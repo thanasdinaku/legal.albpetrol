@@ -51,6 +51,16 @@ export default function Sidebar() {
         </button>
         
         {user?.role === 'admin' && (
+          <button
+            onClick={() => setLocation('/csv-import')}
+            className={isActive('/csv-import') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
+          >
+            <i className="fas fa-file-import"></i>
+            <span>Import CSV</span>
+          </button>
+        )}
+        
+        {user?.role === 'admin' && (
           <div className="border-t border-gray-200 pt-2 mt-2">
             <button className="nav-link w-full text-left">
               <i className="fas fa-users"></i>

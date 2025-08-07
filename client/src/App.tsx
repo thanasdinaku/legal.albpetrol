@@ -9,6 +9,7 @@ import Landing from "@/pages/landing";
 import Home from "@/pages/home";
 import DataEntry from "@/pages/data-entry";
 import DataTable from "@/pages/data-table";
+import CSVImport from "@/pages/csv-import";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -35,6 +36,7 @@ function Router() {
           <Route path="/" component={Home} />
           <Route path="/data-entry" component={DataEntry} />
           <Route path="/data-table" component={DataTable} />
+          <Route path="/csv-import" component={CSVImport} />
         </>
       )}
       <Route component={NotFound} />

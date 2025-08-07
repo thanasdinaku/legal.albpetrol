@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { insertDataEntrySchema, updateDataEntrySchema } from "@shared/schema";
 import { z } from "zod";
+import multer from "multer";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
@@ -159,6 +160,95 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching recent entries:", error);
       res.status(500).json({ message: "Failed to fetch recent entries" });
+    }
+  });
+
+  // CSV Import endpoint
+  const upload = multer({ storage: multer.memoryStorage() });
+  
+  app.post('/api/import/csv', isAuthenticated, upload.single('file'), async (req: any, res) => {
+    try {
+      const user = await storage.getUser(req.user.claims.sub);
+      if (!user || user.role !== 'admin') {
+        return res.status(403).json({ message: "Admin access required for CSV import" });
+      }
+
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+
+      const fileContent = req.file.buffer.toString('utf8');
+      const mappings = JSON.parse(req.body.mappings || '[]');
+
+      // Parse CSV
+      const lines = fileContent.split('\n').filter((line: string) => line.trim());
+      const headers = lines[0].split(',').map((h: string) => h.trim().replace(/"/g, ''));
+      const dataRows = lines.slice(1).filter((line: string) => line.trim());
+
+      let importedCount = 0;
+      let errors = [];
+
+      for (let i = 0; i < dataRows.length; i++) {
+        try {
+          const cells = dataRows[i].split(',').map((cell: string) => cell.trim().replace(/"/g, ''));
+          const rowData: any = {};
+
+          // Apply field mappings
+          mappings.forEach((mapping: any) => {
+            const csvIndex = headers.indexOf(mapping.csvField);
+            if (csvIndex !== -1 && mapping.dbField !== 'skip' && cells[csvIndex]) {
+              let value = cells[csvIndex];
+              
+              // Handle specific field types
+              if (mapping.dbField === 'date' && value) {
+                // Try to parse date
+                const date = new Date(value);
+                if (!isNaN(date.getTime())) {
+                  rowData[mapping.dbField] = date;
+                }
+              } else if (mapping.dbField === 'status') {
+                // Validate status values
+                if (['active', 'inactive', 'pending'].includes(value.toLowerCase())) {
+                  rowData[mapping.dbField] = value.toLowerCase();
+                }
+              } else if (mapping.dbField === 'priority') {
+                // Validate priority values
+                if (['low', 'medium', 'high'].includes(value.toLowerCase())) {
+                  rowData[mapping.dbField] = value.toLowerCase();
+                }
+              } else {
+                rowData[mapping.dbField] = value;
+              }
+            }
+          });
+
+          // Set defaults if not provided
+          if (!rowData.status) rowData.status = 'active';
+          if (!rowData.priority) rowData.priority = 'medium';
+          if (!rowData.category) rowData.category = 'General';
+
+          // Validate and create entry
+          const validatedData = insertDataEntrySchema.parse({
+            ...rowData,
+            createdById: req.user.claims.sub,
+          });
+
+          await storage.createDataEntry(validatedData);
+          importedCount++;
+        } catch (error: any) {
+          errors.push(`Row ${i + 2}: ${error.message}`);
+        }
+      }
+
+      res.json({
+        imported: importedCount,
+        total: dataRows.length,
+        errors: errors.slice(0, 10) // Limit error messages
+      });
+
+    } catch (error) {
+      console.error("Error importing CSV:", error);
+      res.status(500).json({ message: "Failed to import CSV data" });
     }
   });
 

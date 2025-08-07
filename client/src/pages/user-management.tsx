@@ -32,9 +32,12 @@ export default function UserManagement() {
   const { user: currentUser, isAuthenticated, isLoading } = useAuth();
   const { toast } = useToast();
 
+  // Check if user is admin (truealbos@gmail.com)
+  const isAdmin = currentUser?.id === "46078954";
+
   // Redirect if not admin
   useEffect(() => {
-    if (!isLoading && (!isAuthenticated || currentUser?.role !== 'admin')) {
+    if (!isLoading && (!isAuthenticated || !isAdmin)) {
       toast({
         title: "Access Denied",
         description: "Only administrators can access user management.",
@@ -45,16 +48,16 @@ export default function UserManagement() {
       }, 1500);
       return;
     }
-  }, [isAuthenticated, isLoading, currentUser, toast]);
+  }, [isAuthenticated, isLoading, isAdmin, toast]);
 
   const { data: users = [], isLoading: usersLoading } = useQuery({
     queryKey: ['/api/admin/users'],
-    enabled: currentUser?.role === 'admin'
+    enabled: isAdmin && isAuthenticated
   });
 
   const { data: stats = {} } = useQuery({
     queryKey: ['/api/admin/user-stats'],
-    enabled: currentUser?.role === 'admin'
+    enabled: isAdmin && isAuthenticated
   });
 
   const updateRoleMutation = useMutation({
@@ -99,7 +102,7 @@ export default function UserManagement() {
     },
   });
 
-  if (isLoading || !isAuthenticated || currentUser?.role !== 'admin') {
+  if (isLoading || !isAuthenticated || !isAdmin) {
     return null;
   }
 

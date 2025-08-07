@@ -75,7 +75,7 @@ export default function Home() {
                     <i className="fas fa-file-import text-2xl text-gray-400 group-hover:text-primary mb-2"></i>
                     <p className="text-sm font-medium text-gray-600 group-hover:text-primary">Importo CSV</p>
                   </button>
-                  {user && user.role === 'admin' ? (
+                  {user?.id === "46078954" ? (
                     <button 
                       onClick={() => window.location.href = '/user-management'}
                       className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition duration-200 group"

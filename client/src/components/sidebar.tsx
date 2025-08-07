@@ -31,7 +31,7 @@ export default function Sidebar() {
           className={isActive('/') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
         >
           <i className="fas fa-tachometer-alt"></i>
-          <span>Dashboard</span>
+          <span>Paneli Kryesor</span>
         </button>
         
         <button
@@ -56,7 +56,7 @@ export default function Sidebar() {
             className={isActive('/csv-import') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
           >
             <i className="fas fa-file-import"></i>
-            <span>Import CSV</span>
+            <span>Importo CSV</span>
           </button>
         )}
         
@@ -67,11 +67,11 @@ export default function Sidebar() {
               className={isActive('/user-management') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
             >
               <i className="fas fa-users"></i>
-              <span>User Management</span>
+              <span>Menaxhimi i Përdoruesve</span>
             </button>
             <button className="nav-link w-full text-left">
               <i className="fas fa-cog"></i>
-              <span>System Settings</span>
+              <span>Cilësimet e Sistemit</span>
             </button>
           </div>
         )}

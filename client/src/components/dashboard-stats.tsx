@@ -43,7 +43,7 @@ export default function DashboardStats() {
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Entries</p>
+              <p className="text-sm font-medium text-gray-600">Totali i Çështjeve</p>
               <p className="text-3xl font-bold text-gray-900">{stats?.totalEntries || 0}</p>
             </div>
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -52,7 +52,7 @@ export default function DashboardStats() {
           </div>
           <div className="mt-4 flex items-center">
             <span className="text-sm text-green-600 font-medium">+12.5%</span>
-            <span className="text-sm text-gray-500 ml-2">from last month</span>
+            <span className="text-sm text-gray-500 ml-2">nga muaji i shkuar</span>
           </div>
         </CardContent>
       </Card>
@@ -61,7 +61,7 @@ export default function DashboardStats() {
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Active Users</p>
+              <p className="text-sm font-medium text-gray-600">Përdorues Aktiv</p>
               <p className="text-3xl font-bold text-gray-900">{stats?.activeUsers || 0}</p>
             </div>
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -70,7 +70,7 @@ export default function DashboardStats() {
           </div>
           <div className="mt-4 flex items-center">
             <span className="text-sm text-green-600 font-medium">+8.2%</span>
-            <span className="text-sm text-gray-500 ml-2">from last month</span>
+            <span className="text-sm text-gray-500 ml-2">nga muaji i shkuar</span>
           </div>
         </CardContent>
       </Card>
@@ -79,7 +79,7 @@ export default function DashboardStats() {
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Today's Entries</p>
+              <p className="text-sm font-medium text-gray-600">Çështjet e Sotme</p>
               <p className="text-3xl font-bold text-gray-900">{stats?.todayEntries || 0}</p>
             </div>
             <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
@@ -88,7 +88,7 @@ export default function DashboardStats() {
           </div>
           <div className="mt-4 flex items-center">
             <span className="text-sm text-green-600 font-medium">+5.7%</span>
-            <span className="text-sm text-gray-500 ml-2">from yesterday</span>
+            <span className="text-sm text-gray-500 ml-2">nga dje</span>
           </div>
         </CardContent>
       </Card>
@@ -97,8 +97,8 @@ export default function DashboardStats() {
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">System Status</p>
-              <p className="text-xl font-bold text-green-600">Healthy</p>
+              <p className="text-sm font-medium text-gray-600">Statusi i Sistemit</p>
+              <p className="text-xl font-bold text-green-600">I Shëndetshëm</p>
             </div>
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
               <i className="fas fa-heart text-green-600"></i>
@@ -106,7 +106,7 @@ export default function DashboardStats() {
           </div>
           <div className="mt-4 flex items-center">
             <span className="text-sm text-green-600 font-medium">99.9%</span>
-            <span className="text-sm text-gray-500 ml-2">uptime</span>
+            <span className="text-sm text-gray-500 ml-2">përfundimit</span>
           </div>
         </CardContent>
       </Card>

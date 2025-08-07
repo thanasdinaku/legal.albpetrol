@@ -18,7 +18,7 @@ export default function RecentActivity() {
     return (
       <Card className="border border-gray-200">
         <CardContent className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Entries</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Çështjet e Fundit</h3>
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
               <div key={i} className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
@@ -39,10 +39,10 @@ export default function RecentActivity() {
     return (
       <Card className="border border-gray-200">
         <CardContent className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Entries</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Çështjet e Fundit</h3>
           <div className="text-center py-8">
             <i className="fas fa-inbox text-4xl text-gray-300 mb-4"></i>
-            <p className="text-gray-500">No recent entries found</p>
+            <p className="text-gray-500">Nuk u gjetën çështje të fundit</p>
           </div>
         </CardContent>
       </Card>
@@ -72,7 +72,7 @@ export default function RecentActivity() {
   return (
     <Card className="border border-gray-200">
       <CardContent className="p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Entries</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Çështjet e Fundit</h3>
         <div className="space-y-4">
           {recentEntries.map((entry: any) => (
             <div key={entry.id} className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">

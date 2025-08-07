@@ -16,8 +16,8 @@ export default function Home() {
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       toast({
-        title: "Unauthorized",
-        description: "You are logged out. Logging in again...",
+        title: "Pa Autorizim",
+        description: "Jeni shkëputur. Duke u kyçur përsëri...",
         variant: "destructive",
       });
       setTimeout(() => {
@@ -34,7 +34,7 @@ export default function Home() {
           <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
             <i className="fas fa-database text-white text-2xl"></i>
           </div>
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-gray-600">Duke ngarkuar...</p>
         </div>
       </div>
     );
@@ -45,8 +45,8 @@ export default function Home() {
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header 
-          title="Dashboard Overview" 
-          subtitle="Welcome back! Here's your data summary." 
+          title="Përmbledhja e Panelit" 
+          subtitle="Mirë se erdhët! Këtu është përmbledhja e të dhënave tuaja." 
         />
         <main className="flex-1 overflow-y-auto p-6">
           <div className="space-y-6">
@@ -54,7 +54,7 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <RecentActivity />
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Veprime të Shpejta</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <button 
                     onClick={() => navigate('/data-entry')}

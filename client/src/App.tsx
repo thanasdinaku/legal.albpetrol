@@ -22,7 +22,7 @@ function Router() {
           <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
             <i className="fas fa-database text-white text-2xl"></i>
           </div>
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-gray-600">Duke ngarkuar...</p>
         </div>
       </div>
     );

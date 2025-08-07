@@ -50,8 +50,8 @@ export default function DataTableComponent() {
     },
     onSuccess: () => {
       toast({
-        title: "Success",
-        description: "Entry deleted successfully.",
+        title: "Sukses",
+        description: "Çështja u fshi me sukses.",
       });
       queryClient.invalidateQueries({ queryKey: ["/api/data-entries"] });
       queryClient.invalidateQueries({ queryKey: ["/api/dashboard/stats"] });
@@ -60,8 +60,8 @@ export default function DataTableComponent() {
     onError: (error) => {
       if (isUnauthorizedError(error)) {
         toast({
-          title: "Unauthorized",
-          description: "You are logged out. Logging in again...",
+          title: "Pa Autorizim",
+          description: "Jeni shkëputur. Duke u kyçur përsëri...",
           variant: "destructive",
         });
         setTimeout(() => {
@@ -70,15 +70,15 @@ export default function DataTableComponent() {
         return;
       }
       toast({
-        title: "Error",
-        description: "Failed to delete entry. Please try again.",
+        title: "Gabim",
+        description: "Dështoi fshirja e çështjes. Ju lutemi provoni përsëri.",
         variant: "destructive",
       });
     },
   });
 
   const handleDelete = async (id: number) => {
-    if (window.confirm("Are you sure you want to delete this entry?")) {
+    if (window.confirm("Jeni i sigurt që doni të fshini këtë çështje?")) {
       await deleteMutation.mutateAsync(id);
     }
   };
@@ -86,11 +86,11 @@ export default function DataTableComponent() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "active":
-        return <Badge className="status-badge-active">Active</Badge>;
+        return <Badge className="status-badge-active">Aktiv</Badge>;
       case "inactive":
-        return <Badge className="status-badge-inactive">Inactive</Badge>;
+        return <Badge className="status-badge-inactive">Joaktiv</Badge>;
       case "pending":
-        return <Badge className="status-badge-pending">Pending</Badge>;
+        return <Badge className="status-badge-pending">Në pritje</Badge>;
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
@@ -199,19 +199,19 @@ export default function DataTableComponent() {
                 ID
               </th>
               <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Title
+                Objekti i Padisë
               </th>
               <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Category
+                Gjykata Shkallë
               </th>
               <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
+                Faza
               </th>
               <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Created Date
+                Data e Krijimit
               </th>
               <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
+                Veprime
               </th>
             </tr>
           </thead>
@@ -221,7 +221,7 @@ export default function DataTableComponent() {
                 <td colSpan={6} className="px-6 py-12 text-center">
                   <div className="text-center">
                     <i className="fas fa-inbox text-4xl text-gray-300 mb-4"></i>
-                    <p className="text-gray-500">No entries found</p>
+                    <p className="text-gray-500">Nuk u gjetën çështje</p>
                   </div>
                 </td>
               </tr>
@@ -232,30 +232,30 @@ export default function DataTableComponent() {
                     #{entry.id}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {entry.title}
+                    {entry.objektiIPadise || 'N/A'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {entry.category}
+                    {entry.gjykataShkalle || 'N/A'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {getStatusBadge(entry.status)}
+                    {getStatusBadge(entry.fazaAktuale || 'aktiv')}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {format(new Date(entry.createdAt!), "MMM d, yyyy")}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                    <button className="text-blue-600 hover:text-blue-900" title="View">
+                    <button className="text-blue-600 hover:text-blue-900" title="Shiko">
                       <i className="fas fa-eye"></i>
                     </button>
                     {user?.role === 'admin' && (
                       <>
-                        <button className="text-indigo-600 hover:text-indigo-900" title="Edit">
+                        <button className="text-indigo-600 hover:text-indigo-900" title="Modifiko">
                           <i className="fas fa-edit"></i>
                         </button>
                         <button 
                           onClick={() => handleDelete(entry.id)}
                           className="text-red-600 hover:text-red-900"
-                          title="Delete"
+                          title="Fshi"
                           disabled={deleteMutation.isPending}
                         >
                           <i className="fas fa-trash"></i>
@@ -273,7 +273,7 @@ export default function DataTableComponent() {
       {data?.pagination && data.pagination.totalPages > 1 && (
         <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
           <div className="flex items-center text-sm text-gray-500">
-            Showing {((data.pagination.page - 1) * data.pagination.limit) + 1} to {Math.min(data.pagination.page * data.pagination.limit, data.pagination.total)} of {data.pagination.total} results
+            Duke treguar {((data.pagination.page - 1) * data.pagination.limit) + 1} deri në {Math.min(data.pagination.page * data.pagination.limit, data.pagination.total)} nga {data.pagination.total} rezultate
           </div>
           <div className="flex items-center space-x-2">
             <Button
@@ -282,7 +282,7 @@ export default function DataTableComponent() {
               variant="outline"
               size="sm"
             >
-              Previous
+              I mëparshmi
             </Button>
             {Array.from({ length: Math.min(5, data.pagination.totalPages) }, (_, i) => {
               const pageNum = i + 1;
@@ -303,7 +303,7 @@ export default function DataTableComponent() {
               variant="outline"
               size="sm"
             >
-              Next
+              Tjetër
             </Button>
           </div>
         </div>

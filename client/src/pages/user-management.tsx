@@ -182,23 +182,23 @@ export default function UserManagement() {
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">User Management</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Menaxhimi i Përdoruesve</h1>
           <p className="text-muted-foreground mt-2">
-            Manage user accounts and permissions for the legal case management system
+            Menaxho llogaritë e përdoruesve dhe lejet për sistemin e menaxhimit të çështjeve ligjore
           </p>
         </div>
         <Dialog open={showAddUserDialog} onOpenChange={setShowAddUserDialog}>
           <DialogTrigger asChild>
             <Button>
               <UserPlus className="w-4 h-4 mr-2" />
-              Add User
+              Shto Përdorues
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Add New User</DialogTitle>
+              <DialogTitle>Shto Përdorues të Ri</DialogTitle>
               <DialogDescription>
-                Create a new user account and assign their role in the system.
+                Krijo një llogari të re përdoruesi dhe cakto rolin e tyre në sistem.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
@@ -216,7 +216,7 @@ export default function UserManagement() {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="firstName" className="text-right">
-                  First Name
+                  Emri
                 </Label>
                 <Input
                   id="firstName"
@@ -227,7 +227,7 @@ export default function UserManagement() {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="lastName" className="text-right">
-                  Last Name
+                  Mbiemri
                 </Label>
                 <Input
                   id="lastName"
@@ -238,18 +238,18 @@ export default function UserManagement() {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="role" className="text-right">
-                  Role
+                  Roli
                 </Label>
                 <Select 
                   value={newUser.role} 
                   onValueChange={(value: 'user' | 'admin') => setNewUser({ ...newUser, role: value })}
                 >
                   <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select a role" />
+                    <SelectValue placeholder="Zgjidh një rol" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="user">Regular User</SelectItem>
-                    <SelectItem value="admin">Administrator</SelectItem>
+                    <SelectItem value="user">Përdorues i Rregullt</SelectItem>
+                    <SelectItem value="admin">Administratori</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -260,7 +260,7 @@ export default function UserManagement() {
                 onClick={() => createUserMutation.mutate(newUser)}
                 disabled={createUserMutation.isPending}
               >
-                {createUserMutation.isPending ? "Creating..." : "Create User"}
+                {createUserMutation.isPending ? "Duke krijuar..." : "Krijo Përdorues"}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -272,7 +272,7 @@ export default function UserManagement() {
         <div className="grid gap-4 md:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+              <CardTitle className="text-sm font-medium">Totali Përdoruesve</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -281,7 +281,7 @@ export default function UserManagement() {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Administrators</CardTitle>
+              <CardTitle className="text-sm font-medium">Administratorë</CardTitle>
               <Shield className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -290,7 +290,7 @@ export default function UserManagement() {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Regular Users</CardTitle>
+              <CardTitle className="text-sm font-medium">Përdorues të Rregullt</CardTitle>
               <UserCheck className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -299,7 +299,7 @@ export default function UserManagement() {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Today</CardTitle>
+              <CardTitle className="text-sm font-medium">Aktiv Sot</CardTitle>
               <Calendar className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -312,10 +312,10 @@ export default function UserManagement() {
       {/* User List */}
       <Card>
         <CardHeader>
-          <CardTitle>System Users</CardTitle>
+          <CardTitle>Përdoruesit e Sistemit</CardTitle>
           <CardDescription>
-            Manage user roles and permissions. Normal users can only add legal cases, 
-            while administrators have full access to edit, delete, and manage all data.
+            Menaxho rolet dhe lejet e përdoruesve. Përdoruesit e rregullt mund të shtojnë vetëm raste ligjore, 
+            ndërsa administratorët kanë qasje të plotë për të modifikuar, fshirë dhe menaxhuar të gjitha të dhënat.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -328,12 +328,12 @@ export default function UserManagement() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>User</TableHead>
+                    <TableHead>Përdoruesi</TableHead>
                     <TableHead>Email</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Joined</TableHead>
-                    <TableHead>Last Active</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>Roli</TableHead>
+                    <TableHead>U Bashkua</TableHead>
+                    <TableHead>Aktivi i Fundit</TableHead>
+                    <TableHead className="text-right">Veprimet</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -358,12 +358,12 @@ export default function UserManagement() {
                       <TableCell>{user.email}</TableCell>
                       <TableCell>
                         <Badge variant={user.role === 'admin' ? 'default' : 'secondary'}>
-                          {user.role === 'admin' ? 'Administrator' : 'User'}
+                          {user.role === 'admin' ? 'Administratori' : 'Përdoruesi'}
                         </Badge>
                       </TableCell>
                       <TableCell>{formatDate(user.createdAt)}</TableCell>
                       <TableCell>
-                        {user.lastActive ? formatDate(user.lastActive) : 'Never'}
+                        {user.lastActive ? formatDate(user.lastActive) : 'Kurrë'}
                       </TableCell>
                       <TableCell className="text-right space-x-2">
                         {user.id !== currentUser.id && (
@@ -379,7 +379,7 @@ export default function UserManagement() {
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="user">User</SelectItem>
+                                <SelectItem value="user">Përdorues</SelectItem>
                                 <SelectItem value="admin">Admin</SelectItem>
                               </SelectContent>
                             </Select>
@@ -396,14 +396,14 @@ export default function UserManagement() {
                                   disabled={deleteUserMutation.isPending}
                                 >
                                   <Trash2 className="h-4 w-4 mr-2" />
-                                  Delete User
+                                  Fshi Përdoruesin
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
                           </>
                         )}
                         {user.id === currentUser.id && (
-                          <Badge variant="outline">Current User</Badge>
+                          <Badge variant="outline">Përdoruesi Aktual</Badge>
                         )}
                       </TableCell>
                     </TableRow>
@@ -418,9 +418,9 @@ export default function UserManagement() {
       {/* Role Permissions Info */}
       <Card>
         <CardHeader>
-          <CardTitle>Role Permissions</CardTitle>
+          <CardTitle>Lejet e Roleve</CardTitle>
           <CardDescription>
-            Overview of what each role can do in the system
+            Përmbledhje e asaj që mund të bëjë çdo rol në sistem
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -428,28 +428,28 @@ export default function UserManagement() {
             <div className="p-4 rounded-lg border bg-muted/50">
               <div className="flex items-center space-x-2 mb-3">
                 <UserCheck className="h-5 w-5 text-blue-600" />
-                <h3 className="font-semibold">Regular User</h3>
+                <h3 className="font-semibold">Përdorues i Rregullt</h3>
               </div>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>• View dashboard statistics</li>
-                <li>• Add new legal case entries</li>
-                <li>• View all case data in tables</li>
-                <li>• Export data (Excel, CSV, PDF)</li>
-                <li>• Import data from CSV files</li>
+                <li>• Shiko statistikat e panelit</li>
+                <li>• Shto regjistrime të reja të rasteve ligjore</li>
+                <li>• Shiko të gjitha të dhënat e rasteve në tabela</li>
+                <li>• Eksporto të dhënat (Excel, CSV, PDF)</li>
+                <li>• Importo të dhënat nga skedarët CSV</li>
               </ul>
             </div>
             <div className="p-4 rounded-lg border bg-muted/50">
               <div className="flex items-center space-x-2 mb-3">
                 <Shield className="h-5 w-5 text-red-600" />
-                <h3 className="font-semibold">Administrator</h3>
+                <h3 className="font-semibold">Administratori</h3>
               </div>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>• All regular user permissions</li>
-                <li>• Edit existing legal case entries</li>
-                <li>• Delete legal case entries</li>
-                <li>• Manage user accounts and roles</li>
-                <li>• View user management dashboard</li>
-                <li>• Deactivate user accounts</li>
+                <li>• Të gjitha lejet e përdoruesit të rregullt</li>
+                <li>• Modifiko regjistrimet ekzistuese të rasteve ligjore</li>
+                <li>• Fshi regjistrimet e rasteve ligjore</li>
+                <li>• Menaxho llogaritë dhe rolet e përdoruesve</li>
+                <li>• Shiko panelin e menaxhimit të përdoruesve</li>
+                <li>• Çaktivizo llogaritë e përdoruesve</li>
               </ul>
             </div>
           </div>

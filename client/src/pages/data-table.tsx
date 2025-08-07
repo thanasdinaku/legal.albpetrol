@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import Sidebar from "@/components/sidebar";
 import Header from "@/components/header";
-import DataTableComponent from "@/components/data-table-component";
+import CaseTable from "@/components/case-table";
 
 export default function DataTable() {
   const { toast } = useToast();
@@ -41,11 +41,11 @@ export default function DataTable() {
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header 
-          title="Data Records" 
-          subtitle="Manage and view all database entries" 
+          title="Menaxhimi i Çështjeve" 
+          subtitle="Shikoni dhe menaxhoni çështjet ligjore" 
         />
         <main className="flex-1 overflow-y-auto p-6">
-          <DataTableComponent />
+          <CaseTable />
         </main>
       </div>
     </div>

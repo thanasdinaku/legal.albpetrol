@@ -207,14 +207,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
                   rowData[mapping.dbField] = date;
                 }
               } else if (mapping.dbField === 'status') {
-                // Validate status values
-                if (['active', 'inactive', 'pending'].includes(value.toLowerCase())) {
+                // Validate status values for Albanian legal cases
+                if (['aktiv', 'mbyllur', 'pezull'].includes(value.toLowerCase())) {
                   rowData[mapping.dbField] = value.toLowerCase();
                 }
               } else if (mapping.dbField === 'priority') {
-                // Validate priority values
-                if (['low', 'medium', 'high'].includes(value.toLowerCase())) {
+                // Validate priority values for Albanian legal cases
+                if (['i_ulet', 'mesatar', 'i_larte'].includes(value.toLowerCase())) {
                   rowData[mapping.dbField] = value.toLowerCase();
+                }
+              } else if (['ankimuar', 'perfunduar'].includes(mapping.dbField)) {
+                // Validate boolean fields (Po/Jo)
+                if (['po', 'jo'].includes(value.toLowerCase())) {
+                  rowData[mapping.dbField] = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
                 }
               } else {
                 rowData[mapping.dbField] = value;
@@ -223,9 +228,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
 
           // Set defaults if not provided
-          if (!rowData.status) rowData.status = 'active';
-          if (!rowData.priority) rowData.priority = 'medium';
-          if (!rowData.category) rowData.category = 'General';
+          if (!rowData.status) rowData.status = 'aktiv';
+          if (!rowData.priority) rowData.priority = 'mesatar';
+          if (!rowData.ankimuar) rowData.ankimuar = 'Jo';
+          if (!rowData.perfunduar) rowData.perfunduar = 'Jo';
 
           // Validate and create entry
           const validatedData = insertDataEntrySchema.parse({

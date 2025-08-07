@@ -38,22 +38,35 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-// Data entries status enum
-export const entryStatusEnum = pgEnum("entry_status", ["active", "inactive", "pending"]);
+// Legal case status enum (Albanian court cases)
+export const caseStatusEnum = pgEnum("case_status", ["aktiv", "mbyllur", "pezull"]);
 
-// Data entries priority enum
-export const entryPriorityEnum = pgEnum("entry_priority", ["low", "medium", "high"]);
+// Legal case priority enum
+export const casePriorityEnum = pgEnum("case_priority", ["i_ulet", "mesatar", "i_larte"]);
 
-// Data entries table
+// Legal cases table (Albanian court system)
 export const dataEntries = pgTable("data_entries", {
   id: serial("id").primaryKey(),
-  title: varchar("title", { length: 255 }).notNull(),
-  description: text("description"),
-  category: varchar("category", { length: 100 }).notNull(),
-  status: entryStatusEnum("status").default("active").notNull(),
-  priority: entryPriorityEnum("priority").default("medium").notNull(),
-  value: varchar("value", { length: 50 }),
-  date: timestamp("date"),
+  nrRendor: varchar("nr_rendor", { length: 50 }).notNull(), // Nr. Rendor
+  paditesi: varchar("paditesi", { length: 255 }).notNull(), // Paditesi (Emer e Mbiemer)
+  iPaditur: varchar("i_paditur", { length: 255 }).notNull(), // I Paditur
+  personITrete: varchar("person_i_trete", { length: 255 }), // Person I Trete
+  objektiIPadise: text("objekti_i_padise"), // Objekti I Padise
+  gjykataShkalle: varchar("gjykata_shkalle", { length: 255 }), // Gjykata e Shk. I
+  fazaGjykataShkalle: varchar("faza_gjykata_shkalle", { length: 255 }), // Faza ne te cilen ndodhet procesi (Shkalle I)
+  gjykataApelit: varchar("gjykata_apelit", { length: 255 }), // Gjykata e Apelit
+  fazaGjykataApelit: varchar("faza_gjykata_apelit", { length: 255 }), // Faza ne te cilen ndodhet procesi (Apelit)
+  fazaAktuale: varchar("faza_aktuale", { length: 255 }), // Faza ne te cilen ndodhet procesi (current)
+  perfaqesuesi: varchar("perfaqesuesi", { length: 255 }), // Perfaqesuesi I Albpetrol SH.A.
+  demiIPretenduar: varchar("demi_i_pretenduar", { length: 255 }), // Demi i pretenduar ne objekt
+  shumaGjykata: varchar("shuma_gjykata", { length: 255 }), // Shuma e caktuar nga Gjykata me vendim
+  vendimEkzekutim: varchar("vendim_ekzekutim", { length: 255 }), // Vendim me ekzekutim te perkohshem
+  fazaEkzekutim: varchar("faza_ekzekutim", { length: 255 }), // Faza ne te cilen ndodhet
+  ankimuar: varchar("ankimuar", { length: 10 }).default("Jo"), // Ankimuar (Po/Jo)
+  perfunduar: varchar("perfunduar", { length: 10 }).default("Jo"), // Perfunduar (Po/Jo)
+  gjykataLarte: varchar("gjykata_larte", { length: 255 }), // Gjykata e Larte
+  status: caseStatusEnum("status").default("aktiv").notNull(),
+  priority: casePriorityEnum("priority").default("mesatar").notNull(),
   createdById: varchar("created_by_id").notNull().references(() => users.id),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -75,16 +88,6 @@ export const insertDataEntrySchema = createInsertSchema(dataEntries).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
-}).extend({
-  date: z.preprocess(
-    (arg) => {
-      if (typeof arg === 'string' && arg !== '') {
-        return new Date(arg);
-      }
-      return arg;
-    },
-    z.date().optional().nullable()
-  ),
 });
 
 export const updateDataEntrySchema = createInsertSchema(dataEntries).omit({

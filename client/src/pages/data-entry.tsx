@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import Sidebar from "@/components/sidebar";
 import Header from "@/components/header";
-import DataEntryForm from "@/components/data-entry-form";
+import CaseEntryForm from "@/components/case-entry-form";
 
 export default function DataEntry() {
   const { toast } = useToast();
@@ -41,11 +41,11 @@ export default function DataEntry() {
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header 
-          title="Add New Data Entry" 
-          subtitle="Fill in the form below to add a new record to the database." 
+          title="Regjistro Çështje të Re" 
+          subtitle="Plotësoni formën për të shtuar një çështje ligjore në sistem" 
         />
         <main className="flex-1 overflow-y-auto p-6">
-          <DataEntryForm />
+          <CaseEntryForm />
         </main>
       </div>
     </div>

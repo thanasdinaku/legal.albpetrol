@@ -59,21 +59,21 @@ export default function Home() {
                     className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition duration-200 group"
                   >
                     <i className="fas fa-plus text-2xl text-gray-400 group-hover:text-primary mb-2"></i>
-                    <p className="text-sm font-medium text-gray-600 group-hover:text-primary">Add New Entry</p>
+                    <p className="text-sm font-medium text-gray-600 group-hover:text-primary">Regjistro Çështje</p>
                   </button>
                   <button 
                     onClick={() => window.location.href = '/data-table'}
                     className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition duration-200 group"
                   >
                     <i className="fas fa-table text-2xl text-gray-400 group-hover:text-primary mb-2"></i>
-                    <p className="text-sm font-medium text-gray-600 group-hover:text-primary">View All Data</p>
+                    <p className="text-sm font-medium text-gray-600 group-hover:text-primary">Shiko të Gjitha</p>
                   </button>
                   <button 
                     onClick={() => window.location.href = '/csv-import'}
                     className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition duration-200 group"
                   >
                     <i className="fas fa-file-import text-2xl text-gray-400 group-hover:text-primary mb-2"></i>
-                    <p className="text-sm font-medium text-gray-600 group-hover:text-primary">Import CSV</p>
+                    <p className="text-sm font-medium text-gray-600 group-hover:text-primary">Importo CSV</p>
                   </button>
                   <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition duration-200 group">
                     <i className="fas fa-cog text-2xl text-gray-400 group-hover:text-primary mb-2"></i>

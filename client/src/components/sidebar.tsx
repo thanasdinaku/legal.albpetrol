@@ -19,8 +19,8 @@ export default function Sidebar() {
             <i className="fas fa-database text-white"></i>
           </div>
           <div>
-            <h1 className="text-lg font-bold text-gray-900">DataBase Pro</h1>
-            <p className="text-sm text-gray-500 capitalize">{user?.role || 'User'}</p>
+            <h1 className="text-lg font-bold text-gray-900">Menaxhimi Ligjor</h1>
+            <p className="text-sm text-gray-500 capitalize">{user?.role === 'admin' ? 'Administrator' : 'Përdorues'}</p>
           </div>
         </div>
       </div>
@@ -39,7 +39,7 @@ export default function Sidebar() {
           className={isActive('/data-entry') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
         >
           <i className="fas fa-plus-circle"></i>
-          <span>Add New Entry</span>
+          <span>Regjistro Çështje</span>
         </button>
         
         <button
@@ -47,7 +47,7 @@ export default function Sidebar() {
           className={isActive('/data-table') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
         >
           <i className="fas fa-table"></i>
-          <span>View All Data</span>
+          <span>Menaxho Çështjet</span>
         </button>
         
         {user?.role === 'admin' && (

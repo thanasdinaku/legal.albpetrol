@@ -14,9 +14,8 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 
-const formSchema = insertDataEntrySchema.extend({
-  ankimuar: z.string().optional(),
-  perfunduar: z.string().optional(),
+const formSchema = insertDataEntrySchema.omit({
+  createdById: true,
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -104,7 +103,7 @@ export default function CaseEntryForm() {
                       <FormItem>
                         <FormLabel>Paditesi (Emër e Mbiemër) *</FormLabel>
                         <FormControl>
-                          <Input placeholder="Emri i plotë i paditesit" {...field} />
+                          <Input placeholder="Emri i plotë i paditesit" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -119,7 +118,7 @@ export default function CaseEntryForm() {
                       <FormItem>
                         <FormLabel>I Paditur *</FormLabel>
                         <FormControl>
-                          <Input placeholder="Emri i plotë i të paditurit" {...field} />
+                          <Input placeholder="Emri i plotë i të paditurit" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -320,7 +319,7 @@ export default function CaseEntryForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Ankimuar</FormLabel>
-                        <Select value={field.value} onValueChange={field.onChange}>
+                        <Select value={field.value || "Jo"} onValueChange={field.onChange}>
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Zgjidhni" />
@@ -343,7 +342,7 @@ export default function CaseEntryForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Përfunduar</FormLabel>
-                        <Select value={field.value} onValueChange={field.onChange}>
+                        <Select value={field.value || "Jo"} onValueChange={field.onChange}>
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Zgjidhni" />

@@ -19,7 +19,7 @@ export default function Sidebar() {
           <img 
             src={albpetrolLogo} 
             alt="Albpetrol Logo" 
-            className="w-24 h-16 object-contain mx-auto"
+            className="w-32 h-20 object-contain mx-auto"
           />
           <div>
             <h1 className="text-lg font-bold text-gray-900">Menaxhimi Ligjor</h1>

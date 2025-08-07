@@ -22,7 +22,7 @@ export default function Sidebar() {
             className="w-32 h-20 object-contain mx-auto"
           />
           <div>
-            <h1 className="text-lg font-bold text-gray-900">Menaxhimi Ligjor</h1>
+            <h1 className="text-lg font-bold text-gray-900">Pasqyra e Ceshtjeve Ligjore</h1>
             <p className="text-sm text-gray-500 capitalize">{user?.role === 'admin' ? 'Administrator' : 'Përdorues'}</p>
           </div>
         </div>

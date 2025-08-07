@@ -15,11 +15,11 @@ export default function Sidebar() {
   return (
     <div className="w-64 bg-white shadow-lg border-r border-gray-200">
       <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center space-x-3">
+        <div className="text-center space-y-3">
           <img 
             src={albpetrolLogo} 
             alt="Albpetrol Logo" 
-            className="w-20 h-14 object-contain"
+            className="w-24 h-16 object-contain mx-auto"
           />
           <div>
             <h1 className="text-lg font-bold text-gray-900">Menaxhimi Ligjor</h1>

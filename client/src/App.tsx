@@ -12,6 +12,7 @@ import DataEntry from "@/pages/data-entry";
 import DataTable from "@/pages/data-table";
 import CSVImport from "@/pages/csv-import";
 import UserManagement from "@/pages/user-management";
+import SystemSettings from "@/pages/system-settings";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -40,6 +41,7 @@ function Router() {
           <Route path="/data-table" component={DataTable} />
           <Route path="/csv-import" component={CSVImport} />
           <Route path="/user-management" component={UserManagement} />
+          <Route path="/system-settings" component={SystemSettings} />
         </>
       )}
       <Route component={NotFound} />

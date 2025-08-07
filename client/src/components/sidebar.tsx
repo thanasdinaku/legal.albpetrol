@@ -70,7 +70,10 @@ export default function Sidebar() {
               <i className="fas fa-users"></i>
               <span>Menaxhimi i Përdoruesve</span>
             </button>
-            <button className="nav-link w-full text-left">
+            <button
+              onClick={() => setLocation('/system-settings')}
+              className={isActive('/system-settings') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
+            >
               <i className="fas fa-cog"></i>
               <span>Cilësimet e Sistemit</span>
             </button>

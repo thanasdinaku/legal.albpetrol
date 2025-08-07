@@ -184,7 +184,7 @@ export default function UserManagement() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Menaxhimi i Përdoruesve</h1>
           <p className="text-muted-foreground mt-2">
-            Menaxho llogaritë e përdoruesve dhe lejet për sistemin e menaxhimit të çështjeve ligjore
+            Menaxhimi i llogarive të përdoruesve dhe i lejeve për sistemin e menaxhimit të çështjeve ligjore.
           </p>
         </div>
         <Dialog open={showAddUserDialog} onOpenChange={setShowAddUserDialog}>
@@ -366,7 +366,7 @@ export default function UserManagement() {
                         {user.lastActive ? formatDate(user.lastActive) : 'Kurrë'}
                       </TableCell>
                       <TableCell className="text-right space-x-2">
-                        {user.id !== currentUser.id && (
+                        {currentUser && user.id !== currentUser.id && (
                           <>
                             <Select
                               value={user.role}
@@ -402,7 +402,7 @@ export default function UserManagement() {
                             </DropdownMenu>
                           </>
                         )}
-                        {user.id === currentUser.id && (
+                        {currentUser && user.id === currentUser.id && (
                           <Badge variant="outline">Përdoruesi Aktual</Badge>
                         )}
                       </TableCell>

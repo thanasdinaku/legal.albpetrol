@@ -534,18 +534,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/admin/users/:userId/deactivate", isAuthenticated, async (req: any, res) => {
+  app.post("/api/admin/users", isAuthenticated, async (req: any, res) => {
+    try {
+      if (req.user.claims.sub !== "46078954") { // Only truealbos@gmail.com can access
+        return res.status(403).json({ message: "Access denied. Admin privileges required." });
+      }
+      
+      const { email, firstName, lastName, role } = req.body;
+      
+      if (!email || !firstName) {
+        return res.status(400).json({ message: "Email and first name are required" });
+      }
+      
+      if (!["user", "admin"].includes(role)) {
+        return res.status(400).json({ message: "Invalid role. Must be 'user' or 'admin'." });
+      }
+      
+      const newUser = await storage.createManualUser({
+        email,
+        firstName,
+        lastName,
+        role
+      });
+      
+      res.status(201).json(newUser);
+    } catch (error: any) {
+      console.error("Error creating user:", error);
+      if (error?.message && error.message.includes('unique')) {
+        return res.status(400).json({ message: "User with this email already exists" });
+      }
+      res.status(500).json({ message: "Failed to create user" });
+    }
+  });
+
+  app.delete("/api/admin/users/:userId", isAuthenticated, async (req: any, res) => {
     try {
       if (req.user.claims.sub !== "46078954") { // Only truealbos@gmail.com can access
         return res.status(403).json({ message: "Access denied. Admin privileges required." });
       }
       
       const { userId } = req.params;
-      await storage.deactivateUser(userId);
-      res.json({ message: "User deactivated successfully" });
+      
+      // Prevent admin from deleting themselves
+      if (userId === req.user.claims.sub) {
+        return res.status(400).json({ message: "Cannot delete your own account" });
+      }
+      
+      await storage.deleteUser(userId);
+      res.json({ message: "User deleted successfully" });
     } catch (error) {
-      console.error("Error deactivating user:", error);
-      res.status(500).json({ message: "Failed to deactivate user" });
+      console.error("Error deleting user:", error);
+      res.status(500).json({ message: "Failed to delete user" });
     }
   });
 

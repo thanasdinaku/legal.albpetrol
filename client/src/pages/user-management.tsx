@@ -6,9 +6,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
-import { Users, Shield, UserCheck, Calendar } from "lucide-react";
-import { useEffect } from "react";
+import { Users, Shield, UserCheck, Calendar, UserPlus, Trash2, MoreHorizontal } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface User {
   id: string;
@@ -60,30 +64,24 @@ export default function UserManagement() {
     }
   }, [isAuthenticated, isLoading, toast]);
 
-  // For now, let's show mock data until API is working
-  const mockUsers = [
-    {
-      id: "46078954",
-      email: "truealbos@gmail.com",
-      firstName: "Admin",
-      lastName: "User",
-      role: "admin" as const,
-      profileImageUrl: "https://replit.com/public/images/mark.png",
-      createdAt: new Date().toISOString(),
-      lastActive: new Date().toISOString()
-    }
-  ];
+  // Use real API data
+  const { data: users = [], isLoading: usersLoading } = useQuery({
+    queryKey: ['/api/admin/users'],
+    enabled: isAuthenticated
+  });
 
-  const mockStats = {
-    totalUsers: 1,
-    adminUsers: 1,
-    regularUsers: 0,
-    activeToday: 1
-  };
+  const { data: stats = {} } = useQuery({
+    queryKey: ['/api/admin/user-stats'],
+    enabled: isAuthenticated
+  });
 
-  const users = mockUsers;
-  const stats = mockStats;
-  const usersLoading = false;
+  const [showAddUserDialog, setShowAddUserDialog] = useState(false);
+  const [newUser, setNewUser] = useState({
+    email: '',
+    firstName: '',
+    lastName: '',
+    role: 'user' as 'user' | 'admin'
+  });
 
   const updateRoleMutation = useMutation({
     mutationFn: async ({ userId, role }: { userId: string; role: 'user' | 'admin' }) => {
@@ -106,22 +104,45 @@ export default function UserManagement() {
     },
   });
 
-  const deactivateUserMutation = useMutation({
-    mutationFn: async (userId: string) => {
-      await apiRequest(`/api/admin/users/${userId}/deactivate`, 'PUT');
+  const createUserMutation = useMutation({
+    mutationFn: async (userData: typeof newUser) => {
+      await apiRequest('/api/admin/users', 'POST', userData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
       queryClient.invalidateQueries({ queryKey: ['/api/admin/user-stats'] });
       toast({
-        title: "User Deactivated",
-        description: "User has been successfully deactivated.",
+        title: "User Created",
+        description: "New user has been successfully created.",
+      });
+      setShowAddUserDialog(false);
+      setNewUser({ email: '', firstName: '', lastName: '', role: 'user' });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to create user. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteUserMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      await apiRequest(`/api/admin/users/${userId}`, 'DELETE');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/user-stats'] });
+      toast({
+        title: "User Deleted",
+        description: "User has been successfully deleted.",
       });
     },
     onError: (error) => {
       toast({
         title: "Error",
-        description: "Failed to deactivate user. Please try again.",
+        description: "Failed to delete user. Please try again.",
         variant: "destructive",
       });
     },
@@ -166,6 +187,84 @@ export default function UserManagement() {
             Manage user accounts and permissions for the legal case management system
           </p>
         </div>
+        <Dialog open={showAddUserDialog} onOpenChange={setShowAddUserDialog}>
+          <DialogTrigger asChild>
+            <Button>
+              <UserPlus className="w-4 h-4 mr-2" />
+              Add User
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Add New User</DialogTitle>
+              <DialogDescription>
+                Create a new user account and assign their role in the system.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="email" className="text-right">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={newUser.email}
+                  onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="firstName" className="text-right">
+                  First Name
+                </Label>
+                <Input
+                  id="firstName"
+                  value={newUser.firstName}
+                  onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="lastName" className="text-right">
+                  Last Name
+                </Label>
+                <Input
+                  id="lastName"
+                  value={newUser.lastName}
+                  onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="role" className="text-right">
+                  Role
+                </Label>
+                <Select 
+                  value={newUser.role} 
+                  onValueChange={(value: 'user' | 'admin') => setNewUser({ ...newUser, role: value })}
+                >
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Select a role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="user">Regular User</SelectItem>
+                    <SelectItem value="admin">Administrator</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button 
+                type="submit" 
+                onClick={() => createUserMutation.mutate(newUser)}
+                disabled={createUserMutation.isPending}
+              >
+                {createUserMutation.isPending ? "Creating..." : "Create User"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Statistics Cards */}
@@ -284,14 +383,23 @@ export default function UserManagement() {
                                 <SelectItem value="admin">Admin</SelectItem>
                               </SelectContent>
                             </Select>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => deactivateUserMutation.mutate(user.id)}
-                              disabled={deactivateUserMutation.isPending}
-                            >
-                              Deactivate
-                            </Button>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="h-8 w-8 p-0">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                  onClick={() => deleteUserMutation.mutate(user.id)}
+                                  className="text-red-600"
+                                  disabled={deleteUserMutation.isPending}
+                                >
+                                  <Trash2 className="h-4 w-4 mr-2" />
+                                  Delete User
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           </>
                         )}
                         {user.id === currentUser.id && (

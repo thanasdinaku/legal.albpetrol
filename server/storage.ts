@@ -21,8 +21,14 @@ export interface IStorage {
     regularUsers: number;
     activeToday: number;
   }>;
-  updateUserRole(userId: string, role: 'user' | 'admin'): Promise<void>;
-  deactivateUser(userId: string): Promise<void>;
+  updateUserRole(userId: string, role: 'user' | 'admin'): Promise<User>;
+  createManualUser(userData: {
+    email: string;
+    firstName: string;
+    lastName?: string;
+    role: 'user' | 'admin';
+  }): Promise<User>;
+  deleteUser(userId: string): Promise<void>;
   
   // Data entry operations
   createDataEntry(entry: InsertDataEntry): Promise<DataEntry>;
@@ -289,6 +295,82 @@ export class DatabaseStorage implements IStorage {
       todayEntries: todayResult.count,
       activeUsers: usersResult.count,
     };
+  }
+
+  // User Management Methods
+  async getAllUsers(): Promise<User[]> {
+    return await db.select().from(users).orderBy(desc(users.createdAt));
+  }
+
+  async getUserStats(): Promise<{
+    totalUsers: number;
+    adminUsers: number;
+    regularUsers: number;
+    activeToday: number;
+  }> {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const [totalResult] = await db
+      .select({ count: sql<number>`count(*)`.mapWith(Number) })
+      .from(users);
+    
+    const [adminResult] = await db
+      .select({ count: sql<number>`count(*)`.mapWith(Number) })
+      .from(users)
+      .where(eq(users.role, 'admin'));
+    
+    const [userResult] = await db
+      .select({ count: sql<number>`count(*)`.mapWith(Number) })
+      .from(users)
+      .where(eq(users.role, 'user'));
+    
+    const [activeResult] = await db
+      .select({ count: sql<number>`count(*)`.mapWith(Number) })
+      .from(users)
+      .where(sql`${users.updatedAt} >= ${today}`);
+    
+    return {
+      totalUsers: totalResult.count,
+      adminUsers: adminResult.count,
+      regularUsers: userResult.count,
+      activeToday: activeResult.count,
+    };
+  }
+
+  async updateUserRole(userId: string, role: 'user' | 'admin'): Promise<User> {
+    const [updatedUser] = await db
+      .update(users)
+      .set({ role, updatedAt: new Date() })
+      .where(eq(users.id, userId))
+      .returning();
+    return updatedUser;
+  }
+
+  async createManualUser(userData: {
+    email: string;
+    firstName: string;
+    lastName?: string;
+    role: 'user' | 'admin';
+  }): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values({
+        id: `manual_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        email: userData.email,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        role: userData.role,
+        profileImageUrl: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning();
+    return user;
+  }
+
+  async deleteUser(userId: string): Promise<void> {
+    await db.delete(users).where(eq(users.id, userId));
   }
 }
 

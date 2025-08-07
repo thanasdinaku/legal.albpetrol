@@ -9,12 +9,12 @@ interface RecentEntry extends DataEntry {
 }
 
 export default function RecentActivity() {
-  const { data: recentEntries, isLoading } = useQuery<RecentEntry[]>({
+  const { data: recentEntries, isLoading, error } = useQuery<RecentEntry[]>({
     queryKey: ["/api/dashboard/recent-entries"],
-    retry: false,
-    staleTime: 1000 * 60 * 10, // 10 minutes for recent entries
-    refetchInterval: 1000 * 60 * 5, // Refresh every 5 minutes
-    refetchOnMount: false,
+    retry: 1,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchInterval: false, // Disable auto refresh to reduce server load
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
   });
 
@@ -39,7 +39,21 @@ export default function RecentActivity() {
     );
   }
 
-  if (!recentEntries || recentEntries.length === 0) {
+  if (error) {
+    return (
+      <Card className="border border-gray-200">
+        <CardContent className="p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Çështjet e Fundit</h3>
+          <div className="text-center py-8">
+            <i className="fas fa-exclamation-triangle text-4xl text-red-300 mb-4"></i>
+            <p className="text-red-500">Gabim në ngarkimin e të dhënave</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!recentEntries || !Array.isArray(recentEntries) || recentEntries.length === 0) {
     return (
       <Card className="border border-gray-200">
         <CardContent className="p-6">
@@ -78,19 +92,19 @@ export default function RecentActivity() {
       <CardContent className="p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Çështjet e Fundit</h3>
         <div className="space-y-4">
-          {recentEntries.map((entry: any) => (
+          {recentEntries.map((entry) => (
             <div key={entry.id} className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
-              <div className={`w-8 h-8 ${getRandomColor(entry.createdByName)} rounded-full flex items-center justify-center`}>
+              <div className={`w-8 h-8 ${getRandomColor(entry.createdByName || 'User')} rounded-full flex items-center justify-center`}>
                 <span className="text-white text-sm font-medium">
-                  {getInitials(entry.createdByName)}
+                  {getInitials(entry.createdByName || 'U')}
                 </span>
               </div>
               <div className="flex-1">
                 <p className="text-sm font-medium text-gray-900">
-                  {entry.createdByName} added "{entry.title}"
+                  {entry.createdByName || 'Përdorues'} shtoi "{entry.paditesi || 'Çështje e re'}"
                 </p>
                 <p className="text-xs text-gray-500">
-                  {formatDistanceToNow(new Date(entry.createdAt), { addSuffix: true })}
+                  {entry.createdAt ? formatDistanceToNow(new Date(entry.createdAt), { addSuffix: true }) : 'Kohë e panjohur'}
                 </p>
               </div>
             </div>

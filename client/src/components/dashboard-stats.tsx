@@ -9,12 +9,12 @@ interface DashboardStats {
 }
 
 export default function DashboardStats() {
-  const { data: stats, isLoading } = useQuery<DashboardStats>({
+  const { data: stats, isLoading, error } = useQuery<DashboardStats>({
     queryKey: ["/api/dashboard/stats"],
-    retry: false,
-    staleTime: 1000 * 60 * 15, // 15 minutes for stats
-    refetchInterval: 1000 * 60 * 10, // Refresh every 10 minutes
-    refetchOnMount: false,
+    retry: 1,
+    staleTime: 1000 * 60 * 5, // 5 minutes for stats
+    refetchInterval: false, // Disable auto refresh to reduce server load
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
   });
 
@@ -37,6 +37,26 @@ export default function DashboardStats() {
             </CardContent>
           </Card>
         ))}
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="border border-red-200 bg-red-50">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-red-600">Gabim në ngarkimin e të dhënave</p>
+                <p className="text-xs text-red-500 mt-1">Ju lutemi rifreskoni faqen</p>
+              </div>
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                <i className="fas fa-exclamation-triangle text-red-600"></i>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }

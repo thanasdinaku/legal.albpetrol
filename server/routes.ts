@@ -20,24 +20,7 @@ const strictLimiter = rateLimit({
   message: { error: 'Too many requests, please try again later.' },
 });
 
-// Cache middleware for frequently accessed data
-const cache = new Map();
-const cacheMiddleware = (duration: number) => (req: any, res: any, next: any) => {
-  const key = req.originalUrl;
-  const cached = cache.get(key);
-  
-  if (cached && Date.now() - cached.timestamp < duration) {
-    return res.json(cached.data);
-  }
-  
-  const originalSend = res.json;
-  res.json = function(data: any) {
-    cache.set(key, { data, timestamp: Date.now() });
-    originalSend.call(this, data);
-  };
-  
-  next();
-};
+// Removed caching middleware to fix authentication and system stability issues
 import { insertDataEntrySchema, updateDataEntrySchema } from "@shared/schema";
 import { z } from "zod";
 import multer from "multer";
@@ -52,8 +35,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
 
-  // Auth routes with caching
-  app.get('/api/auth/user', cacheMiddleware(5 * 60 * 1000), isAuthenticated, async (req: any, res) => {
+  // Auth routes
+  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
@@ -185,7 +168,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Dashboard stats
-  app.get('/api/dashboard/stats', cacheMiddleware(10 * 60 * 1000), isAuthenticated, async (req: any, res) => {
+  app.get('/api/dashboard/stats', isAuthenticated, async (req: any, res) => {
     try {
       const stats = await storage.getDataEntryStats();
       res.json(stats);
@@ -195,7 +178,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/dashboard/recent-entries', cacheMiddleware(5 * 60 * 1000), isAuthenticated, async (req: any, res) => {
+  app.get('/api/dashboard/recent-entries', isAuthenticated, async (req: any, res) => {
     try {
       const entries = await storage.getRecentDataEntries(5);
       res.json(entries);
@@ -524,7 +507,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // User Management Routes (Admin only)
-  app.get("/api/admin/users", strictLimiter, cacheMiddleware(15 * 60 * 1000), isAuthenticated, async (req: any, res) => {
+  app.get("/api/admin/users", strictLimiter, isAuthenticated, async (req: any, res) => {
     try {
       if (req.user.claims.sub !== "46078954") { // Only truealbos@gmail.com can access
         return res.status(403).json({ message: "Access denied. Admin privileges required." });

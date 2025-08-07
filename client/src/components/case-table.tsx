@@ -158,29 +158,52 @@ export default function CaseTable() {
               </div>
             ) : (
               <>
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto border rounded-lg">
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Nr. Rendor</TableHead>
-                        <TableHead>Paditesi</TableHead>
-                        <TableHead>I Paditur</TableHead>
-                        <TableHead>Objekti i Padisë</TableHead>
-                        <TableHead>Ankimuar</TableHead>
-                        <TableHead>Përfunduar</TableHead>
-                        <TableHead>Krijuar më</TableHead>
-                        {user?.role === "admin" && <TableHead>Veprime</TableHead>}
+                        <TableHead className="min-w-[80px]">Nr. Rendor</TableHead>
+                        <TableHead className="min-w-[150px]">Paditesi</TableHead>
+                        <TableHead className="min-w-[150px]">I Paditur</TableHead>
+                        <TableHead className="min-w-[120px]">Person I Tretë</TableHead>
+                        <TableHead className="min-w-[200px]">Objekti i Padisë</TableHead>
+                        <TableHead className="min-w-[150px]">Gjykata Shkallë I</TableHead>
+                        <TableHead className="min-w-[180px]">Faza Shkallë I</TableHead>
+                        <TableHead className="min-w-[150px]">Gjykata Apelit</TableHead>
+                        <TableHead className="min-w-[180px]">Faza Apelit</TableHead>
+                        <TableHead className="min-w-[150px]">Faza Aktuale</TableHead>
+                        <TableHead className="min-w-[150px]">Përfaqësuesi</TableHead>
+                        <TableHead className="min-w-[150px]">Demi i Pretenduar</TableHead>
+                        <TableHead className="min-w-[150px]">Shuma Gjykate</TableHead>
+                        <TableHead className="min-w-[180px]">Vendim Ekzekutim</TableHead>
+                        <TableHead className="min-w-[150px]">Faza Ekzekutim</TableHead>
+                        <TableHead className="min-w-[100px]">Ankimuar</TableHead>
+                        <TableHead className="min-w-[100px]">Përfunduar</TableHead>
+                        <TableHead className="min-w-[150px]">Gjykata e Lartë</TableHead>
+                        <TableHead className="min-w-[120px]">Krijuar më</TableHead>
+                        {user?.role === "admin" && <TableHead className="min-w-[120px]">Veprime</TableHead>}
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {response.entries.map((caseItem: DataEntry) => (
                         <TableRow key={caseItem.id}>
                           <TableCell className="font-medium">{caseItem.id}</TableCell>
-                          <TableCell>{caseItem.paditesi}</TableCell>
-                          <TableCell>{caseItem.iPaditur}</TableCell>
-                          <TableCell className="max-w-xs truncate">
+                          <TableCell className="max-w-[150px] truncate">{caseItem.paditesi}</TableCell>
+                          <TableCell className="max-w-[150px] truncate">{caseItem.iPaditur}</TableCell>
+                          <TableCell className="max-w-[120px] truncate">{caseItem.personITrete || "-"}</TableCell>
+                          <TableCell className="max-w-[200px] truncate">
                             {caseItem.objektiIPadise || "-"}
                           </TableCell>
+                          <TableCell className="max-w-[150px] truncate">{caseItem.gjykataShkalle || "-"}</TableCell>
+                          <TableCell className="max-w-[180px] truncate">{caseItem.fazaGjykataShkalle || "-"}</TableCell>
+                          <TableCell className="max-w-[150px] truncate">{caseItem.gjykataApelit || "-"}</TableCell>
+                          <TableCell className="max-w-[180px] truncate">{caseItem.fazaGjykataApelit || "-"}</TableCell>
+                          <TableCell className="max-w-[150px] truncate">{caseItem.fazaAktuale || "-"}</TableCell>
+                          <TableCell className="max-w-[150px] truncate">{caseItem.perfaqesuesi || "-"}</TableCell>
+                          <TableCell className="max-w-[150px] truncate">{caseItem.demiIPretenduar || "-"}</TableCell>
+                          <TableCell className="max-w-[150px] truncate">{caseItem.shumaGjykata || "-"}</TableCell>
+                          <TableCell className="max-w-[180px] truncate">{caseItem.vendimEkzekutim || "-"}</TableCell>
+                          <TableCell className="max-w-[150px] truncate">{caseItem.fazaEkzekutim || "-"}</TableCell>
                           <TableCell>
                             <Badge variant={caseItem.ankimuar === "Po" ? "destructive" : "secondary"}>
                               {caseItem.ankimuar}
@@ -191,6 +214,7 @@ export default function CaseTable() {
                               {caseItem.perfunduar}
                             </Badge>
                           </TableCell>
+                          <TableCell className="max-w-[150px] truncate">{caseItem.gjykataLarte || "-"}</TableCell>
                           <TableCell>{formatDate(caseItem.createdAt)}</TableCell>
                           {user?.role === "admin" && (
                             <TableCell>

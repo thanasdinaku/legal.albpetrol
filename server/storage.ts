@@ -85,18 +85,19 @@ export class DatabaseStorage implements IStorage {
     if (filters?.search) {
       conditions.push(
         or(
-          ilike(dataEntries.title, `%${filters.search}%`),
-          ilike(dataEntries.description, `%${filters.search}%`)
+          ilike(dataEntries.paditesi, `%${filters.search}%`),
+          ilike(dataEntries.iPaditur, `%${filters.search}%`),
+          ilike(dataEntries.objektiIPadise, `%${filters.search}%`)
         )
       );
     }
     
     if (filters?.category) {
-      conditions.push(eq(dataEntries.category, filters.category));
+      conditions.push(eq(dataEntries.fazaAktuale, filters.category));
     }
     
     if (filters?.status) {
-      conditions.push(eq(dataEntries.status, filters.status as any));
+      conditions.push(eq(dataEntries.perfunduar, filters.status as any));
     }
     
     if (conditions.length > 0) {
@@ -149,18 +150,19 @@ export class DatabaseStorage implements IStorage {
     if (filters?.search) {
       conditions.push(
         or(
-          ilike(dataEntries.title, `%${filters.search}%`),
-          ilike(dataEntries.description, `%${filters.search}%`)
+          ilike(dataEntries.paditesi, `%${filters.search}%`),
+          ilike(dataEntries.iPaditur, `%${filters.search}%`),
+          ilike(dataEntries.objektiIPadise, `%${filters.search}%`)
         )
       );
     }
     
     if (filters?.category) {
-      conditions.push(eq(dataEntries.category, filters.category));
+      conditions.push(eq(dataEntries.fazaAktuale, filters.category));
     }
     
     if (filters?.status) {
-      conditions.push(eq(dataEntries.status, filters.status as any));
+      conditions.push(eq(dataEntries.perfunduar, filters.status as any));
     }
     
     if (conditions.length > 0) {
@@ -175,13 +177,23 @@ export class DatabaseStorage implements IStorage {
     const entries = await db
       .select({
         id: dataEntries.id,
-        title: dataEntries.title,
-        description: dataEntries.description,
-        category: dataEntries.category,
-        status: dataEntries.status,
-        priority: dataEntries.priority,
-        value: dataEntries.value,
-        date: dataEntries.date,
+        paditesi: dataEntries.paditesi,
+        iPaditur: dataEntries.iPaditur,
+        personITrete: dataEntries.personITrete,
+        objektiIPadise: dataEntries.objektiIPadise,
+        gjykataShkalle: dataEntries.gjykataShkalle,
+        fazaGjykataShkalle: dataEntries.fazaGjykataShkalle,
+        gjykataApelit: dataEntries.gjykataApelit,
+        fazaGjykataApelit: dataEntries.fazaGjykataApelit,
+        fazaAktuale: dataEntries.fazaAktuale,
+        perfaqesuesi: dataEntries.perfaqesuesi,
+        demiIPretenduar: dataEntries.demiIPretenduar,
+        shumaGjykata: dataEntries.shumaGjykata,
+        vendimEkzekutim: dataEntries.vendimEkzekutim,
+        fazaEkzekutim: dataEntries.fazaEkzekutim,
+        ankimuar: dataEntries.ankimuar,
+        perfunduar: dataEntries.perfunduar,
+        gjykataLarte: dataEntries.gjykataLarte,
         createdById: dataEntries.createdById,
         createdAt: dataEntries.createdAt,
         updatedAt: dataEntries.updatedAt,
@@ -195,7 +207,7 @@ export class DatabaseStorage implements IStorage {
     return entries.map(entry => ({
       ...entry,
       createdByName: entry.createdByName || 'Unknown User',
-    }));
+    })) as (DataEntry & { createdByName: string })[];
   }
 
   async getDataEntryStats(): Promise<{

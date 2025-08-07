@@ -258,8 +258,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Get all data entries for export
-      const result = await storage.getDataEntries({});
-      const entries = result.entries;
+      const entries = await storage.getDataEntries({ limit: 1000 });
 
       if (!entries || entries.length === 0) {
         return res.status(404).json({ message: "No data to export" });

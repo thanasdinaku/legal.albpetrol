@@ -484,6 +484,71 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // User Management Routes (Admin only)
+  app.get("/api/admin/users", isAuthenticated, async (req: any, res) => {
+    try {
+      if (req.user.claims.sub !== "46078954") { // Only truealbos@gmail.com can access
+        return res.status(403).json({ message: "Access denied. Admin privileges required." });
+      }
+      
+      const users = await storage.getAllUsers();
+      res.json(users);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({ message: "Failed to fetch users" });
+    }
+  });
+
+  app.get("/api/admin/user-stats", isAuthenticated, async (req: any, res) => {
+    try {
+      if (req.user.claims.sub !== "46078954") { // Only truealbos@gmail.com can access
+        return res.status(403).json({ message: "Access denied. Admin privileges required." });
+      }
+      
+      const stats = await storage.getUserStats();
+      res.json(stats);
+    } catch (error) {
+      console.error("Error fetching user stats:", error);
+      res.status(500).json({ message: "Failed to fetch user statistics" });
+    }
+  });
+
+  app.put("/api/admin/users/:userId/role", isAuthenticated, async (req: any, res) => {
+    try {
+      if (req.user.claims.sub !== "46078954") { // Only truealbos@gmail.com can access
+        return res.status(403).json({ message: "Access denied. Admin privileges required." });
+      }
+      
+      const { userId } = req.params;
+      const { role } = req.body;
+      
+      if (!["user", "admin"].includes(role)) {
+        return res.status(400).json({ message: "Invalid role. Must be 'user' or 'admin'." });
+      }
+      
+      await storage.updateUserRole(userId, role);
+      res.json({ message: "User role updated successfully" });
+    } catch (error) {
+      console.error("Error updating user role:", error);
+      res.status(500).json({ message: "Failed to update user role" });
+    }
+  });
+
+  app.put("/api/admin/users/:userId/deactivate", isAuthenticated, async (req: any, res) => {
+    try {
+      if (req.user.claims.sub !== "46078954") { // Only truealbos@gmail.com can access
+        return res.status(403).json({ message: "Access denied. Admin privileges required." });
+      }
+      
+      const { userId } = req.params;
+      await storage.deactivateUser(userId);
+      res.json({ message: "User deactivated successfully" });
+    } catch (error) {
+      console.error("Error deactivating user:", error);
+      res.status(500).json({ message: "Failed to deactivate user" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

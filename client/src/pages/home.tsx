@@ -9,7 +9,7 @@ import RecentActivity from "@/components/recent-activity";
 
 export default function Home() {
   const { toast } = useToast();
-  const { isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -75,10 +75,20 @@ export default function Home() {
                     <i className="fas fa-file-import text-2xl text-gray-400 group-hover:text-primary mb-2"></i>
                     <p className="text-sm font-medium text-gray-600 group-hover:text-primary">Importo CSV</p>
                   </button>
-                  <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition duration-200 group">
-                    <i className="fas fa-cog text-2xl text-gray-400 group-hover:text-primary mb-2"></i>
-                    <p className="text-sm font-medium text-gray-600 group-hover:text-primary">Settings</p>
-                  </button>
+                  {user && user.role === 'admin' ? (
+                    <button 
+                      onClick={() => window.location.href = '/user-management'}
+                      className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition duration-200 group"
+                    >
+                      <i className="fas fa-users text-2xl text-gray-400 group-hover:text-primary mb-2"></i>
+                      <p className="text-sm font-medium text-gray-600 group-hover:text-primary">Menaxho Përdoruesit</p>
+                    </button>
+                  ) : (
+                    <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition duration-200 group">
+                      <i className="fas fa-cog text-2xl text-gray-400 group-hover:text-primary mb-2"></i>
+                      <p className="text-sm font-medium text-gray-600 group-hover:text-primary">Settings</p>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

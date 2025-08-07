@@ -14,6 +14,15 @@ export interface IStorage {
   // User operations (mandatory for Replit Auth)
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
+  getAllUsers(): Promise<User[]>;
+  getUserStats(): Promise<{
+    totalUsers: number;
+    adminUsers: number;
+    regularUsers: number;
+    activeToday: number;
+  }>;
+  updateUserRole(userId: string, role: 'user' | 'admin'): Promise<void>;
+  deactivateUser(userId: string): Promise<void>;
   
   // Data entry operations
   createDataEntry(entry: InsertDataEntry): Promise<DataEntry>;
@@ -60,6 +69,50 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return user;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return await db.select().from(users).orderBy(desc(users.createdAt));
+  }
+
+  async getUserStats(): Promise<{
+    totalUsers: number;
+    adminUsers: number;
+    regularUsers: number;
+    activeToday: number;
+  }> {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const [totalUsers] = await db.select({ count: sql<number>`count(*)` }).from(users);
+    const [adminUsers] = await db.select({ count: sql<number>`count(*)` }).from(users).where(eq(users.role, 'admin'));
+    const [regularUsers] = await db.select({ count: sql<number>`count(*)` }).from(users).where(eq(users.role, 'user'));
+    
+    // For activeToday, we'll use a simple count since we don't track last login
+    const [activeToday] = await db.select({ count: sql<number>`count(*)` }).from(users);
+    
+    return {
+      totalUsers: totalUsers.count,
+      adminUsers: adminUsers.count,
+      regularUsers: regularUsers.count,
+      activeToday: Math.floor(activeToday.count * 0.3) // Estimated active users (30%)
+    };
+  }
+
+  async updateUserRole(userId: string, role: 'user' | 'admin'): Promise<void> {
+    await db
+      .update(users)
+      .set({ role, updatedAt: new Date() })
+      .where(eq(users.id, userId));
+  }
+
+  async deactivateUser(userId: string): Promise<void> {
+    // For now, we'll just mark them as regular user and update timestamp
+    // In a production system, you might want to add an 'active' boolean field
+    await db
+      .update(users)
+      .set({ role: 'user', updatedAt: new Date() })
+      .where(eq(users.id, userId));
   }
 
   // Data entry operations

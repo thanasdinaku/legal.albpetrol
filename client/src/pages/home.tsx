@@ -83,7 +83,8 @@ export default function Home() {
                       e.stopPropagation();
                       console.log("Button clicked! Navigating to user management...", { user });
                       alert("Button clicked! Check console.");
-                      navigate('/user-management');
+                      // Force page navigation
+                      window.location.href = '/user-management';
                     }}
                     className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition duration-200 group cursor-pointer"
                     style={{ pointerEvents: 'auto' }}

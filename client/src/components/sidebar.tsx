@@ -60,9 +60,12 @@ export default function Sidebar() {
           </button>
         )}
         
-        {user?.role === 'admin' && (
+        {user?.id === "46078954" && (
           <div className="border-t border-gray-200 pt-2 mt-2">
-            <button className="nav-link w-full text-left">
+            <button
+              onClick={() => setLocation('/user-management')}
+              className={isActive('/user-management') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
+            >
               <i className="fas fa-users"></i>
               <span>User Management</span>
             </button>

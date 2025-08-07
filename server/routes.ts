@@ -6,7 +6,7 @@ import { insertDataEntrySchema, updateDataEntrySchema } from "@shared/schema";
 import { z } from "zod";
 import multer from "multer";
 import XLSX from "xlsx";
-import jsPDF from "jspdf";
+import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 
 export async function registerRoutes(app: Express): Promise<Server> {

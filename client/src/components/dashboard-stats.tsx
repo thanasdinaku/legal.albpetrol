@@ -110,7 +110,7 @@ export default function DashboardStats() {
           </div>
           <div className="mt-4 flex items-center">
             <span className="text-sm text-green-600 font-medium">99.9%</span>
-            <span className="text-sm text-gray-500 ml-2">përfundimit</span>
+            <span className="text-sm text-gray-500 ml-2">online</span>
           </div>
         </CardContent>
       </Card>

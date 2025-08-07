@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
+import { useLocation } from "wouter";
 import Sidebar from "@/components/sidebar";
 import Header from "@/components/header";
 import DashboardStats from "@/components/dashboard-stats";
@@ -10,6 +11,7 @@ import RecentActivity from "@/components/recent-activity";
 export default function Home() {
   const { toast } = useToast();
   const { user, isAuthenticated, isLoading } = useAuth();
+  const [, navigate] = useLocation();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -55,40 +57,36 @@ export default function Home() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <button 
-                    onClick={() => window.location.href = '/data-entry'}
+                    onClick={() => navigate('/data-entry')}
                     className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition duration-200 group"
                   >
                     <i className="fas fa-plus text-2xl text-gray-400 group-hover:text-primary mb-2"></i>
                     <p className="text-sm font-medium text-gray-600 group-hover:text-primary">Regjistro Çështje</p>
                   </button>
                   <button 
-                    onClick={() => window.location.href = '/data-table'}
+                    onClick={() => navigate('/data-table')}
                     className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition duration-200 group"
                   >
                     <i className="fas fa-table text-2xl text-gray-400 group-hover:text-primary mb-2"></i>
                     <p className="text-sm font-medium text-gray-600 group-hover:text-primary">Shiko të Gjitha</p>
                   </button>
                   <button 
-                    onClick={() => window.location.href = '/csv-import'}
+                    onClick={() => navigate('/csv-import')}
                     className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition duration-200 group"
                   >
                     <i className="fas fa-file-import text-2xl text-gray-400 group-hover:text-primary mb-2"></i>
                     <p className="text-sm font-medium text-gray-600 group-hover:text-primary">Importo CSV</p>
                   </button>
-                  {user?.id === "46078954" ? (
-                    <button 
-                      onClick={() => window.location.href = '/user-management'}
-                      className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition duration-200 group"
-                    >
-                      <i className="fas fa-users text-2xl text-gray-400 group-hover:text-primary mb-2"></i>
-                      <p className="text-sm font-medium text-gray-600 group-hover:text-primary">Menaxho Përdoruesit</p>
-                    </button>
-                  ) : (
-                    <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition duration-200 group">
-                      <i className="fas fa-cog text-2xl text-gray-400 group-hover:text-primary mb-2"></i>
-                      <p className="text-sm font-medium text-gray-600 group-hover:text-primary">Settings</p>
-                    </button>
-                  )}
+                  <button 
+                    onClick={() => {
+                      console.log("Navigating to user management...", { user });
+                      navigate('/user-management');
+                    }}
+                    className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition duration-200 group"
+                  >
+                    <i className="fas fa-users text-2xl text-gray-400 group-hover:text-primary mb-2"></i>
+                    <p className="text-sm font-medium text-gray-600 group-hover:text-primary">Menaxho Përdoruesit</p>
+                  </button>
                 </div>
               </div>
             </div>

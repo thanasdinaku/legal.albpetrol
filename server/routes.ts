@@ -2,6 +2,42 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
+
+import rateLimit from 'express-rate-limit';
+
+// Create different rate limiters for different endpoints
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: { error: 'Too many requests, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const strictLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes  
+  max: 50, // Limit each IP to 50 requests per windowMs for sensitive endpoints
+  message: { error: 'Too many requests, please try again later.' },
+});
+
+// Cache middleware for frequently accessed data
+const cache = new Map();
+const cacheMiddleware = (duration: number) => (req: any, res: any, next: any) => {
+  const key = req.originalUrl;
+  const cached = cache.get(key);
+  
+  if (cached && Date.now() - cached.timestamp < duration) {
+    return res.json(cached.data);
+  }
+  
+  const originalSend = res.json;
+  res.json = function(data: any) {
+    cache.set(key, { data, timestamp: Date.now() });
+    originalSend.call(this, data);
+  };
+  
+  next();
+};
 import { insertDataEntrySchema, updateDataEntrySchema } from "@shared/schema";
 import { z } from "zod";
 import multer from "multer";
@@ -10,11 +46,14 @@ import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Apply rate limiting to all routes
+  app.use('/api/', generalLimiter);
+  
   // Auth middleware
   await setupAuth(app);
 
-  // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+  // Auth routes with caching
+  app.get('/api/auth/user', cacheMiddleware(5 * 60 * 1000), isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
@@ -146,7 +185,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Dashboard stats
-  app.get('/api/dashboard/stats', isAuthenticated, async (req: any, res) => {
+  app.get('/api/dashboard/stats', cacheMiddleware(10 * 60 * 1000), isAuthenticated, async (req: any, res) => {
     try {
       const stats = await storage.getDataEntryStats();
       res.json(stats);
@@ -156,7 +195,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/dashboard/recent-entries', isAuthenticated, async (req: any, res) => {
+  app.get('/api/dashboard/recent-entries', cacheMiddleware(5 * 60 * 1000), isAuthenticated, async (req: any, res) => {
     try {
       const entries = await storage.getRecentDataEntries(5);
       res.json(entries);
@@ -485,7 +524,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // User Management Routes (Admin only)
-  app.get("/api/admin/users", isAuthenticated, async (req: any, res) => {
+  app.get("/api/admin/users", strictLimiter, cacheMiddleware(15 * 60 * 1000), isAuthenticated, async (req: any, res) => {
     try {
       if (req.user.claims.sub !== "46078954") { // Only truealbos@gmail.com can access
         return res.status(403).json({ message: "Access denied. Admin privileges required." });
@@ -513,7 +552,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/admin/users/:userId/role", isAuthenticated, async (req: any, res) => {
+  app.put("/api/admin/users/:userId/role", strictLimiter, isAuthenticated, async (req: any, res) => {
     try {
       if (req.user.claims.sub !== "46078954") { // Only truealbos@gmail.com can access
         return res.status(403).json({ message: "Access denied. Admin privileges required." });
@@ -534,7 +573,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/admin/users", isAuthenticated, async (req: any, res) => {
+  app.post("/api/admin/users", strictLimiter, isAuthenticated, async (req: any, res) => {
     try {
       if (req.user.claims.sub !== "46078954") { // Only truealbos@gmail.com can access
         return res.status(403).json({ message: "Access denied. Admin privileges required." });
@@ -567,7 +606,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/admin/users/:userId", isAuthenticated, async (req: any, res) => {
+  app.delete("/api/admin/users/:userId", strictLimiter, isAuthenticated, async (req: any, res) => {
     try {
       if (req.user.claims.sub !== "46078954") { // Only truealbos@gmail.com can access
         return res.status(403).json({ message: "Access denied. Admin privileges required." });

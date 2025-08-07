@@ -12,6 +12,10 @@ export default function RecentActivity() {
   const { data: recentEntries, isLoading } = useQuery<RecentEntry[]>({
     queryKey: ["/api/dashboard/recent-entries"],
     retry: false,
+    staleTime: 1000 * 60 * 10, // 10 minutes for recent entries
+    refetchInterval: 1000 * 60 * 5, // Refresh every 5 minutes
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   if (isLoading) {

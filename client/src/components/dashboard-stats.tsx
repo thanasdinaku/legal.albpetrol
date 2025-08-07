@@ -12,6 +12,10 @@ export default function DashboardStats() {
   const { data: stats, isLoading } = useQuery<DashboardStats>({
     queryKey: ["/api/dashboard/stats"],
     retry: false,
+    staleTime: 1000 * 60 * 15, // 15 minutes for stats
+    refetchInterval: 1000 * 60 * 10, // Refresh every 10 minutes
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   if (isLoading) {

@@ -46,7 +46,7 @@ export default function DataTableComponent() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      await apiRequest("DELETE", `/api/data-entries/${id}`);
+      await apiRequest(`/api/data-entries/${id}`, "DELETE");
     },
     onSuccess: () => {
       toast({

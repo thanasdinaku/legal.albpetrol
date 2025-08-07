@@ -49,7 +49,8 @@ export default function CaseEntryForm() {
 
   const createMutation = useMutation({
     mutationFn: async (data: FormData) => {
-      return apiRequest("/api/data-entries", "POST", data);
+      const response = await apiRequest("/api/data-entries", "POST", data);
+      return response.json();
     },
     onSuccess: () => {
       toast({

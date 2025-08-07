@@ -44,7 +44,7 @@ export default function DataEntryForm() {
         ...data,
         date: data.date && data.date.trim() !== "" ? data.date : null,
       };
-      return await apiRequest("POST", "/api/data-entries", submitData);
+      return await apiRequest("/api/data-entries", "POST", submitData);
     },
     onSuccess: () => {
       toast({

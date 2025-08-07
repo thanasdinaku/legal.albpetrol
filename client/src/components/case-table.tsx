@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Search, Edit, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Edit, Trash2, ChevronLeft, ChevronRight, Download, FileSpreadsheet, FileText } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -65,6 +65,45 @@ export default function CaseTable() {
   const handleDelete = (id: number) => {
     if (window.confirm("A jeni i sigurt që dëshironi të fshini këtë çështje?")) {
       deleteMutation.mutate(id);
+    }
+  };
+
+  const handleExport = async (format: 'excel' | 'csv' | 'pdf') => {
+    try {
+      const response = await fetch(`/api/data-entries/export/${format}`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error(`Export failed: ${response.statusText}`);
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      
+      const timestamp = new Date().toISOString().slice(0, 10);
+      const extension = format === 'excel' ? 'xlsx' : format;
+      a.download = `ceshtjet-ligjore-${timestamp}.${extension}`;
+      
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      toast({
+        title: "Eksportimi u krye me sukses",
+        description: `Skedari ${format.toUpperCase()} u shkarkua në kompjuterin tuaj`,
+      });
+    } catch (error) {
+      toast({
+        title: "Gabim në eksportim",
+        description: "Ndodhi një gabim gjatë eksportimit të të dhënave",
+        variant: "destructive",
+      });
     }
   };
 
@@ -136,10 +175,43 @@ export default function CaseTable() {
         {/* Data Table */}
         <Card>
           <CardHeader>
-            <CardTitle>Çështjet Ligjore</CardTitle>
-            <CardDescription>
-              {response ? `${response.pagination?.total || 0} çështje në total` : ""}
-            </CardDescription>
+            <div className="flex justify-between items-start">
+              <div>
+                <CardTitle>Çështjet Ligjore</CardTitle>
+                <CardDescription>
+                  {response ? `${response.pagination?.total || 0} çështje në total` : ""}
+                </CardDescription>
+              </div>
+              <div className="flex space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleExport('excel')}
+                  disabled={!response?.entries?.length}
+                >
+                  <FileSpreadsheet className="h-4 w-4 mr-2" />
+                  Excel
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleExport('csv')}
+                  disabled={!response?.entries?.length}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  CSV
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleExport('pdf')}
+                  disabled={!response?.entries?.length}
+                >
+                  <FileText className="h-4 w-4 mr-2" />
+                  PDF
+                </Button>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             {isLoading ? (

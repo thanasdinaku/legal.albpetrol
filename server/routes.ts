@@ -5,6 +5,9 @@ import { setupAuth, isAuthenticated } from "./replitAuth";
 import { insertDataEntrySchema, updateDataEntrySchema } from "@shared/schema";
 import { z } from "zod";
 import multer from "multer";
+import XLSX from "xlsx";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
@@ -243,6 +246,169 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error importing CSV:", error);
       res.status(500).json({ message: "Failed to import CSV data" });
+    }
+  });
+
+  // Export routes
+  app.get('/api/data-entries/export/:format', isAuthenticated, async (req: any, res) => {
+    try {
+      const format = req.params.format;
+      if (!['excel', 'csv', 'pdf'].includes(format)) {
+        return res.status(400).json({ message: "Invalid export format" });
+      }
+
+      // Get all data entries for export
+      const result = await storage.getDataEntries({});
+      const entries = result.entries;
+
+      if (!entries || entries.length === 0) {
+        return res.status(404).json({ message: "No data to export" });
+      }
+
+      const timestamp = new Date().toISOString().slice(0, 10);
+
+      if (format === 'excel') {
+        // Excel export
+        const worksheetData = [
+          // Headers in Albanian
+          [
+            'Nr. Rendor', 'Paditesi', 'I Paditur', 'Person I Tretë', 'Objekti I Padisë',
+            'Gjykata Shkallë I', 'Faza Shkallë I', 'Gjykata Apelit', 'Faza Apelit',
+            'Faza Aktuale', 'Përfaqësuesi', 'Demi i Pretenduar', 'Shuma Gjykate',
+            'Vendim Ekzekutim', 'Faza Ekzekutim', 'Ankimuar', 'Përfunduar',
+            'Gjykata e Lartë', 'Krijuar më'
+          ],
+          // Data rows
+          ...entries.map(entry => [
+            entry.id,
+            entry.paditesi,
+            entry.iPaditur,
+            entry.personITrete || '',
+            entry.objektiIPadise || '',
+            entry.gjykataShkalle || '',
+            entry.fazaGjykataShkalle || '',
+            entry.gjykataApelit || '',
+            entry.fazaGjykataApelit || '',
+            entry.fazaAktuale || '',
+            entry.perfaqesuesi || '',
+            entry.demiIPretenduar || '',
+            entry.shumaGjykata || '',
+            entry.vendimEkzekutim || '',
+            entry.fazaEkzekutim || '',
+            entry.ankimuar || 'Jo',
+            entry.perfunduar || 'Jo',
+            entry.gjykataLarte || '',
+            entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : ''
+          ])
+        ];
+
+        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Çështjet Ligjore');
+
+        const buffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+        res.set({
+          'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          'Content-Disposition': `attachment; filename="ceshtjet-ligjore-${timestamp}.xlsx"`,
+          'Content-Length': buffer.length
+        });
+
+        res.send(buffer);
+
+      } else if (format === 'csv') {
+        // CSV export
+        const csvHeaders = [
+          'Nr. Rendor', 'Paditesi', 'I Paditur', 'Person I Tretë', 'Objekti I Padisë',
+          'Gjykata Shkallë I', 'Faza Shkallë I', 'Gjykata Apelit', 'Faza Apelit',
+          'Faza Aktuale', 'Përfaqësuesi', 'Demi i Pretenduar', 'Shuma Gjykate',
+          'Vendim Ekzekutim', 'Faza Ekzekutim', 'Ankimuar', 'Përfunduar',
+          'Gjykata e Lartë', 'Krijuar më'
+        ];
+
+        const csvRows = entries.map(entry => [
+          entry.id,
+          `"${entry.paditesi || ''}"`,
+          `"${entry.iPaditur || ''}"`,
+          `"${entry.personITrete || ''}"`,
+          `"${entry.objektiIPadise || ''}"`,
+          `"${entry.gjykataShkalle || ''}"`,
+          `"${entry.fazaGjykataShkalle || ''}"`,
+          `"${entry.gjykataApelit || ''}"`,
+          `"${entry.fazaGjykataApelit || ''}"`,
+          `"${entry.fazaAktuale || ''}"`,
+          `"${entry.perfaqesuesi || ''}"`,
+          `"${entry.demiIPretenduar || ''}"`,
+          `"${entry.shumaGjykata || ''}"`,
+          `"${entry.vendimEkzekutim || ''}"`,
+          `"${entry.fazaEkzekutim || ''}"`,
+          entry.ankimuar || 'Jo',
+          entry.perfunduar || 'Jo',
+          `"${entry.gjykataLarte || ''}"`,
+          entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : ''
+        ]);
+
+        const csvContent = [csvHeaders.join(','), ...csvRows.map(row => row.join(','))].join('\n');
+
+        res.set({
+          'Content-Type': 'text/csv; charset=utf-8',
+          'Content-Disposition': `attachment; filename="ceshtjet-ligjore-${timestamp}.csv"`
+        });
+
+        res.send('\uFEFF' + csvContent); // BOM for UTF-8
+
+      } else if (format === 'pdf') {
+        // PDF export
+        const doc = new jsPDF('l', 'mm', 'a4'); // Landscape orientation
+        
+        doc.setFontSize(16);
+        doc.text('Çështjet Ligjore', 14, 15);
+        doc.setFontSize(10);
+        doc.text(`Eksportuar më: ${new Date().toLocaleDateString('sq-AL')}`, 14, 25);
+
+        const tableData = entries.map(entry => [
+          entry.id.toString(),
+          entry.paditesi || '',
+          entry.iPaditur || '',
+          entry.personITrete || '',
+          (entry.objektiIPadise || '').substring(0, 30) + (entry.objektiIPadise && entry.objektiIPadise.length > 30 ? '...' : ''),
+          entry.ankimuar || 'Jo',
+          entry.perfunduar || 'Jo',
+          entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : ''
+        ]);
+
+        (doc as any).autoTable({
+          head: [['Nr.', 'Paditesi', 'I Paditur', 'Person I Tretë', 'Objekti I Padisë', 'Ankimuar', 'Përfunduar', 'Krijuar']],
+          body: tableData,
+          startY: 35,
+          styles: { fontSize: 8, cellPadding: 2 },
+          headStyles: { fillColor: [66, 66, 66] },
+          columnStyles: {
+            0: { cellWidth: 15 },
+            1: { cellWidth: 40 },
+            2: { cellWidth: 40 },
+            3: { cellWidth: 30 },
+            4: { cellWidth: 60 },
+            5: { cellWidth: 20 },
+            6: { cellWidth: 20 },
+            7: { cellWidth: 25 }
+          }
+        });
+
+        const pdfBuffer = Buffer.from(doc.output('arraybuffer'));
+
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': `attachment; filename="ceshtjet-ligjore-${timestamp}.pdf"`,
+          'Content-Length': pdfBuffer.length
+        });
+
+        res.send(pdfBuffer);
+      }
+
+    } catch (error) {
+      console.error("Error exporting data:", error);
+      res.status(500).json({ message: "Failed to export data" });
     }
   });
 

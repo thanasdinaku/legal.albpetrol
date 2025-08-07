@@ -86,6 +86,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/data-entries/:id', isAuthenticated, async (req: any, res) => {
     try {
       const id = parseInt(req.params.id);
+      
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID format" });
+      }
+      
       const entry = await storage.getDataEntryById(id);
       
       if (!entry) {

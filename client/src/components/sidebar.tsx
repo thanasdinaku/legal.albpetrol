@@ -1,5 +1,6 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useLocation } from "wouter";
+import albpetrolLogo from "@assets/Albpetrol.svg_1754604323425.png";
 
 export default function Sidebar() {
   const { user } = useAuth();
@@ -15,9 +16,11 @@ export default function Sidebar() {
     <div className="w-64 bg-white shadow-lg border-r border-gray-200">
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-            <i className="fas fa-database text-white"></i>
-          </div>
+          <img 
+            src={albpetrolLogo} 
+            alt="Albpetrol Logo" 
+            className="w-10 h-10 object-contain"
+          />
           <div>
             <h1 className="text-lg font-bold text-gray-900">Menaxhimi Ligjor</h1>
             <p className="text-sm text-gray-500 capitalize">{user?.role === 'admin' ? 'Administrator' : 'Përdorues'}</p>

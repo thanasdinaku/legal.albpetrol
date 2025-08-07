@@ -206,16 +206,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 if (!isNaN(date.getTime())) {
                   rowData[mapping.dbField] = date;
                 }
-              } else if (mapping.dbField === 'status') {
-                // Validate status values for Albanian legal cases
-                if (['aktiv', 'mbyllur', 'pezull'].includes(value.toLowerCase())) {
-                  rowData[mapping.dbField] = value.toLowerCase();
-                }
-              } else if (mapping.dbField === 'priority') {
-                // Validate priority values for Albanian legal cases
-                if (['i_ulet', 'mesatar', 'i_larte'].includes(value.toLowerCase())) {
-                  rowData[mapping.dbField] = value.toLowerCase();
-                }
               } else if (['ankimuar', 'perfunduar'].includes(mapping.dbField)) {
                 // Validate boolean fields (Po/Jo)
                 if (['po', 'jo'].includes(value.toLowerCase())) {
@@ -228,8 +218,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
 
           // Set defaults if not provided
-          if (!rowData.status) rowData.status = 'aktiv';
-          if (!rowData.priority) rowData.priority = 'mesatar';
           if (!rowData.ankimuar) rowData.ankimuar = 'Jo';
           if (!rowData.perfunduar) rowData.perfunduar = 'Jo';
 

@@ -25,8 +25,7 @@ export default function CaseTable() {
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [priorityFilter, setPriorityFilter] = useState("");
+
   const [editingCase, setEditingCase] = useState<DataEntry | null>(null);
 
   const {
@@ -36,9 +35,7 @@ export default function CaseTable() {
   } = useQuery({
     queryKey: ["/api/data-entries", { 
       page: currentPage, 
-      search: searchTerm, 
-      status: statusFilter,
-      priority: priorityFilter 
+      search: searchTerm
     }],
     retry: false,
   });
@@ -71,27 +68,7 @@ export default function CaseTable() {
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    const statusConfig = {
-      aktiv: { label: "Aktiv", variant: "default" as const },
-      mbyllur: { label: "Mbyllur", variant: "secondary" as const },
-      pezull: { label: "Pezull", variant: "destructive" as const },
-    };
-    
-    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.aktiv;
-    return <Badge variant={config.variant}>{config.label}</Badge>;
-  };
 
-  const getPriorityBadge = (priority: string) => {
-    const priorityConfig = {
-      i_ulet: { label: "I Ulët", variant: "outline" as const },
-      mesatar: { label: "Mesatar", variant: "secondary" as const },
-      i_larte: { label: "I Lartë", variant: "destructive" as const },
-    };
-    
-    const config = priorityConfig[priority as keyof typeof priorityConfig] || priorityConfig.mesatar;
-    return <Badge variant={config.variant}>{config.label}</Badge>;
-  };
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "-";
@@ -132,51 +109,25 @@ export default function CaseTable() {
             <CardDescription>Përdorni filtrat për të kërkuar çështje specifike</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Kërko sipas emrit, nr. rendor..."
+                  placeholder="Kërko sipas emrit, paditesit, të paditurit..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
                 />
               </div>
-              
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Filtro sipas statusit" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">Të gjitha</SelectItem>
-                  <SelectItem value="aktiv">Aktiv</SelectItem>
-                  <SelectItem value="mbyllur">Mbyllur</SelectItem>
-                  <SelectItem value="pezull">Pezull</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Filtro sipas prioritetit" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">Të gjitha</SelectItem>
-                  <SelectItem value="i_ulet">I Ulët</SelectItem>
-                  <SelectItem value="mesatar">Mesatar</SelectItem>
-                  <SelectItem value="i_larte">I Lartë</SelectItem>
-                </SelectContent>
-              </Select>
 
               <Button
                 onClick={() => {
                   setSearchTerm("");
-                  setStatusFilter("");
-                  setPriorityFilter("");
                   setCurrentPage(1);
                 }}
                 variant="outline"
               >
-                Pastro Filtrat
+                Pastro Filtrin
               </Button>
             </div>
           </CardContent>
@@ -215,8 +166,6 @@ export default function CaseTable() {
                         <TableHead>Paditesi</TableHead>
                         <TableHead>I Paditur</TableHead>
                         <TableHead>Objekti i Padisë</TableHead>
-                        <TableHead>Statusi</TableHead>
-                        <TableHead>Prioriteti</TableHead>
                         <TableHead>Ankimuar</TableHead>
                         <TableHead>Përfunduar</TableHead>
                         <TableHead>Krijuar më</TableHead>
@@ -226,14 +175,12 @@ export default function CaseTable() {
                     <TableBody>
                       {response.entries.map((caseItem: DataEntry) => (
                         <TableRow key={caseItem.id}>
-                          <TableCell className="font-medium">{caseItem.nrRendor}</TableCell>
+                          <TableCell className="font-medium">{caseItem.id}</TableCell>
                           <TableCell>{caseItem.paditesi}</TableCell>
                           <TableCell>{caseItem.iPaditur}</TableCell>
                           <TableCell className="max-w-xs truncate">
                             {caseItem.objektiIPadise || "-"}
                           </TableCell>
-                          <TableCell>{getStatusBadge(caseItem.status)}</TableCell>
-                          <TableCell>{getPriorityBadge(caseItem.priority)}</TableCell>
                           <TableCell>
                             <Badge variant={caseItem.ankimuar === "Po" ? "destructive" : "secondary"}>
                               {caseItem.ankimuar}

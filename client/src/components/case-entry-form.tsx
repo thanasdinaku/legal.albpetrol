@@ -28,7 +28,6 @@ export default function CaseEntryForm() {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      nrRendor: "",
       paditesi: "",
       iPaditur: "",
       personITrete: "",
@@ -46,8 +45,6 @@ export default function CaseEntryForm() {
       ankimuar: "Jo",
       perfunduar: "Jo",
       gjykataLarte: "",
-      status: "aktiv",
-      priority: "mesatar",
     },
   });
 
@@ -99,45 +96,6 @@ export default function CaseEntryForm() {
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Nr. Rendor */}
-                  <FormField
-                    control={form.control}
-                    name="nrRendor"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nr. Rendor *</FormLabel>
-                        <FormControl>
-                          <Input placeholder="p.sh. 001/2024" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* Status */}
-                  <FormField
-                    control={form.control}
-                    name="status"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Statusi</FormLabel>
-                        <Select value={field.value} onValueChange={field.onChange}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Zgjidhni statusin" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="aktiv">Aktiv</SelectItem>
-                            <SelectItem value="mbyllur">Mbyllur</SelectItem>
-                            <SelectItem value="pezull">Pezull</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
                   {/* Paditesi */}
                   <FormField
                     control={form.control}
@@ -178,30 +136,6 @@ export default function CaseEntryForm() {
                         <FormControl>
                           <Input placeholder="Nëse ka person të tretë të përfshirë" {...field} value={field.value || ""} />
                         </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* Prioriteti */}
-                  <FormField
-                    control={form.control}
-                    name="priority"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Prioriteti</FormLabel>
-                        <Select value={field.value} onValueChange={field.onChange}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Zgjidhni prioritetin" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="i_ulet">I Ulët</SelectItem>
-                            <SelectItem value="mesatar">Mesatar</SelectItem>
-                            <SelectItem value="i_larte">I Lartë</SelectItem>
-                          </SelectContent>
-                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}

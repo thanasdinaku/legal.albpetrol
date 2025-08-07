@@ -19,13 +19,23 @@ interface FieldMapping {
 }
 
 const DB_FIELDS = [
-  { value: "title", label: "Title" },
-  { value: "description", label: "Description" },
-  { value: "category", label: "Category" },
-  { value: "status", label: "Status (active/inactive/pending)" },
-  { value: "priority", label: "Priority (low/medium/high)" },
-  { value: "value", label: "Value" },
-  { value: "date", label: "Date (YYYY-MM-DD)" },
+  { value: "paditesi", label: "Paditesi (Emer e Mbiemer)" },
+  { value: "iPaditur", label: "I Paditur" },
+  { value: "personITrete", label: "Person I Trete" },
+  { value: "objektiIPadise", label: "Objekti I Padise" },
+  { value: "gjykataShkalle", label: "Gjykata e Shkallës I" },
+  { value: "fazaGjykataShkalle", label: "Faza ne te cilen ndodhet procesi (Shkalle I)" },
+  { value: "gjykataApelit", label: "Gjykata e Apelit" },
+  { value: "fazaGjykataApelit", label: "Faza ne te cilen ndodhet procesi (Apel)" },
+  { value: "fazaAktuale", label: "Faza Aktuale e Procesit" },
+  { value: "perfaqesuesi", label: "Perfaqesuesi i Albpetrol SH.A." },
+  { value: "demiIPretenduar", label: "Demi i Pretenduar ne Objekt" },
+  { value: "shumaGjykata", label: "Shuma e Caktuar nga Gjykata me Vendim" },
+  { value: "vendimEkzekutim", label: "Vendim me Ekzekutim te Perkohshem" },
+  { value: "fazaEkzekutim", label: "Faza ne te cilen ndodhet Ekzekutimi" },
+  { value: "ankimuar", label: "Ankimuar (Po/Jo)" },
+  { value: "perfunduar", label: "Perfunduar (Po/Jo)" },
+  { value: "gjykataLarte", label: "Gjykata e Larte" },
   { value: "skip", label: "Skip this field" }
 ];
 

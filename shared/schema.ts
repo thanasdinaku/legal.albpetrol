@@ -38,16 +38,9 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-// Legal case status enum (Albanian court cases)
-export const caseStatusEnum = pgEnum("case_status", ["aktiv", "mbyllur", "pezull"]);
-
-// Legal case priority enum
-export const casePriorityEnum = pgEnum("case_priority", ["i_ulet", "mesatar", "i_larte"]);
-
 // Legal cases table (Albanian court system)
 export const dataEntries = pgTable("data_entries", {
-  id: serial("id").primaryKey(),
-  nrRendor: varchar("nr_rendor", { length: 50 }).notNull(), // Nr. Rendor
+  id: serial("id").primaryKey(), // This serves as Nr. Rendor (auto-incrementing row number)
   paditesi: varchar("paditesi", { length: 255 }).notNull(), // Paditesi (Emer e Mbiemer)
   iPaditur: varchar("i_paditur", { length: 255 }).notNull(), // I Paditur
   personITrete: varchar("person_i_trete", { length: 255 }), // Person I Trete
@@ -65,8 +58,6 @@ export const dataEntries = pgTable("data_entries", {
   ankimuar: varchar("ankimuar", { length: 10 }).default("Jo"), // Ankimuar (Po/Jo)
   perfunduar: varchar("perfunduar", { length: 10 }).default("Jo"), // Perfunduar (Po/Jo)
   gjykataLarte: varchar("gjykata_larte", { length: 255 }), // Gjykata e Larte
-  status: caseStatusEnum("status").default("aktiv").notNull(),
-  priority: casePriorityEnum("priority").default("mesatar").notNull(),
   createdById: varchar("created_by_id").notNull().references(() => users.id),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),

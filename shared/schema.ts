@@ -75,6 +75,16 @@ export const insertDataEntrySchema = createInsertSchema(dataEntries).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  date: z.preprocess(
+    (arg) => {
+      if (typeof arg === 'string' && arg !== '') {
+        return new Date(arg);
+      }
+      return arg;
+    },
+    z.date().optional().nullable()
+  ),
 });
 
 export const updateDataEntrySchema = createInsertSchema(dataEntries).omit({

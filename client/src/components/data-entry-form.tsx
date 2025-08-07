@@ -42,7 +42,7 @@ export default function DataEntryForm() {
     mutationFn: async (data: FormData) => {
       const submitData = {
         ...data,
-        date: data.date && data.date.trim() !== "" ? new Date(data.date) : null,
+        date: data.date && data.date.trim() !== "" ? data.date : null,
       };
       return await apiRequest("POST", "/api/data-entries", submitData);
     },

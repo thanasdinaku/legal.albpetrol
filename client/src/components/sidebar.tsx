@@ -61,7 +61,7 @@ export default function Sidebar() {
           </button>
         )}
         
-        {user?.id === "46078954" && (
+        {user?.role === 'admin' && (
           <div className="border-t border-gray-200 pt-2 mt-2">
             <button
               onClick={() => setLocation('/user-management')}

@@ -48,7 +48,7 @@ export default function Sidebar() {
           className={isActive('/data-table') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
         >
           <i className="fas fa-table"></i>
-          <span>Menaxho Çështjet</span>
+          <span>{user?.role === 'admin' ? 'Menaxho Çështjet' : 'Shiko Çështjet'}</span>
         </button>
         
         {user?.role === 'admin' && (

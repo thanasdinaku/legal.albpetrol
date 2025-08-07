@@ -7,7 +7,7 @@ import CaseTable from "@/components/case-table";
 
 export default function DataTable() {
   const { toast } = useToast();
-  const { isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -41,8 +41,11 @@ export default function DataTable() {
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header 
-          title="Menaxhimi i Çështjeve" 
-          subtitle="Shikoni dhe menaxhoni çështjet ligjore" 
+          title={user?.role === 'admin' ? "Menaxhimi i Çështjeve" : "Çështjet Ligjore"}
+          subtitle={user?.role === 'admin' 
+            ? "Shikoni, përditësoni dhe menaxhoni çështjet ligjore" 
+            : "Shikoni çështjet ligjore të regjistruara (Vetëm shikimi i lejuar)"
+          } 
         />
         <main className="flex-1 overflow-y-auto p-6">
           <CaseTable />

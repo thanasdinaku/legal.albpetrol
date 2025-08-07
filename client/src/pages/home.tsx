@@ -78,14 +78,18 @@ export default function Home() {
                     <p className="text-sm font-medium text-gray-600 group-hover:text-primary">Importo CSV</p>
                   </button>
                   <button 
-                    onClick={() => {
-                      console.log("Navigating to user management...", { user });
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log("Button clicked! Navigating to user management...", { user });
+                      alert("Button clicked! Check console.");
                       navigate('/user-management');
                     }}
-                    className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition duration-200 group"
+                    className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition duration-200 group cursor-pointer"
+                    style={{ pointerEvents: 'auto' }}
                   >
-                    <i className="fas fa-users text-2xl text-gray-400 group-hover:text-primary mb-2"></i>
-                    <p className="text-sm font-medium text-gray-600 group-hover:text-primary">Menaxho Përdoruesit</p>
+                    <i className="fas fa-users text-2xl text-gray-400 group-hover:text-primary mb-2 pointer-events-none"></i>
+                    <p className="text-sm font-medium text-gray-600 group-hover:text-primary pointer-events-none">Menaxho Përdoruesit</p>
                   </button>
                 </div>
               </div>

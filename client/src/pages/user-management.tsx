@@ -314,8 +314,8 @@ export default function UserManagement() {
         <CardHeader>
           <CardTitle>Përdoruesit e Sistemit</CardTitle>
           <CardDescription>
-            Menaxho rolet dhe lejet e përdoruesve. Përdoruesit e rregullt mund të shtojnë vetëm raste ligjore, 
-            ndërsa administratorët kanë qasje të plotë për të modifikuar, fshirë dhe menaxhuar të gjitha të dhënat.
+            Menaxhimi i roleve dhe lejeve të përdoruesve parashikon që përdoruesit e rregullt të kenë vetëm të drejtën e shtimit të rasteve ligjore, 
+            ndërsa administratorëve u garantohet qasje e plotë për modifikimin, fshirjen dhe menaxhimin e të gjitha të dhënave.
           </CardDescription>
         </CardHeader>
         <CardContent>

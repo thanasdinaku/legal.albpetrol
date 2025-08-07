@@ -41,6 +41,22 @@ export default function DashboardStats() {
     );
   }
 
+  // Handle unauthorized or invalid response
+  if (!stats || typeof stats !== 'object' || 'message' in stats) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="border border-gray-200">
+          <CardContent className="p-6">
+            <div className="text-center py-8">
+              <i className="fas fa-exclamation-triangle text-4xl text-yellow-500 mb-4"></i>
+              <p className="text-gray-500">Gabim në ngarkimin e statistikave</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <Card className="border border-gray-200">

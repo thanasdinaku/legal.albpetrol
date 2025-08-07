@@ -39,6 +39,21 @@ export default function RecentActivity() {
     );
   }
 
+  // Handle unauthorized or invalid response
+  if (!Array.isArray(recentEntries)) {
+    return (
+      <Card className="border border-gray-200">
+        <CardContent className="p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Çështjet e Fundit</h3>
+          <div className="text-center py-8">
+            <i className="fas fa-exclamation-triangle text-4xl text-yellow-500 mb-4"></i>
+            <p className="text-gray-500">Gabim në ngarkimin e të dhënave</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   if (!recentEntries || recentEntries.length === 0) {
     return (
       <Card className="border border-gray-200">

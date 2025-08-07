@@ -15,7 +15,7 @@ import { insertDataEntrySchema } from "@shared/schema";
 import { z } from "zod";
 
 const formSchema = insertDataEntrySchema.omit({ createdById: true }).extend({
-  date: z.string().optional(),
+  date: z.string().optional().nullable(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -34,7 +34,7 @@ export default function DataEntryForm() {
       status: "active",
       priority: "medium",
       value: "",
-      date: "",
+      date: undefined,
     },
   });
 
@@ -42,7 +42,7 @@ export default function DataEntryForm() {
     mutationFn: async (data: FormData) => {
       const submitData = {
         ...data,
-        date: data.date ? new Date(data.date) : null,
+        date: data.date && data.date.trim() !== "" ? new Date(data.date) : null,
       };
       return await apiRequest("POST", "/api/data-entries", submitData);
     },
@@ -222,7 +222,7 @@ export default function DataEntryForm() {
                 <FormItem>
                   <FormLabel>Date</FormLabel>
                   <FormControl>
-                    <Input {...field} type="date" className="input-field" />
+                    <Input {...field} value={field.value || ""} type="date" className="input-field" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

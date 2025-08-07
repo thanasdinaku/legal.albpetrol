@@ -28,13 +28,19 @@ export default function DataTableComponent() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
-  const [status, setStatus] = useState("");
+  const [category, setCategory] = useState("all");
+  const [status, setStatus] = useState("all");
   const [page, setPage] = useState(1);
   const limit = 10;
 
   const { data, isLoading } = useQuery<DataTableResponse>({
-    queryKey: ["/api/data-entries", { search, category, status, page, limit }],
+    queryKey: ["/api/data-entries", { 
+      search, 
+      category: category === "all" ? "" : category, 
+      status: status === "all" ? "" : status, 
+      page, 
+      limit 
+    }],
     retry: false,
   });
 
@@ -151,7 +157,7 @@ export default function DataTableComponent() {
               <SelectValue placeholder="All Categories" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Categories</SelectItem>
+              <SelectItem value="all">All Categories</SelectItem>
               <SelectItem value="General">General</SelectItem>
               <SelectItem value="Finance">Finance</SelectItem>
               <SelectItem value="Operations">Operations</SelectItem>
@@ -164,7 +170,7 @@ export default function DataTableComponent() {
               <SelectValue placeholder="All Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Status</SelectItem>
+              <SelectItem value="all">All Status</SelectItem>
               <SelectItem value="active">Active</SelectItem>
               <SelectItem value="inactive">Inactive</SelectItem>
               <SelectItem value="pending">Pending</SelectItem>
@@ -173,8 +179,8 @@ export default function DataTableComponent() {
           <Button 
             onClick={() => {
               setSearch("");
-              setCategory("");
-              setStatus("");
+              setCategory("all");
+              setStatus("all");
               setPage(1);
             }}
             variant="outline"

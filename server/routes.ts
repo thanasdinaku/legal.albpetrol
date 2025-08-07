@@ -7,7 +7,7 @@ import { z } from "zod";
 import multer from "multer";
 import XLSX from "xlsx";
 import { jsPDF } from "jspdf";
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
@@ -376,7 +376,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : ''
         ]);
 
-        (doc as any).autoTable({
+        autoTable(doc, {
           head: [['Nr.', 'Paditesi', 'I Paditur', 'Person I Tretë', 'Objekti I Padisë', 'Ankimuar', 'Përfunduar', 'Krijuar']],
           body: tableData,
           startY: 35,

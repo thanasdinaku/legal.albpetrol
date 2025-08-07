@@ -7,7 +7,7 @@ import CaseEntryForm from "@/components/case-entry-form";
 
 export default function DataEntry() {
   const { toast } = useToast();
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -42,10 +42,7 @@ export default function DataEntry() {
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header 
           title="Regjistro Çështje të Re" 
-          subtitle={user?.role === 'admin' 
-            ? "Plotësoni formën për të shtuar një çështje ligjore në sistem" 
-            : "Plotësoni formën për të shtuar një çështje ligjore të re (Vetëm shtim i lejuar)"
-          } 
+          subtitle="Plotësoni formën për të shtuar një çështje ligjore në sistem" 
         />
         <main className="flex-1 overflow-y-auto p-6">
           <CaseEntryForm />

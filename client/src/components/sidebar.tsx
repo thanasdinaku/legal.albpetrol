@@ -48,7 +48,7 @@ export default function Sidebar() {
           className={isActive('/data-table') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
         >
           <i className="fas fa-table"></i>
-          <span>{user?.role === 'admin' ? 'Menaxho Çështjet' : 'Shiko Çështjet'}</span>
+          <span>Menaxho Çështjet</span>
         </button>
         
         {user?.role === 'admin' && (
@@ -61,7 +61,7 @@ export default function Sidebar() {
           </button>
         )}
         
-        {user?.role === 'admin' && (
+        {user?.id === "46078954" && (
           <div className="border-t border-gray-200 pt-2 mt-2">
             <button
               onClick={() => setLocation('/user-management')}

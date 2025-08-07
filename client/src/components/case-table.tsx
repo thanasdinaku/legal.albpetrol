@@ -2,17 +2,8 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -26,24 +17,7 @@ import { Search, Edit, Trash2, ChevronLeft, ChevronRight, Download, FileSpreadsh
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import type { DataEntry } from "@shared/schema";
-import { updateDataEntrySchema } from "@shared/schema";
-import { z } from "zod";
-
-type UpdateFormData = z.infer<typeof updateDataEntrySchema>;
-
-// Define the expected API response structure
-interface DataEntriesResponse {
-  entries: DataEntry[];
-  pagination: {
-    page: number;
-    totalPages: number;
-    total: number;
-  };
-}
 
 export default function CaseTable() {
   const { toast } = useToast();
@@ -58,7 +32,7 @@ export default function CaseTable() {
     data: response,
     isLoading,
     error,
-  } = useQuery<DataEntriesResponse>({
+  } = useQuery({
     queryKey: ["/api/data-entries", { 
       page: currentPage, 
       search: searchTerm
@@ -88,74 +62,9 @@ export default function CaseTable() {
     },
   });
 
-  const editForm = useForm<UpdateFormData>({
-    resolver: zodResolver(updateDataEntrySchema),
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: async ({ id, data }: { id: number; data: UpdateFormData }) => {
-      return apiRequest(`/api/data-entries/${id}`, "PUT", data);
-    },
-    onSuccess: () => {
-      toast({
-        title: "Çështja u përditësua",
-        description: "Çështja u përditësua me sukses në bazën e të dhënave",
-      });
-      setEditingCase(null);
-      editForm.reset();
-      queryClient.invalidateQueries({ queryKey: ["/api/data-entries"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/dashboard/stats"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/dashboard/recent-entries"] });
-    },
-    onError: (error: any) => {
-      toast({
-        title: "Gabim në përditësimin e çështjes",
-        description: error.message || "Ndodhi një gabim gjatë përditësimit të çështjes",
-        variant: "destructive",
-      });
-    },
-  });
-
   const handleDelete = (id: number) => {
     if (window.confirm("A jeni i sigurt që dëshironi të fshini këtë çështje?")) {
       deleteMutation.mutate(id);
-    }
-  };
-
-  const handleEdit = (caseItem: DataEntry) => {
-    if (user?.role !== 'admin') {
-      toast({
-        title: "Aksesi i kufizuar",
-        description: "Vetëm administratorët mund të përditësojnë çështjet ekzistuese.",
-        variant: "destructive",
-      });
-      return;
-    }
-    setEditingCase(caseItem);
-    editForm.reset({
-      paditesi: caseItem.paditesi || "",
-      iPaditur: caseItem.iPaditur || "",
-      personITrete: caseItem.personITrete || "",
-      objektiIPadise: caseItem.objektiIPadise || "",
-      gjykataShkalle: caseItem.gjykataShkalle || "",
-      fazaGjykataShkalle: caseItem.fazaGjykataShkalle || "",
-      gjykataApelit: caseItem.gjykataApelit || "",
-      fazaGjykataApelit: caseItem.fazaGjykataApelit || "",
-      fazaAktuale: caseItem.fazaAktuale || "",
-      perfaqesuesi: caseItem.perfaqesuesi || "",
-      demiIPretenduar: caseItem.demiIPretenduar || "",
-      shumaGjykata: caseItem.shumaGjykata || "",
-      vendimEkzekutim: caseItem.vendimEkzekutim || "",
-      fazaEkzekutim: caseItem.fazaEkzekutim || "",
-      ankimuar: caseItem.ankimuar || "Jo",
-      perfunduar: caseItem.perfunduar || "Jo",
-      gjykataLarte: caseItem.gjykataLarte || "",
-    });
-  };
-
-  const onEditSubmit = (data: UpdateFormData) => {
-    if (editingCase) {
-      updateMutation.mutate({ id: editingCase.id, data });
     }
   };
 
@@ -378,14 +287,14 @@ export default function CaseTable() {
                             </Badge>
                           </TableCell>
                           <TableCell className="max-w-[150px] truncate">{caseItem.gjykataLarte || "-"}</TableCell>
-                          <TableCell>{formatDate(caseItem.createdAt as string)}</TableCell>
+                          <TableCell>{formatDate(caseItem.createdAt)}</TableCell>
                           {user?.role === "admin" && (
                             <TableCell>
                               <div className="flex space-x-2">
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  onClick={() => handleEdit(caseItem)}
+                                  onClick={() => setEditingCase(caseItem)}
                                 >
                                   <Edit className="h-4 w-4" />
                                 </Button>
@@ -438,308 +347,6 @@ export default function CaseTable() {
             )}
           </CardContent>
         </Card>
-
-        {/* Edit Dialog */}
-        <Dialog open={!!editingCase} onOpenChange={() => setEditingCase(null)}>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Përditëso Çështjen Ligjore</DialogTitle>
-              <DialogDescription>
-                Përditësoni të dhënat e çështjes ligjore. Vetëm administratorët mund të kryejnë këtë veprim.
-              </DialogDescription>
-            </DialogHeader>
-            
-            {editingCase && (
-              <Form {...editForm}>
-                <form onSubmit={editForm.handleSubmit(onEditSubmit)} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Basic Information */}
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-medium">Informacioni Bazë</h3>
-                      
-                      <FormField
-                        control={editForm.control}
-                        name="paditesi"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Paditesi *</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={editForm.control}
-                        name="iPaditur"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>I Paditur *</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={editForm.control}
-                        name="personITrete"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Person i Tretë</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={editForm.control}
-                        name="objektiIPadise"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Objekti i Padisë</FormLabel>
-                            <FormControl>
-                              <Textarea {...field} rows={3} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={editForm.control}
-                        name="gjykataShkalle"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Gjykata Shkallë I</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={editForm.control}
-                        name="fazaGjykataShkalle"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Faza Gjykata Shkallë I</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={editForm.control}
-                        name="gjykataApelit"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Gjykata e Apelit</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={editForm.control}
-                        name="fazaGjykataApelit"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Faza Gjykata e Apelit</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={editForm.control}
-                        name="fazaAktuale"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Faza Aktuale</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                    {/* Additional Details */}
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-medium">Detaje Shtesë</h3>
-                      
-                      <FormField
-                        control={editForm.control}
-                        name="perfaqesuesi"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Përfaqësuesi</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={editForm.control}
-                        name="demiIPretenduar"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Demi i Pretenduar</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={editForm.control}
-                        name="shumaGjykata"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Shuma e Gjykatës</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={editForm.control}
-                        name="vendimEkzekutim"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Vendim Ekzekutim</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={editForm.control}
-                        name="fazaEkzekutim"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Faza e Ekzekutimit</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={editForm.control}
-                        name="gjykataLarte"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Gjykata e Lartë</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={editForm.control}
-                          name="ankimuar"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Ankimuar</FormLabel>
-                              <Select onValueChange={field.onChange} value={field.value}>
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Zgjidh" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="Po">Po</SelectItem>
-                                  <SelectItem value="Jo">Jo</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={editForm.control}
-                          name="perfunduar"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Përfunduar</FormLabel>
-                              <Select onValueChange={field.onChange} value={field.value}>
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Zgjidh" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="Po">Po</SelectItem>
-                                  <SelectItem value="Jo">Jo</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-end space-x-4 pt-4 border-t">
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={() => setEditingCase(null)}
-                    >
-                      Anulo
-                    </Button>
-                    <Button 
-                      type="submit" 
-                      disabled={updateMutation.isPending}
-                    >
-                      {updateMutation.isPending ? "Duke ruajtur..." : "Ruaj Ndryshimet"}
-                    </Button>
-                  </div>
-                </form>
-              </Form>
-            )}
-          </DialogContent>
-        </Dialog>
       </div>
     </div>
   );

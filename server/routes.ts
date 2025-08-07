@@ -357,20 +357,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.send('\uFEFF' + csvContent); // BOM for UTF-8
 
       } else if (format === 'pdf') {
-        // PDF export
-        const doc = new jsPDF('l', 'mm', 'a4'); // Landscape orientation
+        // PDF export - Create multiple pages to show all fields
+        const doc = new jsPDF('l', 'mm', 'a3'); // Use A3 landscape for more space
         
         doc.setFontSize(16);
-        doc.text('Çështjet Ligjore', 14, 15);
+        doc.text('Çështjet Ligjore - Faqja 1', 14, 15);
         doc.setFontSize(10);
         doc.text(`Eksportuar më: ${new Date().toLocaleDateString('sq-AL')}`, 14, 25);
 
-        const tableData = entries.map(entry => [
+        // Page 1: Basic case information
+        const basicData = entries.map(entry => [
           entry.id.toString(),
-          entry.paditesi || '',
-          entry.iPaditur || '',
-          entry.personITrete || '',
-          (entry.objektiIPadise || '').substring(0, 30) + (entry.objektiIPadise && entry.objektiIPadise.length > 30 ? '...' : ''),
+          (entry.paditesi || '').substring(0, 35),
+          (entry.iPaditur || '').substring(0, 35),
+          (entry.personITrete || '').substring(0, 25),
+          (entry.objektiIPadise || '').substring(0, 40),
           entry.ankimuar || 'Jo',
           entry.perfunduar || 'Jo',
           entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : ''
@@ -378,20 +379,92 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         autoTable(doc, {
           head: [['Nr.', 'Paditesi', 'I Paditur', 'Person I Tretë', 'Objekti I Padisë', 'Ankimuar', 'Përfunduar', 'Krijuar']],
-          body: tableData,
+          body: basicData,
           startY: 35,
-          styles: { fontSize: 8, cellPadding: 2 },
-          headStyles: { fillColor: [66, 66, 66] },
+          styles: { fontSize: 7, cellPadding: 1.5, overflow: 'linebreak' },
+          headStyles: { fillColor: [66, 66, 66], fontSize: 8 },
           columnStyles: {
-            0: { cellWidth: 15 },
-            1: { cellWidth: 40 },
-            2: { cellWidth: 40 },
-            3: { cellWidth: 30 },
-            4: { cellWidth: 60 },
-            5: { cellWidth: 20 },
-            6: { cellWidth: 20 },
-            7: { cellWidth: 25 }
-          }
+            0: { cellWidth: 20 },
+            1: { cellWidth: 60 },
+            2: { cellWidth: 60 },
+            3: { cellWidth: 45 },
+            4: { cellWidth: 80 },
+            5: { cellWidth: 25 },
+            6: { cellWidth: 25 },
+            7: { cellWidth: 35 }
+          },
+          tableWidth: 'auto',
+          margin: { top: 35, left: 14, right: 14 }
+        });
+
+        // Page 2: Court and process information
+        doc.addPage();
+        doc.setFontSize(16);
+        doc.text('Çështjet Ligjore - Faqja 2 (Gjykatat dhe Fazat)', 14, 15);
+        doc.setFontSize(10);
+        doc.text(`Eksportuar më: ${new Date().toLocaleDateString('sq-AL')}`, 14, 25);
+
+        const courtData = entries.map(entry => [
+          entry.id.toString(),
+          (entry.gjykataShkalle || '').substring(0, 30),
+          (entry.fazaGjykataShkalle || '').substring(0, 30),
+          (entry.gjykataApelit || '').substring(0, 30),
+          (entry.fazaGjykataApelit || '').substring(0, 30),
+          (entry.fazaAktuale || '').substring(0, 30),
+          (entry.gjykataLarte || '').substring(0, 30)
+        ]);
+
+        autoTable(doc, {
+          head: [['Nr.', 'Gjykata Shkallë I', 'Faza Shkallë I', 'Gjykata Apelit', 'Faza Apelit', 'Faza Aktuale', 'Gjykata e Lartë']],
+          body: courtData,
+          startY: 35,
+          styles: { fontSize: 7, cellPadding: 1.5, overflow: 'linebreak' },
+          headStyles: { fillColor: [66, 66, 66], fontSize: 8 },
+          columnStyles: {
+            0: { cellWidth: 20 },
+            1: { cellWidth: 55 },
+            2: { cellWidth: 55 },
+            3: { cellWidth: 55 },
+            4: { cellWidth: 55 },
+            5: { cellWidth: 55 },
+            6: { cellWidth: 55 }
+          },
+          tableWidth: 'auto',
+          margin: { top: 35, left: 14, right: 14 }
+        });
+
+        // Page 3: Financial and execution information
+        doc.addPage();
+        doc.setFontSize(16);
+        doc.text('Çështjet Ligjore - Faqja 3 (Informacioni Financiar)', 14, 15);
+        doc.setFontSize(10);
+        doc.text(`Eksportuar më: ${new Date().toLocaleDateString('sq-AL')}`, 14, 25);
+
+        const financialData = entries.map(entry => [
+          entry.id.toString(),
+          (entry.perfaqesuesi || '').substring(0, 35),
+          (entry.demiIPretenduar || '').substring(0, 30),
+          (entry.shumaGjykata || '').substring(0, 30),
+          (entry.vendimEkzekutim || '').substring(0, 35),
+          (entry.fazaEkzekutim || '').substring(0, 35)
+        ]);
+
+        autoTable(doc, {
+          head: [['Nr.', 'Përfaqësuesi', 'Demi i Pretenduar', 'Shuma Gjykate', 'Vendim Ekzekutim', 'Faza Ekzekutim']],
+          body: financialData,
+          startY: 35,
+          styles: { fontSize: 7, cellPadding: 1.5, overflow: 'linebreak' },
+          headStyles: { fillColor: [66, 66, 66], fontSize: 8 },
+          columnStyles: {
+            0: { cellWidth: 20 },
+            1: { cellWidth: 70 },
+            2: { cellWidth: 60 },
+            3: { cellWidth: 60 },
+            4: { cellWidth: 70 },
+            5: { cellWidth: 70 }
+          },
+          tableWidth: 'auto',
+          margin: { top: 35, left: 14, right: 14 }
         });
 
         const pdfBuffer = Buffer.from(doc.output('arraybuffer'));

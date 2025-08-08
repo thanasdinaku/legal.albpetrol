@@ -43,7 +43,7 @@ export default function SystemSettings() {
 
   // Redirect if not authenticated or not admin
   useEffect(() => {
-    if (!isLoading && (!isAuthenticated || user?.id !== "46078954")) {
+    if (!isLoading && (!isAuthenticated || user?.role !== "admin")) {
       toast({
         title: "Aksesi i kufizuar",
         description: "Vetëm administratori mund të aksesojë cilësimet e sistemit.",
@@ -68,7 +68,7 @@ export default function SystemSettings() {
     );
   }
 
-  if (!isAuthenticated || user?.id !== "46078954") {
+  if (!isAuthenticated || user?.role !== "admin") {
     return null;
   }
 

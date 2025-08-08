@@ -215,11 +215,23 @@ export class DatabaseStorage implements IStorage {
     const entries = await baseQueryBuilder;
     
     // Add dynamic Nr. Rendor based on position in filtered/sorted results
-    return entries.map((entry, index) => ({
-      ...entry,
-      createdByName: entry.createdByName || 'Përdorues i panjohur',
-      nrRendor: totalFilteredCount - (filters?.offset || 0) - index,
-    })) as (DataEntry & { createdByName: string; nrRendor: number })[];
+    return entries.map((entry, index) => {
+      let nrRendor: number;
+      
+      if (filters?.sortOrder === 'asc') {
+        // For ascending sort (oldest first), oldest entry gets number 1
+        nrRendor = (filters?.offset || 0) + index + 1;
+      } else {
+        // For descending sort (newest first), newest entry gets the highest number
+        nrRendor = totalFilteredCount - (filters?.offset || 0) - index;
+      }
+      
+      return {
+        ...entry,
+        createdByName: entry.createdByName || 'Përdorues i panjohur',
+        nrRendor,
+      };
+    }) as (DataEntry & { createdByName: string; nrRendor: number })[];
   }
 
   async getDataEntryById(id: number): Promise<DataEntry | undefined> {

@@ -32,6 +32,8 @@ const strictLimiter = rateLimit({
 import { insertDataEntrySchema, updateDataEntrySchema } from "@shared/schema";
 import { z } from "zod";
 import XLSX from "xlsx";
+import { db } from "./db";
+import { sql } from "drizzle-orm";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Apply rate limiting to all routes
@@ -42,6 +44,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Ensure default admin exists on startup
   await storage.ensureDefaultAdmin();
+  
+  // Clear old sessions route (for migration)
+  app.post('/api/clear-sessions', async (req, res) => {
+    try {
+      // Clear session table directly for migration
+      await db.delete(sql`sessions`);
+      res.json({ message: "All sessions cleared" });
+    } catch (error) {
+      console.log("Session clear error:", error);
+      res.status(500).json({ error: "Failed to clear sessions" });
+    }
+  });
 
   // Auth routes (already handled in auth.ts setup)
 

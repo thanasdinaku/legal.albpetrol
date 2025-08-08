@@ -55,11 +55,7 @@ export default function Header({ title, subtitle, onMenuToggle }: HeaderProps) {
         <div className="flex items-center space-x-2 sm:space-x-4">
 
 
-          {/* Notifications */}
-          <button className="relative p-2 text-gray-400 hover:text-gray-600 focus:outline-none">
-            <i className="fas fa-bell text-lg sm:text-xl"></i>
-            <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-          </button>
+
           
           {/* User Menu */}
           <DropdownMenu>

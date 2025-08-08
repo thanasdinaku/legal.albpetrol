@@ -36,7 +36,8 @@ export default function SystemSettings() {
     auditLog: true,
     dataRetention: 365,
     sessionTimeout: 30,
-    maxFileSize: 10
+    maxFileSize: 10,
+    passwordPolicy: "Fjalëkalimet duhet të kenë të paktën 8 karaktere, përfshijnë shkronja të mëdha dhe të vogla, numra dhe simbole."
   });
 
   // Redirect if not authenticated or not admin
@@ -317,7 +318,8 @@ export default function SystemSettings() {
                       <Textarea
                         id="passwordPolicy"
                         placeholder="Përshkrimi i politikës së fjalëkalimeve..."
-                        value="Fjalëkalimet duhet të kenë të paktën 8 karaktere, përfshijnë shkronja të mëdha dhe të vogla, numra dhe simbole."
+                        value={settings.passwordPolicy}
+                        onChange={(e) => setSettings({...settings, passwordPolicy: e.target.value})}
                         rows={3}
                       />
                     </div>

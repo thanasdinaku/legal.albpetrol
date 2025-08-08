@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
+
+
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,8 +17,6 @@ interface HeaderProps {
 }
 
 export default function Header({ title, subtitle, onMenuToggle }: HeaderProps) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [showSearch, setShowSearch] = useState(false);
   const { user } = useAuth();
 
   const handleLogout = () => {
@@ -47,27 +45,7 @@ export default function Header({ title, subtitle, onMenuToggle }: HeaderProps) {
         </div>
 
         <div className="flex items-center space-x-2 sm:space-x-4">
-          {/* Search - hidden on mobile, shown on larger screens */}
-          <div className="hidden md:block relative">
-            <Input
-              type="search"
-              placeholder="Search data..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 w-48 lg:w-64"
-            />
-            <i className="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-          </div>
-          
-          {/* Mobile search toggle */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowSearch(!showSearch)}
-            className="md:hidden"
-          >
-            <i className="fas fa-search text-lg"></i>
-          </Button>
+
 
           {/* Notifications */}
           <button className="relative p-2 text-gray-400 hover:text-gray-600 focus:outline-none">
@@ -127,22 +105,7 @@ export default function Header({ title, subtitle, onMenuToggle }: HeaderProps) {
           </DropdownMenu>
         </div>
       </div>
-      
-      {/* Mobile search bar - shown when toggled */}
-      {showSearch && (
-        <div className="mt-4 md:hidden">
-          <div className="relative">
-            <Input
-              type="search"
-              placeholder="Search data..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 w-full"
-            />
-            <i className="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-          </div>
-        </div>
-      )}
+
     </header>
   );
 }

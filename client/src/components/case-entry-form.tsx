@@ -170,7 +170,7 @@ export default function CaseEntryForm() {
                         <FormLabel>Gjykata e Shkallës së Parë e</FormLabel>
                         <Select onValueChange={field.onChange} value={field.value || ""}>
                           <FormControl>
-                            <SelectTrigger className="text-gray-900 [&>span]:text-gray-400 [&>span]:opacity-80">
+                            <SelectTrigger className="text-gray-900 [&>span[data-placeholder]]:text-gray-400 [&>span[data-placeholder]]:opacity-80">
                               <SelectValue placeholder="Zgjidhni gjykatën" />
                             </SelectTrigger>
                           </FormControl>
@@ -212,7 +212,7 @@ export default function CaseEntryForm() {
                         <FormLabel>Gjykata e Apelit</FormLabel>
                         <Select onValueChange={field.onChange} value={field.value || ""}>
                           <FormControl>
-                            <SelectTrigger className="text-gray-900 [&>span]:text-gray-400 [&>span]:opacity-80">
+                            <SelectTrigger className="text-gray-900 [&>span[data-placeholder]]:text-gray-400 [&>span[data-placeholder]]:opacity-80">
                               <SelectValue placeholder="Zgjidhni gjykatën e apelit" />
                             </SelectTrigger>
                           </FormControl>

@@ -26,7 +26,15 @@ export default function LoginPage() {
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      const response = await apiRequest("POST", "/api/login", credentials);
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+        credentials: "include", // Important for cookies/sessions
+      });
+      
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Invalid email or password");

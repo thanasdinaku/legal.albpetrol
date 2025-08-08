@@ -101,7 +101,9 @@ export function setupAuth(app: Express) {
         if (err) {
           return res.status(500).json({ message: "Login failed" });
         }
-        res.status(200).json(user);
+        // Remove password from response for security
+        const { password, ...userWithoutPassword } = user;
+        res.status(200).json(userWithoutPassword);
       });
     })(req, res, next);
   });
@@ -117,7 +119,10 @@ export function setupAuth(app: Express) {
   // Get current user route
   app.get("/api/auth/user", (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
-    res.json(req.user);
+    const user = req.user!;
+    // Remove password from response for security
+    const { password, ...userWithoutPassword } = user;
+    res.json(userWithoutPassword);
   });
 
   // Change password route

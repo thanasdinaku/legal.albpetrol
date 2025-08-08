@@ -249,8 +249,7 @@ export default function CaseTable() {
                         <TableHead className="min-w-[150px]">Shuma Gjykate</TableHead>
                         <TableHead className="min-w-[180px]">Vendim Ekzekutim</TableHead>
                         <TableHead className="min-w-[150px]">Faza Ekzekutim</TableHead>
-                        <TableHead className="min-w-[100px]">Ankimuar</TableHead>
-                        <TableHead className="min-w-[100px]">Përfunduar</TableHead>
+
                         <TableHead className="min-w-[150px]">Gjykata e Lartë</TableHead>
                         <TableHead className="min-w-[120px]">Krijuar më</TableHead>
                         {user?.role === "admin" && <TableHead className="min-w-[120px]">Veprime</TableHead>}
@@ -276,16 +275,7 @@ export default function CaseTable() {
                           <TableCell className="max-w-[150px] truncate">{caseItem.shumaGjykata || "-"}</TableCell>
                           <TableCell className="max-w-[180px] truncate">{caseItem.vendimEkzekutim || "-"}</TableCell>
                           <TableCell className="max-w-[150px] truncate">{caseItem.fazaEkzekutim || "-"}</TableCell>
-                          <TableCell>
-                            <Badge variant={caseItem.ankimuar === "Po" ? "destructive" : "secondary"}>
-                              {caseItem.ankimuar}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant={caseItem.perfunduar === "Po" ? "default" : "outline"}>
-                              {caseItem.perfunduar}
-                            </Badge>
-                          </TableCell>
+
                           <TableCell className="max-w-[150px] truncate">{caseItem.gjykataLarte || "-"}</TableCell>
                           <TableCell>{formatDate(caseItem.createdAt)}</TableCell>
                           {user?.role === "admin" && (

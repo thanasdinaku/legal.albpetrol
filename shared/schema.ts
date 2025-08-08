@@ -55,8 +55,7 @@ export const dataEntries = pgTable("data_entries", {
   shumaGjykata: varchar("shuma_gjykata", { length: 255 }), // Shuma e caktuar nga Gjykata me vendim
   vendimEkzekutim: varchar("vendim_ekzekutim", { length: 255 }), // Vendim me ekzekutim te perkohshem
   fazaEkzekutim: varchar("faza_ekzekutim", { length: 255 }), // Faza ne te cilen ndodhet
-  ankimuar: varchar("ankimuar", { length: 10 }).default("Jo"), // Ankimuar (Po/Jo)
-  perfunduar: varchar("perfunduar", { length: 10 }).default("Jo"), // Perfunduar (Po/Jo)
+
   gjykataLarte: varchar("gjykata_larte", { length: 255 }), // Gjykata e Larte
   createdById: varchar("created_by_id").notNull().references(() => users.id),
   createdAt: timestamp("created_at").defaultNow(),

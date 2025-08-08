@@ -41,8 +41,6 @@ export default function CaseEntryForm() {
       shumaGjykata: "",
       vendimEkzekutim: "",
       fazaEkzekutim: "",
-      ankimuar: "Jo",
-      perfunduar: "Jo",
       gjykataLarte: "",
     },
   });
@@ -333,51 +331,7 @@ export default function CaseEntryForm() {
                     )}
                   />
 
-                  {/* Ankimuar */}
-                  <FormField
-                    control={form.control}
-                    name="ankimuar"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Ankimuar</FormLabel>
-                        <Select value={field.value || "Jo"} onValueChange={field.onChange}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Zgjidhni" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="Po">Po</SelectItem>
-                            <SelectItem value="Jo">Jo</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
 
-                  {/* Perfunduar */}
-                  <FormField
-                    control={form.control}
-                    name="perfunduar"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Përfunduar</FormLabel>
-                        <Select value={field.value || "Jo"} onValueChange={field.onChange}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Zgjidhni" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="Po">Po</SelectItem>
-                            <SelectItem value="Jo">Jo</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
 
                   {/* Gjykata e Larte */}
                   <FormField

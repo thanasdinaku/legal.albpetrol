@@ -214,7 +214,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             'Nr. Rendor', 'Paditesi', 'I Paditur', 'Person I Tretë', 'Objekti I Padisë',
             'Gjykata Shkallë së Parë e', 'Faza Shkallë I', 'Gjykata Apelit', 'Faza Apelit',
             'Faza ne te cilen ndodhet procesi', 'Përfaqësuesi', 'Demi i Pretenduar', 'Shuma Gjykate',
-            'Vendim Ekzekutim', 'Faza Ekzekutim', 'Ankimuar', 'Përfunduar',
+            'Vendim Ekzekutim', 'Faza Ekzekutim',
             'Gjykata e Lartë', 'Krijuar më'
           ],
           // Data rows
@@ -234,8 +234,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
             entry.shumaGjykata || '',
             entry.vendimEkzekutim || '',
             entry.fazaEkzekutim || '',
-            entry.ankimuar || 'Jo',
-            entry.perfunduar || 'Jo',
             entry.gjykataLarte || '',
             entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : ''
           ])
@@ -261,7 +259,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           'Nr. Rendor', 'Paditesi', 'I Paditur', 'Person I Tretë', 'Objekti I Padisë',
           'Gjykata Shkallë së Parë e', 'Faza Shkallë I', 'Gjykata Apelit', 'Faza Apelit',
           'Faza ne te cilen ndodhet procesi', 'Përfaqësuesi', 'Demi i Pretenduar', 'Shuma Gjykate',
-          'Vendim Ekzekutim', 'Faza Ekzekutim', 'Ankimuar', 'Përfunduar',
+          'Vendim Ekzekutim', 'Faza Ekzekutim',
           'Gjykata e Lartë', 'Krijuar më'
         ];
 
@@ -281,8 +279,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
           `"${entry.shumaGjykata || ''}"`,
           `"${entry.vendimEkzekutim || ''}"`,
           `"${entry.fazaEkzekutim || ''}"`,
-          entry.ankimuar || 'Jo',
-          entry.perfunduar || 'Jo',
           `"${entry.gjykataLarte || ''}"`,
           entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : ''
         ]);
@@ -311,27 +307,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
           (entry.paditesi || '').substring(0, 35),
           (entry.iPaditur || '').substring(0, 35),
           (entry.personITrete || '').substring(0, 25),
-          (entry.objektiIPadise || '').substring(0, 40),
-          entry.ankimuar || 'Jo',
-          entry.perfunduar || 'Jo',
+          (entry.objektiIPadise || '').substring(0, 50),
           entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : ''
         ]);
 
         autoTable(doc, {
-          head: [['Nr.', 'Paditesi', 'I Paditur', 'Person I Tretë', 'Objekti I Padisë', 'Ankimuar', 'Përfunduar', 'Krijuar']],
+          head: [['Nr.', 'Paditesi', 'I Paditur', 'Person I Tretë', 'Objekti I Padisë', 'Krijuar']],
           body: basicData,
           startY: 35,
           styles: { fontSize: 7, cellPadding: 1.5, overflow: 'linebreak' },
           headStyles: { fillColor: [66, 66, 66], fontSize: 8 },
           columnStyles: {
             0: { cellWidth: 20 },
-            1: { cellWidth: 60 },
-            2: { cellWidth: 60 },
-            3: { cellWidth: 45 },
-            4: { cellWidth: 80 },
-            5: { cellWidth: 25 },
-            6: { cellWidth: 25 },
-            7: { cellWidth: 35 }
+            1: { cellWidth: 70 },
+            2: { cellWidth: 70 },
+            3: { cellWidth: 55 },
+            4: { cellWidth: 100 },
+            5: { cellWidth: 35 }
           },
           tableWidth: 'auto',
           margin: { top: 35, left: 14, right: 14 }

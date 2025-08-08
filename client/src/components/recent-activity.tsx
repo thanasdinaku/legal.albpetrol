@@ -6,6 +6,7 @@ import type { DataEntry } from "@shared/schema";
 
 interface RecentEntry extends DataEntry {
   createdByName: string;
+  nrRendor: number;
 }
 
 export default function RecentActivity() {

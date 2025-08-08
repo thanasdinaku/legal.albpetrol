@@ -35,7 +35,7 @@ export default function CaseTable() {
     isLoading,
     error,
   } = useQuery<{
-    entries: (DataEntry & { createdByName: string })[];
+    entries: (DataEntry & { createdByName: string; nrRendor: number })[];
     pagination: {
       currentPage: number;
       totalPages: number;
@@ -272,9 +272,9 @@ export default function CaseTable() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {response.entries.map((caseItem: DataEntry) => (
+                      {response.entries.map((caseItem: DataEntry & { createdByName: string; nrRendor: number }) => (
                         <TableRow key={caseItem.id}>
-                          <TableCell className="font-medium">{caseItem.id}</TableCell>
+                          <TableCell className="font-medium">{caseItem.nrRendor}</TableCell>
                           <TableCell className="max-w-[150px] truncate">{caseItem.paditesi}</TableCell>
                           <TableCell className="max-w-[150px] truncate">{caseItem.iPaditur}</TableCell>
                           <TableCell className="max-w-[120px] truncate">{caseItem.personITrete || "-"}</TableCell>

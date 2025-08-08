@@ -38,7 +38,7 @@ export interface IStorage {
     status?: string;
     limit?: number;
     offset?: number;
-  }): Promise<(DataEntry & { createdByName: string })[]>;
+  }): Promise<(DataEntry & { createdByName: string; nrRendor: number })[]>;
   getDataEntryById(id: number): Promise<DataEntry | undefined>;
   updateDataEntry(id: number, updates: UpdateDataEntry): Promise<DataEntry>;
   deleteDataEntry(id: number): Promise<void>;
@@ -47,7 +47,7 @@ export interface IStorage {
     category?: string;
     status?: string;
   }): Promise<number>;
-  getRecentDataEntries(limit?: number): Promise<(DataEntry & { createdByName: string })[]>;
+  getRecentDataEntries(limit?: number): Promise<(DataEntry & { createdByName: string; nrRendor: number })[]>;
   getDataEntryStats(): Promise<{
     totalEntries: number;
     todayEntries: number;
@@ -90,12 +90,12 @@ export class DatabaseStorage implements IStorage {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    const [totalUsers] = await db.select({ count: sql<number>`count(*)` }).from(users);
-    const [adminUsers] = await db.select({ count: sql<number>`count(*)` }).from(users).where(eq(users.role, 'admin'));
-    const [regularUsers] = await db.select({ count: sql<number>`count(*)` }).from(users).where(eq(users.role, 'user'));
+    const [totalUsers] = await db.select({ count: sql<number>`count(*)`.mapWith(Number) }).from(users);
+    const [adminUsers] = await db.select({ count: sql<number>`count(*)`.mapWith(Number) }).from(users).where(eq(users.role, 'admin'));
+    const [regularUsers] = await db.select({ count: sql<number>`count(*)`.mapWith(Number) }).from(users).where(eq(users.role, 'user'));
     
     // For activeToday, we'll use a simple count since we don't track last login
-    const [activeToday] = await db.select({ count: sql<number>`count(*)` }).from(users);
+    const [activeToday] = await db.select({ count: sql<number>`count(*)`.mapWith(Number) }).from(users);
     
     return {
       totalUsers: totalUsers.count,
@@ -105,11 +105,13 @@ export class DatabaseStorage implements IStorage {
     };
   }
 
-  async updateUserRole(userId: string, role: 'user' | 'admin'): Promise<void> {
-    await db
+  async updateUserRole(userId: string, role: 'user' | 'admin'): Promise<User> {
+    const [updatedUser] = await db
       .update(users)
       .set({ role, updatedAt: new Date() })
-      .where(eq(users.id, userId));
+      .where(eq(users.id, userId))
+      .returning();
+    return updatedUser;
   }
 
   async deactivateUser(userId: string): Promise<void> {
@@ -136,8 +138,9 @@ export class DatabaseStorage implements IStorage {
     status?: string;
     limit?: number;
     offset?: number;
-  }): Promise<(DataEntry & { createdByName: string })[]> {
-    let queryBuilder = db
+  }): Promise<(DataEntry & { createdByName: string; nrRendor: number })[]> {
+    // First get all entries (for proper nrRendor calculation)
+    let baseQueryBuilder = db
       .select({
         ...getTableColumns(dataEntries),
         createdByName: users.firstName,
@@ -174,28 +177,42 @@ export class DatabaseStorage implements IStorage {
       conditions.push(eq(dataEntries.fazaAktuale, filters.category));
     }
     
-    // Status filtering removed - perfunduar field no longer exists
-    
     if (conditions.length > 0) {
-      queryBuilder = queryBuilder.where(and(...conditions));
+      baseQueryBuilder = baseQueryBuilder.where(and(...conditions));
     }
     
-    queryBuilder = queryBuilder.orderBy(desc(dataEntries.createdAt));
+    baseQueryBuilder = baseQueryBuilder.orderBy(desc(dataEntries.createdAt));
     
+    // Get total count for nrRendor calculation
+    let countQueryBuilder = db.select({ count: sql<number>`count(*)` }).from(dataEntries);
+    
+    if (filters?.search) {
+      countQueryBuilder = countQueryBuilder.leftJoin(users, eq(dataEntries.createdById, users.id));
+      if (conditions.length > 0) {
+        countQueryBuilder = countQueryBuilder.where(and(...conditions));
+      }
+    }
+    
+    const [countResult] = await countQueryBuilder;
+    const totalFilteredCount = countResult.count as number;
+    
+    // Apply pagination
     if (filters?.limit) {
-      queryBuilder = queryBuilder.limit(filters.limit);
+      baseQueryBuilder = baseQueryBuilder.limit(filters.limit);
     }
     
     if (filters?.offset) {
-      queryBuilder = queryBuilder.offset(filters.offset);
+      baseQueryBuilder = baseQueryBuilder.offset(filters.offset);
     }
     
-    const entries = await queryBuilder;
+    const entries = await baseQueryBuilder;
     
-    return entries.map(entry => ({
+    // Add dynamic Nr. Rendor based on position in filtered/sorted results
+    return entries.map((entry, index) => ({
       ...entry,
       createdByName: entry.createdByName || 'Përdorues i panjohur',
-    })) as (DataEntry & { createdByName: string })[];
+      nrRendor: totalFilteredCount - (filters?.offset || 0) - index,
+    })) as (DataEntry & { createdByName: string; nrRendor: number })[];
   }
 
   async getDataEntryById(id: number): Promise<DataEntry | undefined> {
@@ -268,7 +285,7 @@ export class DatabaseStorage implements IStorage {
     return result.count;
   }
 
-  async getRecentDataEntries(limit = 5): Promise<(DataEntry & { createdByName: string })[]> {
+  async getRecentDataEntries(limit = 5): Promise<(DataEntry & { createdByName: string; nrRendor: number })[]> {
     const entries = await db
       .select({
         id: dataEntries.id,
@@ -297,10 +314,14 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(dataEntries.createdAt))
       .limit(limit);
     
-    return entries.map(entry => ({
+    // Get total count for calculating nrRendor positions
+    const totalCount = await this.getDataEntriesCount();
+    
+    return entries.map((entry, index) => ({
       ...entry,
       createdByName: entry.createdByName || 'Unknown User',
-    })) as (DataEntry & { createdByName: string })[];
+      nrRendor: totalCount - index, // Most recent gets highest number
+    })) as (DataEntry & { createdByName: string; nrRendor: number })[];
   }
 
   async getDataEntryStats(): Promise<{
@@ -331,55 +352,7 @@ export class DatabaseStorage implements IStorage {
     };
   }
 
-  // User Management Methods
-  async getAllUsers(): Promise<User[]> {
-    return await db.select().from(users).orderBy(desc(users.createdAt));
-  }
-
-  async getUserStats(): Promise<{
-    totalUsers: number;
-    adminUsers: number;
-    regularUsers: number;
-    activeToday: number;
-  }> {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    const [totalResult] = await db
-      .select({ count: sql<number>`count(*)`.mapWith(Number) })
-      .from(users);
-    
-    const [adminResult] = await db
-      .select({ count: sql<number>`count(*)`.mapWith(Number) })
-      .from(users)
-      .where(eq(users.role, 'admin'));
-    
-    const [userResult] = await db
-      .select({ count: sql<number>`count(*)`.mapWith(Number) })
-      .from(users)
-      .where(eq(users.role, 'user'));
-    
-    const [activeResult] = await db
-      .select({ count: sql<number>`count(*)`.mapWith(Number) })
-      .from(users)
-      .where(sql`${users.updatedAt} >= ${today}`);
-    
-    return {
-      totalUsers: totalResult.count,
-      adminUsers: adminResult.count,
-      regularUsers: userResult.count,
-      activeToday: activeResult.count,
-    };
-  }
-
-  async updateUserRole(userId: string, role: 'user' | 'admin'): Promise<User> {
-    const [updatedUser] = await db
-      .update(users)
-      .set({ role, updatedAt: new Date() })
-      .where(eq(users.id, userId))
-      .returning();
-    return updatedUser;
-  }
+  // User Management Methods - Updated versions
 
   async createManualUser(userData: {
     email: string;

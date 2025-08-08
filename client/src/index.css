@@ -32,6 +32,19 @@ textarea:-ms-input-placeholder {
   opacity: 0.8 !important;
 }
 
+/* Select dropdown placeholder styling for shadcn/ui components */
+[data-placeholder] {
+  color: #9CA3AF !important;
+  opacity: 0.8 !important;
+}
+
+.select-placeholder,
+[role="combobox"][data-placeholder="true"],
+[role="combobox"]:not([aria-expanded="true"]):not([data-state="open"]) [data-radix-select-value]:empty::before {
+  color: #9CA3AF !important;
+  opacity: 0.8 !important;
+}
+
 /* Form label styling */
 .form-label {
   @apply text-gray-700 font-medium;

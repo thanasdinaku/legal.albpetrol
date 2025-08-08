@@ -1,5 +1,5 @@
 
-
+import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,6 +9,13 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { UserCheck, Shield } from "lucide-react";
 
 interface HeaderProps {
   title: string;
@@ -18,6 +25,7 @@ interface HeaderProps {
 
 export default function Header({ title, subtitle, onMenuToggle }: HeaderProps) {
   const { user } = useAuth();
+  const [showProfileDialog, setShowProfileDialog] = useState(false);
 
   const handleLogout = () => {
     window.location.href = "/api/logout";
@@ -88,7 +96,7 @@ export default function Header({ title, subtitle, onMenuToggle }: HeaderProps) {
                 </p>
               </div>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setShowProfileDialog(true)}>
                 <i className="fas fa-user mr-2"></i>
                 Profili im
               </DropdownMenuItem>
@@ -105,6 +113,51 @@ export default function Header({ title, subtitle, onMenuToggle }: HeaderProps) {
           </DropdownMenu>
         </div>
       </div>
+
+      {/* Profile Dialog */}
+      <Dialog open={showProfileDialog} onOpenChange={setShowProfileDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {user?.role === 'admin' ? (
+                <>
+                  <Shield className="h-5 w-5 text-red-600" />
+                  Administratori
+                </>
+              ) : (
+                <>
+                  <UserCheck className="h-5 w-5 text-blue-600" />
+                  Përdorues i Rregullt
+                </>
+              )}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="p-4 rounded-lg border bg-muted/50">
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                {user?.role === 'admin' ? (
+                  <>
+                    <li>• Përmban të gjitha lejet e përdoruesit të rregullt</li>
+                    <li>• Modifikon regjistrimet ekzistuese të rasteve ligjore</li>
+                    <li>• Fshin regjistrimet e rasteve ligjore</li>
+                    <li>• Menaxhon llogaritë dhe rolet e përdoruesve</li>
+                    <li>• Shikon panelin e menaxhimit të përdoruesve</li>
+                    <li>• Çaktivizon llogaritë e përdoruesve</li>
+                  </>
+                ) : (
+                  <>
+                    <li>• Shikon statistikat e panelit</li>
+                    <li>• Shton regjistrime të reja të rasteve ligjore</li>
+                    <li>• Shikon të gjitha të dhënat e rasteve në tabela</li>
+                    <li>• Eksporton të dhënat (Excel, CSV)</li>
+                    <li>• Editon të dhënat e regjistrimeve që krijon vetë</li>
+                  </>
+                )}
+              </ul>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
     </header>
   );

@@ -167,7 +167,7 @@ export default function CaseTable() {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Kërko sipas emrit, paditesit, të paditurit..."
+                  placeholder="Kërkoni në të gjitha fushat (paditesi, i paditur, gjykata, etj.)..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -194,7 +194,7 @@ export default function CaseTable() {
               <div>
                 <CardTitle>Çështjet Ligjore</CardTitle>
                 <CardDescription>
-                  {response ? `${response.pagination?.total || 0} çështje në total` : ""}
+                  {response ? `${response.pagination?.totalItems || 0} çështje në total` : ""}
                 </CardDescription>
               </div>
               <div className="flex space-x-2">
@@ -326,7 +326,7 @@ export default function CaseTable() {
                 {response.pagination && response.pagination.totalPages > 1 && (
                   <div className="flex items-center justify-between mt-6">
                     <p className="text-sm text-gray-500">
-                      Faqja {response.pagination.page} nga {response.pagination.totalPages}
+                      Faqja {response.pagination.currentPage} nga {response.pagination.totalPages}
                     </p>
                     <div className="flex space-x-2">
                       <Button

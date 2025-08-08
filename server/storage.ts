@@ -152,7 +152,20 @@ export class DatabaseStorage implements IStorage {
         or(
           ilike(dataEntries.paditesi, `%${filters.search}%`),
           ilike(dataEntries.iPaditur, `%${filters.search}%`),
-          ilike(dataEntries.objektiIPadise, `%${filters.search}%`)
+          ilike(dataEntries.personITrete, `%${filters.search}%`),
+          ilike(dataEntries.objektiIPadise, `%${filters.search}%`),
+          ilike(dataEntries.gjykataShkalle, `%${filters.search}%`),
+          ilike(dataEntries.fazaGjykataShkalle, `%${filters.search}%`),
+          ilike(dataEntries.gjykataApelit, `%${filters.search}%`),
+          ilike(dataEntries.fazaGjykataApelit, `%${filters.search}%`),
+          ilike(dataEntries.fazaAktuale, `%${filters.search}%`),
+          ilike(dataEntries.perfaqesuesi, `%${filters.search}%`),
+          ilike(dataEntries.demiIPretenduar, `%${filters.search}%`),
+          ilike(dataEntries.shumaGjykata, `%${filters.search}%`),
+          ilike(dataEntries.vendimEkzekutim, `%${filters.search}%`),
+          ilike(dataEntries.fazaEkzekutim, `%${filters.search}%`),
+          ilike(dataEntries.gjykataLarte, `%${filters.search}%`),
+          ilike(users.firstName, `%${filters.search}%`)
         )
       );
     }
@@ -211,7 +224,10 @@ export class DatabaseStorage implements IStorage {
     category?: string;
     status?: string;
   }): Promise<number> {
-    let queryBuilder = db.select({ count: sql<number>`count(*)`.mapWith(Number) }).from(dataEntries);
+    let queryBuilder = db
+      .select({ count: sql<number>`count(*)`.mapWith(Number) })
+      .from(dataEntries)
+      .leftJoin(users, eq(dataEntries.createdById, users.id));
     
     const conditions = [];
     
@@ -220,7 +236,20 @@ export class DatabaseStorage implements IStorage {
         or(
           ilike(dataEntries.paditesi, `%${filters.search}%`),
           ilike(dataEntries.iPaditur, `%${filters.search}%`),
-          ilike(dataEntries.objektiIPadise, `%${filters.search}%`)
+          ilike(dataEntries.personITrete, `%${filters.search}%`),
+          ilike(dataEntries.objektiIPadise, `%${filters.search}%`),
+          ilike(dataEntries.gjykataShkalle, `%${filters.search}%`),
+          ilike(dataEntries.fazaGjykataShkalle, `%${filters.search}%`),
+          ilike(dataEntries.gjykataApelit, `%${filters.search}%`),
+          ilike(dataEntries.fazaGjykataApelit, `%${filters.search}%`),
+          ilike(dataEntries.fazaAktuale, `%${filters.search}%`),
+          ilike(dataEntries.perfaqesuesi, `%${filters.search}%`),
+          ilike(dataEntries.demiIPretenduar, `%${filters.search}%`),
+          ilike(dataEntries.shumaGjykata, `%${filters.search}%`),
+          ilike(dataEntries.vendimEkzekutim, `%${filters.search}%`),
+          ilike(dataEntries.fazaEkzekutim, `%${filters.search}%`),
+          ilike(dataEntries.gjykataLarte, `%${filters.search}%`),
+          ilike(users.firstName, `%${filters.search}%`)
         )
       );
     }

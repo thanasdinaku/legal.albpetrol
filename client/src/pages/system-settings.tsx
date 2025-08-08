@@ -444,13 +444,9 @@ export default function SystemSettings() {
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="passwordPolicy">Politika e Fjalëkalimeve</Label>
-                      <Textarea
-                        id="passwordPolicy"
-                        placeholder="Përshkrimi i politikës së fjalëkalimeve..."
-                        value={settings.passwordPolicy}
-                        onChange={(e) => setSettings({...settings, passwordPolicy: e.target.value})}
-                        rows={3}
-                      />
+                      <div className="p-3 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700">
+                        Fjalëkalimet duhet të kenë të paktën 8 karaktere, përfshijnë shkronja të mëdha dhe të vogla, numra dhe simbole.
+                      </div>
                     </div>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

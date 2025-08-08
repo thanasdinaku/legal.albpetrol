@@ -13,10 +13,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Search, Edit, Trash2, ChevronLeft, ChevronRight, Download, FileSpreadsheet, FileText } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { CaseEditForm } from "@/components/case-edit-form";
 import type { DataEntry } from "@shared/schema";
 
 export default function CaseTable() {
@@ -337,6 +339,27 @@ export default function CaseTable() {
             )}
           </CardContent>
         </Card>
+
+        {/* Edit Modal */}
+        <Dialog open={!!editingCase} onOpenChange={(open) => !open && setEditingCase(null)}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Modifiko Çështjen</DialogTitle>
+            </DialogHeader>
+            {editingCase && (
+              <CaseEditForm 
+                caseData={editingCase} 
+                onSuccess={() => {
+                  setEditingCase(null);
+                  queryClient.invalidateQueries({ queryKey: ["/api/data-entries"] });
+                  queryClient.invalidateQueries({ queryKey: ["/api/dashboard/stats"] });
+                  queryClient.invalidateQueries({ queryKey: ["/api/dashboard/recent-entries"] });
+                }}
+                onCancel={() => setEditingCase(null)}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

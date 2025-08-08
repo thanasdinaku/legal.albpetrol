@@ -41,7 +41,9 @@ export default function SystemSettings() {
     dataRetention: 365,
     sessionTimeout: 30,
     maxFileSize: 10,
-    passwordPolicy: "Fjalëkalimet duhet të kenë të paktën 8 karaktere, përfshijnë shkronja të mëdha dhe të vogla, numra dhe simbole."
+    passwordPolicy: "Fjalëkalimet duhet të kenë të paktën 8 karaktere, përfshijnë shkronja të mëdha dhe të vogla, numra dhe simbole.",
+    failedAttempts: 5,
+    lockoutTime: 15
   });
 
   // Redirect if not authenticated or not admin
@@ -451,12 +453,22 @@ export default function SystemSettings() {
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label>Tentativat e Dështuara</Label>
-                        <Input type="number" defaultValue="5" />
+                        <Label htmlFor="failedAttempts">Tentativat e Dështuara</Label>
+                        <Input 
+                          id="failedAttempts"
+                          type="number" 
+                          value={settings.failedAttempts}
+                          onChange={(e) => setSettings({...settings, failedAttempts: parseInt(e.target.value) || 5})}
+                        />
                       </div>
                       <div>
-                        <Label>Koha e Bllokimit (minuta)</Label>
-                        <Input type="number" defaultValue="15" />
+                        <Label htmlFor="lockoutTime">Koha e Bllokimit (minuta)</Label>
+                        <Input 
+                          id="lockoutTime"
+                          type="number" 
+                          value={settings.lockoutTime}
+                          onChange={(e) => setSettings({...settings, lockoutTime: parseInt(e.target.value) || 15})}
+                        />
                       </div>
                     </div>
                   </div>

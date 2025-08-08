@@ -7,7 +7,29 @@
 input::placeholder,
 textarea::placeholder,
 select::placeholder {
-  @apply text-gray-400;
+  color: #9CA3AF !important;
+  opacity: 0.8 !important;
+}
+
+/* Webkit specific placeholder styling */
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: #9CA3AF !important;
+  opacity: 0.8 !important;
+}
+
+/* Firefox specific placeholder styling */
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+  color: #9CA3AF !important;
+  opacity: 0.8 !important;
+}
+
+/* IE specific placeholder styling */
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+  color: #9CA3AF !important;
+  opacity: 0.8 !important;
 }
 
 /* Form label styling */
@@ -86,6 +108,24 @@ select::placeholder {
     font-family: 'Inter', sans-serif;
   }
 
+  /* Additional placeholder styling to ensure it takes effect */
+  input::placeholder {
+    color: #9CA3AF !important;
+    opacity: 0.7 !important;
+  }
+  
+  textarea::placeholder {
+    color: #9CA3AF !important;
+    opacity: 0.7 !important;
+  }
+  
+  select::placeholder {
+    color: #9CA3AF !important;
+    opacity: 0.7 !important;
+  }
+}
+
+@layer components {
   .primary-button {
     @apply bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium transition-colors duration-200;
   }

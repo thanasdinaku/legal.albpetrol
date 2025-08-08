@@ -31,7 +31,6 @@ export default function SystemSettings() {
   });
   
   const [settings, setSettings] = useState({
-    maintenanceMode: false,
     emailNotifications: true,
     autoBackup: true,
     auditLog: true,
@@ -86,13 +85,7 @@ export default function SystemSettings() {
     });
   };
 
-  const handleSystemRestart = () => {
-    toast({
-      title: "Ristartuesi i sistemit",
-      description: "Sistemi do të ristartohet në 30 sekonda.",
-      variant: "destructive",
-    });
-  };
+
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -109,11 +102,10 @@ export default function SystemSettings() {
         
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-4 sm:p-6">
           <Tabs defaultValue="general" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 text-xs sm:text-sm">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-3 text-xs sm:text-sm">
               <TabsTrigger value="general">Të Përgjithshme</TabsTrigger>
               <TabsTrigger value="database">Baza e të Dhënave</TabsTrigger>
               <TabsTrigger value="security">Siguria</TabsTrigger>
-              <TabsTrigger value="maintenance">Mirëmbajtja</TabsTrigger>
             </TabsList>
 
             <TabsContent value="general" className="space-y-4 sm:space-y-6">
@@ -344,48 +336,7 @@ export default function SystemSettings() {
               </Card>
             </TabsContent>
 
-            <TabsContent value="maintenance" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <i className="fas fa-tools mr-2 text-orange-600"></i>
-                    Veprimet e Mirëmbajtjes
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label htmlFor="maintenanceMode">Modaliteti i Mirëmbajtjes</Label>
-                      <p className="text-sm text-gray-500">Aktivizo për të kufizuar aksesin e përdoruesve</p>
-                    </div>
-                    <Switch
-                      id="maintenanceMode"
-                      checked={settings.maintenanceMode}
-                      onCheckedChange={(checked) => setSettings({...settings, maintenanceMode: checked})}
-                    />
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Button variant="outline">
-                      <i className="fas fa-broom mr-2"></i>
-                      Pastro Cache-in
-                    </Button>
-                    <Button variant="outline">
-                      <i className="fas fa-compress-arrows-alt mr-2"></i>
-                      Optimizo Bazën
-                    </Button>
-                    <Button variant="outline">
-                      <i className="fas fa-file-alt mr-2"></i>
-                      Eksporto Logs
-                    </Button>
-                    <Button variant="destructive" onClick={handleSystemRestart}>
-                      <i className="fas fa-power-off mr-2"></i>
-                      Ristarto Sistemin
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
+
           </Tabs>
 
           <div className="mt-6 flex justify-end">

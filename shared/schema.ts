@@ -46,10 +46,10 @@ export const dataEntries = pgTable("data_entries", {
   personITrete: varchar("person_i_trete", { length: 255 }), // Person I Trete
   objektiIPadise: text("objekti_i_padise"), // Objekti I Padise
   gjykataShkalle: varchar("gjykata_shkalle", { length: 255 }), // Gjykata e Shk. I
-  fazaGjykataShkalle: varchar("faza_gjykata_shkalle", { length: 255 }), // Faza ne te cilen ndodhet procesi (Shkalle I)
+  fazaGjykataShkalle: varchar("faza_gjykata_shkalle", { length: 255 }), // Faza në të cilën ndodhet proçesi (Shkalle I)
   gjykataApelit: varchar("gjykata_apelit", { length: 255 }), // Gjykata e Apelit
-  fazaGjykataApelit: varchar("faza_gjykata_apelit", { length: 255 }), // Faza ne te cilen ndodhet procesi (Apelit)
-  fazaAktuale: varchar("faza_aktuale", { length: 255 }), // Faza ne te cilen ndodhet procesi (current)
+  fazaGjykataApelit: varchar("faza_gjykata_apelit", { length: 255 }), // Faza në të cilën ndodhet proçesi (Apelit)
+  fazaAktuale: varchar("faza_aktuale", { length: 255 }), // Faza në të cilën ndodhet proçesi (current)
   perfaqesuesi: varchar("perfaqesuesi", { length: 255 }), // Perfaqesuesi I Albpetrol SH.A.
   demiIPretenduar: varchar("demi_i_pretenduar", { length: 255 }), // Demi i pretenduar ne objekt
   shumaGjykata: varchar("shuma_gjykata", { length: 255 }), // Shuma e caktuar nga Gjykata me vendim

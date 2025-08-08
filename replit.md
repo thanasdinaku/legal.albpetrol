@@ -16,7 +16,7 @@ This is a full-stack data management system built with React and Express.js, des
 ✓ **Ubuntu 22.04 Compatibility**: Confirmed system compatibility with Linux Ubuntu 22.04
 ✓ **CSV Import Removal**: Completely removed CSV import functionality per user request - simplified interface and navigation
 ✓ **Court Field Dropdowns**: Converted court fields to dropdown selectors with specific Albanian court options
-✓ **Field Label Updates**: Updated "Faza Aktuale e Procesit" to "Faza ne te cilen ndodhet procesi" with new placeholder
+✓ **Field Label Updates**: Updated "Faza Aktuale e Procesit" to "Faza në të cilën ndodhet proçesi" with new placeholder
 ✓ **Removed Unnecessary Fields**: Eliminated "Ankimuar" and "Përfunduar" fields from form, table, and exports
 ✓ **Enhanced UX**: Added lighter grey placeholder text for better visual hierarchy and user experience
 

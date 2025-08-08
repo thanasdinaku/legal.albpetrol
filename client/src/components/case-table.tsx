@@ -243,7 +243,7 @@ export default function CaseTable() {
                         <TableHead className="min-w-[180px]">Faza Shkallë I</TableHead>
                         <TableHead className="min-w-[150px]">Gjykata Apelit</TableHead>
                         <TableHead className="min-w-[180px]">Faza Apelit</TableHead>
-                        <TableHead className="min-w-[150px]">Faza ne te cilen ndodhet procesi</TableHead>
+                        <TableHead className="min-w-[150px]">Faza në të cilën ndodhet proçesi</TableHead>
                         <TableHead className="min-w-[150px]">Përfaqësuesi</TableHead>
                         <TableHead className="min-w-[150px]">Demi i Pretenduar</TableHead>
                         <TableHead className="min-w-[150px]">Shuma Gjykate</TableHead>

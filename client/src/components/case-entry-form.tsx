@@ -146,7 +146,7 @@ export default function CaseEntryForm() {
                   name="objektiIPadise"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Objekti I Padisë</FormLabel>
+                      <FormLabel>Objekti i Padisë</FormLabel>
                       <FormControl>
                         <Textarea 
                           placeholder="Përshkrimi i objektit të padisë" 
@@ -247,7 +247,7 @@ export default function CaseEntryForm() {
                     name="fazaAktuale"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Faza ne te cilen ndodhet procesi</FormLabel>
+                        <FormLabel>Faza në të cilën ndodhet proçesi</FormLabel>
                         <FormControl>
                           <Input placeholder="P.Sh. (Përgaditore)" {...field} value={field.value || ""} />
                         </FormControl>

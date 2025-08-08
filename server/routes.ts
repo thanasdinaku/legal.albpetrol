@@ -34,6 +34,7 @@ import { z } from "zod";
 import XLSX from "xlsx";
 import { db } from "./db";
 import { sql } from "drizzle-orm";
+import { sessions } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Apply rate limiting to all routes
@@ -49,7 +50,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/clear-sessions', async (req, res) => {
     try {
       // Clear session table directly for migration
-      await db.delete(sql`sessions`);
+      await db.delete(sessions);
       res.json({ message: "All sessions cleared" });
     } catch (error) {
       console.log("Session clear error:", error);
@@ -195,7 +196,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Dashboard stats
-  app.get('/api/dashboard/stats', isAdmin, async (req: any, res) => {
+  app.get('/api/dashboard/stats', isAuthenticated, async (req: any, res) => {
     try {
       const stats = await storage.getDataEntryStats();
       res.json(stats);
@@ -205,7 +206,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/dashboard/recent-entries', isAdmin, async (req: any, res) => {
+  app.get('/api/dashboard/recent-entries', isAuthenticated, async (req: any, res) => {
     try {
       const entries = await storage.getRecentDataEntries(5);
       res.json(entries);
@@ -394,14 +395,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid role. Must be 'user' or 'admin'." });
       }
       
+      // Generate a temporary password for the new user
+      const tempPassword = `temp${Math.random().toString(36).substring(2, 8)}`;
+      const hashedPassword = await hashPassword(tempPassword);
+      
       const newUser = await storage.createManualUser({
         email,
         firstName,
         lastName,
+        password: hashedPassword,
         role
       });
       
-      res.status(201).json(newUser);
+      // Remove password from response and include temp password for admin
+      const { password, ...userWithoutPassword } = newUser;
+      res.status(201).json({
+        ...userWithoutPassword,
+        tempPassword: tempPassword  // Include temp password for admin to share with user
+      });
     } catch (error: any) {
       console.error("Error creating user:", error);
       if (error?.message && error.message.includes('unique')) {
@@ -432,31 +443,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Admin user creation route
-  app.post("/api/admin/users", isAdmin, async (req: any, res) => {
-    try {
-      const userData = createUserSchema.parse(req.body);
-      
-      // Hash the password before storing
-      const hashedPassword = await hashPassword(userData.password);
-      const userWithHashedPassword = {
-        ...userData,
-        password: hashedPassword
-      };
-      
-      const user = await storage.createManualUser(userWithHashedPassword);
-      
-      // Remove password from response
-      const { password, ...userWithoutPassword } = user;
-      res.status(201).json(userWithoutPassword);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Validation error", errors: error.errors });
-      }
-      console.error("Error creating user:", error);
-      res.status(500).json({ message: "Failed to create user" });
-    }
-  });
+
 
   const httpServer = createServer(app);
   return httpServer;

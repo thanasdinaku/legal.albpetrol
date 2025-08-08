@@ -86,7 +86,7 @@ export default function Sidebar({ isOpen = true, onClose, className }: SidebarPr
           <span className="text-sm sm:text-base">Menaxho Çështjet</span>
         </button>
         
-        {user?.id === "46078954" && (
+        {user?.role === 'admin' && (
           <div className="border-t border-gray-200 pt-2 mt-2">
             <button
               onClick={() => handleNavigation('/user-management')}
@@ -104,6 +104,17 @@ export default function Sidebar({ isOpen = true, onClose, className }: SidebarPr
             </button>
           </div>
         )}
+        
+        {/* Personal Settings - Always visible for all users */}
+        <div className="border-t border-gray-200 pt-2 mt-2">
+          <button
+            onClick={() => handleNavigation('/settings')}
+            className={isActive('/settings') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
+          >
+            <i className="fas fa-user-cog"></i>
+            <span className="text-sm sm:text-base">Cilësimet</span>
+          </button>
+        </div>
       </nav>
     </div>
     </>

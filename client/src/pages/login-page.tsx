@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,6 +16,7 @@ import { Eye, EyeOff } from "lucide-react";
 export default function LoginPage() {
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
+  const [, setLocation] = useLocation();
 
   const form = useForm<LoginData>({
     resolver: zodResolver(loginSchema),
@@ -47,7 +49,8 @@ export default function LoginPage() {
         title: "Mirë se erdhët!",
         description: `Jeni kyçur me sukses si ${user.firstName} ${user.lastName}`,
       });
-      // The app will automatically redirect due to auth state change
+      // Programmatically redirect to dashboard
+      setLocation("/");
     },
     onError: (error: Error) => {
       toast({

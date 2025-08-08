@@ -111,10 +111,18 @@
   }
 
   .nav-link {
-    @apply flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200;
+    @apply flex items-center space-x-2 sm:space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200;
   }
 
   .nav-link-active {
-    @apply flex items-center space-x-3 px-4 py-3 rounded-lg bg-primary text-white;
+    @apply flex items-center space-x-2 sm:space-x-3 px-3 py-2 rounded-lg bg-primary text-white;
+  }
+
+  /* Mobile responsiveness improvements */
+  @media (max-width: 640px) {
+    .nav-link i,
+    .nav-link-active i {
+      @apply w-5 text-center text-base;
+    }
   }
 }

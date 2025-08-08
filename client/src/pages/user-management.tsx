@@ -13,6 +13,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useToast } from "@/hooks/use-toast";
 import { Users, Shield, UserCheck, Calendar, UserPlus, Trash2, MoreHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
+import Sidebar from "@/components/sidebar";
+import Header from "@/components/header";
 
 interface User {
   id: string;
@@ -35,6 +37,7 @@ interface UserStats {
 export default function UserManagement() {
   const { user: currentUser, isAuthenticated, isLoading } = useAuth();
   const { toast } = useToast();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Check if user is admin (truealbos@gmail.com)
   const isAdmin = currentUser?.id === "46078954";
@@ -179,15 +182,27 @@ export default function UserManagement() {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Menaxhimi i Përdoruesve</h1>
-          <p className="text-muted-foreground mt-2">
-            Menaxhimi i llogarive të përdoruesve dhe i lejeve për sistemin e menaxhimit të çështjeve ligjore.
-          </p>
-        </div>
-        <Dialog open={showAddUserDialog} onOpenChange={setShowAddUserDialog}>
+    <div className="flex h-screen bg-gray-50">
+      <Sidebar 
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
+      <div className="flex-1 flex flex-col overflow-hidden lg:ml-0">
+        <Header 
+          title="Menaxhimi i Përdoruesve" 
+          subtitle="Menaxhimi i llogarive të përdoruesve dhe i lejeve për sistemin" 
+          onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
+        />
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="min-w-0">
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Menaxhimi i Përdoruesve</h1>
+                <p className="text-muted-foreground mt-2 text-sm sm:text-base">
+                  Menaxhimi i llogarive të përdoruesve dhe i lejeve për sistemin e menaxhimit të çështjeve ligjore.
+                </p>
+              </div>
+              <Dialog open={showAddUserDialog} onOpenChange={setShowAddUserDialog}>
           <DialogTrigger asChild>
             <Button>
               <UserPlus className="w-4 h-4 mr-2" />
@@ -455,6 +470,9 @@ export default function UserManagement() {
           </div>
         </CardContent>
       </Card>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

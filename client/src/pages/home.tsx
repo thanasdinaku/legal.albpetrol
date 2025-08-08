@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
@@ -12,6 +12,7 @@ export default function Home() {
   const { toast } = useToast();
   const { user, isAuthenticated, isLoading } = useAuth();
   const [, navigate] = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -42,20 +43,24 @@ export default function Home() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <Sidebar 
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
+      <div className="flex-1 flex flex-col overflow-hidden lg:ml-0">
         <Header 
           title="Përmbledhja e Panelit" 
           subtitle="Mirë se erdhët! Këtu është përmbledhja e të dhënave tuaja." 
+          onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
         />
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
           <div className="space-y-6">
             <DashboardStats />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <RecentActivity />
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Veprime të Shpejta</h3>
-                <div className="grid grid-cols-2 gap-4">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Veprime të Shpejta</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <button 
                     onClick={() => navigate('/data-entry')}
                     className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition duration-200 group"

@@ -1,8 +1,15 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useLocation } from "wouter";
 import albpetrolLogo from "@assets/Albpetrol.svg_1754604323425.png";
+import { cn } from "@/lib/utils";
 
-export default function Sidebar() {
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+  className?: string;
+}
+
+export default function Sidebar({ isOpen = true, onClose, className }: SidebarProps) {
   const { user } = useAuth();
   const [location, setLocation] = useLocation();
 
@@ -10,78 +17,105 @@ export default function Sidebar() {
 
   const isActive = (path: string) => location === path;
 
+  const handleNavigation = (path: string) => {
+    setLocation(path);
+    onClose?.(); // Close mobile sidebar after navigation
+  };
+
   return (
-    <div className="w-64 bg-white shadow-lg border-r border-gray-200">
-      <div className="p-6 border-b border-gray-200">
-        <div className="text-center space-y-3">
-          <img 
-            src={albpetrolLogo} 
-            alt="Albpetrol Logo" 
-            className="w-32 h-20 object-contain mx-auto"
-          />
-          <div>
-            <h1 className="text-lg font-bold text-gray-900">Pasqyra e Ceshtjeve Ligjore</h1>
-            <p className="text-sm text-gray-500 capitalize">{user?.role === 'admin' ? 'Administrator' : 'Përdorues'}</p>
+    <>
+      {/* Mobile backdrop */}
+      {isOpen && onClose && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <div className={cn(
+        "fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white shadow-lg border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:transform-none",
+        isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+        className
+      )}>
+        <div className="p-4 sm:p-6 border-b border-gray-200">
+          <div className="text-center space-y-3">
+            {/* Close button for mobile */}
+            {onClose && (
+              <button
+                onClick={onClose}
+                className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 lg:hidden"
+              >
+                <i className="fas fa-times text-xl"></i>
+              </button>
+            )}
+            <img 
+              src={albpetrolLogo} 
+              alt="Albpetrol Logo" 
+              className="w-24 h-16 sm:w-32 sm:h-20 object-contain mx-auto"
+            />
+            <div>
+              <h1 className="text-base sm:text-lg font-bold text-gray-900 leading-tight">Pasqyra e Ceshtjeve Ligjore</h1>
+              <p className="text-xs sm:text-sm text-gray-500 capitalize">{user?.role === 'admin' ? 'Administrator' : 'Përdorues'}</p>
+            </div>
           </div>
         </div>
-      </div>
       
-      <nav className="p-4 space-y-2">
+      <nav className="p-4 space-y-2 overflow-y-auto flex-1">
         <button
-          onClick={() => setLocation('/')}
+          onClick={() => handleNavigation('/')}
           className={isActive('/') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
         >
           <i className="fas fa-tachometer-alt"></i>
-          <span>Paneli Kryesor</span>
+          <span className="text-sm sm:text-base">Paneli Kryesor</span>
         </button>
         
         <button
-          onClick={() => setLocation('/data-entry')}
+          onClick={() => handleNavigation('/data-entry')}
           className={isActive('/data-entry') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
         >
           <i className="fas fa-plus-circle"></i>
-          <span>Regjistro Çështje</span>
+          <span className="text-sm sm:text-base">Regjistro Çështje</span>
         </button>
         
         <button
-          onClick={() => setLocation('/data-table')}
+          onClick={() => handleNavigation('/data-table')}
           className={isActive('/data-table') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
         >
           <i className="fas fa-table"></i>
-          <span>Menaxho Çështjet</span>
+          <span className="text-sm sm:text-base">Menaxho Çështjet</span>
         </button>
         
         {user?.role === 'admin' && (
           <button
-            onClick={() => setLocation('/csv-import')}
+            onClick={() => handleNavigation('/csv-import')}
             className={isActive('/csv-import') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
           >
             <i className="fas fa-file-import"></i>
-            <span>Importo CSV</span>
+            <span className="text-sm sm:text-base">Importo CSV</span>
           </button>
         )}
         
         {user?.id === "46078954" && (
           <div className="border-t border-gray-200 pt-2 mt-2">
             <button
-              onClick={() => setLocation('/user-management')}
+              onClick={() => handleNavigation('/user-management')}
               className={isActive('/user-management') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
             >
               <i className="fas fa-users"></i>
-              <span>Menaxhimi i Përdoruesve</span>
+              <span className="text-sm sm:text-base">Menaxhimi i Përdoruesve</span>
             </button>
             <button
-              onClick={() => setLocation('/system-settings')}
+              onClick={() => handleNavigation('/system-settings')}
               className={isActive('/system-settings') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
             >
               <i className="fas fa-cog"></i>
-              <span>Cilësimet e Sistemit</span>
+              <span className="text-sm sm:text-base">Cilësimet e Sistemit</span>
             </button>
           </div>
         )}
       </nav>
-
-
     </div>
+    </>
   );
 }

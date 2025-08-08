@@ -17,6 +17,7 @@ export default function SystemSettings() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [systemInfo, setSystemInfo] = useState({
     version: "2.1.0",
     buildDate: "2025-01-07",
@@ -95,24 +96,28 @@ export default function SystemSettings() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <Sidebar 
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
+      <div className="flex-1 flex flex-col overflow-hidden lg:ml-0">
         <Header 
           title="Cilësimet e Sistemit" 
           subtitle="Menaxho konfigurimin dhe parametrat e sistemit të menaxhimit ligjor" 
+          onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
         />
         
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-4 sm:p-6">
           <Tabs defaultValue="general" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 text-xs sm:text-sm">
               <TabsTrigger value="general">Të Përgjithshme</TabsTrigger>
               <TabsTrigger value="database">Baza e të Dhënave</TabsTrigger>
               <TabsTrigger value="security">Siguria</TabsTrigger>
               <TabsTrigger value="maintenance">Mirëmbajtja</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="general" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <TabsContent value="general" className="space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center">

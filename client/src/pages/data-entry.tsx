@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import Sidebar from "@/components/sidebar";
@@ -8,6 +8,7 @@ import CaseEntryForm from "@/components/case-entry-form";
 export default function DataEntry() {
   const { toast } = useToast();
   const { isAuthenticated, isLoading } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -38,13 +39,17 @@ export default function DataEntry() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <Sidebar 
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
+      <div className="flex-1 flex flex-col overflow-hidden lg:ml-0">
         <Header 
           title="Regjistro Çështje të Re" 
           subtitle="Plotësoni formën për të shtuar një çështje ligjore në sistem" 
+          onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
         />
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
           <CaseEntryForm />
         </main>
       </div>

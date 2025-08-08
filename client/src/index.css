@@ -3,6 +3,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom placeholder styling for better visual hierarchy */
+input::placeholder,
+textarea::placeholder,
+select::placeholder {
+  @apply text-gray-400;
+}
+
+/* Form label styling */
+.form-label {
+  @apply text-gray-700 font-medium;
+}
+
 :root {
   --background: hsl(0 0% 100%);
   --foreground: hsl(210 25% 7.8431%);

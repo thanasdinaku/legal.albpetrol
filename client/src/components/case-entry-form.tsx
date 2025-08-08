@@ -279,7 +279,7 @@ export default function CaseEntryForm() {
                       <FormItem>
                         <FormLabel>Dëmi i Pretenduar në Objekt</FormLabel>
                         <FormControl>
-                          <Input placeholder="p.sh. 50,000 LEKË" {...field} value={field.value || ""} />
+                          <Input placeholder="P.Sh. 50,000 LEKË" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -294,7 +294,7 @@ export default function CaseEntryForm() {
                       <FormItem>
                         <FormLabel>Shuma e Caktuar nga Gjykata me Vendim</FormLabel>
                         <FormControl>
-                          <Input placeholder="p.sh. 30,000 LEKË" {...field} value={field.value || ""} />
+                          <Input placeholder="P.Sh. 30,000 LEKË" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -324,7 +324,7 @@ export default function CaseEntryForm() {
                       <FormItem>
                         <FormLabel>Faza në të cilën ndodhet Ekzekutimi</FormLabel>
                         <FormControl>
-                          <Input placeholder="p.sh. Në proces" {...field} value={field.value || ""} />
+                          <Input placeholder="P.Sh. Në proçes" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

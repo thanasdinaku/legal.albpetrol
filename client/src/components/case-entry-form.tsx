@@ -249,9 +249,9 @@ export default function CaseEntryForm() {
                     name="fazaAktuale"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Faza Aktuale e Procesit</FormLabel>
+                        <FormLabel>Faza ne te cilen ndodhet procesi</FormLabel>
                         <FormControl>
-                          <Input placeholder="Faza aktuale e çështjes" {...field} value={field.value || ""} />
+                          <Input placeholder="P.Sh. (Përgaditore)" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

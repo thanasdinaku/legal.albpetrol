@@ -213,7 +213,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           [
             'Nr. Rendor', 'Paditesi', 'I Paditur', 'Person I Tretë', 'Objekti I Padisë',
             'Gjykata Shkallë së Parë e', 'Faza Shkallë I', 'Gjykata Apelit', 'Faza Apelit',
-            'Faza Aktuale', 'Përfaqësuesi', 'Demi i Pretenduar', 'Shuma Gjykate',
+            'Faza ne te cilen ndodhet procesi', 'Përfaqësuesi', 'Demi i Pretenduar', 'Shuma Gjykate',
             'Vendim Ekzekutim', 'Faza Ekzekutim', 'Ankimuar', 'Përfunduar',
             'Gjykata e Lartë', 'Krijuar më'
           ],
@@ -260,7 +260,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const csvHeaders = [
           'Nr. Rendor', 'Paditesi', 'I Paditur', 'Person I Tretë', 'Objekti I Padisë',
           'Gjykata Shkallë së Parë e', 'Faza Shkallë I', 'Gjykata Apelit', 'Faza Apelit',
-          'Faza Aktuale', 'Përfaqësuesi', 'Demi i Pretenduar', 'Shuma Gjykate',
+          'Faza ne te cilen ndodhet procesi', 'Përfaqësuesi', 'Demi i Pretenduar', 'Shuma Gjykate',
           'Vendim Ekzekutim', 'Faza Ekzekutim', 'Ankimuar', 'Përfunduar',
           'Gjykata e Lartë', 'Krijuar më'
         ];
@@ -355,7 +355,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ]);
 
         autoTable(doc, {
-          head: [['Nr.', 'Gjykata Shkallë së Parë e', 'Faza Shkallë I', 'Gjykata Apelit', 'Faza Apelit', 'Faza Aktuale', 'Gjykata e Lartë']],
+          head: [['Nr.', 'Gjykata Shkallë së Parë e', 'Faza Shkallë I', 'Gjykata Apelit', 'Faza Apelit', 'Faza ne te cilen ndodhet procesi', 'Gjykata e Lartë']],
           body: courtData,
           startY: 35,
           styles: { fontSize: 7, cellPadding: 1.5, overflow: 'linebreak' },

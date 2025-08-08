@@ -155,9 +155,7 @@ export class DatabaseStorage implements IStorage {
       conditions.push(eq(dataEntries.fazaAktuale, filters.category));
     }
     
-    if (filters?.status) {
-      conditions.push(eq(dataEntries.perfunduar, filters.status as any));
-    }
+    // Status filtering removed - perfunduar field no longer exists
     
     if (conditions.length > 0) {
       queryBuilder = queryBuilder.where(and(...conditions));
@@ -220,9 +218,7 @@ export class DatabaseStorage implements IStorage {
       conditions.push(eq(dataEntries.fazaAktuale, filters.category));
     }
     
-    if (filters?.status) {
-      conditions.push(eq(dataEntries.perfunduar, filters.status as any));
-    }
+    // Status filtering removed - perfunduar field no longer exists
     
     if (conditions.length > 0) {
       queryBuilder = queryBuilder.where(and(...conditions));
@@ -250,8 +246,6 @@ export class DatabaseStorage implements IStorage {
         shumaGjykata: dataEntries.shumaGjykata,
         vendimEkzekutim: dataEntries.vendimEkzekutim,
         fazaEkzekutim: dataEntries.fazaEkzekutim,
-        ankimuar: dataEntries.ankimuar,
-        perfunduar: dataEntries.perfunduar,
         gjykataLarte: dataEntries.gjykataLarte,
         createdById: dataEntries.createdById,
         createdAt: dataEntries.createdAt,

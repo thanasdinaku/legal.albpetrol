@@ -526,6 +526,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // System Settings Routes (Admin only)
+  app.put("/api/admin/settings", isAdmin, async (req: any, res) => {
+    try {
+      if (req.user.role !== "admin") {
+        return res.status(403).json({ message: "Access denied. Admin privileges required." });
+      }
+      
+      const settings = req.body;
+      
+      // Save each setting to the database
+      const savedSettings = [];
+      for (const [key, value] of Object.entries(settings)) {
+        if (key !== 'lastSaved') { // Skip the lastSaved timestamp
+          const savedSetting = await storage.saveSystemSetting(key, value, req.user.id);
+          savedSettings.push(savedSetting);
+        }
+      }
+      
+      console.log("Saved system settings:", savedSettings.length, "settings");
+      
+      res.json({ 
+        message: "System settings saved successfully",
+        timestamp: new Date().toISOString(),
+        settingsCount: savedSettings.length
+      });
+    } catch (error) {
+      console.error("Error saving settings:", error);
+      res.status(500).json({ message: "Failed to save system settings" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

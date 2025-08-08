@@ -77,6 +77,15 @@ export const databaseCheckpoints = pgTable("database_checkpoints", {
   isAutoBackup: boolean("is_auto_backup").default(false), // True for automated backups
 });
 
+// System settings table for storing application configuration
+export const systemSettings = pgTable("system_settings", {
+  id: serial("id").primaryKey(),
+  settingKey: varchar("setting_key", { length: 255 }).notNull().unique(),
+  settingValue: jsonb("setting_value").notNull(),
+  updatedById: varchar("updated_by_id").notNull().references(() => users.id),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -123,6 +132,11 @@ export const insertCheckpointSchema = createInsertSchema(databaseCheckpoints).om
   createdAt: true,
 });
 
+export const insertSystemSettingsSchema = createInsertSchema(systemSettings).omit({
+  id: true,
+  updatedAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -134,3 +148,5 @@ export type InsertDataEntry = z.infer<typeof insertDataEntrySchema>;
 export type UpdateDataEntry = z.infer<typeof updateDataEntrySchema>;
 export type DatabaseCheckpoint = typeof databaseCheckpoints.$inferSelect;
 export type InsertCheckpoint = z.infer<typeof insertCheckpointSchema>;
+export type SystemSettings = typeof systemSettings.$inferSelect;
+export type InsertSystemSettings = z.infer<typeof insertSystemSettingsSchema>;

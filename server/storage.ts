@@ -2,6 +2,7 @@ import {
   users,
   dataEntries,
   databaseCheckpoints,
+  systemSettings,
   type User,
   type InsertUser,
   type CreateUser,
@@ -10,6 +11,8 @@ import {
   type UpdateDataEntry,
   type DatabaseCheckpoint,
   type InsertCheckpoint,
+  type SystemSettings,
+  type InsertSystemSettings,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, asc, and, ilike, or, sql, getTableColumns } from "drizzle-orm";
@@ -63,6 +66,11 @@ export interface IStorage {
   getCheckpointById(id: number): Promise<DatabaseCheckpoint | undefined>;
   deleteCheckpoint(id: number): Promise<void>;
   restoreFromCheckpoint(checkpointId: number): Promise<void>;
+
+  // System settings operations
+  saveSystemSetting(key: string, value: any, updatedById: string): Promise<SystemSettings>;
+  getSystemSetting(key: string): Promise<SystemSettings | undefined>;
+  getAllSystemSettings(): Promise<SystemSettings[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -212,40 +220,42 @@ export class DatabaseStorage implements IStorage {
       conditions.push(eq(dataEntries.fazaAktuale, filters.category));
     }
     
+    let finalQuery = baseQueryBuilder;
+    
     if (conditions.length > 0) {
-      baseQueryBuilder = baseQueryBuilder.where(and(...conditions));
+      finalQuery = finalQuery.where(and(...conditions));
     }
     
     // Apply sorting based on sortOrder parameter
     if (filters?.sortOrder === 'asc') {
-      baseQueryBuilder = baseQueryBuilder.orderBy(asc(dataEntries.createdAt));
+      finalQuery = finalQuery.orderBy(asc(dataEntries.createdAt));
     } else {
-      baseQueryBuilder = baseQueryBuilder.orderBy(desc(dataEntries.createdAt));
+      finalQuery = finalQuery.orderBy(desc(dataEntries.createdAt));
     }
     
     // Get total count for nrRendor calculation
-    let countQueryBuilder = db.select({ count: sql<number>`count(*)` }).from(dataEntries);
+    let countQuery = db.select({ count: sql<number>`count(*)` }).from(dataEntries);
     
     if (filters?.search) {
-      countQueryBuilder = countQueryBuilder.leftJoin(users, eq(dataEntries.createdById, users.id));
+      countQuery = countQuery.leftJoin(users, eq(dataEntries.createdById, users.id));
       if (conditions.length > 0) {
-        countQueryBuilder = countQueryBuilder.where(and(...conditions));
+        countQuery = countQuery.where(and(...conditions));
       }
     }
     
-    const [countResult] = await countQueryBuilder;
+    const [countResult] = await countQuery;
     const totalFilteredCount = countResult.count as number;
     
     // Apply pagination
     if (filters?.limit) {
-      baseQueryBuilder = baseQueryBuilder.limit(filters.limit);
+      finalQuery = finalQuery.limit(filters.limit);
     }
     
     if (filters?.offset) {
-      baseQueryBuilder = baseQueryBuilder.offset(filters.offset);
+      finalQuery = finalQuery.offset(filters.offset);
     }
     
-    const entries = await baseQueryBuilder;
+    const entries = await finalQuery;
     
     // Add dynamic Nr. Rendor based on position in filtered/sorted results
     return entries.map((entry, index) => {
@@ -329,11 +339,13 @@ export class DatabaseStorage implements IStorage {
     
     // Status filtering removed - perfunduar field no longer exists
     
+    let finalCountQuery = queryBuilder;
+    
     if (conditions.length > 0) {
-      queryBuilder = queryBuilder.where(and(...conditions));
+      finalCountQuery = finalCountQuery.where(and(...conditions));
     }
     
-    const [result] = await queryBuilder;
+    const [result] = await finalCountQuery;
     return result.count;
   }
 
@@ -445,6 +457,39 @@ export class DatabaseStorage implements IStorage {
     // For now, it's a placeholder that would need proper implementation
     // with database dump/restore utilities
     throw new Error("Restore functionality not yet implemented");
+  }
+
+  // System Settings operations
+  async saveSystemSetting(key: string, value: any, updatedById: string): Promise<SystemSettings> {
+    const [setting] = await db
+      .insert(systemSettings)
+      .values({
+        settingKey: key,
+        settingValue: value,
+        updatedById
+      })
+      .onConflictDoUpdate({
+        target: systemSettings.settingKey,
+        set: {
+          settingValue: value,
+          updatedById,
+          updatedAt: new Date()
+        }
+      })
+      .returning();
+    return setting;
+  }
+
+  async getSystemSetting(key: string): Promise<SystemSettings | undefined> {
+    const [setting] = await db
+      .select()
+      .from(systemSettings)
+      .where(eq(systemSettings.settingKey, key));
+    return setting;
+  }
+
+  async getAllSystemSettings(): Promise<SystemSettings[]> {
+    return await db.select().from(systemSettings).orderBy(systemSettings.settingKey);
   }
 }
 

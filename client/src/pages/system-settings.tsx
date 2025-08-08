@@ -75,11 +75,34 @@ export default function SystemSettings() {
     return null;
   }
 
+  // Save settings mutation
+  const saveSettingsMutation = useMutation({
+    mutationFn: async (settingsData: any) => {
+      const res = await apiRequest("PUT", "/api/admin/settings", settingsData);
+      return res.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Cilësimet u ruajtën",
+        description: "Cilësimet e sistemit u përditësuan me sukses.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Gabim në ruajtje",
+        description: "Cilësimet nuk u ruajtën. Provoni përsëri.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleSaveSettings = () => {
-    toast({
-      title: "Cilësimet u ruajtën",
-      description: "Cilësimet e sistemit u përditësuan me sukses.",
-    });
+    const settingsToSave = {
+      ...settings,
+      lastSaved: new Date().toISOString()
+    };
+    
+    saveSettingsMutation.mutate(settingsToSave);
   };
 
   // Fetch checkpoints for restore functionality
@@ -354,7 +377,7 @@ export default function SystemSettings() {
                           <SelectValue placeholder="Zgjidhni një checkpoint" />
                         </SelectTrigger>
                         <SelectContent className="max-h-48">
-                          {checkpointsData && checkpointsData.length > 0 ? (
+                          {checkpointsData && Array.isArray(checkpointsData) && checkpointsData.length > 0 ? (
                             checkpointsData.map((checkpoint: any) => (
                               <SelectItem key={checkpoint.id} value={checkpoint.id.toString()}>
                                 {checkpoint.name} - {new Date(checkpoint.createdAt).toLocaleDateString('sq-AL')}
@@ -390,11 +413,11 @@ export default function SystemSettings() {
                   <CardContent className="space-y-4">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Totali i Çështjeve:</span>
-                      <Badge variant="secondary">{dbStats?.totalEntries || 0}</Badge>
+                      <Badge variant="secondary">{(dbStats as any)?.totalEntries || 0}</Badge>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Përdorues Aktivë:</span>
-                      <Badge variant="secondary">{userStats?.totalUsers || 0}</Badge>
+                      <Badge variant="secondary">{(userStats as any)?.totalUsers || 0}</Badge>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Madhësia e Bazës:</span>
@@ -449,9 +472,13 @@ export default function SystemSettings() {
           </Tabs>
 
           <div className="mt-6 flex justify-end">
-            <Button onClick={handleSaveSettings} className="px-6">
+            <Button 
+              onClick={handleSaveSettings} 
+              className="px-6"
+              disabled={saveSettingsMutation.isPending}
+            >
               <i className="fas fa-save mr-2"></i>
-              Ruaj Cilësimet
+              {saveSettingsMutation.isPending ? "Duke Ruajtur..." : "Ruaj Cilësimet"}
             </Button>
           </div>
         </main>

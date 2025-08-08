@@ -33,14 +33,15 @@ textarea:-ms-input-placeholder {
 }
 
 /* Select dropdown placeholder styling for shadcn/ui components */
-[role="combobox"] span[data-placeholder] {
+/* Target the SelectTrigger when showing placeholder using shadcn's data-placeholder attribute */
+button[role="combobox"][data-placeholder] {
   color: #9CA3AF !important;
   opacity: 0.8 !important;
 }
 
-/* Ensure selected values maintain full opacity and normal color */
-[role="combobox"] span:not([data-placeholder]) {
-  color: inherit !important;
+/* When SelectTrigger has a value, ensure it's dark */
+button[role="combobox"]:not([data-placeholder]) {
+  color: #0f172a !important;
   opacity: 1 !important;
 }
 

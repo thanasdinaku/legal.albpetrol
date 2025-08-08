@@ -20,12 +20,11 @@ export default function SystemSettings() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [systemInfo, setSystemInfo] = useState({
     version: "2.1.0",
-    buildDate: "2025-01-07",
+    buildDate: new Date().toLocaleDateString('sq-AL'), // Date when system is initialized for the first time
     author: "Albpetrol Sh.A.",
     environment: "Production",
     database: "PostgreSQL 15.3",
     lastBackup: "2025-01-07 21:30:00",
-    uptime: "15 ditë, 8 orë",
     totalStorage: "2.4 GB",
     usedStorage: "1.2 GB"
   });
@@ -133,10 +132,6 @@ export default function SystemSettings() {
                     <div className="flex justify-between">
                       <span className="text-gray-600">Mjedisi:</span>
                       <Badge variant="default">{systemInfo.environment}</Badge>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Koha e Funksionimit:</span>
-                      <span className="font-medium">{systemInfo.uptime}</span>
                     </div>
                   </CardContent>
                 </Card>

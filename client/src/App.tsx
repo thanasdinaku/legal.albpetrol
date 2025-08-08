@@ -33,7 +33,10 @@ function Router() {
   return (
     <Switch>
       {!isAuthenticated ? (
-        <Route path="/" component={LoginPage} />
+        <>
+          <Route path="/" component={LoginPage} />
+          <Route path="/auth" component={LoginPage} />
+        </>
       ) : (
         <>
           <Route path="/" component={Home} />

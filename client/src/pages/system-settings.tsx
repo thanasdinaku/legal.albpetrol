@@ -88,6 +88,18 @@ export default function SystemSettings() {
     enabled: isAuthenticated && user?.role === "admin"
   });
 
+  // Fetch database statistics
+  const { data: dbStats } = useQuery({
+    queryKey: ["/api/dashboard/stats"],
+    enabled: isAuthenticated && user?.role === "admin"
+  });
+
+  // Fetch user statistics
+  const { data: userStats } = useQuery({
+    queryKey: ["/api/admin/user-stats"],
+    enabled: isAuthenticated && user?.role === "admin"
+  });
+
   // Backup mutation
   const backupMutation = useMutation({
     mutationFn: async (backupData: any) => {
@@ -249,7 +261,7 @@ export default function SystemSettings() {
                         id="sessionTimeout"
                         type="number"
                         value={settings.sessionTimeout}
-                        onChange={(e) => setSettings({...settings, sessionTimeout: parseInt(e.target.value)})}
+                        onChange={(e) => setSettings({...settings, sessionTimeout: parseInt(e.target.value) || 30})}
                       />
                     </div>
                     <div className="space-y-2">
@@ -258,7 +270,7 @@ export default function SystemSettings() {
                         id="maxFileSize"
                         type="number"
                         value={settings.maxFileSize}
-                        onChange={(e) => setSettings({...settings, maxFileSize: parseInt(e.target.value)})}
+                        onChange={(e) => setSettings({...settings, maxFileSize: parseInt(e.target.value) || 10})}
                       />
                     </div>
                   </div>
@@ -320,7 +332,7 @@ export default function SystemSettings() {
                         id="dataRetention"
                         type="number"
                         value={settings.dataRetention}
-                        onChange={(e) => setSettings({...settings, dataRetention: parseInt(e.target.value)})}
+                        onChange={(e) => setSettings({...settings, dataRetention: parseInt(e.target.value) || 365})}
                       />
                     </div>
                     
@@ -378,15 +390,15 @@ export default function SystemSettings() {
                   <CardContent className="space-y-4">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Totali i Çështjeve:</span>
-                      <Badge variant="secondary">1,247</Badge>
+                      <Badge variant="secondary">{dbStats?.totalEntries || 0}</Badge>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Përdorues Aktivë:</span>
-                      <Badge variant="secondary">12</Badge>
+                      <Badge variant="secondary">{userStats?.totalUsers || 0}</Badge>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Madhësia e Bazës:</span>
-                      <Badge variant="secondary">1.2 GB</Badge>
+                      <Badge variant="secondary">{systemInfo.usedStorage}</Badge>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Indekset:</span>

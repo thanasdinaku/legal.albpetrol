@@ -78,6 +78,11 @@ export default function CaseTable() {
     }
   };
 
+  // Helper function to check if user can edit/delete an entry
+  const canUserModifyEntry = (entry: DataEntry & { createdByName: string }) => {
+    return user?.role === "admin" || entry.createdById === user?.id;
+  };
+
   const handleExport = async (format: 'excel' | 'csv' | 'pdf') => {
     try {
       const response = await fetch(`/api/data-entries/export/${format}`, {
@@ -263,7 +268,7 @@ export default function CaseTable() {
                         <TableHead className="min-w-[150px]">Gjykata e Lartë</TableHead>
                         <TableHead className="min-w-[120px]">Krijuar më</TableHead>
                         <TableHead className="min-w-[120px]">Krijuar nga</TableHead>
-                        {user?.role === "admin" && <TableHead className="min-w-[120px]">Veprime</TableHead>}
+                        {(user?.role === "admin" || response?.entries?.some(entry => entry.createdById === user?.id)) && <TableHead className="min-w-[120px]">Veprime</TableHead>}
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -290,7 +295,7 @@ export default function CaseTable() {
                           <TableCell className="max-w-[150px] truncate">{caseItem.gjykataLarte || "-"}</TableCell>
                           <TableCell>{formatDate(caseItem.createdAt ? new Date(caseItem.createdAt).toISOString() : null)}</TableCell>
                           <TableCell className="max-w-[120px] truncate">{caseItem.createdByName || "Përdorues i panjohur"}</TableCell>
-                          {user?.role === "admin" && (
+                          {canUserModifyEntry(caseItem) && (
                             <TableCell>
                               <div className="flex space-x-2">
                                 <Button

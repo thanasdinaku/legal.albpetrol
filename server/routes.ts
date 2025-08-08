@@ -131,14 +131,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put('/api/data-entries/:id', isAuthenticated, async (req: any, res) => {
     try {
-      const user = await storage.getUser(req.user.claims.sub);
-      if (!user || user.role !== 'admin') {
-        return res.status(403).json({ message: "Admin access required" });
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      const id = parseInt(req.params.id);
+      
+      // Check if entry exists and get ownership
+      const existingEntry = await storage.getDataEntryById(id);
+      if (!existingEntry) {
+        return res.status(404).json({ message: "Entry not found" });
       }
 
-      const id = parseInt(req.params.id);
+      // Permission check: admin can edit any entry, regular user can only edit their own
+      if (user?.role !== 'admin' && existingEntry.createdById !== userId) {
+        return res.status(403).json({ message: "You can only edit your own entries" });
+      }
+
       const validatedData = updateDataEntrySchema.parse(req.body);
-      
       const entry = await storage.updateDataEntry(id, validatedData);
       res.json(entry);
     } catch (error) {
@@ -152,12 +160,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.delete('/api/data-entries/:id', isAuthenticated, async (req: any, res) => {
     try {
-      const user = await storage.getUser(req.user.claims.sub);
-      if (!user || user.role !== 'admin') {
-        return res.status(403).json({ message: "Admin access required" });
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      const id = parseInt(req.params.id);
+
+      // Check if entry exists and get ownership
+      const existingEntry = await storage.getDataEntryById(id);
+      if (!existingEntry) {
+        return res.status(404).json({ message: "Entry not found" });
       }
 
-      const id = parseInt(req.params.id);
+      // Permission check: admin can delete any entry, regular user can only delete their own
+      if (user?.role !== 'admin' && existingEntry.createdById !== userId) {
+        return res.status(403).json({ message: "You can only delete your own entries" });
+      }
+
       await storage.deleteDataEntry(id);
       res.status(204).send();
     } catch (error) {

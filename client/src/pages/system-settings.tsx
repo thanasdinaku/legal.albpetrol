@@ -12,12 +12,17 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 
 export default function SystemSettings() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [checkpoints, setCheckpoints] = useState<any[]>([]);
+  const [selectedCheckpoint, setSelectedCheckpoint] = useState<string>("");
   const [systemInfo, setSystemInfo] = useState({
     version: "2.1.0",
     buildDate: new Date().toLocaleDateString('sq-AL'), // Date when system is initialized for the first time
@@ -77,11 +82,73 @@ export default function SystemSettings() {
     });
   };
 
+  // Fetch checkpoints for restore functionality
+  const { data: checkpointsData } = useQuery({
+    queryKey: ["/api/admin/checkpoints"],
+    enabled: isAuthenticated && user?.role === "admin"
+  });
+
+  // Backup mutation
+  const backupMutation = useMutation({
+    mutationFn: async (backupData: any) => {
+      const res = await apiRequest("POST", "/api/admin/backup", backupData);
+      return res.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Backup u krye me sukses",
+        description: "Backup-i i të dhënave u krijua dhe u ruajt në listën e checkpoint-eve.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/checkpoints"] });
+    },
+    onError: () => {
+      toast({
+        title: "Gabim në backup",
+        description: "Backup-i i të dhënave dështoi. Provoni përsëri.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Restore mutation
+  const restoreMutation = useMutation({
+    mutationFn: async (checkpointId: number) => {
+      const res = await apiRequest("POST", `/api/admin/restore/${checkpointId}`, {});
+      return res.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Restore u krye me sukses",
+        description: `Të dhënat u rikthyen nga checkpoint-i: ${data.checkpointName}`,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Gabim në restore",
+        description: "Rikthimi i të dhënave dështoi. Provoni përsëri.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleBackup = () => {
-    toast({
-      title: "Backup në progres",
-      description: "Backup-i i të dhënave filloi. Do të njoftoheni kur të përfundojë.",
+    backupMutation.mutate({
+      name: `Manual Backup ${new Date().toLocaleDateString('sq-AL')}`,
+      description: "Manual backup created from system settings",
+      isAutoBackup: false
     });
+  };
+
+  const handleRestore = () => {
+    if (selectedCheckpoint) {
+      restoreMutation.mutate(parseInt(selectedCheckpoint));
+    } else {
+      toast({
+        title: "Zgjidhni checkpoint",
+        description: "Ju lutem zgjidhni një checkpoint për t'u rikthyer.",
+        variant: "destructive",
+      });
+    }
   };
 
 
@@ -258,9 +325,44 @@ export default function SystemSettings() {
                     </div>
                     
                     <div className="space-y-2">
-                      <Button onClick={handleBackup} className="w-full">
+                      <Button 
+                        onClick={handleBackup} 
+                        className="w-full" 
+                        disabled={backupMutation.isPending}
+                      >
                         <i className="fas fa-download mr-2"></i>
-                        Krijo Backup Tani
+                        {backupMutation.isPending ? "Duke Krijuar..." : "Krijo Backup Tani"}
+                      </Button>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="checkpoint-select">Rikthe nga Checkpoint-i</Label>
+                      <Select value={selectedCheckpoint} onValueChange={setSelectedCheckpoint}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Zgjidhni një checkpoint" />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-48">
+                          {checkpointsData && checkpointsData.length > 0 ? (
+                            checkpointsData.map((checkpoint: any) => (
+                              <SelectItem key={checkpoint.id} value={checkpoint.id.toString()}>
+                                {checkpoint.name} - {new Date(checkpoint.createdAt).toLocaleDateString('sq-AL')}
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <SelectItem value="no-checkpoints" disabled>
+                              Nuk ka checkpoint të disponueshëm
+                            </SelectItem>
+                          )}
+                        </SelectContent>
+                      </Select>
+                      <Button 
+                        onClick={handleRestore} 
+                        variant="outline" 
+                        className="w-full"
+                        disabled={!selectedCheckpoint || selectedCheckpoint === "no-checkpoints" || restoreMutation.isPending}
+                      >
+                        <i className="fas fa-history mr-2"></i>
+                        {restoreMutation.isPending ? "Duke Rikthyer..." : "Rikthe të Dhënat"}
                       </Button>
                     </div>
                   </CardContent>

@@ -65,6 +65,18 @@ export const dataEntries = pgTable("data_entries", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Database checkpoints table for backup/restore functionality
+export const databaseCheckpoints = pgTable("database_checkpoints", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(), // Display name for checkpoint
+  description: text("description"), // Optional description
+  filePath: varchar("file_path", { length: 500 }).notNull(), // Path to backup file
+  fileSize: varchar("file_size", { length: 50 }), // Size in readable format (e.g., "1.2 MB")
+  createdById: varchar("created_by_id").notNull().references(() => users.id),
+  createdAt: timestamp("created_at").defaultNow(),
+  isAutoBackup: boolean("is_auto_backup").default(false), // True for automated backups
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -106,6 +118,11 @@ export const updateDataEntrySchema = createInsertSchema(dataEntries).omit({
   updatedAt: true,
 }).partial();
 
+export const insertCheckpointSchema = createInsertSchema(databaseCheckpoints).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -115,3 +132,5 @@ export type ChangePasswordData = z.infer<typeof changePasswordSchema>;
 export type DataEntry = typeof dataEntries.$inferSelect;
 export type InsertDataEntry = z.infer<typeof insertDataEntrySchema>;
 export type UpdateDataEntry = z.infer<typeof updateDataEntrySchema>;
+export type DatabaseCheckpoint = typeof databaseCheckpoints.$inferSelect;
+export type InsertCheckpoint = z.infer<typeof insertCheckpointSchema>;

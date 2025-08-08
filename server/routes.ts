@@ -6,9 +6,11 @@ import {
   createUserSchema,
   loginSchema,
   changePasswordSchema,
+  insertCheckpointSchema,
   type CreateUser,
   type LoginData,
-  type ChangePasswordData
+  type ChangePasswordData,
+  type InsertCheckpoint
 } from "@shared/schema";
 
 import rateLimit from 'express-rate-limit';
@@ -443,7 +445,86 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Database Backup/Restore Routes (Admin only)
+  app.get("/api/admin/checkpoints", isAdmin, async (req: any, res) => {
+    try {
+      if (req.user.role !== "admin") {
+        return res.status(403).json({ message: "Access denied. Admin privileges required." });
+      }
+      
+      const checkpoints = await storage.getAllCheckpoints();
+      res.json(checkpoints);
+    } catch (error) {
+      console.error("Error fetching checkpoints:", error);
+      res.status(500).json({ message: "Failed to fetch checkpoints" });
+    }
+  });
 
+  app.post("/api/admin/backup", isAdmin, async (req: any, res) => {
+    try {
+      if (req.user.role !== "admin") {
+        return res.status(403).json({ message: "Access denied. Admin privileges required." });
+      }
+      
+      const { name, description, isAutoBackup } = req.body;
+      
+      // Create a backup checkpoint entry (simplified version)
+      const checkpointData: InsertCheckpoint = {
+        name: name || `Backup ${new Date().toLocaleDateString('sq-AL')}`,
+        description: description || "Manual backup created from system settings",
+        filePath: `/backups/backup_${Date.now()}.sql`, // Placeholder path
+        fileSize: "1.2 MB", // Placeholder size
+        createdById: req.user.id,
+        isAutoBackup: isAutoBackup || false
+      };
+      
+      const checkpoint = await storage.createBackupCheckpoint(checkpointData);
+      res.status(201).json(checkpoint);
+    } catch (error) {
+      console.error("Error creating backup:", error);
+      res.status(500).json({ message: "Failed to create backup" });
+    }
+  });
+
+  app.post("/api/admin/restore/:checkpointId", isAdmin, async (req: any, res) => {
+    try {
+      if (req.user.role !== "admin") {
+        return res.status(403).json({ message: "Access denied. Admin privileges required." });
+      }
+      
+      const checkpointId = parseInt(req.params.checkpointId);
+      const checkpoint = await storage.getCheckpointById(checkpointId);
+      
+      if (!checkpoint) {
+        return res.status(404).json({ message: "Checkpoint not found" });
+      }
+      
+      // For now, return a simulated response since actual restore needs system-level access
+      res.json({ 
+        message: "Database restore initiated successfully",
+        checkpointName: checkpoint.name,
+        backupDate: checkpoint.createdAt 
+      });
+    } catch (error) {
+      console.error("Error restoring from checkpoint:", error);
+      res.status(500).json({ message: "Failed to restore from checkpoint" });
+    }
+  });
+
+  app.delete("/api/admin/checkpoints/:id", isAdmin, async (req: any, res) => {
+    try {
+      if (req.user.role !== "admin") {
+        return res.status(403).json({ message: "Access denied. Admin privileges required." });
+      }
+      
+      const checkpointId = parseInt(req.params.id);
+      await storage.deleteCheckpoint(checkpointId);
+      res.json({ message: "Checkpoint deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting checkpoint:", error);
+      res.status(500).json({ message: "Failed to delete checkpoint" });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;

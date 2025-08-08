@@ -1,12 +1,15 @@
 import {
   users,
   dataEntries,
+  databaseCheckpoints,
   type User,
   type InsertUser,
   type CreateUser,
   type DataEntry,
   type InsertDataEntry,
   type UpdateDataEntry,
+  type DatabaseCheckpoint,
+  type InsertCheckpoint,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, asc, and, ilike, or, sql, getTableColumns } from "drizzle-orm";
@@ -53,6 +56,13 @@ export interface IStorage {
     todayEntries: number;
     activeUsers: number;
   }>;
+
+  // Database backup/checkpoint operations
+  createBackupCheckpoint(checkpoint: InsertCheckpoint): Promise<DatabaseCheckpoint>;
+  getAllCheckpoints(): Promise<DatabaseCheckpoint[]>;
+  getCheckpointById(id: number): Promise<DatabaseCheckpoint | undefined>;
+  deleteCheckpoint(id: number): Promise<void>;
+  restoreFromCheckpoint(checkpointId: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -403,6 +413,38 @@ export class DatabaseStorage implements IStorage {
 
   async deleteUser(userId: string): Promise<void> {
     await db.delete(users).where(eq(users.id, userId));
+  }
+
+  // Backup/Checkpoint operations
+  async createBackupCheckpoint(checkpointData: InsertCheckpoint): Promise<DatabaseCheckpoint> {
+    const [checkpoint] = await db.insert(databaseCheckpoints).values(checkpointData).returning();
+    return checkpoint;
+  }
+
+  async getAllCheckpoints(): Promise<DatabaseCheckpoint[]> {
+    return await db
+      .select()
+      .from(databaseCheckpoints)
+      .orderBy(desc(databaseCheckpoints.createdAt));
+  }
+
+  async getCheckpointById(id: number): Promise<DatabaseCheckpoint | undefined> {
+    const [checkpoint] = await db
+      .select()
+      .from(databaseCheckpoints)
+      .where(eq(databaseCheckpoints.id, id));
+    return checkpoint;
+  }
+
+  async deleteCheckpoint(id: number): Promise<void> {
+    await db.delete(databaseCheckpoints).where(eq(databaseCheckpoints.id, id));
+  }
+
+  async restoreFromCheckpoint(checkpointId: number): Promise<void> {
+    // This method would implement the actual database restore logic
+    // For now, it's a placeholder that would need proper implementation
+    // with database dump/restore utilities
+    throw new Error("Restore functionality not yet implemented");
   }
 }
 

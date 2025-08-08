@@ -212,9 +212,17 @@ export default function CaseEntryForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Gjykata e Apelit</FormLabel>
-                        <FormControl>
-                          <Input placeholder="p.sh. Gjykata e Apelit Tiranë" {...field} value={field.value || ""} />
-                        </FormControl>
+                        <Select onValueChange={field.onChange} value={field.value || ""}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Zgjidhni gjykatën e apelit" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="Administrative Tirane">Administrative Tiranë</SelectItem>
+                            <SelectItem value="e Juridiksionit te Pergjithshem Tirane">e Juridiksionit të Përgjithshëm Tiranë</SelectItem>
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Search, Edit, Trash2, ChevronLeft, ChevronRight, Download, FileSpreadsheet } from "lucide-react";
+import { Search, Edit, Trash2, ChevronLeft, ChevronRight, Download, FileSpreadsheet, ArrowUpDown, SortAsc, SortDesc } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -27,6 +27,7 @@ export default function CaseTable() {
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc'); // desc = most recent first
 
   const [editingCase, setEditingCase] = useState<DataEntry | null>(null);
 
@@ -45,7 +46,8 @@ export default function CaseTable() {
   }>({
     queryKey: ["/api/data-entries", { 
       page: currentPage, 
-      search: searchTerm
+      search: searchTerm,
+      sortOrder: sortOrder
     }],
     retry: false,
   });
@@ -122,7 +124,10 @@ export default function CaseTable() {
     }
   };
 
-
+  const handleSort = (order: 'desc' | 'asc') => {
+    setSortOrder(order);
+    setCurrentPage(1); // Reset to first page when sorting changes
+  };
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "-";
@@ -197,26 +202,50 @@ export default function CaseTable() {
                   {response ? `${response.pagination?.totalItems || 0} çështje në total` : ""}
                 </CardDescription>
               </div>
-              <div className="flex space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleExport('excel')}
-                  disabled={!response?.entries?.length}
-                >
-                  <FileSpreadsheet className="h-4 w-4 mr-2" />
-                  Excel
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleExport('csv')}
-                  disabled={!response?.entries?.length}
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  CSV
-                </Button>
+              <div className="flex flex-wrap gap-2">
+                {/* Sorting buttons */}
+                <div className="flex space-x-1">
+                  <Button
+                    variant={sortOrder === 'desc' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => handleSort('desc')}
+                    disabled={!response?.entries?.length}
+                  >
+                    <SortDesc className="h-4 w-4 mr-2" />
+                    Më të Rejat
+                  </Button>
+                  <Button
+                    variant={sortOrder === 'asc' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => handleSort('asc')}
+                    disabled={!response?.entries?.length}
+                  >
+                    <SortAsc className="h-4 w-4 mr-2" />
+                    Më të Vjetrat
+                  </Button>
+                </div>
 
+                {/* Export buttons */}
+                <div className="flex space-x-1 border-l pl-2 ml-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleExport('excel')}
+                    disabled={!response?.entries?.length}
+                  >
+                    <FileSpreadsheet className="h-4 w-4 mr-2" />
+                    Excel
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleExport('csv')}
+                    disabled={!response?.entries?.length}
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    CSV
+                  </Button>
+                </div>
               </div>
             </div>
           </CardHeader>

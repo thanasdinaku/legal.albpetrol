@@ -69,7 +69,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/data-entries', isAuthenticated, async (req: any, res) => {
     try {
-      const { search, category, status, page = '1', limit = '10' } = req.query;
+      const { search, category, status, page = '1', limit = '10', sortOrder = 'desc' } = req.query;
       const pageNum = parseInt(page);
       const limitNum = parseInt(limit);
       const offset = (pageNum - 1) * limitNum;
@@ -80,6 +80,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         status: status as string,
         limit: limitNum,
         offset,
+        sortOrder: sortOrder as 'asc' | 'desc',
       };
 
       const [entries, total] = await Promise.all([

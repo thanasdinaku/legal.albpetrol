@@ -8,7 +8,7 @@ import {
   type UpdateDataEntry,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, and, ilike, or, sql, getTableColumns } from "drizzle-orm";
+import { eq, desc, asc, and, ilike, or, sql, getTableColumns } from "drizzle-orm";
 
 export interface IStorage {
   // User operations (mandatory for Replit Auth)
@@ -38,6 +38,7 @@ export interface IStorage {
     status?: string;
     limit?: number;
     offset?: number;
+    sortOrder?: 'asc' | 'desc';
   }): Promise<(DataEntry & { createdByName: string; nrRendor: number })[]>;
   getDataEntryById(id: number): Promise<DataEntry | undefined>;
   updateDataEntry(id: number, updates: UpdateDataEntry): Promise<DataEntry>;
@@ -138,6 +139,7 @@ export class DatabaseStorage implements IStorage {
     status?: string;
     limit?: number;
     offset?: number;
+    sortOrder?: 'asc' | 'desc';
   }): Promise<(DataEntry & { createdByName: string; nrRendor: number })[]> {
     // First get all entries (for proper nrRendor calculation)
     let baseQueryBuilder = db
@@ -181,7 +183,12 @@ export class DatabaseStorage implements IStorage {
       baseQueryBuilder = baseQueryBuilder.where(and(...conditions));
     }
     
-    baseQueryBuilder = baseQueryBuilder.orderBy(desc(dataEntries.createdAt));
+    // Apply sorting based on sortOrder parameter
+    if (filters?.sortOrder === 'asc') {
+      baseQueryBuilder = baseQueryBuilder.orderBy(asc(dataEntries.createdAt));
+    } else {
+      baseQueryBuilder = baseQueryBuilder.orderBy(desc(dataEntries.createdAt));
+    }
     
     // Get total count for nrRendor calculation
     let countQueryBuilder = db.select({ count: sql<number>`count(*)` }).from(dataEntries);

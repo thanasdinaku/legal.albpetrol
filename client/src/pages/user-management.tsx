@@ -435,7 +435,7 @@ export default function UserManagement() {
         <CardHeader>
           <CardTitle>Lejet e Roleve</CardTitle>
           <CardDescription>
-            Përmbledhje e asaj që mund të bëjë çdo rol në sistem
+            Përmbledhje e funksionaliteteve që mund të kryejë çdo rol në sistem
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -446,11 +446,11 @@ export default function UserManagement() {
                 <h3 className="font-semibold">Përdorues i Rregullt</h3>
               </div>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>• Shiko statistikat e panelit</li>
-                <li>• Shto regjistrime të reja të rasteve ligjore</li>
-                <li>• Shiko të gjitha të dhënat e rasteve në tabela</li>
-                <li>• Eksporto të dhënat (Excel, CSV, PDF)</li>
-                <li>• Importo të dhënat nga skedarët CSV</li>
+                <li>• Shikon statistikat e panelit</li>
+                <li>• Shton regjistrime të reja të rasteve ligjore</li>
+                <li>• Shikon të gjitha të dhënat e rasteve në tabela</li>
+                <li>• Eksporton të dhënat (Excel, CSV)</li>
+                <li>• Editon të dhënat e regjistrimeve që krijon vetë</li>
               </ul>
             </div>
             <div className="p-4 rounded-lg border bg-muted/50">
@@ -459,12 +459,12 @@ export default function UserManagement() {
                 <h3 className="font-semibold">Administratori</h3>
               </div>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>• Të gjitha lejet e përdoruesit të rregullt</li>
-                <li>• Modifiko regjistrimet ekzistuese të rasteve ligjore</li>
-                <li>• Fshi regjistrimet e rasteve ligjore</li>
-                <li>• Menaxho llogaritë dhe rolet e përdoruesve</li>
-                <li>• Shiko panelin e menaxhimit të përdoruesve</li>
-                <li>• Çaktivizo llogaritë e përdoruesve</li>
+                <li>• Përmban të gjitha lejet e përdoruesit të rregullt</li>
+                <li>• Modifikon regjistrimet ekzistuese të rasteve ligjore</li>
+                <li>• Fshin regjistrimet e rasteve ligjore</li>
+                <li>• Menaxhon llogaritë dhe rolet e përdoruesve</li>
+                <li>• Shikon panelin e menaxhimit të përdoruesve</li>
+                <li>• Çaktivizon llogaritë e përdoruesve</li>
               </ul>
             </div>
           </div>

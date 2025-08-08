@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Search, Edit, Trash2, ChevronLeft, ChevronRight, Download, FileSpreadsheet, FileText } from "lucide-react";
+import { Search, Edit, Trash2, ChevronLeft, ChevronRight, Download, FileSpreadsheet } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -83,7 +83,7 @@ export default function CaseTable() {
     return user?.role === "admin" || entry.createdById === user?.id;
   };
 
-  const handleExport = async (format: 'excel' | 'csv' | 'pdf') => {
+  const handleExport = async (format: 'excel' | 'csv') => {
     try {
       const response = await fetch(`/api/data-entries/export/${format}`, {
         method: 'GET',
@@ -216,15 +216,7 @@ export default function CaseTable() {
                   <Download className="h-4 w-4 mr-2" />
                   CSV
                 </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleExport('pdf')}
-                  disabled={!response?.entries?.length}
-                >
-                  <FileText className="h-4 w-4 mr-2" />
-                  PDF
-                </Button>
+
               </div>
             </div>
           </CardHeader>

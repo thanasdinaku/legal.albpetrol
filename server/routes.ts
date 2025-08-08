@@ -24,8 +24,6 @@ const strictLimiter = rateLimit({
 import { insertDataEntrySchema, updateDataEntrySchema } from "@shared/schema";
 import { z } from "zod";
 import XLSX from "xlsx";
-import { jsPDF } from "jspdf";
-import autoTable from "jspdf-autotable";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Apply rate limiting to all routes
@@ -210,7 +208,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/data-entries/export/:format', isAuthenticated, async (req: any, res) => {
     try {
       const format = req.params.format;
-      if (!['excel', 'csv', 'pdf'].includes(format)) {
+      if (!['excel', 'csv'].includes(format)) {
         return res.status(400).json({ message: "Invalid export format" });
       }
 
@@ -310,127 +308,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
 
         res.send('\uFEFF' + csvContent); // BOM for UTF-8
-
-      } else if (format === 'pdf') {
-        // PDF export - Create multiple pages to show all fields
-        const doc = new jsPDF('l', 'mm', 'a3'); // Use A3 landscape for more space
-        
-        doc.setFontSize(16);
-        doc.text('Çështjet Ligjore - Faqja 1', 14, 15);
-        doc.setFontSize(10);
-        doc.text(`Eksportuar më: ${new Date().toLocaleDateString('sq-AL')}`, 14, 25);
-
-        // Page 1: Basic case information
-        const basicData = entries.map(entry => [
-          entry.id.toString(),
-          (entry.paditesi || '').substring(0, 35),
-          (entry.iPaditur || '').substring(0, 35),
-          (entry.personITrete || '').substring(0, 25),
-          (entry.objektiIPadise || '').substring(0, 50),
-          entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : '',
-          ((entry as any).createdByName || 'Përdorues i panjohur').substring(0, 20)
-        ]);
-
-        autoTable(doc, {
-          head: [['Nr.', 'Paditesi', 'I Paditur', 'Person i Tretë', 'Objekti i Padisë', 'Krijuar më', 'Krijuar nga']],
-          body: basicData,
-          startY: 35,
-          styles: { fontSize: 7, cellPadding: 1.5, overflow: 'linebreak' },
-          headStyles: { fillColor: [66, 66, 66], fontSize: 8 },
-          columnStyles: {
-            0: { cellWidth: 20 },
-            1: { cellWidth: 60 },
-            2: { cellWidth: 60 },
-            3: { cellWidth: 45 },
-            4: { cellWidth: 80 },
-            5: { cellWidth: 30 },
-            6: { cellWidth: 35 }
-          },
-          tableWidth: 'auto',
-          margin: { top: 35, left: 14, right: 14 }
-        });
-
-        // Page 2: Court and process information
-        doc.addPage();
-        doc.setFontSize(16);
-        doc.text('Çështjet Ligjore - Faqja 2 (Gjykatat dhe Fazat)', 14, 15);
-        doc.setFontSize(10);
-        doc.text(`Eksportuar më: ${new Date().toLocaleDateString('sq-AL')}`, 14, 25);
-
-        const courtData = entries.map(entry => [
-          entry.id.toString(),
-          (entry.gjykataShkalle || '').substring(0, 30),
-          (entry.fazaGjykataShkalle || '').substring(0, 30),
-          (entry.gjykataApelit || '').substring(0, 30),
-          (entry.fazaGjykataApelit || '').substring(0, 30),
-          (entry.fazaAktuale || '').substring(0, 30),
-          (entry.gjykataLarte || '').substring(0, 30)
-        ]);
-
-        autoTable(doc, {
-          head: [['Nr.', 'Gjykata Shkallë së Parë e', 'Faza Shkallë I', 'Gjykata Apelit', 'Faza Apelit', 'Faza në të cilën ndodhet proçesi', 'Gjykata e Lartë']],
-          body: courtData,
-          startY: 35,
-          styles: { fontSize: 7, cellPadding: 1.5, overflow: 'linebreak' },
-          headStyles: { fillColor: [66, 66, 66], fontSize: 8 },
-          columnStyles: {
-            0: { cellWidth: 20 },
-            1: { cellWidth: 55 },
-            2: { cellWidth: 55 },
-            3: { cellWidth: 55 },
-            4: { cellWidth: 55 },
-            5: { cellWidth: 55 },
-            6: { cellWidth: 55 }
-          },
-          tableWidth: 'auto',
-          margin: { top: 35, left: 14, right: 14 }
-        });
-
-        // Page 3: Financial and execution information
-        doc.addPage();
-        doc.setFontSize(16);
-        doc.text('Çështjet Ligjore - Faqja 3 (Informacioni Financiar)', 14, 15);
-        doc.setFontSize(10);
-        doc.text(`Eksportuar më: ${new Date().toLocaleDateString('sq-AL')}`, 14, 25);
-
-        const financialData = entries.map(entry => [
-          entry.id.toString(),
-          (entry.perfaqesuesi || '').substring(0, 35),
-          (entry.demiIPretenduar || '').substring(0, 30),
-          (entry.shumaGjykata || '').substring(0, 30),
-          (entry.vendimEkzekutim || '').substring(0, 35),
-          (entry.fazaEkzekutim || '').substring(0, 35)
-        ]);
-
-        autoTable(doc, {
-          head: [['Nr.', 'Përfaqësuesi', 'Demi i Pretenduar', 'Shuma Gjykate', 'Vendim Ekzekutim', 'Faza Ekzekutim']],
-          body: financialData,
-          startY: 35,
-          styles: { fontSize: 7, cellPadding: 1.5, overflow: 'linebreak' },
-          headStyles: { fillColor: [66, 66, 66], fontSize: 8 },
-          columnStyles: {
-            0: { cellWidth: 20 },
-            1: { cellWidth: 70 },
-            2: { cellWidth: 60 },
-            3: { cellWidth: 60 },
-            4: { cellWidth: 70 },
-            5: { cellWidth: 70 }
-          },
-          tableWidth: 'auto',
-          margin: { top: 35, left: 14, right: 14 }
-        });
-
-        const pdfBuffer = Buffer.from(doc.output('arraybuffer'));
-
-        res.set({
-          'Content-Type': 'application/pdf',
-          'Content-Disposition': `attachment; filename="ceshtjet-ligjore-${timestamp}.pdf"`,
-          'Content-Length': pdfBuffer.length
-        });
-
-        res.send(pdfBuffer);
       }
-
     } catch (error) {
       console.error("Error exporting data:", error);
       res.status(500).json({ message: "Failed to export data" });

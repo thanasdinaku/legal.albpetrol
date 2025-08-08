@@ -10,8 +10,8 @@ This is a full-stack data management system built with React and Express.js, des
 ✓ **Data Entry System**: Implemented form validation and data submission with proper error handling
 ✓ **Data Table Interface**: Created paginated table with horizontal scrolling to display all 19 Albanian legal case fields
 ✓ **Role-Based Access**: Normal users can add entries, admins can edit/delete with proper permission checks
-✓ **Comprehensive Export System**: Added Excel, CSV, and PDF export functionality with Albanian headers
-✓ **PDF Multi-Page Layout**: Optimized PDF export with 3-page layout using A3 landscape format for complete field visibility
+✓ **Export System**: Added Excel and CSV export functionality with Albanian headers
+✓ **PDF Export Removed**: Completely removed PDF export feature per user request, keeping only Excel and CSV exports
 ✓ **Mobile Responsive Design**: Implemented mobile-first design with responsive navigation, forms, and tables
 ✓ **Ubuntu 22.04 Compatibility**: Confirmed system compatibility with Linux Ubuntu 22.04
 ✓ **CSV Import Removal**: Completely removed CSV import functionality per user request - simplified interface and navigation
@@ -20,7 +20,7 @@ This is a full-stack data management system built with React and Express.js, des
 ✓ **Removed Unnecessary Fields**: Eliminated "Ankimuar" and "Përfunduar" fields from form, table, and exports
 ✓ **Enhanced UX**: Added lighter grey placeholder text for better visual hierarchy and user experience
 
-The application now provides complete legal case management with full export capabilities, mobile responsiveness, and streamlined user interface without CSV import complexity.
+The application now provides complete legal case management with Excel and CSV export capabilities, mobile responsiveness, and streamlined user interface without CSV import or PDF export complexity.
 
 # User Preferences
 

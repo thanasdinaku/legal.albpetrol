@@ -86,16 +86,6 @@ export default function Sidebar({ isOpen = true, onClose, className }: SidebarPr
           <span className="text-sm sm:text-base">Menaxho Çështjet</span>
         </button>
         
-        {user?.role === 'admin' && (
-          <button
-            onClick={() => handleNavigation('/csv-import')}
-            className={isActive('/csv-import') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
-          >
-            <i className="fas fa-file-import"></i>
-            <span className="text-sm sm:text-base">Importo CSV</span>
-          </button>
-        )}
-        
         {user?.id === "46078954" && (
           <div className="border-t border-gray-200 pt-2 mt-2">
             <button

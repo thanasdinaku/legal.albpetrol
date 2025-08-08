@@ -8,7 +8,7 @@ import {
   type UpdateDataEntry,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, and, ilike, or, sql } from "drizzle-orm";
+import { eq, desc, and, ilike, or, sql, getTableColumns } from "drizzle-orm";
 
 export interface IStorage {
   // User operations (mandatory for Replit Auth)
@@ -38,7 +38,7 @@ export interface IStorage {
     status?: string;
     limit?: number;
     offset?: number;
-  }): Promise<DataEntry[]>;
+  }): Promise<(DataEntry & { createdByName: string })[]>;
   getDataEntryById(id: number): Promise<DataEntry | undefined>;
   updateDataEntry(id: number, updates: UpdateDataEntry): Promise<DataEntry>;
   deleteDataEntry(id: number): Promise<void>;
@@ -136,8 +136,14 @@ export class DatabaseStorage implements IStorage {
     status?: string;
     limit?: number;
     offset?: number;
-  }): Promise<DataEntry[]> {
-    let queryBuilder = db.select().from(dataEntries);
+  }): Promise<(DataEntry & { createdByName: string })[]> {
+    let queryBuilder = db
+      .select({
+        ...getTableColumns(dataEntries),
+        createdByName: users.firstName,
+      })
+      .from(dataEntries)
+      .leftJoin(users, eq(dataEntries.createdById, users.id));
     
     const conditions = [];
     
@@ -171,7 +177,12 @@ export class DatabaseStorage implements IStorage {
       queryBuilder = queryBuilder.offset(filters.offset);
     }
     
-    return await queryBuilder;
+    const entries = await queryBuilder;
+    
+    return entries.map(entry => ({
+      ...entry,
+      createdByName: entry.createdByName || 'Përdorues i panjohur',
+    })) as (DataEntry & { createdByName: string })[];
   }
 
   async getDataEntryById(id: number): Promise<DataEntry | undefined> {

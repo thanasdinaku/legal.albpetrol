@@ -34,7 +34,15 @@ export default function CaseTable() {
     data: response,
     isLoading,
     error,
-  } = useQuery({
+  } = useQuery<{
+    entries: (DataEntry & { createdByName: string })[];
+    pagination: {
+      currentPage: number;
+      totalPages: number;
+      totalItems: number;
+      itemsPerPage: number;
+    };
+  }>({
     queryKey: ["/api/data-entries", { 
       page: currentPage, 
       search: searchTerm
@@ -254,6 +262,7 @@ export default function CaseTable() {
 
                         <TableHead className="min-w-[150px]">Gjykata e Lartë</TableHead>
                         <TableHead className="min-w-[120px]">Krijuar më</TableHead>
+                        <TableHead className="min-w-[120px]">Krijuar nga</TableHead>
                         {user?.role === "admin" && <TableHead className="min-w-[120px]">Veprime</TableHead>}
                       </TableRow>
                     </TableHeader>
@@ -279,7 +288,8 @@ export default function CaseTable() {
                           <TableCell className="max-w-[150px] truncate">{caseItem.fazaEkzekutim || "-"}</TableCell>
 
                           <TableCell className="max-w-[150px] truncate">{caseItem.gjykataLarte || "-"}</TableCell>
-                          <TableCell>{formatDate(caseItem.createdAt)}</TableCell>
+                          <TableCell>{formatDate(caseItem.createdAt ? new Date(caseItem.createdAt).toISOString() : null)}</TableCell>
+                          <TableCell className="max-w-[120px] truncate">{caseItem.createdByName || "Përdorues i panjohur"}</TableCell>
                           {user?.role === "admin" && (
                             <TableCell>
                               <div className="flex space-x-2">

@@ -215,7 +215,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             'Gjykata Shkallë së Parë e', 'Faza Shkallë I', 'Gjykata Apelit', 'Faza Apelit',
             'Faza në të cilën ndodhet proçesi', 'Përfaqësuesi', 'Demi i Pretenduar', 'Shuma Gjykate',
             'Vendim Ekzekutim', 'Faza Ekzekutim',
-            'Gjykata e Lartë', 'Krijuar më'
+            'Gjykata e Lartë', 'Krijuar më', 'Krijuar nga'
           ],
           // Data rows
           ...entries.map(entry => [
@@ -235,7 +235,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             entry.vendimEkzekutim || '',
             entry.fazaEkzekutim || '',
             entry.gjykataLarte || '',
-            entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : ''
+            entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : '',
+            (entry as any).createdByName || 'Përdorues i panjohur'
           ])
         ];
 
@@ -260,7 +261,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           'Gjykata Shkallë së Parë e', 'Faza Shkallë I', 'Gjykata Apelit', 'Faza Apelit',
           'Faza në të cilën ndodhet proçesi', 'Përfaqësuesi', 'Demi i Pretenduar', 'Shuma Gjykate',
           'Vendim Ekzekutim', 'Faza Ekzekutim',
-          'Gjykata e Lartë', 'Krijuar më'
+          'Gjykata e Lartë', 'Krijuar më', 'Krijuar nga'
         ];
 
         const csvRows = entries.map(entry => [
@@ -280,7 +281,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           `"${entry.vendimEkzekutim || ''}"`,
           `"${entry.fazaEkzekutim || ''}"`,
           `"${entry.gjykataLarte || ''}"`,
-          entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : ''
+          entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : '',
+          `"${(entry as any).createdByName || 'Përdorues i panjohur'}"`
         ]);
 
         const csvContent = [csvHeaders.join(','), ...csvRows.map(row => row.join(','))].join('\n');
@@ -308,22 +310,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
           (entry.iPaditur || '').substring(0, 35),
           (entry.personITrete || '').substring(0, 25),
           (entry.objektiIPadise || '').substring(0, 50),
-          entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : ''
+          entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : '',
+          ((entry as any).createdByName || 'Përdorues i panjohur').substring(0, 20)
         ]);
 
         autoTable(doc, {
-          head: [['Nr.', 'Paditesi', 'I Paditur', 'Person i Tretë', 'Objekti i Padisë', 'Krijuar']],
+          head: [['Nr.', 'Paditesi', 'I Paditur', 'Person i Tretë', 'Objekti i Padisë', 'Krijuar më', 'Krijuar nga']],
           body: basicData,
           startY: 35,
           styles: { fontSize: 7, cellPadding: 1.5, overflow: 'linebreak' },
           headStyles: { fillColor: [66, 66, 66], fontSize: 8 },
           columnStyles: {
             0: { cellWidth: 20 },
-            1: { cellWidth: 70 },
-            2: { cellWidth: 70 },
-            3: { cellWidth: 55 },
-            4: { cellWidth: 100 },
-            5: { cellWidth: 35 }
+            1: { cellWidth: 60 },
+            2: { cellWidth: 60 },
+            3: { cellWidth: 45 },
+            4: { cellWidth: 80 },
+            5: { cellWidth: 30 },
+            6: { cellWidth: 35 }
           },
           tableWidth: 'auto',
           margin: { top: 35, left: 14, right: 14 }

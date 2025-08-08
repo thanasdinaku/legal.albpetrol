@@ -2,7 +2,8 @@ import {
   users,
   dataEntries,
   type User,
-  type UpsertUser,
+  type InsertUser,
+  type CreateUser,
   type DataEntry,
   type InsertDataEntry,
   type UpdateDataEntry,
@@ -11,9 +12,12 @@ import { db } from "./db";
 import { eq, desc, asc, and, ilike, or, sql, getTableColumns } from "drizzle-orm";
 
 export interface IStorage {
-  // User operations (mandatory for Replit Auth)
+  // User operations
   getUser(id: string): Promise<User | undefined>;
-  upsertUser(user: UpsertUser): Promise<User>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  createUser(user: CreateUser): Promise<User>;
+  updateUserPassword(userId: string, hashedPassword: string): Promise<void>;
+  ensureDefaultAdmin(): Promise<User>;
   getAllUsers(): Promise<User[]>;
   getUserStats(): Promise<{
     totalUsers: number;
@@ -22,12 +26,7 @@ export interface IStorage {
     activeToday: number;
   }>;
   updateUserRole(userId: string, role: 'user' | 'admin'): Promise<User>;
-  createManualUser(userData: {
-    email: string;
-    firstName: string;
-    lastName?: string;
-    role: 'user' | 'admin';
-  }): Promise<User>;
+  createManualUser(userData: CreateUser): Promise<User>;
   deleteUser(userId: string): Promise<void>;
   
   // Data entry operations
@@ -63,19 +62,43 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async upsertUser(userData: UpsertUser): Promise<User> {
-    const [user] = await db
-      .insert(users)
-      .values(userData)
-      .onConflictDoUpdate({
-        target: users.id,
-        set: {
-          ...userData,
-          updatedAt: new Date(),
-        },
-      })
-      .returning();
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
     return user;
+  }
+
+  async createUser(userData: CreateUser): Promise<User> {
+    const [user] = await db.insert(users).values(userData).returning();
+    return user;
+  }
+
+  async updateUserPassword(userId: string, hashedPassword: string): Promise<void> {
+    await db.update(users)
+      .set({ password: hashedPassword, updatedAt: new Date() })
+      .where(eq(users.id, userId));
+  }
+
+  async ensureDefaultAdmin(): Promise<User> {
+    // Check if default admin exists
+    const [existingAdmin] = await db.select().from(users).where(eq(users.isDefaultAdmin, true));
+    if (existingAdmin) {
+      return existingAdmin;
+    }
+
+    // Create default admin if none exists
+    const { hashPassword } = await import("./auth");
+    const hashedPassword = await hashPassword("admin123");
+    
+    const [defaultAdmin] = await db.insert(users).values({
+      email: "admin@albpetrol.al",
+      firstName: "Administrator",
+      lastName: "i Sistemit",
+      password: hashedPassword,
+      role: "admin",
+      isDefaultAdmin: true,
+    }).returning();
+    
+    return defaultAdmin;
   }
 
   async getAllUsers(): Promise<User[]> {
@@ -373,25 +396,8 @@ export class DatabaseStorage implements IStorage {
 
   // User Management Methods - Updated versions
 
-  async createManualUser(userData: {
-    email: string;
-    firstName: string;
-    lastName?: string;
-    role: 'user' | 'admin';
-  }): Promise<User> {
-    const [user] = await db
-      .insert(users)
-      .values({
-        id: `manual_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        email: userData.email,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        role: userData.role,
-        profileImageUrl: null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      })
-      .returning();
+  async createManualUser(userData: CreateUser): Promise<User> {
+    const [user] = await db.insert(users).values(userData).returning();
     return user;
   }
 

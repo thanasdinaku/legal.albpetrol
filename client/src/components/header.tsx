@@ -100,7 +100,7 @@ export default function Header({ title, subtitle, onMenuToggle }: HeaderProps) {
                 <i className="fas fa-user mr-2"></i>
                 Profili im
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => window.location.href = "/settings"}>
                 <i className="fas fa-cog mr-2"></i>
                 Cilësimet
               </DropdownMenuItem>

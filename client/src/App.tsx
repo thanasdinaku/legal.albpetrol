@@ -6,12 +6,13 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/useAuth";
 import { ApiStatusIndicator } from "@/components/api-status-indicator";
 import NotFound from "@/pages/not-found";
-import Landing from "@/pages/landing";
+import LoginPage from "@/pages/login-page";
 import Home from "@/pages/home";
 import DataEntry from "@/pages/data-entry";
 import DataTable from "@/pages/data-table";
 import UserManagement from "@/pages/user-management";
 import SystemSettings from "@/pages/system-settings";
+import SettingsPage from "@/pages/settings-page";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -32,7 +33,7 @@ function Router() {
   return (
     <Switch>
       {!isAuthenticated ? (
-        <Route path="/" component={Landing} />
+        <Route path="/" component={LoginPage} />
       ) : (
         <>
           <Route path="/" component={Home} />
@@ -41,6 +42,7 @@ function Router() {
 
           <Route path="/user-management" component={UserManagement} />
           <Route path="/system-settings" component={SystemSettings} />
+          <Route path="/settings" component={SettingsPage} />
         </>
       )}
       <Route component={NotFound} />

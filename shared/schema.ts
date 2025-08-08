@@ -8,6 +8,7 @@ import {
   text,
   serial,
   pgEnum,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -26,14 +27,16 @@ export const sessions = pgTable(
 // User roles enum
 export const userRoleEnum = pgEnum("user_role", ["user", "admin"]);
 
-// User storage table (mandatory for Replit Auth)
+// User storage table
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  email: varchar("email").unique(),
-  firstName: varchar("first_name"),
-  lastName: varchar("last_name"),
+  email: varchar("email").unique().notNull(),
+  firstName: varchar("first_name").notNull(),
+  lastName: varchar("last_name").notNull(),
+  password: varchar("password").notNull(),
   profileImageUrl: varchar("profile_image_url"),
   role: userRoleEnum("role").default("user").notNull(),
+  isDefaultAdmin: boolean("is_default_admin").default(false),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -69,9 +72,25 @@ export const insertUserSchema = createInsertSchema(users).omit({
   updatedAt: true,
 });
 
-export const upsertUserSchema = createInsertSchema(users).omit({
+export const createUserSchema = createInsertSchema(users).omit({
+  id: true,
+  isDefaultAdmin: true,
   createdAt: true,
   updatedAt: true,
+});
+
+export const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+});
+
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1),
+  newPassword: z.string().min(6),
+  confirmPassword: z.string().min(6),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
 });
 
 export const insertDataEntrySchema = createInsertSchema(dataEntries).omit({
@@ -89,8 +108,10 @@ export const updateDataEntrySchema = createInsertSchema(dataEntries).omit({
 
 // Types
 export type User = typeof users.$inferSelect;
-export type UpsertUser = z.infer<typeof upsertUserSchema>;
 export type InsertUser = z.infer<typeof insertUserSchema>;
+export type CreateUser = z.infer<typeof createUserSchema>;
+export type LoginData = z.infer<typeof loginSchema>;
+export type ChangePasswordData = z.infer<typeof changePasswordSchema>;
 export type DataEntry = typeof dataEntries.$inferSelect;
 export type InsertDataEntry = z.infer<typeof insertDataEntrySchema>;
 export type UpdateDataEntry = z.infer<typeof updateDataEntrySchema>;

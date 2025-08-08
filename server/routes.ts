@@ -1,7 +1,15 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupAuth, isAuthenticated, isAdmin, hashPassword } from "./auth";
+import {
+  createUserSchema,
+  loginSchema,
+  changePasswordSchema,
+  type CreateUser,
+  type LoginData,
+  type ChangePasswordData
+} from "@shared/schema";
 
 import rateLimit from 'express-rate-limit';
 
@@ -30,27 +38,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use('/api/', generalLimiter);
   
   // Auth middleware
-  await setupAuth(app);
+  setupAuth(app);
+  
+  // Ensure default admin exists on startup
+  await storage.ensureDefaultAdmin();
 
-  // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
-    }
-  });
+  // Auth routes (already handled in auth.ts setup)
 
   // Data entry routes
-  app.post('/api/data-entries', isAuthenticated, async (req: any, res) => {
+  app.post('/api/data-entries', isAdmin, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const validatedData = insertDataEntrySchema.parse({
         ...req.body,
         createdById: userId,
@@ -67,7 +65,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/data-entries', isAuthenticated, async (req: any, res) => {
+  app.get('/api/data-entries', isAdmin, async (req: any, res) => {
     try {
       const { search, category, status, page = '1', limit = '10', sortOrder = 'desc' } = req.query;
       const pageNum = parseInt(page);
@@ -107,7 +105,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/data-entries/:id', isAuthenticated, async (req: any, res) => {
+  app.get('/api/data-entries/:id', isAdmin, async (req: any, res) => {
     try {
       const id = parseInt(req.params.id);
       
@@ -128,9 +126,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put('/api/data-entries/:id', isAuthenticated, async (req: any, res) => {
+  app.put('/api/data-entries/:id', isAdmin, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const user = await storage.getUser(userId);
       const id = parseInt(req.params.id);
       
@@ -157,9 +155,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete('/api/data-entries/:id', isAuthenticated, async (req: any, res) => {
+  app.delete('/api/data-entries/:id', isAdmin, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const user = await storage.getUser(userId);
       const id = parseInt(req.params.id);
 
@@ -183,7 +181,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Dashboard stats
-  app.get('/api/dashboard/stats', isAuthenticated, async (req: any, res) => {
+  app.get('/api/dashboard/stats', isAdmin, async (req: any, res) => {
     try {
       const stats = await storage.getDataEntryStats();
       res.json(stats);
@@ -193,7 +191,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/dashboard/recent-entries', isAuthenticated, async (req: any, res) => {
+  app.get('/api/dashboard/recent-entries', isAdmin, async (req: any, res) => {
     try {
       const entries = await storage.getRecentDataEntries(5);
       res.json(entries);
@@ -206,7 +204,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 
   // Export routes
-  app.get('/api/data-entries/export/:format', isAuthenticated, async (req: any, res) => {
+  app.get('/api/data-entries/export/:format', isAdmin, async (req: any, res) => {
     try {
       const format = req.params.format;
       if (!['excel', 'csv'].includes(format)) {
@@ -317,9 +315,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // User Management Routes (Admin only)
-  app.get("/api/admin/users", strictLimiter, isAuthenticated, async (req: any, res) => {
+  app.get("/api/admin/users", strictLimiter, isAdmin, async (req: any, res) => {
     try {
-      if (req.user.claims.sub !== "46078954") { // Only truealbos@gmail.com can access
+      if (req.user.role !== "admin") { // Admin access required
         return res.status(403).json({ message: "Access denied. Admin privileges required." });
       }
       
@@ -331,9 +329,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/admin/user-stats", isAuthenticated, async (req: any, res) => {
+  app.get("/api/admin/user-stats", isAdmin, async (req: any, res) => {
     try {
-      if (req.user.claims.sub !== "46078954") { // Only truealbos@gmail.com can access
+      if (req.user.role !== "admin") { // Admin access required
         return res.status(403).json({ message: "Access denied. Admin privileges required." });
       }
       
@@ -345,9 +343,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/admin/users/:userId/role", strictLimiter, isAuthenticated, async (req: any, res) => {
+  app.put("/api/admin/users/:userId/role", strictLimiter, isAdmin, async (req: any, res) => {
     try {
-      if (req.user.claims.sub !== "46078954") { // Only truealbos@gmail.com can access
+      if (req.user.role !== "admin") { // Admin access required
         return res.status(403).json({ message: "Access denied. Admin privileges required." });
       }
       
@@ -366,9 +364,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/admin/users", strictLimiter, isAuthenticated, async (req: any, res) => {
+  app.post("/api/admin/users", strictLimiter, isAdmin, async (req: any, res) => {
     try {
-      if (req.user.claims.sub !== "46078954") { // Only truealbos@gmail.com can access
+      if (req.user.role !== "admin") { // Admin access required
         return res.status(403).json({ message: "Access denied. Admin privileges required." });
       }
       
@@ -399,16 +397,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/admin/users/:userId", strictLimiter, isAuthenticated, async (req: any, res) => {
+  app.delete("/api/admin/users/:userId", strictLimiter, isAdmin, async (req: any, res) => {
     try {
-      if (req.user.claims.sub !== "46078954") { // Only truealbos@gmail.com can access
+      if (req.user.role !== "admin") { // Admin access required
         return res.status(403).json({ message: "Access denied. Admin privileges required." });
       }
       
       const { userId } = req.params;
       
       // Prevent admin from deleting themselves
-      if (userId === req.user.claims.sub) {
+      if (userId === req.user.id) {
         return res.status(400).json({ message: "Cannot delete your own account" });
       }
       
@@ -417,6 +415,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error deleting user:", error);
       res.status(500).json({ message: "Failed to delete user" });
+    }
+  });
+
+  // Admin user creation route
+  app.post("/api/admin/users", isAdmin, async (req: any, res) => {
+    try {
+      const userData = createUserSchema.parse(req.body);
+      
+      // Hash the password before storing
+      const hashedPassword = await hashPassword(userData.password);
+      const userWithHashedPassword = {
+        ...userData,
+        password: hashedPassword
+      };
+      
+      const user = await storage.createManualUser(userWithHashedPassword);
+      
+      // Remove password from response
+      const { password, ...userWithoutPassword } = user;
+      res.status(201).json(userWithoutPassword);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      console.error("Error creating user:", error);
+      res.status(500).json({ message: "Failed to create user" });
     }
   });
 

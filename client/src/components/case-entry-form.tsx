@@ -163,16 +163,28 @@ export default function CaseEntryForm() {
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Gjykata e Shkalle I */}
+                  {/* Gjykata e Shkallës së Parë e */}
                   <FormField
                     control={form.control}
                     name="gjykataShkalle"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Gjykata e Shkallës I</FormLabel>
-                        <FormControl>
-                          <Input placeholder="p.sh. Gjykata e Rrethit Gjyqësor Tiranë" {...field} value={field.value || ""} />
-                        </FormControl>
+                        <FormLabel>Gjykata e Shkallës së Parë e</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value || ""}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Zgjidhni gjykatën" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="Rrethit Gjyqesor Vlore">Rrethit Gjyqësor Vlorë</SelectItem>
+                            <SelectItem value="Rrethit Gjyqesor Fier">Rrethit Gjyqësor Fier</SelectItem>
+                            <SelectItem value="Rrethit Gjyqesor Berat">Rrethit Gjyqësor Berat</SelectItem>
+                            <SelectItem value="Administrative Lushnje">Administrative Lushnjë</SelectItem>
+                            <SelectItem value="Administrative Tirane">Administrative Tiranë</SelectItem>
+                            <SelectItem value="Juridiksionit te Pergjithshem Tirane">Juridiksionit të Përgjithshëm Tiranë</SelectItem>
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}

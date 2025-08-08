@@ -144,17 +144,6 @@ export default function LoginPage() {
               </Button>
             </form>
           </Form>
-          
-          <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <h3 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
-              Informacion për Administratorët:
-            </h3>
-            <p className="text-xs text-blue-700 dark:text-blue-300">
-              Nëse ky është aksesi i parë në sistem, përdorni kredencialet e administratorit të paracaktuar: <br />
-              <strong>Email:</strong> admin@albpetrol.al <br />
-              <strong>Fjalëkalimi:</strong> admin123
-            </p>
-          </div>
         </CardContent>
       </Card>
     </div>

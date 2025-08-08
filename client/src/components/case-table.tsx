@@ -237,7 +237,7 @@ export default function CaseTable() {
                         <TableHead className="min-w-[80px]">Nr. Rendor</TableHead>
                         <TableHead className="min-w-[150px]">Paditesi</TableHead>
                         <TableHead className="min-w-[150px]">I Paditur</TableHead>
-                        <TableHead className="min-w-[120px]">Person I Tretë</TableHead>
+                        <TableHead className="min-w-[120px]">Person i Tretë</TableHead>
                         <TableHead className="min-w-[200px]">Objekti i Padisë</TableHead>
                         <TableHead className="min-w-[150px]">Gjykata Shkallë së Parë e</TableHead>
                         <TableHead className="min-w-[180px]">Faza Shkallë I</TableHead>

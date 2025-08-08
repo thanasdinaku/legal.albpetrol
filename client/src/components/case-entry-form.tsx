@@ -130,7 +130,7 @@ export default function CaseEntryForm() {
                     name="personITrete"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Person I Tretë</FormLabel>
+                        <FormLabel>Person i Tretë</FormLabel>
                         <FormControl>
                           <Input placeholder="Nëse ka person të tretë të përfshirë" {...field} value={field.value || ""} />
                         </FormControl>

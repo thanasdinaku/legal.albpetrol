@@ -63,7 +63,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth routes (already handled in auth.ts setup)
 
   // Data entry routes
-  app.post('/api/data-entries', isAdmin, async (req: any, res) => {
+  app.post('/api/data-entries', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.id;
       const validatedData = insertDataEntrySchema.parse({
@@ -82,8 +82,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/data-entries', isAdmin, async (req: any, res) => {
+  app.get('/api/data-entries', isAuthenticated, async (req: any, res) => {
     try {
+      const userId = req.user.id;
+      const user = await storage.getUser(userId);
       const { search, category, status, page = '1', limit = '10', sortOrder = 'desc' } = req.query;
       const pageNum = parseInt(page);
       const limitNum = parseInt(limit);
@@ -96,6 +98,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         limit: limitNum,
         offset,
         sortOrder: sortOrder as 'asc' | 'desc',
+        // Regular users can only see their own entries, admins see all
+        createdById: user?.role === 'admin' ? undefined : userId,
       };
 
       const [entries, total] = await Promise.all([
@@ -104,6 +108,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           search: search as string,
           category: category as string,
           status: status as string,
+          createdById: user?.role === 'admin' ? undefined : userId,
         }),
       ]);
 
@@ -122,7 +127,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/data-entries/:id', isAdmin, async (req: any, res) => {
+  app.get('/api/data-entries/:id', isAuthenticated, async (req: any, res) => {
     try {
       const id = parseInt(req.params.id);
       

@@ -44,6 +44,7 @@ export interface IStorage {
     limit?: number;
     offset?: number;
     sortOrder?: 'asc' | 'desc';
+    createdById?: string;
   }): Promise<(DataEntry & { createdByName: string; nrRendor: number })[]>;
   getDataEntryById(id: number): Promise<DataEntry | undefined>;
   updateDataEntry(id: number, updates: UpdateDataEntry): Promise<DataEntry>;
@@ -52,6 +53,7 @@ export interface IStorage {
     search?: string;
     category?: string;
     status?: string;
+    createdById?: string;
   }): Promise<number>;
   getRecentDataEntries(limit?: number): Promise<(DataEntry & { createdByName: string; nrRendor: number })[]>;
   getDataEntryStats(): Promise<{
@@ -181,6 +183,7 @@ export class DatabaseStorage implements IStorage {
     limit?: number;
     offset?: number;
     sortOrder?: 'asc' | 'desc';
+    createdById?: string;
   }): Promise<(DataEntry & { createdByName: string; nrRendor: number })[]> {
     // First get all entries (for proper nrRendor calculation)
     let baseQueryBuilder = db
@@ -218,6 +221,10 @@ export class DatabaseStorage implements IStorage {
     
     if (filters?.category) {
       conditions.push(eq(dataEntries.fazaAktuale, filters.category));
+    }
+    
+    if (filters?.createdById) {
+      conditions.push(eq(dataEntries.createdById, filters.createdById));
     }
     
     let finalQuery = baseQueryBuilder;
@@ -302,6 +309,7 @@ export class DatabaseStorage implements IStorage {
     search?: string;
     category?: string;
     status?: string;
+    createdById?: string;
   }): Promise<number> {
     let queryBuilder = db
       .select({ count: sql<number>`count(*)`.mapWith(Number) })
@@ -335,6 +343,10 @@ export class DatabaseStorage implements IStorage {
     
     if (filters?.category) {
       conditions.push(eq(dataEntries.fazaAktuale, filters.category));
+    }
+    
+    if (filters?.createdById) {
+      conditions.push(eq(dataEntries.createdById, filters.createdById));
     }
     
     // Status filtering removed - perfunduar field no longer exists

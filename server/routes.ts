@@ -226,7 +226,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 
   // Export routes
-  app.get('/api/data-entries/export/:format', isAdmin, async (req: any, res) => {
+  app.get('/api/data-entries/export/:format', isAuthenticated, async (req: any, res) => {
     try {
       const format = req.params.format;
       if (!['excel', 'csv'].includes(format)) {

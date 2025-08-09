@@ -98,8 +98,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         limit: limitNum,
         offset,
         sortOrder: sortOrder as 'asc' | 'desc',
-        // Regular users can only see their own entries, admins see all
-        createdById: user?.role === 'admin' ? undefined : userId,
+        // Both users and admins can see all entries
+        createdById: undefined,
       };
 
       const [entries, total] = await Promise.all([
@@ -108,7 +108,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           search: search as string,
           category: category as string,
           status: status as string,
-          createdById: user?.role === 'admin' ? undefined : userId,
+          createdById: undefined,
         }),
       ]);
 
@@ -148,7 +148,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put('/api/data-entries/:id', isAdmin, async (req: any, res) => {
+  app.put('/api/data-entries/:id', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.id;
       const user = await storage.getUser(userId);
@@ -177,7 +177,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete('/api/data-entries/:id', isAdmin, async (req: any, res) => {
+  app.delete('/api/data-entries/:id', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.id;
       const user = await storage.getUser(userId);

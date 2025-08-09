@@ -23,8 +23,10 @@ This is a full-stack data management system built with React and Express.js, des
 ✓ **Clean Login Interface**: Removed administrator credentials display for professional appearance
 ✓ **Save Settings Functionality**: Activated 'Save Settings' button with database persistence for all system configuration changes
 ✓ **Password Policy Display**: Converted password policy from editable textarea to read-only styled display for system security
+✓ **Permission System Enhancement**: Updated access control so regular users can view all records but only edit/delete their own entries
+✓ **Role-Based Data Access**: Administrators maintain full CRUD access while regular users have view-only access to others' records
 
-The application now provides complete legal case management with private authentication, seamless logout-login flow, admin-controlled user creation, Excel and CSV export capabilities, and streamlined Albanian-language interface.
+The application now provides complete legal case management with private authentication, seamless logout-login flow, admin-controlled user creation, Excel and CSV export capabilities, proper role-based permissions, and streamlined Albanian-language interface.
 
 # User Preferences
 

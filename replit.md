@@ -25,8 +25,10 @@ This is a full-stack data management system built with React and Express.js, des
 ✓ **Password Policy Display**: Converted password policy from editable textarea to read-only styled display for system security
 ✓ **Permission System Enhancement**: Updated access control so regular users can view all records but only edit/delete their own entries
 ✓ **Role-Based Data Access**: Administrators maintain full CRUD access while regular users have view-only access to others' records
+✓ **Export Functionality for All Users**: Updated export routes from admin-only to authenticated users for Excel and CSV downloads
+✓ **View Button Addition**: Added View button in Actions column for all users to view detailed case information in read-only modal
 
-The application now provides complete legal case management with private authentication, seamless logout-login flow, admin-controlled user creation, Excel and CSV export capabilities, proper role-based permissions, and streamlined Albanian-language interface.
+The application now provides complete legal case management with private authentication, seamless logout-login flow, admin-controlled user creation, Excel and CSV export capabilities for all users, proper role-based permissions with view access for everyone, and streamlined Albanian-language interface.
 
 # User Preferences
 

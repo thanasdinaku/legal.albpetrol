@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Search, Edit, Trash2, ChevronLeft, ChevronRight, Download, FileSpreadsheet, ArrowUpDown, SortAsc, SortDesc } from "lucide-react";
+import { Search, Edit, Trash2, ChevronLeft, ChevronRight, Download, FileSpreadsheet, ArrowUpDown, SortAsc, SortDesc, Eye } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -30,6 +30,7 @@ export default function CaseTable() {
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc'); // desc = most recent first
 
   const [editingCase, setEditingCase] = useState<DataEntry | null>(null);
+  const [viewingCase, setViewingCase] = useState<DataEntry | null>(null);
 
   const {
     data: response,
@@ -289,7 +290,7 @@ export default function CaseTable() {
                         <TableHead className="min-w-[150px]">Gjykata e Lartë</TableHead>
                         <TableHead className="min-w-[120px]">Krijuar më</TableHead>
                         <TableHead className="min-w-[120px]">Krijuar nga</TableHead>
-                        {(user?.role === "admin" || response?.entries?.some(entry => entry.createdById === user?.id)) && <TableHead className="min-w-[120px]">Veprime</TableHead>}
+                        <TableHead className="min-w-[120px]">Veprime</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -316,27 +317,39 @@ export default function CaseTable() {
                           <TableCell className="max-w-[150px] truncate">{caseItem.gjykataLarte || "-"}</TableCell>
                           <TableCell>{formatDate(caseItem.createdAt ? new Date(caseItem.createdAt).toISOString() : null)}</TableCell>
                           <TableCell className="max-w-[120px] truncate">{caseItem.createdByName || "Përdorues i panjohur"}</TableCell>
-                          {canUserModifyEntry(caseItem) && (
-                            <TableCell>
-                              <div className="flex space-x-2">
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => setEditingCase(caseItem)}
-                                >
-                                  <Edit className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => handleDelete(caseItem.id)}
-                                  disabled={deleteMutation.isPending}
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </TableCell>
-                          )}
+                          <TableCell>
+                            <div className="flex space-x-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setViewingCase(caseItem)}
+                                title="Shiko detajet"
+                              >
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                              {canUserModifyEntry(caseItem) && (
+                                <>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => setEditingCase(caseItem)}
+                                    title="Modifiko"
+                                  >
+                                    <Edit className="h-4 w-4" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => handleDelete(caseItem.id)}
+                                    disabled={deleteMutation.isPending}
+                                    title="Fshi"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </>
+                              )}
+                            </div>
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -375,6 +388,94 @@ export default function CaseTable() {
             )}
           </CardContent>
         </Card>
+
+        {/* View Modal */}
+        <Dialog open={!!viewingCase} onOpenChange={(open) => !open && setViewingCase(null)}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Detajet e Çështjes</DialogTitle>
+            </DialogHeader>
+            {viewingCase && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Paditesi</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.paditesi}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">I Paditur</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.iPaditur}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Person i Tretë</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.personITrete || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Objekti i Padisë</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.objektiIPadise || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Gjykata Shkallë së Parë</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.gjykataShkalle || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Faza Shkallë I</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.fazaGjykataShkalle || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Gjykata Apelit</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.gjykataApelit || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Faza Apelit</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.fazaGjykataApelit || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Faza Aktuale</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.fazaAktuale || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Përfaqësuesi</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.perfaqesuesi || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Demi i Pretenduar</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.demiIPretenduar || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Shuma Gjykatë</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.shumaGjykata || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Vendim Ekzekutim</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.vendimEkzekutim || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Faza Ekzekutim</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.fazaEkzekutim || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Gjykata e Lartë</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.gjykataLarte || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Krijuar më</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{formatDate(viewingCase.createdAt ? new Date(viewingCase.createdAt).toISOString() : null)}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Krijuar nga</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{(viewingCase as any).createdByName || "Përdorues i panjohur"}</p>
+                  </div>
+                </div>
+                <div className="flex justify-end pt-4">
+                  <Button variant="outline" onClick={() => setViewingCase(null)}>
+                    Mbyll
+                  </Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
 
         {/* Edit Modal */}
         <Dialog open={!!editingCase} onOpenChange={(open) => !open && setEditingCase(null)}>

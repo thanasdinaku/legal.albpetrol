@@ -79,6 +79,9 @@ export default function UserManagement() {
   });
 
   const [showAddUserDialog, setShowAddUserDialog] = useState(false);
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false);
+  const [generatedPassword, setGeneratedPassword] = useState('');
+  const [createdUserEmail, setCreatedUserEmail] = useState('');
   const [newUser, setNewUser] = useState({
     email: '',
     firstName: '',
@@ -109,22 +112,24 @@ export default function UserManagement() {
 
   const createUserMutation = useMutation({
     mutationFn: async (userData: typeof newUser) => {
-      await apiRequest('/api/admin/users', 'POST', userData);
+      const response = await apiRequest('/api/admin/users', 'POST', userData);
+      return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
       queryClient.invalidateQueries({ queryKey: ['/api/admin/user-stats'] });
-      toast({
-        title: "User Created",
-        description: "New user has been successfully created.",
-      });
+      
+      // Show the temporary password to the admin
+      setGeneratedPassword(data.tempPassword);
+      setCreatedUserEmail(data.email);
       setShowAddUserDialog(false);
+      setShowPasswordDialog(true);
       setNewUser({ email: '', firstName: '', lastName: '', role: 'user' });
     },
     onError: (error) => {
       toast({
-        title: "Error",
-        description: "Failed to create user. Please try again.",
+        title: "Gabim",
+        description: "Dështoi krijimi i përdoruesit. Ju lutemi provoni përsëri.",
         variant: "destructive",
       });
     },
@@ -276,6 +281,66 @@ export default function UserManagement() {
                 disabled={createUserMutation.isPending}
               >
                 {createUserMutation.isPending ? "Duke krijuar..." : "Krijo Përdorues"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Password Display Dialog */}
+        <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center">
+                <i className="fas fa-key mr-2 text-green-600"></i>
+                Përdoruesi u Krijua me Sukses
+              </DialogTitle>
+              <DialogDescription>
+                Fjalëkalimi i përkohshëm për përdoruesin <strong>{createdUserEmail}</strong>
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <div className="flex items-center mb-2">
+                  <i className="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>
+                  <span className="font-medium text-yellow-800">Fjalëkalimi i Përkohshëm</span>
+                </div>
+                <div className="bg-white border rounded p-3 font-mono text-lg select-all">
+                  {generatedPassword}
+                </div>
+                <p className="text-sm text-yellow-700 mt-2">
+                  Kopjoni këtë fjalëkalim dhe ndajeni me përdoruesin. Ai duhet të ndryshojë fjalëkalimin në hyrjen e parë.
+                </p>
+              </div>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex items-center mb-2">
+                  <i className="fas fa-info-circle text-blue-600 mr-2"></i>
+                  <span className="font-medium text-blue-800">Udhëzime për Përdoruesin</span>
+                </div>
+                <ul className="text-sm text-blue-700 space-y-1">
+                  <li>• Hyrja e parë kërkon ndryshimin e fjalëkalimit</li>
+                  <li>• Përdoruesi mund ta ndryshojë fjalëkalimin sa herë të dojë</li>
+                  <li>• Fjalëkalimi duhet të jetë i sigurt dhe unik</li>
+                </ul>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button 
+                onClick={() => {
+                  navigator.clipboard.writeText(generatedPassword);
+                  toast({
+                    title: "U Kopjua",
+                    description: "Fjalëkalimi u kopjua në clipboard.",
+                  });
+                }}
+                variant="outline"
+                className="mr-2"
+              >
+                <i className="fas fa-copy mr-2"></i>
+                Kopjo Fjalëkalimin
+              </Button>
+              <Button onClick={() => setShowPasswordDialog(false)}>
+                <i className="fas fa-check mr-2"></i>
+                U Kuptua
               </Button>
             </DialogFooter>
           </DialogContent>

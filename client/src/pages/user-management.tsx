@@ -39,8 +39,8 @@ export default function UserManagement() {
   const { toast } = useToast();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Check if user is admin (truealbos@gmail.com)
-  const isAdmin = currentUser?.id === "46078954";
+  // Check if user is admin
+  const isAdmin = currentUser?.role === "admin";
 
   // Debug logging
   useEffect(() => {
@@ -112,24 +112,51 @@ export default function UserManagement() {
 
   const createUserMutation = useMutation({
     mutationFn: async (userData: typeof newUser) => {
+      console.log('Creating user with data:', userData);
+      
+      // Validate form data before sending
+      if (!userData.email || !userData.firstName) {
+        throw new Error('Email dhe emri janë të detyrueshme');
+      }
+      
       const response = await apiRequest('/api/admin/users', 'POST', userData);
-      return response.json();
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('User creation failed:', errorText);
+        throw new Error(`Failed to create user: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('User creation response:', data);
+      return data;
     },
     onSuccess: (data) => {
+      console.log('User created successfully:', data);
       queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
       queryClient.invalidateQueries({ queryKey: ['/api/admin/user-stats'] });
       
       // Show the temporary password to the admin
-      setGeneratedPassword(data.tempPassword);
-      setCreatedUserEmail(data.email);
-      setShowAddUserDialog(false);
-      setShowPasswordDialog(true);
+      if (data.tempPassword) {
+        setGeneratedPassword(data.tempPassword);
+        setCreatedUserEmail(data.email);
+        setShowAddUserDialog(false);
+        setShowPasswordDialog(true);
+      } else {
+        // Fallback success message if tempPassword is missing
+        toast({
+          title: "Përdoruesi u Krijua",
+          description: "Përdoruesi i ri është krijuar me sukses.",
+        });
+        setShowAddUserDialog(false);
+      }
+      
       setNewUser({ email: '', firstName: '', lastName: '', role: 'user' });
     },
-    onError: (error) => {
+    onError: (error: any) => {
+      console.error('User creation error:', error);
       toast({
         title: "Gabim",
-        description: "Dështoi krijimi i përdoruesit. Ju lutemi provoni përsëri.",
+        description: error.message || "Dështoi krijimi i përdoruesit. Ju lutemi provoni përsëri.",
         variant: "destructive",
       });
     },
@@ -277,7 +304,18 @@ export default function UserManagement() {
             <DialogFooter>
               <Button 
                 type="submit" 
-                onClick={() => createUserMutation.mutate(newUser)}
+                onClick={() => {
+                  console.log('Creating user with form data:', newUser);
+                  if (!newUser.email.trim() || !newUser.firstName.trim()) {
+                    toast({
+                      title: "Gabim",
+                      description: "Email dhe emri janë të detyrueshme.",
+                      variant: "destructive",
+                    });
+                    return;
+                  }
+                  createUserMutation.mutate(newUser);
+                }}
                 disabled={createUserMutation.isPending}
               >
                 {createUserMutation.isPending ? "Duke krijuar..." : "Krijo Përdorues"}

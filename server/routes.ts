@@ -233,8 +233,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid export format" });
       }
 
-      // Get all data entries for export
-      const entries = await storage.getDataEntries({ limit: 1000 });
+      // Get the same filtering and sorting parameters as the UI
+      const { search, sortOrder } = req.query;
+      
+      // Get all data entries for export with the same filters and sorting as the UI
+      const entries = await storage.getDataEntriesForExport({ 
+        search: search as string,
+        sortOrder: (sortOrder as 'asc' | 'desc') || 'desc'
+      });
 
       if (!entries || entries.length === 0) {
         return res.status(404).json({ message: "No data to export" });
@@ -255,7 +261,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           ],
           // Data rows
           ...entries.map(entry => [
-            entry.id,
+            entry.nrRendor,
             entry.paditesi,
             entry.iPaditur,
             entry.personITrete || '',
@@ -301,7 +307,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ];
 
         const csvRows = entries.map(entry => [
-          entry.id,
+          entry.nrRendor,
           `"${entry.paditesi || ''}"`,
           `"${entry.iPaditur || ''}"`,
           `"${entry.personITrete || ''}"`,

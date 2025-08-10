@@ -88,7 +88,17 @@ export default function CaseTable() {
 
   const handleExport = async (format: 'excel' | 'csv') => {
     try {
-      const response = await fetch(`/api/data-entries/export/${format}`, {
+      // Build query parameters to match current view
+      const params = new URLSearchParams();
+      if (searchTerm) {
+        params.append('search', searchTerm);
+      }
+      params.append('sortOrder', sortOrder);
+      
+      const queryString = params.toString();
+      const exportUrl = `/api/data-entries/export/${format}${queryString ? `?${queryString}` : ''}`;
+      
+      const response = await fetch(exportUrl, {
         method: 'GET',
         credentials: 'include',
       });
@@ -98,10 +108,10 @@ export default function CaseTable() {
       }
 
       const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
+      const downloadUrl = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.style.display = 'none';
-      a.href = url;
+      a.href = downloadUrl;
       
       const timestamp = new Date().toISOString().slice(0, 10);
       const extension = format === 'excel' ? 'xlsx' : format;
@@ -109,7 +119,7 @@ export default function CaseTable() {
       
       document.body.appendChild(a);
       a.click();
-      window.URL.revokeObjectURL(url);
+      window.URL.revokeObjectURL(downloadUrl);
       document.body.removeChild(a);
 
       toast({

@@ -46,6 +46,10 @@ export interface IStorage {
     sortOrder?: 'asc' | 'desc';
     createdById?: string;
   }): Promise<(DataEntry & { createdByName: string; nrRendor: number })[]>;
+  getDataEntriesForExport(filters?: {
+    search?: string;
+    sortOrder?: 'asc' | 'desc';
+  }): Promise<(DataEntry & { createdByName: string; nrRendor: number })[]>;
   getDataEntryById(id: number): Promise<DataEntry | undefined>;
   updateDataEntry(id: number, updates: UpdateDataEntry): Promise<DataEntry>;
   deleteDataEntry(id: number): Promise<void>;
@@ -174,6 +178,69 @@ export class DatabaseStorage implements IStorage {
       .values(entry)
       .returning();
     return dataEntry;
+  }
+
+  // Simple method for export functionality to avoid complex query building
+  async getDataEntriesForExport(filters?: {
+    search?: string;
+    sortOrder?: 'asc' | 'desc';
+  }): Promise<(DataEntry & { createdByName: string; nrRendor: number })[]> {
+    // Build base query
+    let query = db
+      .select({
+        ...getTableColumns(dataEntries),
+        createdByName: users.firstName,
+      })
+      .from(dataEntries)
+      .leftJoin(users, eq(dataEntries.createdById, users.id));
+
+    // Apply search filter if provided
+    if (filters?.search) {
+      const searchTerm = `%${filters.search}%`;
+      query = query.where(
+        or(
+          ilike(dataEntries.paditesi, searchTerm),
+          ilike(dataEntries.iPaditur, searchTerm),
+          ilike(dataEntries.personITrete, searchTerm),
+          ilike(dataEntries.objektiIPadise, searchTerm),
+          ilike(dataEntries.gjykataShkalle, searchTerm),
+          ilike(dataEntries.fazaGjykataShkalle, searchTerm),
+          ilike(dataEntries.gjykataApelit, searchTerm),
+          ilike(dataEntries.fazaGjykataApelit, searchTerm),
+          ilike(dataEntries.fazaAktuale, searchTerm),
+          ilike(dataEntries.perfaqesuesi, searchTerm),
+          ilike(dataEntries.demiIPretenduar, searchTerm),
+          ilike(dataEntries.shumaGjykata, searchTerm),
+          ilike(dataEntries.vendimEkzekutim, searchTerm),
+          ilike(dataEntries.fazaEkzekutim, searchTerm),
+          ilike(dataEntries.gjykataLarte, searchTerm),
+          ilike(users.firstName, searchTerm)
+        )
+      );
+    }
+
+    // Apply sorting
+    if (filters?.sortOrder === 'asc') {
+      query = query.orderBy(asc(dataEntries.createdAt));
+    } else {
+      query = query.orderBy(desc(dataEntries.createdAt));
+    }
+
+    // Execute query
+    const results = await query;
+
+    // Add nrRendor based on sort order
+    return results.map((entry, index) => {
+      const nrRendor = filters?.sortOrder === 'asc' 
+        ? index + 1 
+        : results.length - index;
+      
+      return {
+        ...entry,
+        createdByName: entry.createdByName || 'Përdorues i panjohur',
+        nrRendor,
+      };
+    }) as (DataEntry & { createdByName: string; nrRendor: number })[];
   }
 
   async getDataEntries(filters?: {

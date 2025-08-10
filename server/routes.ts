@@ -249,8 +249,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const timestamp = new Date().toISOString().slice(0, 10);
 
       if (format === 'excel') {
-        // Excel export
+        // Excel export with professional formatting
+        const currentDate = new Date().toLocaleDateString('sq-AL');
         const worksheetData = [
+          // Main title row
+          [`PASQYRA E ÇËSHTJEVE LIGJORE - ALBPETROL SH.A. (${currentDate})`],
+          [], // Empty row for spacing
           // Headers in Albanian
           [
             'Nr. Rendor', 'Paditesi', 'I Paditur', 'Person i Tretë', 'Objekti i Padisë',
@@ -283,6 +287,81 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ];
 
         const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+        
+        // Set column widths for better readability
+        const columnWidths = [
+          { wch: 8 },  // Nr. Rendor
+          { wch: 20 }, // Paditesi
+          { wch: 20 }, // I Paditur
+          { wch: 15 }, // Person i Tretë
+          { wch: 25 }, // Objekti i Padisë
+          { wch: 20 }, // Gjykata Shkallë
+          { wch: 15 }, // Faza Shkallë I
+          { wch: 20 }, // Gjykata Apelit
+          { wch: 15 }, // Faza Apelit
+          { wch: 25 }, // Faza Aktuale
+          { wch: 18 }, // Përfaqësuesi
+          { wch: 18 }, // Demi i Pretenduar
+          { wch: 15 }, // Shuma Gjykate
+          { wch: 18 }, // Vendim Ekzekutim
+          { wch: 15 }, // Faza Ekzekutim
+          { wch: 18 }, // Gjykata e Lartë
+          { wch: 12 }, // Krijuar më
+          { wch: 15 }  // Krijuar nga
+        ];
+        worksheet['!cols'] = columnWidths;
+
+        // Style the main title (row 1)
+        if (worksheet['A1']) {
+          worksheet['A1'].s = {
+            font: { bold: true, sz: 14 },
+            alignment: { horizontal: 'center' },
+            fill: { fgColor: { rgb: 'E6F3FF' } }
+          };
+        }
+
+        // Merge cells for the main title across all columns
+        worksheet['!merges'] = [
+          { s: { c: 0, r: 0 }, e: { c: 17, r: 0 } } // Merge A1 to R1
+        ];
+
+        // Style the header row (row 3)
+        const headerRowIndex = 2; // 0-indexed, so row 3
+        for (let col = 0; col < 18; col++) {
+          const cellRef = XLSX.utils.encode_cell({ r: headerRowIndex, c: col });
+          if (worksheet[cellRef]) {
+            worksheet[cellRef].s = {
+              font: { bold: true, sz: 11 },
+              fill: { fgColor: { rgb: 'D9EDF7' } },
+              alignment: { horizontal: 'center', vertical: 'center' },
+              border: {
+                top: { style: 'thin' },
+                bottom: { style: 'thin' },
+                left: { style: 'thin' },
+                right: { style: 'thin' }
+              }
+            };
+          }
+        }
+
+        // Add borders to data cells
+        for (let row = 3; row < worksheetData.length; row++) {
+          for (let col = 0; col < 18; col++) {
+            const cellRef = XLSX.utils.encode_cell({ r: row, c: col });
+            if (worksheet[cellRef]) {
+              worksheet[cellRef].s = {
+                border: {
+                  top: { style: 'thin' },
+                  bottom: { style: 'thin' },
+                  left: { style: 'thin' },
+                  right: { style: 'thin' }
+                },
+                alignment: { vertical: 'center' }
+              };
+            }
+          }
+        }
+
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Çështjet Ligjore');
 
@@ -290,7 +369,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         res.set({
           'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          'Content-Disposition': `attachment; filename="ceshtjet-ligjore-${timestamp}.xlsx"`,
+          'Content-Disposition': `attachment; filename="Pasqyra e Ceshtjeve-${timestamp}.xlsx"`,
           'Content-Length': buffer.length
         });
 

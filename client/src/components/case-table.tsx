@@ -86,6 +86,10 @@ export default function CaseTable() {
     return user?.role === "admin" || entry.createdById === user?.id;
   };
 
+  const canUserDeleteEntry = () => {
+    return user?.role === "admin";
+  };
+
   const handleExport = async (format: 'excel' | 'csv') => {
     try {
       // Build query parameters to match current view
@@ -338,25 +342,25 @@ export default function CaseTable() {
                                 <Eye className="h-4 w-4" />
                               </Button>
                               {canUserModifyEntry(caseItem) && (
-                                <>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={() => setEditingCase(caseItem)}
-                                    title="Modifiko"
-                                  >
-                                    <Edit className="h-4 w-4" />
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={() => handleDelete(caseItem.id)}
-                                    disabled={deleteMutation.isPending}
-                                    title="Fshi"
-                                  >
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
-                                </>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => setEditingCase(caseItem)}
+                                  title="Modifiko"
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                              )}
+                              {canUserDeleteEntry() && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => handleDelete(caseItem.id)}
+                                  disabled={deleteMutation.isPending}
+                                  title="Fshi"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
                               )}
                             </div>
                           </TableCell>

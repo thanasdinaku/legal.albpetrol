@@ -183,15 +183,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const user = await storage.getUser(userId);
       const id = parseInt(req.params.id);
 
-      // Check if entry exists and get ownership
+      // Check if entry exists
       const existingEntry = await storage.getDataEntryById(id);
       if (!existingEntry) {
         return res.status(404).json({ message: "Entry not found" });
       }
 
-      // Permission check: admin can delete any entry, regular user can only delete their own
-      if (user?.role !== 'admin' && existingEntry.createdById !== userId) {
-        return res.status(403).json({ message: "You can only delete your own entries" });
+      // Permission check: only administrators can delete entries
+      if (user?.role !== 'admin') {
+        return res.status(403).json({ message: "Only administrators can delete entries" });
       }
 
       await storage.deleteDataEntry(id);

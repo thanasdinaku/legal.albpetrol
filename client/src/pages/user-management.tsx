@@ -502,7 +502,7 @@ export default function UserManagement() {
                     <TableHead>Përdoruesi</TableHead>
                     <TableHead>Email</TableHead>
                     <TableHead>Roli</TableHead>
-                    <TableHead>U Bashkua</TableHead>
+                    <TableHead>Koha e regjistrimit</TableHead>
                     <TableHead>Koha e veprimit të fundit</TableHead>
                     <TableHead className="text-right">Veprimet</TableHead>
                   </TableRow>

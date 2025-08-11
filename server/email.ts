@@ -172,19 +172,69 @@ export async function sendEditEntryNotification(
     }
   });
 
+  // Helper function to check if a field was changed and apply highlighting
+  const getFieldValue = (entry: DataEntry, fieldKey: string, isUpdated: boolean) => {
+    const value = String(entry[fieldKey as keyof DataEntry] || 'N/A');
+    const originalValue = String(originalEntry[fieldKey as keyof DataEntry] || 'N/A');
+    const updatedValue = String(updatedEntry[fieldKey as keyof DataEntry] || 'N/A');
+    
+    if (isUpdated && originalValue !== updatedValue) {
+      return `<span style="background-color: #dcfce7; color: #166534; padding: 2px 4px; border-radius: 3px; font-weight: bold;">${value}</span>`;
+    }
+    return value;
+  };
+
   const changesDetails = notificationSettings.includeDetails ? `
-<strong>Ndryshimet e bëra:</strong>
-<ul>
-  <li><strong>Nr. Rendor:</strong> ${nrRendor || originalEntry.id}</li>
-  <li><strong>Paditesi:</strong> ${updatedEntry.paditesi}</li>
-  ${changes.map(change => `
-  <li><strong>${change.field}:</strong>
-    <br>&nbsp;&nbsp;• Më parë: ${change.from}
-    <br>&nbsp;&nbsp;• Tani: ${change.to}
-  </li>`).join('')}
-  <li><strong>Ndryshuar nga:</strong> ${editor.firstName} ${editor.lastName} (${editor.email})</li>
-  <li><strong>Data e Ndryshimit:</strong> ${updatedEntry.updatedAt?.toLocaleString('sq-AL')}</li>
-</ul>` : '';
+<div style="margin-bottom: 30px;">
+  <h3 style="color: #dc2626; margin: 0 0 15px 0; font-size: 16px; border-bottom: 2px solid #dc2626; padding-bottom: 5px;">Ishte:</h3>
+  <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+    <li><strong>Nr. Rendor:</strong> ${nrRendor || originalEntry.id}</li>
+    <li><strong>Paditesi:</strong> ${getFieldValue(originalEntry, 'paditesi', false)}</li>
+    <li><strong>I Paditur:</strong> ${getFieldValue(originalEntry, 'iPaditur', false)}</li>
+    <li><strong>Person i Tretë:</strong> ${getFieldValue(originalEntry, 'personITrete', false)}</li>
+    <li><strong>Objekti i Padisë:</strong> ${getFieldValue(originalEntry, 'objektiIPadise', false)}</li>
+    <li><strong>Gjykata e Shkallës së Parë:</strong> ${getFieldValue(originalEntry, 'gjykataShkalle', false)}</li>
+    <li><strong>Faza në Gjykatën e Shkallës së Parë:</strong> ${getFieldValue(originalEntry, 'fazaGjykataShkalle', false)}</li>
+    <li><strong>Gjykata e Apelit:</strong> ${getFieldValue(originalEntry, 'gjykataApelit', false)}</li>
+    <li><strong>Faza në Gjykatën e Apelit:</strong> ${getFieldValue(originalEntry, 'fazaGjykataApelit', false)}</li>
+    <li><strong>Faza Aktuale:</strong> ${getFieldValue(originalEntry, 'fazaAktuale', false)}</li>
+    <li><strong>Përfaqësuesi i Albpetrol SH.A.:</strong> ${getFieldValue(originalEntry, 'perfaqesuesi', false)}</li>
+    <li><strong>Dëmi i Pretenduar:</strong> ${getFieldValue(originalEntry, 'demiIPretenduar', false)}</li>
+    <li><strong>Shuma e Caktuar nga Gjykata:</strong> ${getFieldValue(originalEntry, 'shumaGjykata', false)}</li>
+    <li><strong>Vendim me Ekzekutim të Përkohshëm:</strong> ${getFieldValue(originalEntry, 'vendimEkzekutim', false)}</li>
+    <li><strong>Faza e Ekzekutimit:</strong> ${getFieldValue(originalEntry, 'fazaEkzekutim', false)}</li>
+    <li><strong>Gjykata e Lartë:</strong> ${getFieldValue(originalEntry, 'gjykataLarte', false)}</li>
+  </ul>
+</div>
+
+<div style="margin-bottom: 20px;">
+  <h3 style="color: #059669; margin: 0 0 15px 0; font-size: 16px; border-bottom: 2px solid #059669; padding-bottom: 5px;">U bë:</h3>
+  <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+    <li><strong>Nr. Rendor:</strong> ${nrRendor || updatedEntry.id}</li>
+    <li><strong>Paditesi:</strong> ${getFieldValue(updatedEntry, 'paditesi', true)}</li>
+    <li><strong>I Paditur:</strong> ${getFieldValue(updatedEntry, 'iPaditur', true)}</li>
+    <li><strong>Person i Tretë:</strong> ${getFieldValue(updatedEntry, 'personITrete', true)}</li>
+    <li><strong>Objekti i Padisë:</strong> ${getFieldValue(updatedEntry, 'objektiIPadise', true)}</li>
+    <li><strong>Gjykata e Shkallës së Parë:</strong> ${getFieldValue(updatedEntry, 'gjykataShkalle', true)}</li>
+    <li><strong>Faza në Gjykatën e Shkallës së Parë:</strong> ${getFieldValue(updatedEntry, 'fazaGjykataShkalle', true)}</li>
+    <li><strong>Gjykata e Apelit:</strong> ${getFieldValue(updatedEntry, 'gjykataApelit', true)}</li>
+    <li><strong>Faza në Gjykatën e Apelit:</strong> ${getFieldValue(updatedEntry, 'fazaGjykataApelit', true)}</li>
+    <li><strong>Faza Aktuale:</strong> ${getFieldValue(updatedEntry, 'fazaAktuale', true)}</li>
+    <li><strong>Përfaqësuesi i Albpetrol SH.A.:</strong> ${getFieldValue(updatedEntry, 'perfaqesuesi', true)}</li>
+    <li><strong>Dëmi i Pretenduar:</strong> ${getFieldValue(updatedEntry, 'demiIPretenduar', true)}</li>
+    <li><strong>Shuma e Caktuar nga Gjykata:</strong> ${getFieldValue(updatedEntry, 'shumaGjykata', true)}</li>
+    <li><strong>Vendim me Ekzekutim të Përkohshëm:</strong> ${getFieldValue(updatedEntry, 'vendimEkzekutim', true)}</li>
+    <li><strong>Faza e Ekzekutimit:</strong> ${getFieldValue(updatedEntry, 'fazaEkzekutim', true)}</li>
+    <li><strong>Gjykata e Lartë:</strong> ${getFieldValue(updatedEntry, 'gjykataLarte', true)}</li>
+  </ul>
+</div>
+
+<div style="background-color: #f3f4f6; padding: 15px; border-radius: 6px; border-left: 4px solid #6b7280;">
+  <p style="margin: 0; color: #374151; font-size: 14px;">
+    <strong>Ndryshuar nga:</strong> ${editor.firstName} ${editor.lastName} (${editor.email})<br>
+    <strong>Data e Ndryshimit:</strong> ${updatedEntry.updatedAt?.toLocaleString('sq-AL')}
+  </p>
+</div>` : '';
 
   const htmlContent = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
@@ -220,14 +270,44 @@ Njoftim për Ndryshim
 Një çështje ligjore është përditësuar në sistem.
 
 ${notificationSettings.includeDetails ? `
-Ndryshimet e bëra:
+ISHTE:
 - Nr. Rendor: ${nrRendor || originalEntry.id}
+- Paditesi: ${originalEntry.paditesi}
+- I Paditur: ${originalEntry.iPaditur}
+- Person i Tretë: ${originalEntry.personITrete || 'N/A'}
+- Objekti i Padisë: ${originalEntry.objektiIPadise || 'N/A'}
+- Gjykata e Shkallës së Parë: ${originalEntry.gjykataShkalle || 'N/A'}
+- Faza në Gjykatën e Shkallës së Parë: ${originalEntry.fazaGjykataShkalle || 'N/A'}
+- Gjykata e Apelit: ${originalEntry.gjykataApelit || 'N/A'}
+- Faza në Gjykatën e Apelit: ${originalEntry.fazaGjykataApelit || 'N/A'}
+- Faza Aktuale: ${originalEntry.fazaAktuale || 'N/A'}
+- Përfaqësuesi i Albpetrol SH.A.: ${originalEntry.perfaqesuesi || 'N/A'}
+- Dëmi i Pretenduar: ${originalEntry.demiIPretenduar || 'N/A'}
+- Shuma e Caktuar nga Gjykata: ${originalEntry.shumaGjykata || 'N/A'}
+- Vendim me Ekzekutim të Përkohshëm: ${originalEntry.vendimEkzekutim || 'N/A'}
+- Faza e Ekzekutimit: ${originalEntry.fazaEkzekutim || 'N/A'}
+- Gjykata e Lartë: ${originalEntry.gjykataLarte || 'N/A'}
+
+U BË:
+- Nr. Rendor: ${nrRendor || updatedEntry.id}
 - Paditesi: ${updatedEntry.paditesi}
-${changes.map(change => `- ${change.field}:
-  • Më parë: ${change.from}
-  • Tani: ${change.to}`).join('\n')}
-- Ndryshuar nga: ${editor.firstName} ${editor.lastName} (${editor.email})
-- Data e Ndryshimit: ${updatedEntry.updatedAt?.toLocaleString('sq-AL')}
+- I Paditur: ${updatedEntry.iPaditur}
+- Person i Tretë: ${updatedEntry.personITrete || 'N/A'}
+- Objekti i Padisë: ${updatedEntry.objektiIPadise || 'N/A'}
+- Gjykata e Shkallës së Parë: ${updatedEntry.gjykataShkalle || 'N/A'}
+- Faza në Gjykatën e Shkallës së Parë: ${updatedEntry.fazaGjykataShkalle || 'N/A'}
+- Gjykata e Apelit: ${updatedEntry.gjykataApelit || 'N/A'}
+- Faza në Gjykatën e Apelit: ${updatedEntry.fazaGjykataApelit || 'N/A'}
+- Faza Aktuale: ${updatedEntry.fazaAktuale || 'N/A'}
+- Përfaqësuesi i Albpetrol SH.A.: ${updatedEntry.perfaqesuesi || 'N/A'}
+- Dëmi i Pretenduar: ${updatedEntry.demiIPretenduar || 'N/A'}
+- Shuma e Caktuar nga Gjykata: ${updatedEntry.shumaGjykata || 'N/A'}
+- Vendim me Ekzekutim të Përkohshëm: ${updatedEntry.vendimEkzekutim || 'N/A'}
+- Faza e Ekzekutimit: ${updatedEntry.fazaEkzekutim || 'N/A'}
+- Gjykata e Lartë: ${updatedEntry.gjykataLarte || 'N/A'}
+
+Ndryshuar nga: ${editor.firstName} ${editor.lastName} (${editor.email})
+Data e Ndryshimit: ${updatedEntry.updatedAt?.toLocaleString('sq-AL')}
 ` : ''}
 
 ---

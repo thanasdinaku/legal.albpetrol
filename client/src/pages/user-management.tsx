@@ -24,7 +24,7 @@ interface User {
   role: 'user' | 'admin';
   profileImageUrl?: string;
   createdAt: string;
-  lastActive?: string;
+  lastActive?: string | null;
 }
 
 interface UserStats {
@@ -235,6 +235,25 @@ export default function UserManagement() {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  const formatLastActive = (lastActiveString: string | null | undefined) => {
+    if (!lastActiveString) return 'Kurrë';
+    
+    const lastActive = new Date(lastActiveString);
+    const now = new Date();
+    const diffMs = now.getTime() - lastActive.getTime();
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    
+    if (diffMinutes < 1) return 'Tani';
+    if (diffMinutes < 60) return `${diffMinutes} minuta më parë`;
+    if (diffHours < 24) return `${diffHours} orë më parë`;
+    if (diffDays < 7) return `${diffDays} ditë më parë`;
+    
+    // For longer periods, show full date
+    return formatDate(lastActiveString);
   };
 
   const getDisplayName = (user: User) => {
@@ -515,7 +534,7 @@ export default function UserManagement() {
                       </TableCell>
                       <TableCell>{formatDate(user.createdAt)}</TableCell>
                       <TableCell>
-                        {user.lastActive ? formatDate(user.lastActive) : 'Kurrë'}
+                        {formatLastActive(user.lastActive)}
                       </TableCell>
                       <TableCell className="text-right space-x-2">
                         {currentUser && user.id !== currentUser.id && (

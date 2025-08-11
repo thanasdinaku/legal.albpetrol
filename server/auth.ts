@@ -108,10 +108,19 @@ export function setupAuth(app: Express) {
       if (!user) {
         return res.status(401).json({ message: "Invalid email or password" });
       }
-      req.login(user, (err) => {
+      req.login(user, async (err) => {
         if (err) {
           return res.status(500).json({ message: "Login failed" });
         }
+        
+        // Update last login timestamp
+        try {
+          await storage.updateUserLastLogin(user.id);
+        } catch (error) {
+          console.error("Failed to update last login:", error);
+          // Don't fail the login if timestamp update fails
+        }
+        
         // Remove password from response for security
         const { password, ...userWithoutPassword } = user;
         res.status(200).json(userWithoutPassword);

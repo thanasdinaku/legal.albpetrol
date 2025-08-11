@@ -77,7 +77,7 @@ export default function SystemSettings() {
   // Save settings mutation
   const saveSettingsMutation = useMutation({
     mutationFn: async (settingsData: any) => {
-      const res = await apiRequest("PUT", "/api/admin/settings", settingsData);
+      const res = await apiRequest("/api/admin/settings", "PUT", settingsData);
       return res.json();
     },
     onSuccess: () => {
@@ -160,11 +160,12 @@ export default function SystemSettings() {
   // Update email settings when data is fetched
   useEffect(() => {
     if (emailData && typeof emailData === 'object') {
+      const data = emailData as any;
       setEmailSettings({
-        enabled: emailData.enabled ?? true,
-        emailAddresses: emailData.emailAddresses ?? [],
-        subject: emailData.subject ?? "Hyrje e re në sistemin e menaxhimit të çështjeve ligjore",
-        includeDetails: emailData.includeDetails ?? true
+        enabled: data.enabled ?? true,
+        emailAddresses: data.emailAddresses ?? [],
+        subject: data.subject ?? "Hyrje e re në sistemin e menaxhimit të çështjeve ligjore",
+        includeDetails: data.includeDetails ?? true
       });
     }
   }, [emailData]);
@@ -172,7 +173,7 @@ export default function SystemSettings() {
   // Save email notification settings mutation
   const saveEmailMutation = useMutation({
     mutationFn: async (emailData: any) => {
-      const res = await apiRequest("PUT", "/api/admin/email-settings", emailData);
+      const res = await apiRequest("/api/admin/email-settings", "PUT", emailData);
       return res.json();
     },
     onSuccess: () => {
@@ -194,7 +195,7 @@ export default function SystemSettings() {
   // Test email connection mutation
   const testEmailMutation = useMutation({
     mutationFn: async () => {
-      const res = await apiRequest("POST", "/api/admin/test-email", {});
+      const res = await apiRequest("/api/admin/test-email", "POST", {});
       return res.json();
     },
     onSuccess: (data) => {

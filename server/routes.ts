@@ -38,7 +38,7 @@ import { db } from "./db";
 import { sql } from "drizzle-orm";
 import { sessions } from "@shared/schema";
 import { sendNewEntryNotification, sendEditEntryNotification, sendDeleteEntryNotification, testEmailConnection } from "./email";
-import { generateUserManual } from "./generate-manual";
+import { generateUserManual } from "./fixed-manual";
 import { generateSimpleManual } from "./simple-manual";
 
 export async function registerRoutes(app: Express): Promise<Server> {

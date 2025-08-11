@@ -10,7 +10,13 @@ declare module 'jspdf' {
 
 export function generateUserManual(): Buffer {
   try {
-    const doc = new jsPDF();
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+      putOnlyUsedFonts: true,
+      compress: true
+    });
     let yPosition = 20;
 
   // Set font for Albanian characters

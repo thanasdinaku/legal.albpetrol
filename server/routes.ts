@@ -251,62 +251,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (format === 'excel') {
         // Excel export with professional formatting
         const worksheetData = [
-          // Main title row - exactly as shown in the screenshot
+          // Main title row
           ['Ekstrakt i Ceshtjeve Ligjore'],
           [], // Empty row for spacing
-          // Headers exactly as shown in screenshot
+          // Headers matching the current data entry form exactly
           [
-            'Nr. Rendor', 'Paditesi (Kush e ka bere)', 'I Paditur', 'Person i Trete', 'Objekti i Padise', 
-            'Gjykata e Shkall së I-rë', 'Gjykata e Apelit', 'Gjykata e shkall së parë i përkatës', 'Gjykata e Apelit i përkatës', 'Faza në të cilën ndodhet procesi',
-            'Përfaqësuesi i shoq. në gjyq', 'Demi i pretenduar', 'Gjykimi', 'Faza e Gjykimit', 'Ekzekutimi', 'Perfundimi', 'Gjykata e Larte', 'Krijuar nga', 'Krijuar me'
+            'Nr. Rendor', 'Paditesi (Emër e Mbiemër)', 'I Paditur', 'Person i Tretë', 'Objekti i Padisë', 
+            'Gjykata e Shkallës së Parë', 'Faza në të cilën ndodhet procesi (Shkallë I)', 'Gjykata e Apelit', 
+            'Faza në të cilën ndodhet procesi (Apel)', 'Faza në të cilën ndodhet proçesi', 'Përfaqësuesi i Albpetrol SH.A.', 
+            'Dëmi i Pretenduar në Objekt', 'Shuma e Caktuar nga Gjykata me Vendim', 'Vendim me Ekzekutim të Përkohshëm', 
+            'Faza në të cilën ndodhet Ekzekutimi', 'Gjykata e Lartë', 'Krijuar nga', 'Krijuar më'
           ],
-          // Data rows mapped to new header structure
+          // Data rows mapped to correct structure
           ...entries.map(entry => [
             entry.nrRendor,                                                              // Nr. Rendor
-            entry.paditesi,                                                             // Paditesi (Kush e ka bere)
+            entry.paditesi,                                                             // Paditesi (Emër e Mbiemër)
             entry.iPaditur,                                                             // I Paditur
-            entry.personITrete || '',                                                   // Person i Trete
-            entry.objektiIPadise || '',                                                 // Objekti i Padise
-            entry.gjykataShkalle || '',                                                 // Gjykata e Shkall së I-rë
+            entry.personITrete || '',                                                   // Person i Tretë
+            entry.objektiIPadise || '',                                                 // Objekti i Padisë
+            entry.gjykataShkalle || '',                                                 // Gjykata e Shkallës së Parë
+            entry.fazaGjykataShkalle || '',                                            // Faza në të cilën ndodhet procesi (Shkallë I)
             entry.gjykataApelit || '',                                                  // Gjykata e Apelit
-            entry.fazaGjykataShkalle || '',                                            // Gjykata e shkall së parë i përkatës
-            entry.fazaGjykataApelit || '',                                             // Gjykata e Apelit i përkatës
-            entry.fazaAktuale || '',                                                    // Faza në të cilën ndodhet procesi
-            entry.perfaqesuesi || '',                                                   // Përfaqësuesi i shoq. në gjyq
-            entry.demiIPretenduar || '',                                               // Demi i pretenduar
-            entry.shumaGjykata || '',                                                   // Gjykimi
-            entry.fazaEkzekutim || '',                                                  // Faza e Gjykimit
-            entry.vendimEkzekutim || '',                                               // Ekzekutimi
-            '',                                                                         // Perfundimi (empty field)
-            entry.gjykataLarte || '',                                                   // Gjykata e Larte
+            entry.fazaGjykataApelit || '',                                             // Faza në të cilën ndodhet procesi (Apel)
+            entry.fazaAktuale || '',                                                    // Faza në të cilën ndodhet proçesi
+            entry.perfaqesuesi || '',                                                   // Përfaqësuesi i Albpetrol SH.A.
+            entry.demiIPretenduar || '',                                               // Dëmi i Pretenduar në Objekt
+            entry.shumaGjykata || '',                                                   // Shuma e Caktuar nga Gjykata me Vendim
+            entry.vendimEkzekutim || '',                                               // Vendim me Ekzekutim të Përkohshëm
+            entry.fazaEkzekutim || '',                                                  // Faza në të cilën ndodhet Ekzekutimi
+            entry.gjykataLarte || '',                                                   // Gjykata e Lartë
             (entry as any).createdByName || 'Përdorues i panjohur',                    // Krijuar nga
-            entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : '' // Krijuar me
+            entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : '' // Krijuar më
           ])
         ];
 
         const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
         
-        // Set column widths to match screenshot formatting
+        // Set column widths for proper formatting
         const columnWidths = [
           { wch: 8 },  // Nr. Rendor
-          { wch: 18 }, // Paditesi (Kush e ka bere)
+          { wch: 20 }, // Paditesi (Emër e Mbiemër)
           { wch: 15 }, // I Paditur
-          { wch: 12 }, // Person i Trete
-          { wch: 20 }, // Objekti i Padise
-          { wch: 18 }, // Gjykata e Shkall së I-rë
-          { wch: 15 }, // Gjykata e Apelit
-          { wch: 20 }, // Gjykata e shkall së parë i përkatës
-          { wch: 20 }, // Gjykata e Apelit i përkatës
-          { wch: 22 }, // Faza në të cilën ndodhet procesi
-          { wch: 20 }, // Përfaqësuesi i shoq. në gjyq
-          { wch: 15 }, // Demi i pretenduar
-          { wch: 12 }, // Gjykimi
-          { wch: 15 }, // Faza e Gjykimit
-          { wch: 12 }, // Ekzekutimi
-          { wch: 12 }, // Perfundimi
-          { wch: 15 }, // Gjykata e Larte
+          { wch: 12 }, // Person i Tretë
+          { wch: 25 }, // Objekti i Padisë
+          { wch: 35 }, // Gjykata e Shkallës së Parë
+          { wch: 30 }, // Faza në të cilën ndodhet procesi (Shkallë I)
+          { wch: 35 }, // Gjykata e Apelit
+          { wch: 30 }, // Faza në të cilën ndodhet procesi (Apel)
+          { wch: 25 }, // Faza në të cilën ndodhet proçesi
+          { wch: 25 }, // Përfaqësuesi i Albpetrol SH.A.
+          { wch: 25 }, // Dëmi i Pretenduar në Objekt
+          { wch: 30 }, // Shuma e Caktuar nga Gjykata me Vendim
+          { wch: 30 }, // Vendim me Ekzekutim të Përkohshëm
+          { wch: 30 }, // Faza në të cilën ndodhet Ekzekutimi
+          { wch: 15 }, // Gjykata e Lartë
           { wch: 12 }, // Krijuar nga
-          { wch: 12 }  // Krijuar me
+          { wch: 12 }  // Krijuar më
         ];
         worksheet['!cols'] = columnWidths;
 
@@ -321,12 +321,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         // Merge cells for the main title across all columns
         worksheet['!merges'] = [
-          { s: { c: 0, r: 0 }, e: { c: 18, r: 0 } } // Merge A1 to S1 (19 columns)
+          { s: { c: 0, r: 0 }, e: { c: 17, r: 0 } } // Merge A1 to R1 (18 columns)
         ];
 
         // Style the header row (row 3)
         const headerRowIndex = 2; // 0-indexed, so row 3
-        for (let col = 0; col < 19; col++) {
+        for (let col = 0; col < 18; col++) {
           const cellRef = XLSX.utils.encode_cell({ r: headerRowIndex, c: col });
           if (worksheet[cellRef]) {
             worksheet[cellRef].s = {
@@ -345,7 +345,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         // Add borders to data cells
         for (let row = 3; row < worksheetData.length; row++) {
-          for (let col = 0; col < 19; col++) {
+          for (let col = 0; col < 18; col++) {
             const cellRef = XLSX.utils.encode_cell({ r: row, c: col });
             if (worksheet[cellRef]) {
               worksheet[cellRef].s = {
@@ -375,34 +375,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.send(buffer);
 
       } else if (format === 'csv') {
-        // CSV export
+        // CSV export - headers matching form exactly
         const csvHeaders = [
-          'Nr. Rendor', 'Paditesi', 'I Paditur', 'Person i Tretë', 'Objekti i Padisë',
-          'Gjykata Shkallë së Parë e', 'Faza Shkallë I', 'Gjykata Apelit', 'Faza Apelit',
-          'Faza në të cilën ndodhet proçesi', 'Përfaqësuesi', 'Demi i Pretenduar', 'Shuma Gjykate',
-          'Vendim Ekzekutim', 'Faza Ekzekutim',
-          'Gjykata e Lartë', 'Krijuar më', 'Krijuar nga'
+          'Nr. Rendor', 'Paditesi (Emër e Mbiemër)', 'I Paditur', 'Person i Tretë', 'Objekti i Padisë',
+          'Gjykata e Shkallës së Parë', 'Faza në të cilën ndodhet procesi (Shkallë I)', 'Gjykata e Apelit', 
+          'Faza në të cilën ndodhet procesi (Apel)', 'Faza në të cilën ndodhet proçesi', 'Përfaqësuesi i Albpetrol SH.A.',
+          'Dëmi i Pretenduar në Objekt', 'Shuma e Caktuar nga Gjykata me Vendim', 'Vendim me Ekzekutim të Përkohshëm',
+          'Faza në të cilën ndodhet Ekzekutimi', 'Gjykata e Lartë', 'Krijuar nga', 'Krijuar më'
         ];
 
         const csvRows = entries.map(entry => [
-          entry.nrRendor,
-          `"${entry.paditesi || ''}"`,
-          `"${entry.iPaditur || ''}"`,
-          `"${entry.personITrete || ''}"`,
-          `"${entry.objektiIPadise || ''}"`,
-          `"${entry.gjykataShkalle || ''}"`,
-          `"${entry.fazaGjykataShkalle || ''}"`,
-          `"${entry.gjykataApelit || ''}"`,
-          `"${entry.fazaGjykataApelit || ''}"`,
-          `"${entry.fazaAktuale || ''}"`,
-          `"${entry.perfaqesuesi || ''}"`,
-          `"${entry.demiIPretenduar || ''}"`,
-          `"${entry.shumaGjykata || ''}"`,
-          `"${entry.vendimEkzekutim || ''}"`,
-          `"${entry.fazaEkzekutim || ''}"`,
-          `"${entry.gjykataLarte || ''}"`,
-          entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : '',
-          `"${(entry as any).createdByName || 'Përdorues i panjohur'}"`
+          entry.nrRendor,                                                              // Nr. Rendor
+          `"${entry.paditesi || ''}"`,                                                // Paditesi (Emër e Mbiemër)
+          `"${entry.iPaditur || ''}"`,                                                // I Paditur
+          `"${entry.personITrete || ''}"`,                                            // Person i Tretë
+          `"${entry.objektiIPadise || ''}"`,                                          // Objekti i Padisë
+          `"${entry.gjykataShkalle || ''}"`,                                          // Gjykata e Shkallës së Parë
+          `"${entry.fazaGjykataShkalle || ''}"`,                                      // Faza në të cilën ndodhet procesi (Shkallë I)
+          `"${entry.gjykataApelit || ''}"`,                                           // Gjykata e Apelit
+          `"${entry.fazaGjykataApelit || ''}"`,                                       // Faza në të cilën ndodhet procesi (Apel)
+          `"${entry.fazaAktuale || ''}"`,                                             // Faza në të cilën ndodhet proçesi
+          `"${entry.perfaqesuesi || ''}"`,                                            // Përfaqësuesi i Albpetrol SH.A.
+          `"${entry.demiIPretenduar || ''}"`,                                         // Dëmi i Pretenduar në Objekt
+          `"${entry.shumaGjykata || ''}"`,                                            // Shuma e Caktuar nga Gjykata me Vendim
+          `"${entry.vendimEkzekutim || ''}"`,                                         // Vendim me Ekzekutim të Përkohshëm
+          `"${entry.fazaEkzekutim || ''}"`,                                           // Faza në të cilën ndodhet Ekzekutimi
+          `"${entry.gjykataLarte || ''}"`,                                            // Gjykata e Lartë
+          `"${(entry as any).createdByName || 'Përdorues i panjohur'}"`,             // Krijuar nga
+          entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : '' // Krijuar më
         ]);
 
         const csvContent = [csvHeaders.join(','), ...csvRows.map(row => row.join(','))].join('\n');

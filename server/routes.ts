@@ -533,6 +533,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/admin/database-stats", isAdmin, async (req: any, res) => {
+    try {
+      if (req.user.role !== "admin") { // Admin access required
+        return res.status(403).json({ message: "Access denied. Admin privileges required." });
+      }
+      
+      const stats = await storage.getDatabaseStats();
+      res.json(stats);
+    } catch (error) {
+      console.error("Error fetching database stats:", error);
+      res.status(500).json({ message: "Failed to fetch database statistics" });
+    }
+  });
+
   app.put("/api/admin/users/:userId/role", strictLimiter, isAdmin, async (req: any, res) => {
     try {
       if (req.user.role !== "admin") { // Admin access required

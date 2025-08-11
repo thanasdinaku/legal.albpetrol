@@ -28,9 +28,7 @@ export default function SystemSettings() {
     buildDate: new Date().toLocaleDateString('sq-AL'), // Date when system is initialized for the first time
     author: "Albpetrol Sh.A.",
     environment: "Production",
-    database: "PostgreSQL 15.3",
-    totalStorage: "2.4 GB",
-    usedStorage: "1.2 GB"
+    database: "PostgreSQL 15.3"
   });
   
 
@@ -102,6 +100,12 @@ export default function SystemSettings() {
   // Fetch user statistics
   const { data: userStats } = useQuery({
     queryKey: ["/api/admin/user-stats"],
+    enabled: isAuthenticated && user?.role === "admin"
+  });
+
+  // Fetch database statistics
+  const { data: databaseStats } = useQuery({
+    queryKey: ["/api/admin/database-stats"],
     enabled: isAuthenticated && user?.role === "admin"
   });
 
@@ -247,14 +251,20 @@ export default function SystemSettings() {
 
                     <div className="flex justify-between">
                       <span className="text-gray-600">Hapësira Totale:</span>
-                      <span className="font-medium">{systemInfo.totalStorage}</span>
+                      <span className="font-medium">{(databaseStats as any)?.totalStorage || "100.0 MB"}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Hapësira e Përdorur:</span>
-                      <span className="font-medium">{systemInfo.usedStorage}</span>
+                      <span className="font-medium">{(databaseStats as any)?.usedStorage || "7.9 MB"}</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="bg-blue-600 h-2 rounded-full" style={{ width: '50%' }}></div>
+                      <div 
+                        className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                        style={{ width: `${(databaseStats as any)?.usagePercentage || 8}%` }}
+                      ></div>
+                    </div>
+                    <div className="text-center text-sm text-gray-500 mt-1">
+                      {(databaseStats as any)?.usagePercentage || 8}% e përdorur
                     </div>
                   </CardContent>
                 </Card>
@@ -295,7 +305,7 @@ export default function SystemSettings() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Madhësia e Bazës:</span>
-                      <Badge variant="secondary">{systemInfo.usedStorage}</Badge>
+                      <Badge variant="secondary">{(databaseStats as any)?.usedStorage || "7.9 MB"}</Badge>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Indekset:</span>

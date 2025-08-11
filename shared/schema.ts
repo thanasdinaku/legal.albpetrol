@@ -105,12 +105,19 @@ export const loginSchema = z.object({
   password: z.string().min(1),
 });
 
+// Password validation function
+const passwordValidation = z.string()
+  .min(8, "Fjalëkalimi duhet të jetë të paktën 8 karaktere")
+  .regex(/[A-Z]/, "Fjalëkalimi duhet të përmbajë të paktën një shkronjë të madhe")
+  .regex(/[0-9]/, "Fjalëkalimi duhet të përmbajë të paktën një numër")
+  .regex(/[!@#$%^&*(),.?":{}|<>]/, "Fjalëkalimi duhet të përmbajë të paktën një karakter special");
+
 export const changePasswordSchema = z.object({
-  currentPassword: z.string().min(1),
-  newPassword: z.string().min(6),
-  confirmPassword: z.string().min(6),
+  currentPassword: z.string().min(1, "Fjalëkalimi aktual është i kërkuar"),
+  newPassword: passwordValidation,
+  confirmPassword: z.string().min(1, "Konfirmimi i fjalëkalimit është i kërkuar"),
 }).refine((data) => data.newPassword === data.confirmPassword, {
-  message: "Passwords don't match",
+  message: "Fjalëkalimet nuk përputhen",
   path: ["confirmPassword"],
 });
 

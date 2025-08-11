@@ -205,6 +205,17 @@ export default function SettingsPage() {
                             </div>
                           </FormControl>
                           <FormMessage />
+                          <div className="mt-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md">
+                            <p className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
+                              Kriteret e fjalëkalimit:
+                            </p>
+                            <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
+                              <li>• Të paktën 8 karaktere</li>
+                              <li>• Të paktën një shkronjë të madhe (A-Z)</li>
+                              <li>• Të paktën një numër (0-9)</li>
+                              <li>• Të paktën një karakter special (!@#$%^&*...)</li>
+                            </ul>
+                          </div>
                         </FormItem>
                       )}
                     />

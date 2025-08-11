@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import { Express } from "express";
+import { Express, Request, Response, NextFunction } from "express";
 import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
@@ -10,7 +10,18 @@ import connectPg from "connect-pg-simple";
 
 declare global {
   namespace Express {
-    interface User extends User {}
+    interface User {
+      id: string;
+      email: string;
+      firstName: string;
+      lastName: string;
+      role: 'user' | 'admin';
+      password: string;
+      profileImageUrl: string | null;
+      isDefaultAdmin: boolean | null;
+      createdAt: Date | null;
+      updatedAt: Date | null;
+    }
   }
 }
 
@@ -134,6 +145,26 @@ export function setupAuth(app: Express) {
   });
 
   // Change password route
+  // Password validation function
+  const validatePassword = (password: string): { isValid: boolean; errors: string[] } => {
+    const errors: string[] = [];
+    
+    if (password.length < 8) {
+      errors.push("Fjalëkalimi duhet të jetë të paktën 8 karaktere");
+    }
+    if (!/[A-Z]/.test(password)) {
+      errors.push("Fjalëkalimi duhet të përmbajë të paktën një shkronjë të madhe");
+    }
+    if (!/[0-9]/.test(password)) {
+      errors.push("Fjalëkalimi duhet të përmbajë të paktën një numër");
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      errors.push("Fjalëkalimi duhet të përmbajë të paktën një karakter special");
+    }
+    
+    return { isValid: errors.length === 0, errors };
+  };
+
   app.put("/api/auth/change-password", async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
     
@@ -141,25 +172,34 @@ export function setupAuth(app: Express) {
       const { currentPassword, newPassword } = req.body;
       const user = req.user!;
       
+      // Validate new password
+      const passwordValidation = validatePassword(newPassword);
+      if (!passwordValidation.isValid) {
+        return res.status(400).json({ 
+          message: "Fjalëkalimi nuk plotëson kriteret e kërkuara",
+          errors: passwordValidation.errors 
+        });
+      }
+      
       // Verify current password
       if (!(await comparePasswords(currentPassword, user.password))) {
-        return res.status(400).json({ message: "Current password is incorrect" });
+        return res.status(400).json({ message: "Fjalëkalimi aktual është i gabuar" });
       }
       
       // Hash new password and update
       const hashedPassword = await hashPassword(newPassword);
       await storage.updateUserPassword(user.id, hashedPassword);
       
-      res.json({ message: "Password changed successfully" });
+      res.json({ message: "Fjalëkalimi u ndryshua me sukses" });
     } catch (error) {
       console.error("Error changing password:", error);
-      res.status(500).json({ message: "Failed to change password" });
+      res.status(500).json({ message: "Dështoi ndryshimi i fjalëkalimit" });
     }
   });
 }
 
 // Authentication middleware
-export function isAuthenticated(req: Express.Request, res: Express.Response, next: Express.NextFunction) {
+export function isAuthenticated(req: Request, res: Response, next: NextFunction) {
   if (!req.isAuthenticated()) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -167,7 +207,7 @@ export function isAuthenticated(req: Express.Request, res: Express.Response, nex
 }
 
 // Admin middleware
-export function isAdmin(req: Express.Request, res: Express.Response, next: Express.NextFunction) {
+export function isAdmin(req: Request, res: Response, next: NextFunction) {
   if (!req.isAuthenticated() || req.user!.role !== 'admin') {
     return res.status(403).json({ message: "Admin access required" });
   }

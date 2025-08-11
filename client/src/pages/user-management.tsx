@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
-import { Users, Shield, UserCheck, Calendar, UserPlus, Trash2, MoreHorizontal } from "lucide-react";
+import { Users, Shield, UserCheck, Calendar, UserPlus, Trash2, MoreHorizontal, RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import Sidebar from "@/components/sidebar";
 import Header from "@/components/header";
@@ -82,6 +82,7 @@ export default function UserManagement() {
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [generatedPassword, setGeneratedPassword] = useState('');
   const [createdUserEmail, setCreatedUserEmail] = useState('');
+  const [resetPasswordUserEmail, setResetPasswordUserEmail] = useState('');
   const [newUser, setNewUser] = useState({
     email: '',
     firstName: '',
@@ -157,6 +158,36 @@ export default function UserManagement() {
       toast({
         title: "Gabim",
         description: error.message || "Dështoi krijimi i përdoruesit. Ju lutemi provoni përsëri.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const resetPasswordMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      const response = await apiRequest(`/api/admin/users/${userId}/reset-password`, 'POST');
+      if (!response.ok) {
+        throw new Error('Failed to reset password');
+      }
+      return response.json();
+    },
+    onSuccess: (data, userId) => {
+      // Find the user to get their email
+      const user = (users as User[]).find((u: User) => u.id === userId);
+      if (data.tempPassword) {
+        setGeneratedPassword(data.tempPassword);
+        setResetPasswordUserEmail(user?.email || '');
+        setShowPasswordDialog(true);
+      }
+      toast({
+        title: "Fjalëkalimi u Rivendos",
+        description: "Fjalëkalimi i ri i përkohshëm është krijuar me sukses.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Gabim",
+        description: "Dështoi rivendosja e fjalëkalimit. Ju lutemi provoni përsëri.",
         variant: "destructive",
       });
     },
@@ -330,10 +361,10 @@ export default function UserManagement() {
             <DialogHeader>
               <DialogTitle className="flex items-center">
                 <i className="fas fa-key mr-2 text-green-600"></i>
-                Përdoruesi u Krijua me Sukses
+                {resetPasswordUserEmail ? 'Fjalëkalimi u Rivendos me Sukses' : 'Përdoruesi u Krijua me Sukses'}
               </DialogTitle>
               <DialogDescription>
-                Fjalëkalimi i përkohshëm për përdoruesin <strong>{createdUserEmail}</strong>
+                Fjalëkalimi i përkohshëm për përdoruesin <strong>{resetPasswordUserEmail || createdUserEmail}</strong>
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
@@ -376,7 +407,10 @@ export default function UserManagement() {
                 <i className="fas fa-copy mr-2"></i>
                 Kopjo Fjalëkalimin
               </Button>
-              <Button onClick={() => setShowPasswordDialog(false)}>
+              <Button onClick={() => {
+                setShowPasswordDialog(false);
+                setResetPasswordUserEmail('');
+              }}>
                 <i className="fas fa-check mr-2"></i>
                 U Kuptua
               </Button>
@@ -508,6 +542,13 @@ export default function UserManagement() {
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                  onClick={() => resetPasswordMutation.mutate(user.id)}
+                                  disabled={resetPasswordMutation.isPending}
+                                >
+                                  <RotateCcw className="h-4 w-4 mr-2" />
+                                  Rivendos Fjalëkalimin
+                                </DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={() => deleteUserMutation.mutate(user.id)}
                                   className="text-red-600"

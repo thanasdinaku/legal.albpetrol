@@ -513,6 +513,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/admin/users/:userId/reset-password", strictLimiter, isAdmin, async (req: any, res) => {
+    try {
+      if (req.user.role !== "admin") { // Admin access required
+        return res.status(403).json({ message: "Access denied. Admin privileges required." });
+      }
+      
+      const { userId } = req.params;
+      
+      // Generate a new temporary password
+      const tempPassword = `temp${Math.random().toString(36).substring(2, 8)}`;
+      const hashedPassword = await hashPassword(tempPassword);
+      
+      // Update user's password in database
+      await storage.updateUserPassword(userId, hashedPassword);
+      
+      res.json({ 
+        message: "Password reset successfully",
+        tempPassword: tempPassword  // Include temp password for admin to share with user
+      });
+    } catch (error) {
+      console.error("Error resetting user password:", error);
+      res.status(500).json({ message: "Failed to reset user password" });
+    }
+  });
+
   app.delete("/api/admin/users/:userId", strictLimiter, isAdmin, async (req: any, res) => {
     try {
       if (req.user.role !== "admin") { // Admin access required

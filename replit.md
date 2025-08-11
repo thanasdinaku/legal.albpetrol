@@ -28,8 +28,10 @@ This is a full-stack data management system built with React and Express.js, des
 ✓ **Export Functionality for All Users**: Updated export routes from admin-only to authenticated users for Excel and CSV downloads
 ✓ **View Button Addition**: Added View button in Actions column for all users to view detailed case information in read-only modal
 ✓ **Delete Permission Restriction**: Removed delete functionality for regular users; only administrators can now delete data entries
+✓ **Password Validation Rules**: Implemented comprehensive password requirements (8+ characters, uppercase, number, special character) with frontend and backend validation
+✓ **Court Dropdown Updates**: Updated court selection options for consistency - "Gjykata e Apelit" and "Gjykata e Shkallës së Parë" now include full court names
 
-The application now provides complete legal case management with private authentication, seamless logout-login flow, admin-controlled user creation, Excel and CSV export capabilities for all users, proper role-based permissions with administrator-only deletion rights, and streamlined Albanian-language interface.
+The application now provides complete legal case management with private authentication, seamless logout-login flow, admin-controlled user creation, Excel and CSV export capabilities for all users, proper role-based permissions with administrator-only deletion rights, strong password validation, and streamlined Albanian-language interface.
 
 # User Preferences
 

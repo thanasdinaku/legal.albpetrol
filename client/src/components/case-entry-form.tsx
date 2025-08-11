@@ -167,7 +167,7 @@ export default function CaseEntryForm() {
                     name="gjykataShkalle"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Gjykata e Shkallës së Parë e</FormLabel>
+                        <FormLabel>Gjykata e Shkallës së Parë</FormLabel>
                         <Select onValueChange={field.onChange} value={field.value || ""}>
                           <FormControl>
                             <SelectTrigger className="text-gray-900 [&[data-placeholder]]:text-gray-400">
@@ -175,12 +175,12 @@ export default function CaseEntryForm() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="Rrethit Gjyqesor Vlore">Rrethit Gjyqësor Vlorë</SelectItem>
-                            <SelectItem value="Rrethit Gjyqesor Fier">Rrethit Gjyqësor Fier</SelectItem>
-                            <SelectItem value="Rrethit Gjyqesor Berat">Rrethit Gjyqësor Berat</SelectItem>
-                            <SelectItem value="Administrative Lushnje">Administrative Lushnjë</SelectItem>
-                            <SelectItem value="Administrative Tirane">Administrative Tiranë</SelectItem>
-                            <SelectItem value="Juridiksionit te Pergjithshem Tirane">Juridiksionit të Përgjithshëm Tiranë</SelectItem>
+                            <SelectItem value="Gjykata e Shkallës së Parë e Rrethit Gjyqësor Vlorë">Gjykata e Shkallës së Parë e Rrethit Gjyqësor Vlorë</SelectItem>
+                            <SelectItem value="Gjykata e Shkallës së Parë e Rrethit Gjyqësor Berat">Gjykata e Shkallës së Parë e Rrethit Gjyqësor Berat</SelectItem>
+                            <SelectItem value="Gjykata e Shkallës së Parë e Rrethit Gjyqësor Fier">Gjykata e Shkallës së Parë e Rrethit Gjyqësor Fier</SelectItem>
+                            <SelectItem value="Gjykata e Shkallës së Parë Administrative Lushnjë">Gjykata e Shkallës së Parë Administrative Lushnjë</SelectItem>
+                            <SelectItem value="Gjykata e Shkallës së Parë Administrative Tiranë">Gjykata e Shkallës së Parë Administrative Tiranë</SelectItem>
+                            <SelectItem value="Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm Tiranë">Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm Tiranë</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -217,8 +217,8 @@ export default function CaseEntryForm() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="Administrative Tirane">Administrative Tiranë</SelectItem>
-                            <SelectItem value="e Juridiksionit te Pergjithshem Tirane">e Juridiksionit të Përgjithshëm Tiranë</SelectItem>
+                            <SelectItem value="Gjykata e Apelit Administrative Tiranë">Gjykata e Apelit Administrative Tiranë</SelectItem>
+                            <SelectItem value="Gjykata e Apelit e Juridiksionit të Përgjithshëm Tiranë">Gjykata e Apelit e Juridiksionit të Përgjithshëm Tiranë</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />

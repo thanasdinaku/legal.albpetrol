@@ -72,26 +72,17 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
   };
 
   const courtOptions = [
-    "Gjykata e Shkallës së Parë Tiranë",
-    "Gjykata e Shkallës së Parë Durrës",
-    "Gjykata e Shkallës së Parë Fier",
-    "Gjykata e Shkallës së Parë Korçë",
-    "Gjykata e Shkallës së Parë Shkodër",
-    "Gjykata e Shkallës së Parë Vlorë",
-    "Gjykata e Shkallës së Parë Lezhë",
-    "Gjykata e Shkallës së Parë Kukës",
-    "Gjykata e Shkallës së Parë Dibër",
-    "Gjykata e Shkallës së Parë Elbasan",
-    "Gjykata e Shkallës së Parë Berat",
-    "Gjykata e Shkallës së Parë Gjirokastër"
+    "Gjykata e Shkallës së Parë e Rrethit Gjyqësor Vlorë",
+    "Gjykata e Shkallës së Parë e Rrethit Gjyqësor Berat",
+    "Gjykata e Shkallës së Parë e Rrethit Gjyqësor Fier",
+    "Gjykata e Shkallës së Parë Administrative Lushnjë",
+    "Gjykata e Shkallës së Parë Administrative Tiranë",
+    "Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm Tiranë"
   ];
 
   const appellateCourtOptions = [
-    "Gjykata e Apelit Tiranë",
-    "Gjykata e Apelit Durrës", 
-    "Gjykata e Apelit Korçë",
-    "Gjykata e Apelit Shkodër",
-    "Gjykata e Apelit Vlorë"
+    "Gjykata e Apelit Administrative Tiranë",
+    "Gjykata e Apelit e Juridiksionit të Përgjithshëm Tiranë"
   ];
 
   const supremeCourtOptions = [

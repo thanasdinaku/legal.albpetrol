@@ -22,7 +22,8 @@ export interface EmailNotificationData {
 export async function sendNewEntryNotification(
   entry: DataEntry,
   creator: User,
-  notificationSettings: EmailNotificationData
+  notificationSettings: EmailNotificationData,
+  nrRendor?: number
 ): Promise<void> {
   if (!notificationSettings.enabled || notificationSettings.emailAddresses.length === 0) {
     return;
@@ -32,7 +33,7 @@ export async function sendNewEntryNotification(
     
 <strong>Detajet e çështjes:</strong>
 <ul>
-  <li><strong>Nr. Rendor:</strong> ${entry.id}</li>
+  <li><strong>Nr. Rendor:</strong> ${nrRendor || entry.id}</li>
   <li><strong>Paditesi:</strong> ${entry.paditesi}</li>
   <li><strong>I Paditur:</strong> ${entry.iPaditur}</li>
   <li><strong>Person i Tretë:</strong> ${entry.personITrete || 'N/A'}</li>
@@ -87,7 +88,7 @@ Një çështje e re ligjore është shtuar në sistem.
 
 ${notificationSettings.includeDetails ? `
 Detajet e çështjes:
-- Nr. Rendor: ${entry.id}
+- Nr. Rendor: ${nrRendor || entry.id}
 - Paditesi: ${entry.paditesi}
 - I Paditur: ${entry.iPaditur}
 - Person i Tretë: ${entry.personITrete || 'N/A'}

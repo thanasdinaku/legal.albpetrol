@@ -80,7 +80,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (emailSettings.enabled && emailSettings.emailAddresses.length > 0) {
           const creator = await storage.getUser(userId);
           if (creator) {
-            await sendNewEntryNotification(entry, creator, emailSettings);
+            // Get the correct Nr. Rendor by counting total entries
+            const totalEntries = await storage.getDataEntriesCount();
+            await sendNewEntryNotification(entry, creator, emailSettings, totalEntries);
           }
         }
       } catch (emailError) {

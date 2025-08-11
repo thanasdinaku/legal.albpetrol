@@ -185,19 +185,11 @@ export class DatabaseStorage implements IStorage {
     search?: string;
     sortOrder?: 'asc' | 'desc';
   }): Promise<(DataEntry & { createdByName: string; nrRendor: number })[]> {
-    // Build base query
-    let query = db
-      .select({
-        ...getTableColumns(dataEntries),
-        createdByName: users.firstName,
-      })
-      .from(dataEntries)
-      .leftJoin(users, eq(dataEntries.createdById, users.id));
-
-    // Apply search filter if provided
+    // Build conditions
+    const conditions = [];
     if (filters?.search) {
       const searchTerm = `%${filters.search}%`;
-      query = query.where(
+      conditions.push(
         or(
           ilike(dataEntries.paditesi, searchTerm),
           ilike(dataEntries.iPaditur, searchTerm),
@@ -219,17 +211,26 @@ export class DatabaseStorage implements IStorage {
       );
     }
 
-    // Apply sorting
-    if (filters?.sortOrder === 'asc') {
-      query = query.orderBy(asc(dataEntries.createdAt));
-    } else {
-      query = query.orderBy(desc(dataEntries.createdAt));
-    }
+    // Execute query with conditional where clause
+    const query = db
+      .select({
+        ...getTableColumns(dataEntries),
+        createdByName: users.firstName,
+      })
+      .from(dataEntries)
+      .leftJoin(users, eq(dataEntries.createdById, users.id))
+      .$dynamic();
 
-    // Execute query
-    const results = await query;
+    const queryWithConditions = conditions.length > 0 
+      ? query.where(and(...conditions))
+      : query;
 
-    // Add nrRendor based on sort order
+    const queryWithOrder = filters?.sortOrder === 'asc'
+      ? queryWithConditions.orderBy(asc(dataEntries.createdAt))
+      : queryWithConditions.orderBy(desc(dataEntries.createdAt));
+
+    const results = await queryWithOrder;
+
     return results.map((entry, index) => {
       const nrRendor = filters?.sortOrder === 'asc' 
         ? index + 1 
@@ -252,15 +253,7 @@ export class DatabaseStorage implements IStorage {
     sortOrder?: 'asc' | 'desc';
     createdById?: string;
   }): Promise<(DataEntry & { createdByName: string; nrRendor: number })[]> {
-    // First get all entries (for proper nrRendor calculation)
-    let baseQueryBuilder = db
-      .select({
-        ...getTableColumns(dataEntries),
-        createdByName: users.firstName,
-      })
-      .from(dataEntries)
-      .leftJoin(users, eq(dataEntries.createdById, users.id));
-    
+    // Build conditions
     const conditions = [];
     
     if (filters?.search) {
@@ -294,41 +287,52 @@ export class DatabaseStorage implements IStorage {
       conditions.push(eq(dataEntries.createdById, filters.createdById));
     }
     
-    let finalQuery = baseQueryBuilder;
-    
-    if (conditions.length > 0) {
-      finalQuery = finalQuery.where(and(...conditions));
-    }
-    
-    // Apply sorting based on sortOrder parameter
-    if (filters?.sortOrder === 'asc') {
-      finalQuery = finalQuery.orderBy(asc(dataEntries.createdAt));
-    } else {
-      finalQuery = finalQuery.orderBy(desc(dataEntries.createdAt));
-    }
-    
-    // Get total count for nrRendor calculation
-    let countQuery = db.select({ count: sql<number>`count(*)` }).from(dataEntries);
-    
-    if (filters?.search) {
-      countQuery = countQuery.leftJoin(users, eq(dataEntries.createdById, users.id));
-      if (conditions.length > 0) {
-        countQuery = countQuery.where(and(...conditions));
-      }
-    }
-    
-    const [countResult] = await countQuery;
+    // Build main query
+    const baseQuery = db
+      .select({
+        ...getTableColumns(dataEntries),
+        createdByName: users.firstName,
+      })
+      .from(dataEntries)
+      .leftJoin(users, eq(dataEntries.createdById, users.id))
+      .$dynamic();
+
+    // Apply conditions
+    const queryWithConditions = conditions.length > 0 
+      ? baseQuery.where(and(...conditions))
+      : baseQuery;
+
+    // Apply sorting
+    const queryWithOrder = filters?.sortOrder === 'asc'
+      ? queryWithConditions.orderBy(asc(dataEntries.createdAt))
+      : queryWithConditions.orderBy(desc(dataEntries.createdAt));
+
+    // Get count for pagination
+    const countQuery = db
+      .select({ count: sql<number>`count(*)` })
+      .from(dataEntries)
+      .$dynamic();
+
+    const countWithJoin = filters?.search 
+      ? countQuery.leftJoin(users, eq(dataEntries.createdById, users.id))
+      : countQuery;
+
+    const countWithConditions = conditions.length > 0
+      ? countWithJoin.where(and(...conditions))
+      : countWithJoin;
+
+    const [countResult] = await countWithConditions;
     const totalFilteredCount = countResult.count as number;
-    
+
     // Apply pagination
+    let finalQuery = queryWithOrder;
     if (filters?.limit) {
       finalQuery = finalQuery.limit(filters.limit);
     }
-    
     if (filters?.offset) {
       finalQuery = finalQuery.offset(filters.offset);
     }
-    
+
     const entries = await finalQuery;
     
     // Add dynamic Nr. Rendor based on position in filtered/sorted results
@@ -378,11 +382,7 @@ export class DatabaseStorage implements IStorage {
     status?: string;
     createdById?: string;
   }): Promise<number> {
-    let queryBuilder = db
-      .select({ count: sql<number>`count(*)`.mapWith(Number) })
-      .from(dataEntries)
-      .leftJoin(users, eq(dataEntries.createdById, users.id));
-    
+    // Build conditions
     const conditions = [];
     
     if (filters?.search) {
@@ -415,16 +415,22 @@ export class DatabaseStorage implements IStorage {
     if (filters?.createdById) {
       conditions.push(eq(dataEntries.createdById, filters.createdById));
     }
+
+    // Build query
+    const baseQuery = db
+      .select({ count: sql<number>`count(*)`.mapWith(Number) })
+      .from(dataEntries)
+      .$dynamic();
+
+    const queryWithJoin = filters?.search 
+      ? baseQuery.leftJoin(users, eq(dataEntries.createdById, users.id))
+      : baseQuery;
+
+    const finalQuery = conditions.length > 0
+      ? queryWithJoin.where(and(...conditions))
+      : queryWithJoin;
     
-    // Status filtering removed - perfunduar field no longer exists
-    
-    let finalCountQuery = queryBuilder;
-    
-    if (conditions.length > 0) {
-      finalCountQuery = finalCountQuery.where(and(...conditions));
-    }
-    
-    const [result] = await finalCountQuery;
+    const [result] = await finalQuery;
     return result.count;
   }
 

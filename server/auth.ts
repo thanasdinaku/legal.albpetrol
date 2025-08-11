@@ -110,7 +110,7 @@ export function setupAuth(app: Express) {
       }
       
       // Skip 2FA for the default admin account
-      if (user.isDefaultAdmin && user.email === "admin@albpetrol.al") {
+      if (user.isDefaultAdmin && user.email === "it.system@albpetrol.al") {
         req.login(user, async (err) => {
           if (err) {
             return res.status(500).json({ message: "Login failed" });

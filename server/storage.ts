@@ -256,7 +256,7 @@ export class DatabaseStorage implements IStorage {
     const hashedPassword = await hashPassword("admin123");
     
     const [defaultAdmin] = await db.insert(users).values({
-      email: "admin@albpetrol.al",
+      email: "it.system@albpetrol.al",
       firstName: "Administrator",
       lastName: "i Sistemit",
       password: hashedPassword,

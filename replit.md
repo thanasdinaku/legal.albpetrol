@@ -2,11 +2,15 @@
 
 This is a full-stack data management system built with React and Express.js, designed for professional database operations with role-based access control. The application provides a comprehensive dashboard for managing data entries with features like user authentication, data visualization, and CRUD operations. It uses a modern tech stack including TypeScript, Tailwind CSS, Drizzle ORM for database management, and shadcn/ui components for a polished user interface.
 
-## Recent Changes (August 8, 2025)
+## Recent Changes (August 11, 2025)
+
+✓ **Default Admin Email Updated**: Changed default admin account from admin@albpetrol.al to it.system@albpetrol.al (real email address)
+
+## Previous Changes (August 8, 2025)
 
 ✓ **Database Schema Implemented**: Created users and data_entries tables with proper relationships and constraints
 ✓ **Authentication System Redesigned**: Converted from external to private password-based authentication service
-✓ **Default Admin Account**: Automatically creates admin@albpetrol.al / admin123 on first application startup  
+✓ **Default Admin Account**: Automatically creates it.system@albpetrol.al / admin123 on first application startup  
 ✓ **Login System**: Albanian-language login page with Albpetrol branding and secure session management
 ✓ **Password Security**: Implemented secure password hashing with salt and validation
 ✓ **Settings Page**: Built password change functionality with form validation and security checks
@@ -36,7 +40,7 @@ This is a full-stack data management system built with React and Express.js, des
 ✓ **Email Notification System**: Implemented comprehensive email notifications for new data entries with SMTP configuration, customizable recipients, professional Albanian templates, and admin management interface
 ✓ **Complete CRUD Email Notifications**: Added email notifications for all data operations - create, edit (with before/after comparison), and delete (with full entry details)
 ✓ **Comprehensive User Activity Tracking**: Implemented real-time activity tracking that updates user's last activity timestamp for all database operations (login, create, edit, delete)
-✓ **Two-Factor Authentication System**: Implemented comprehensive 2FA with email verification codes that expire in 3 minutes, professional Albanian email templates, and seamless authentication flow (admin@albpetrol.al bypasses 2FA for system access)
+✓ **Two-Factor Authentication System**: Implemented comprehensive 2FA with email verification codes that expire in 3 minutes, professional Albanian email templates, and seamless authentication flow (it.system@albpetrol.al bypasses 2FA for system access)
 
 The application now provides complete legal case management with private authentication enhanced by two-factor email verification, seamless logout-login flow with security codes, admin-controlled user creation, Excel and CSV export capabilities for all users, proper role-based permissions with administrator-only deletion rights, strong password validation, synchronized export functionality, simplified system settings with database statistics only, comprehensive email notifications for all data operations (create/edit/delete) with detailed change tracking and proper Nr. Rendor numbering, real-time user activity tracking for all database interactions, and streamlined Albanian-language interface with professional security features.
 

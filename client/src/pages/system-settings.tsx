@@ -37,10 +37,7 @@ export default function SystemSettings() {
     emailNotifications: true,
     auditLog: true,
     sessionTimeout: 30,
-    maxFileSize: 10,
-    passwordPolicy: "Fjalëkalimet duhet të kenë të paktën 8 karaktere, përfshijnë shkronja të mëdha dhe të vogla, numra dhe simbole.",
-    failedAttempts: 5,
-    lockoutTime: 15
+    maxFileSize: 10
   });
 
   // Redirect if not authenticated or not admin
@@ -529,33 +526,19 @@ export default function SystemSettings() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="passwordPolicy">Politika e Fjalëkalimeve</Label>
-                      <div className="p-3 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700">
-                        Fjalëkalimet duhet të kenë të paktën 8 karaktere, përfshijnë shkronja të mëdha dhe të vogla, numra dhe simbole.
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="failedAttempts">Tentativat e Dështuara</Label>
-                        <Input 
-                          id="failedAttempts"
-                          type="number" 
-                          value={settings.failedAttempts}
-                          onChange={(e) => setSettings({...settings, failedAttempts: parseInt(e.target.value) || 5})}
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="lockoutTime">Koha e Bllokimit (minuta)</Label>
-                        <Input 
-                          id="lockoutTime"
-                          type="number" 
-                          value={settings.lockoutTime}
-                          onChange={(e) => setSettings({...settings, lockoutTime: parseInt(e.target.value) || 15})}
-                        />
-                      </div>
+                  <div>
+                    <Label htmlFor="passwordPolicy">Politika e Fjalëkalimeve</Label>
+                    <div className="p-4 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700 leading-relaxed">
+                      <p className="font-semibold mb-2">Kërkesat për Fjalëkalimin:</p>
+                      <ul className="space-y-1 list-disc list-inside">
+                        <li>Të paktën 8 karaktere</li>
+                        <li>Të paktën një shkronjë të madhe (A-Z)</li>
+                        <li>Të paktën një numër (0-9)</li>
+                        <li>Të paktën një karakter special (!@#$%^&*)</li>
+                      </ul>
+                      <p className="mt-3 text-xs text-gray-600">
+                        Fjalëkalimet e forta mbrojnë të dhënat tuaja dhe sigurojnë aksesim të sigurt në sistem.
+                      </p>
                     </div>
                   </div>
                 </CardContent>

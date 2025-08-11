@@ -1,7 +1,5 @@
-import jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
-import fs from 'fs';
-import path from 'path';
 
 // Extend jsPDF type to include autoTable
 declare module 'jspdf' {
@@ -11,8 +9,9 @@ declare module 'jspdf' {
 }
 
 export function generateUserManual(): Buffer {
-  const doc = new jsPDF();
-  let yPosition = 20;
+  try {
+    const doc = new jsPDF();
+    let yPosition = 20;
 
   // Set font for Albanian characters
   doc.setFont('helvetica');
@@ -1026,4 +1025,15 @@ export function generateUserManual(): Buffer {
   doc.text('Faleminderit që përdorni Sistemin e Menaxhimit të Çështjeve Ligjore!', 105, 285, { align: 'center' });
 
   return Buffer.from(doc.output('arraybuffer'));
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    // Fallback: Create a simple PDF with basic content
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text('MANUALI I PERDORUESIT', 20, 30);
+    doc.setFontSize(12);
+    doc.text('Sistemi i Menaxhimit te Ceshtjeve Ligjore - Albpetrol Sh.A.', 20, 50);
+    doc.text('Per manualet e plota, kontaktoni mbeshtetjen teknike.', 20, 70);
+    return Buffer.from(doc.output('arraybuffer'));
+  }
 }

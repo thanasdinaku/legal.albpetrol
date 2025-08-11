@@ -263,17 +263,34 @@ export default function SystemSettings() {
                       </div>
                     </div>
                     <Button 
-                      onClick={() => {
-                        const link = document.createElement('a');
-                        link.href = '/api/download/user-manual';
-                        link.download = 'Manuali_i_Perdoruesit_Albpetrol.pdf';
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                        toast({
-                          title: "Manuali u Shkarkua",
-                          description: "Manuali i përdoruesit është shkarkuar me sukses.",
-                        });
+                      onClick={async () => {
+                        try {
+                          const response = await fetch('/api/download/user-manual');
+                          if (response.ok) {
+                            const blob = await response.blob();
+                            const url = window.URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = 'Manuali_i_Perdoruesit_Albpetrol.pdf';
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            window.URL.revokeObjectURL(url);
+                            toast({
+                              title: "Manuali u Shkarkua",
+                              description: "Manuali i përdoruesit është shkarkuar me sukses.",
+                            });
+                          } else {
+                            throw new Error('Failed to download manual');
+                          }
+                        } catch (error) {
+                          console.error('Download error:', error);
+                          toast({
+                            title: "Gabim në Shkarkim",
+                            description: "Dështoi shkarkimi i manualit. Ju lutemi provoni përsëri.",
+                            variant: "destructive",
+                          });
+                        }
                       }}
                       className="w-full"
                       variant="default"

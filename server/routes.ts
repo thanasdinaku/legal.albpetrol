@@ -39,6 +39,7 @@ import { sql } from "drizzle-orm";
 import { sessions } from "@shared/schema";
 import { sendNewEntryNotification, sendEditEntryNotification, sendDeleteEntryNotification, testEmailConnection } from "./email";
 import { generateUserManual } from "./generate-manual";
+import { generateSimpleManual } from "./simple-manual";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Apply rate limiting to all routes
@@ -849,6 +850,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.send(pdfBuffer);
     } catch (error) {
       console.error("Error generating PDF manual:", error);
+      res.status(500).json({ message: "Failed to generate user manual" });
+    }
+  });
+
+  // HTML Manual route (fallback)
+  app.get("/api/manual/html", isAuthenticated, async (req: any, res) => {
+    try {
+      const htmlContent = generateSimpleManual();
+      
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.send(htmlContent);
+    } catch (error) {
+      console.error("Error generating HTML manual:", error);
       res.status(500).json({ message: "Failed to generate user manual" });
     }
   });

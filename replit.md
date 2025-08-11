@@ -7,7 +7,7 @@ This is a full-stack data management system built with React and Express.js, des
 ✓ **Default Admin Email Updated**: Changed default admin account from admin@albpetrol.al to it.system@albpetrol.al (real email address)
 ✓ **Enhanced 2FA Security**: Removed admin bypass - all users including default admin now require multi-factor authentication
 ✓ **Default Admin Protection**: Added protection to prevent deletion of it.system@albpetrol.al account - cannot be deleted by any administrator
-✓ **PDF User Manual**: Created comprehensive Albanian-language user manual with download functionality available from system settings and sidebar navigation
+✓ **PDF User Manual with Visual Guides**: Created comprehensive Albanian-language user manual with detailed print-screen explanations for every step, download functionality available from system settings and sidebar navigation
 
 ## Previous Changes (August 8, 2025)
 

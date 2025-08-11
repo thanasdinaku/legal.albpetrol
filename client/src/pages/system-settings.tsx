@@ -33,12 +33,7 @@ export default function SystemSettings() {
     usedStorage: "1.2 GB"
   });
   
-  const [settings, setSettings] = useState({
-    emailNotifications: true,
-    auditLog: true,
-    sessionTimeout: 30,
-    maxFileSize: 10
-  });
+
 
   // Redirect if not authenticated or not admin
   useEffect(() => {
@@ -71,35 +66,7 @@ export default function SystemSettings() {
     return null;
   }
 
-  // Save settings mutation
-  const saveSettingsMutation = useMutation({
-    mutationFn: async (settingsData: any) => {
-      const res = await apiRequest("/api/admin/settings", "PUT", settingsData);
-      return res.json();
-    },
-    onSuccess: () => {
-      toast({
-        title: "Cilësimet u ruajtën",
-        description: "Cilësimet e sistemit u përditësuan me sukses.",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Gabim në ruajtje",
-        description: "Cilësimet nuk u ruajtën. Provoni përsëri.",
-        variant: "destructive",
-      });
-    },
-  });
 
-  const handleSaveSettings = () => {
-    const settingsToSave = {
-      ...settings,
-      lastSaved: new Date().toISOString()
-    };
-    
-    saveSettingsMutation.mutate(settingsToSave);
-  };
 
   const handleSaveEmailSettings = () => {
     saveEmailMutation.mutate(emailSettings);
@@ -229,127 +196,13 @@ export default function SystemSettings() {
         />
         
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-4 sm:p-6">
-          <Tabs defaultValue="general" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-3 text-xs sm:text-sm">
-              <TabsTrigger value="general">Të Përgjithshme</TabsTrigger>
+          <Tabs defaultValue="database" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-2 text-xs sm:text-sm">
               <TabsTrigger value="database">Baza e të Dhënave</TabsTrigger>
               <TabsTrigger value="security">Siguria</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="general" className="space-y-4 sm:space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <i className="fas fa-info-circle mr-2 text-blue-600"></i>
-                      Informacioni i Sistemit
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Versioni:</span>
-                      <Badge variant="secondary">{systemInfo.version}</Badge>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Data e Ndërtimit:</span>
-                      <span className="font-medium">{systemInfo.buildDate}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Autori:</span>
-                      <span className="font-medium">{systemInfo.author}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Mjedisi:</span>
-                      <Badge variant="default">{systemInfo.environment}</Badge>
-                    </div>
-                  </CardContent>
-                </Card>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <i className="fas fa-database mr-2 text-green-600"></i>
-                      Statusi i Bazës së të Dhënave
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Motori:</span>
-                      <span className="font-medium">{systemInfo.database}</span>
-                    </div>
-
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Hapësira Totale:</span>
-                      <span className="font-medium">{systemInfo.totalStorage}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Hapësira e Përdorur:</span>
-                      <span className="font-medium">{systemInfo.usedStorage}</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="bg-blue-600 h-2 rounded-full" style={{ width: '50%' }}></div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <i className="fas fa-cog mr-2 text-purple-600"></i>
-                    Cilësimet e Përgjithshme
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="sessionTimeout">Koha e Sesionit (minuta)</Label>
-                      <Input
-                        id="sessionTimeout"
-                        type="number"
-                        value={settings.sessionTimeout}
-                        onChange={(e) => setSettings({...settings, sessionTimeout: parseInt(e.target.value) || 30})}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="maxFileSize">Madhësia Maksimale e Skedarit (MB)</Label>
-                      <Input
-                        id="maxFileSize"
-                        type="number"
-                        value={settings.maxFileSize}
-                        onChange={(e) => setSettings({...settings, maxFileSize: parseInt(e.target.value) || 10})}
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label htmlFor="emailNotifications">Njoftimet me Email</Label>
-                        <p className="text-sm text-gray-500">Aktivizo njoftimet automatike me email</p>
-                      </div>
-                      <Switch
-                        id="emailNotifications"
-                        checked={settings.emailNotifications}
-                        onCheckedChange={(checked) => setSettings({...settings, emailNotifications: checked})}
-                      />
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label htmlFor="auditLog">Regjistri i Auditimit</Label>
-                        <p className="text-sm text-gray-500">Regjistro të gjitha veprimet e përdoruesve</p>
-                      </div>
-                      <Switch
-                        id="auditLog"
-                        checked={settings.auditLog}
-                        onCheckedChange={(checked) => setSettings({...settings, auditLog: checked})}
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
 
             <TabsContent value="database" className="space-y-6">
               <div className="max-w-2xl mx-auto">
@@ -548,16 +401,7 @@ export default function SystemSettings() {
 
           </Tabs>
 
-          <div className="mt-6 flex justify-end">
-            <Button 
-              onClick={handleSaveSettings} 
-              className="px-6"
-              disabled={saveSettingsMutation.isPending}
-            >
-              <i className="fas fa-save mr-2"></i>
-              {saveSettingsMutation.isPending ? "Duke Ruajtur..." : "Ruaj Cilësimet"}
-            </Button>
-          </div>
+
         </main>
       </div>
     </div>

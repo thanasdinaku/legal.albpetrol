@@ -101,31 +101,72 @@ export function setupAuth(app: Express) {
 
   // Login route
   app.post("/api/login", (req, res, next) => {
-    passport.authenticate("local", (err: any, user: User | false) => {
+    passport.authenticate("local", async (err: any, user: User | false) => {
       if (err) {
         return res.status(500).json({ message: "Internal server error" });
       }
       if (!user) {
         return res.status(401).json({ message: "Invalid email or password" });
       }
-      req.login(user, async (err) => {
-        if (err) {
-          return res.status(500).json({ message: "Login failed" });
-        }
+      
+      try {
+        // Generate 6-digit verification code
+        const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
         
-        // Update last login timestamp
-        try {
-          await storage.updateUserLastLogin(user.id);
-        } catch (error) {
-          console.error("Failed to update last login:", error);
-          // Don't fail the login if timestamp update fails
-        }
+        // Save code to database
+        await storage.saveTwoFactorCode(user.id, verificationCode);
         
-        // Remove password from response for security
-        const { password, ...userWithoutPassword } = user;
-        res.status(200).json(userWithoutPassword);
-      });
+        // Send verification code via email
+        const { sendTwoFactorCode } = await import("./email");
+        await sendTwoFactorCode(user, verificationCode);
+        
+        // Return success with indication that 2FA is required
+        res.status(200).json({ 
+          requiresTwoFactor: true,
+          userId: user.id,
+          email: user.email
+        });
+      } catch (error) {
+        console.error("Failed to send two-factor code:", error);
+        res.status(500).json({ message: "Failed to send verification code. Please try again." });
+      }
     })(req, res, next);
+  });
+
+  app.post("/api/verify-2fa", async (req, res) => {
+    try {
+      const { userId, code } = req.body;
+      
+      if (!userId || !code) {
+        return res.status(400).json({ message: "User ID and verification code are required" });
+      }
+      
+      const isValid = await storage.verifyTwoFactorCode(userId, code);
+      
+      if (isValid) {
+        // Get the user for the session
+        const user = await storage.getUser(userId);
+        if (!user) {
+          return res.status(404).json({ message: "User not found" });
+        }
+        
+        // Create session
+        req.login(user, (err) => {
+          if (err) {
+            return res.status(500).json({ message: "Login failed" });
+          }
+          
+          // Remove password from response for security
+          const { password, twoFactorCode, twoFactorCodeExpiry, ...userWithoutPassword } = user;
+          res.status(200).json(userWithoutPassword);
+        });
+      } else {
+        res.status(401).json({ message: "Invalid or expired verification code" });
+      }
+    } catch (error) {
+      console.error("2FA verification error:", error);
+      res.status(500).json({ message: "Verification failed. Please try again." });
+    }
   });
 
   // Logout route

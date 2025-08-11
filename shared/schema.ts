@@ -38,6 +38,8 @@ export const users = pgTable("users", {
   role: userRoleEnum("role").default("user").notNull(),
   isDefaultAdmin: boolean("is_default_admin").default(false),
   lastLogin: timestamp("last_login"),
+  twoFactorCode: varchar("two_factor_code"),
+  twoFactorCodeExpiry: timestamp("two_factor_code_expiry"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

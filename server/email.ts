@@ -19,6 +19,66 @@ export interface EmailNotificationData {
   includeDetails: boolean;
 }
 
+export async function sendTwoFactorCode(
+  user: User,
+  code: string
+): Promise<void> {
+  const htmlContent = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
+      <div style="background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <div style="text-align: center; margin-bottom: 30px;">
+          <h1 style="color: #1e40af; margin: 0; font-size: 24px;">Albpetrol SH.A.</h1>
+          <p style="color: #6b7280; margin: 5px 0 0 0; font-size: 14px;">Sistemi i Menaxhimit të Çështjeve Ligjore</p>
+        </div>
+        
+        <div style="background-color: #eff6ff; padding: 20px; border-radius: 6px; border-left: 4px solid #3b82f6; margin-bottom: 20px;">
+          <h2 style="color: #1e40af; margin: 0 0 10px 0; font-size: 18px;">Kodi i Verifikimit</h2>
+          <p style="margin: 0; color: #374151;">Kodi juaj i verifikimit për hyrjen në sistem:</p>
+        </div>
+        
+        <div style="text-align: center; margin: 30px 0;">
+          <div style="display: inline-block; background-color: #f3f4f6; border: 2px solid #e5e7eb; padding: 20px 40px; border-radius: 8px; font-size: 32px; font-weight: bold; color: #1f2937; letter-spacing: 8px; font-family: 'Courier New', monospace;">
+            ${code}
+          </div>
+        </div>
+        
+        <div style="background-color: #fef3c7; padding: 15px; border-radius: 6px; border-left: 4px solid #f59e0b; margin: 20px 0;">
+          <p style="margin: 0; color: #92400e; font-size: 14px;">
+            <strong>Vëmendje:</strong> Ky kod skadon për 3 minuta. Nëse nuk e përdorni brenda kësaj kohe, do t'ju duhet të hyni përsëri.
+          </p>
+        </div>
+        
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+          <p style="color: #6b7280; margin: 0; font-size: 14px;">
+            Nëse nuk keni kërkuar të hyni në sistem, ju lutemi injoroni këtë email.
+          </p>
+        </div>
+        
+        <div style="margin-top: 20px; text-align: center;">
+          <p style="color: #6b7280; margin: 0; font-size: 12px;">
+            Ky është një email automatik nga sistemi i menaxhimit të çështjeve ligjore të Albpetrol SH.A.
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const mailOptions = {
+    from: process.env.EMAIL_FROM,
+    to: user.email,
+    subject: 'Kodi i Verifikimit - Albpetrol SH.A.',
+    html: htmlContent,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`Two-factor code sent to: ${user.email}`);
+  } catch (error) {
+    console.error('Failed to send two-factor code email:', error);
+    throw error;
+  }
+}
+
 export async function sendNewEntryNotification(
   entry: DataEntry,
   creator: User,

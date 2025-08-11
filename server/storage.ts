@@ -102,6 +102,61 @@ export class DatabaseStorage implements IStorage {
       .where(eq(users.id, id));
   }
 
+  async saveTwoFactorCode(userId: string, code: string): Promise<void> {
+    const expiryTime = new Date(Date.now() + 3 * 60 * 1000); // 3 minutes from now
+    await db.update(users)
+      .set({ 
+        twoFactorCode: code,
+        twoFactorCodeExpiry: expiryTime
+      })
+      .where(eq(users.id, userId));
+  }
+
+  async verifyTwoFactorCode(userId: string, code: string): Promise<boolean> {
+    const [user] = await db.select()
+      .from(users)
+      .where(eq(users.id, userId));
+    
+    if (!user || !user.twoFactorCode || !user.twoFactorCodeExpiry) {
+      return false;
+    }
+
+    const now = new Date();
+    if (now > user.twoFactorCodeExpiry) {
+      // Code expired, clear it
+      await db.update(users)
+        .set({ 
+          twoFactorCode: null,
+          twoFactorCodeExpiry: null
+        })
+        .where(eq(users.id, userId));
+      return false;
+    }
+
+    if (user.twoFactorCode === code) {
+      // Valid code, clear it and update last login
+      await db.update(users)
+        .set({ 
+          twoFactorCode: null,
+          twoFactorCodeExpiry: null,
+          lastLogin: new Date()
+        })
+        .where(eq(users.id, userId));
+      return true;
+    }
+
+    return false;
+  }
+
+  async clearTwoFactorCode(userId: string): Promise<void> {
+    await db.update(users)
+      .set({ 
+        twoFactorCode: null,
+        twoFactorCodeExpiry: null
+      })
+      .where(eq(users.id, userId));
+  }
+
   async getUserByEmail(email: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.email, email));
     return user;

@@ -32,7 +32,6 @@ This is a full-stack data management system built with React and Express.js, des
 ✓ **Court Dropdown Updates**: Updated court selection options for consistency - "Gjykata e Apelit" and "Gjykata e Shkallës së Parë" now include full court names
 ✓ **Export Headers Synchronization**: Updated Excel and CSV export headers and data mapping to match current data entry form structure exactly
 ✓ **System Settings Cleanup**: Removed backup and restoration features from System Settings, keeping only database statistics and core system information
-✓ **General Settings Removal**: Removed "Cilësimet e përgjithshme" section from System Settings per user request
 ✓ **Email Notification System**: Implemented comprehensive email notifications for new data entries with SMTP configuration, customizable recipients, professional Albanian templates, and admin management interface
 ✓ **Complete CRUD Email Notifications**: Added email notifications for all data operations - create, edit (with before/after comparison), and delete (with full entry details)
 ✓ **Comprehensive User Activity Tracking**: Implemented real-time activity tracking that updates user's last activity timestamp for all database operations (login, create, edit, delete)

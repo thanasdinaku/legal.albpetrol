@@ -31,12 +31,13 @@ const strictLimiter = rateLimit({
 });
 
 // Removed caching middleware to fix authentication and system stability issues
-import { insertDataEntrySchema, updateDataEntrySchema } from "@shared/schema";
+import { insertDataEntrySchema, updateDataEntrySchema, emailNotificationSchema } from "@shared/schema";
 import { z } from "zod";
 import XLSX from "xlsx";
 import { db } from "./db";
 import { sql } from "drizzle-orm";
 import { sessions } from "@shared/schema";
+import { sendNewEntryNotification, testEmailConnection } from "./email";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Apply rate limiting to all routes
@@ -72,6 +73,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       const entry = await storage.createDataEntry(validatedData);
+      
+      // Send email notification
+      try {
+        const emailSettings = await storage.getEmailNotificationSettings();
+        if (emailSettings.enabled && emailSettings.emailAddresses.length > 0) {
+          const creator = await storage.getUser(userId);
+          if (creator) {
+            await sendNewEntryNotification(entry, creator, emailSettings);
+          }
+        }
+      } catch (emailError) {
+        console.error('Failed to send email notification:', emailError);
+        // Don't fail the request if email fails
+      }
+      
       res.status(201).json(entry);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -668,6 +684,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error saving settings:", error);
       res.status(500).json({ message: "Failed to save system settings" });
+    }
+  });
+
+  // Email notification routes
+  app.get("/api/admin/email-settings", isAdmin, async (req: any, res) => {
+    try {
+      if (req.user.role !== "admin") {
+        return res.status(403).json({ message: "Access denied. Admin privileges required." });
+      }
+      
+      const emailSettings = await storage.getEmailNotificationSettings();
+      res.json(emailSettings);
+    } catch (error) {
+      console.error("Error fetching email settings:", error);
+      res.status(500).json({ message: "Failed to fetch email settings" });
+    }
+  });
+
+  app.put("/api/admin/email-settings", isAdmin, async (req: any, res) => {
+    try {
+      if (req.user.role !== "admin") {
+        return res.status(403).json({ message: "Access denied. Admin privileges required." });
+      }
+      
+      const validatedSettings = emailNotificationSchema.parse(req.body);
+      await storage.saveEmailNotificationSettings(validatedSettings, req.user.id);
+      
+      res.json({ 
+        message: "Email notification settings saved successfully",
+        settings: validatedSettings
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      console.error("Error saving email settings:", error);
+      res.status(500).json({ message: "Failed to save email settings" });
+    }
+  });
+
+  app.post("/api/admin/test-email", isAdmin, async (req: any, res) => {
+    try {
+      if (req.user.role !== "admin") {
+        return res.status(403).json({ message: "Access denied. Admin privileges required." });
+      }
+      
+      const isConnected = await testEmailConnection();
+      res.json({ 
+        success: isConnected,
+        message: isConnected 
+          ? "Email connection test successful" 
+          : "Email connection test failed"
+      });
+    } catch (error) {
+      console.error("Error testing email connection:", error);
+      res.status(500).json({ 
+        success: false,
+        message: "Email connection test failed" 
+      });
     }
   });
 

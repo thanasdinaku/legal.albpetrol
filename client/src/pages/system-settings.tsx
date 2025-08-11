@@ -15,6 +15,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { AlertCircle, Plus, X, TestTube, Mail } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function SystemSettings() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -102,6 +104,31 @@ export default function SystemSettings() {
     saveSettingsMutation.mutate(settingsToSave);
   };
 
+  const handleSaveEmailSettings = () => {
+    saveEmailMutation.mutate(emailSettings);
+  };
+
+  const handleAddEmail = () => {
+    if (newEmail && newEmail.includes('@') && !emailSettings.emailAddresses.includes(newEmail)) {
+      setEmailSettings({
+        ...emailSettings,
+        emailAddresses: [...emailSettings.emailAddresses, newEmail]
+      });
+      setNewEmail("");
+    }
+  };
+
+  const handleRemoveEmail = (emailToRemove: string) => {
+    setEmailSettings({
+      ...emailSettings,
+      emailAddresses: emailSettings.emailAddresses.filter(email => email !== emailToRemove)
+    });
+  };
+
+  const handleTestEmail = () => {
+    testEmailMutation.mutate();
+  };
+
   // Fetch database statistics
   const { data: dbStats } = useQuery({
     queryKey: ["/api/dashboard/stats"],
@@ -112,6 +139,78 @@ export default function SystemSettings() {
   const { data: userStats } = useQuery({
     queryKey: ["/api/admin/user-stats"],
     enabled: isAuthenticated && user?.role === "admin"
+  });
+
+  // Email notification settings state
+  const [emailSettings, setEmailSettings] = useState({
+    enabled: true,
+    emailAddresses: [] as string[],
+    subject: "Hyrje e re në sistemin e menaxhimit të çështjeve ligjore",
+    includeDetails: true
+  });
+
+  const [newEmail, setNewEmail] = useState("");
+
+  // Fetch email notification settings
+  const { data: emailData, isLoading: emailLoading } = useQuery({
+    queryKey: ["/api/admin/email-settings"],
+    enabled: isAuthenticated && user?.role === "admin"
+  });
+
+  // Update email settings when data is fetched
+  useEffect(() => {
+    if (emailData && typeof emailData === 'object') {
+      setEmailSettings({
+        enabled: emailData.enabled ?? true,
+        emailAddresses: emailData.emailAddresses ?? [],
+        subject: emailData.subject ?? "Hyrje e re në sistemin e menaxhimit të çështjeve ligjore",
+        includeDetails: emailData.includeDetails ?? true
+      });
+    }
+  }, [emailData]);
+
+  // Save email notification settings mutation
+  const saveEmailMutation = useMutation({
+    mutationFn: async (emailData: any) => {
+      const res = await apiRequest("PUT", "/api/admin/email-settings", emailData);
+      return res.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Cilësimet e email-it u ruajtën",
+        description: "Konfigurimi i njoftimeve me email u përditësua me sukses.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/email-settings"] });
+    },
+    onError: () => {
+      toast({
+        title: "Gabim në ruajtje",
+        description: "Cilësimet e email-it nuk u ruajtën. Provoni përsëri.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Test email connection mutation
+  const testEmailMutation = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest("POST", "/api/admin/test-email", {});
+      return res.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: data.success ? "Testimi i suksesshëm" : "Testimi dështoi",
+        description: data.message,
+        variant: data.success ? "default" : "destructive",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Gabim në testim",
+        description: "Nuk mund të testohet lidhja me serverin e email-it.",
+        variant: "destructive",
+      });
+    },
   });
 
 
@@ -296,6 +395,125 @@ export default function SystemSettings() {
                       <span className="text-gray-600">Versioni i Bazës:</span>
                       <Badge variant="secondary">{systemInfo.database}</Badge>
                     </div>
+                  </CardContent>
+                </Card>
+
+                {/* Email Notification Settings */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Mail className="mr-2 h-5 w-5 text-blue-600" />
+                      Njoftimet me Email
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <Label htmlFor="emailEnabled">Aktivizo Njoftimet</Label>
+                        <p className="text-sm text-gray-500">Dërgo email kur shtohen çështje të reja</p>
+                      </div>
+                      <Switch
+                        id="emailEnabled"
+                        checked={emailSettings.enabled}
+                        onCheckedChange={(checked) => setEmailSettings({...emailSettings, enabled: checked})}
+                      />
+                    </div>
+
+                    {emailSettings.enabled && (
+                      <>
+                        <div className="space-y-2">
+                          <Label htmlFor="emailSubject">Tema e Email-it</Label>
+                          <Input
+                            id="emailSubject"
+                            value={emailSettings.subject}
+                            onChange={(e) => setEmailSettings({...emailSettings, subject: e.target.value})}
+                            placeholder="Tema e email-it..."
+                          />
+                        </div>
+
+                        <div className="space-y-4">
+                          <Label>Adresat e Email-it</Label>
+                          
+                          <div className="flex gap-2">
+                            <Input
+                              value={newEmail}
+                              onChange={(e) => setNewEmail(e.target.value)}
+                              placeholder="Shtoni adresë email..."
+                              type="email"
+                              onKeyPress={(e) => e.key === 'Enter' && handleAddEmail()}
+                            />
+                            <Button 
+                              onClick={handleAddEmail}
+                              disabled={!newEmail || !newEmail.includes('@')}
+                              size="sm"
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+
+                          {emailSettings.emailAddresses.length > 0 && (
+                            <div className="space-y-2">
+                              <p className="text-sm text-gray-600">Adresat e konfiguruar:</p>
+                              <div className="space-y-2">
+                                {emailSettings.emailAddresses.map((email, index) => (
+                                  <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                                    <span className="text-sm">{email}</span>
+                                    <Button
+                                      onClick={() => handleRemoveEmail(email)}
+                                      variant="ghost"
+                                      size="sm"
+                                      className="text-red-600 hover:text-red-800"
+                                    >
+                                      <X className="h-4 w-4" />
+                                    </Button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {emailSettings.emailAddresses.length === 0 && (
+                            <Alert>
+                              <AlertCircle className="h-4 w-4" />
+                              <AlertTitle>Asnjë adresë email</AlertTitle>
+                              <AlertDescription>
+                                Shtoni të paktën një adresë email për të marrë njoftimet.
+                              </AlertDescription>
+                            </Alert>
+                          )}
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <Label htmlFor="includeDetails">Përfshi Detajet</Label>
+                            <p className="text-sm text-gray-500">Përfshi detajet e çështjes në email</p>
+                          </div>
+                          <Switch
+                            id="includeDetails"
+                            checked={emailSettings.includeDetails}
+                            onCheckedChange={(checked) => setEmailSettings({...emailSettings, includeDetails: checked})}
+                          />
+                        </div>
+
+                        <div className="flex gap-2 pt-4">
+                          <Button 
+                            onClick={handleSaveEmailSettings}
+                            disabled={saveEmailMutation.isPending || emailSettings.emailAddresses.length === 0}
+                            className="flex-1"
+                          >
+                            {saveEmailMutation.isPending ? "Duke ruajtur..." : "Ruaj Cilësimet"}
+                          </Button>
+                          <Button 
+                            onClick={handleTestEmail}
+                            disabled={testEmailMutation.isPending}
+                            variant="outline"
+                          >
+                            <TestTube className="h-4 w-4 mr-2" />
+                            {testEmailMutation.isPending ? "Duke testuar..." : "Test"}
+                          </Button>
+                        </div>
+                      </>
+                    )}
                   </CardContent>
                 </Card>
               </div>

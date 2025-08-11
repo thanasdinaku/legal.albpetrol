@@ -144,6 +144,14 @@ export const insertSystemSettingsSchema = createInsertSchema(systemSettings).omi
   updatedAt: true,
 });
 
+// Email notification schemas
+export const emailNotificationSchema = z.object({
+  enabled: z.boolean().default(true),
+  emailAddresses: z.array(z.string().email()).min(1, "Të paktën një adresë email është e kërkuar"),
+  subject: z.string().min(1, "Tema është e kërkuar").default("Hyrje e re në sistemin e menaxhimit të çështjeve ligjore"),
+  includeDetails: z.boolean().default(true),
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -157,3 +165,4 @@ export type DatabaseCheckpoint = typeof databaseCheckpoints.$inferSelect;
 export type InsertCheckpoint = z.infer<typeof insertCheckpointSchema>;
 export type SystemSettings = typeof systemSettings.$inferSelect;
 export type InsertSystemSettings = z.infer<typeof insertSystemSettingsSchema>;
+export type EmailNotificationSettings = z.infer<typeof emailNotificationSchema>;

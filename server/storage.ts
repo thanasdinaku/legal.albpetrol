@@ -77,6 +77,10 @@ export interface IStorage {
   saveSystemSetting(key: string, value: any, updatedById: string): Promise<SystemSettings>;
   getSystemSetting(key: string): Promise<SystemSettings | undefined>;
   getAllSystemSettings(): Promise<SystemSettings[]>;
+  
+  // Email notification settings
+  getEmailNotificationSettings(): Promise<any>;
+  saveEmailNotificationSettings(settings: any, updatedById: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -575,6 +579,25 @@ export class DatabaseStorage implements IStorage {
 
   async getAllSystemSettings(): Promise<SystemSettings[]> {
     return await db.select().from(systemSettings).orderBy(systemSettings.settingKey);
+  }
+
+  // Email notification settings
+  async getEmailNotificationSettings(): Promise<any> {
+    const setting = await this.getSystemSetting('email_notifications');
+    if (!setting) {
+      // Return default settings
+      return {
+        enabled: true,
+        emailAddresses: [],
+        subject: "Hyrje e re në sistemin e menaxhimit të çështjeve ligjore",
+        includeDetails: true
+      };
+    }
+    return setting.settingValue;
+  }
+
+  async saveEmailNotificationSettings(settings: any, updatedById: string): Promise<void> {
+    await this.saveSystemSetting('email_notifications', settings, updatedById);
   }
 }
 

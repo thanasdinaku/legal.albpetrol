@@ -109,26 +109,7 @@ export function setupAuth(app: Express) {
         return res.status(401).json({ message: "Invalid email or password" });
       }
       
-      // Skip 2FA for the default admin account
-      if (user.isDefaultAdmin && user.email === "it.system@albpetrol.al") {
-        req.login(user, async (err) => {
-          if (err) {
-            return res.status(500).json({ message: "Login failed" });
-          }
-          
-          // Update last login timestamp
-          try {
-            await storage.updateUserLastLogin(user.id);
-          } catch (error) {
-            console.error("Failed to update last login:", error);
-          }
-          
-          // Remove password and 2FA fields from response for security
-          const { password, twoFactorCode, twoFactorCodeExpiry, ...userWithoutPassword } = user;
-          res.status(200).json(userWithoutPassword);
-        });
-        return;
-      }
+      // All users including default admin must use 2FA
       
       try {
         // Generate 6-digit verification code for non-admin users

@@ -129,6 +129,238 @@ Ju lutemi mos u përgjigjeni në këtë adresë email.
   }
 }
 
+export async function sendEditEntryNotification(
+  originalEntry: DataEntry,
+  updatedEntry: DataEntry,
+  editor: User,
+  notificationSettings: EmailNotificationData,
+  nrRendor?: number
+): Promise<void> {
+  if (!notificationSettings.enabled || notificationSettings.emailAddresses.length === 0) {
+    return;
+  }
+
+  // Compare fields to show what changed
+  const changes: Array<{ field: string; from: string; to: string }> = [];
+  const fields = [
+    { key: 'paditesi', label: 'Paditesi' },
+    { key: 'iPaditur', label: 'I Paditur' },
+    { key: 'personITrete', label: 'Person i Tretë' },
+    { key: 'objektiIPadise', label: 'Objekti i Padisë' },
+    { key: 'gjykataShkalle', label: 'Gjykata e Shkallës së Parë' },
+    { key: 'fazaGjykataShkalle', label: 'Faza në Gjykatën e Shkallës së Parë' },
+    { key: 'gjykataApelit', label: 'Gjykata e Apelit' },
+    { key: 'fazaGjykataApelit', label: 'Faza në Gjykatën e Apelit' },
+    { key: 'fazaAktuale', label: 'Faza Aktuale' },
+    { key: 'perfaqesuesi', label: 'Përfaqësuesi i Albpetrol SH.A.' },
+    { key: 'demiIPretenduar', label: 'Dëmi i Pretenduar' },
+    { key: 'shumaGjykata', label: 'Shuma e Caktuar nga Gjykata' },
+    { key: 'vendimEkzekutim', label: 'Vendim me Ekzekutim të Përkohshëm' },
+    { key: 'fazaEkzekutim', label: 'Faza e Ekzekutimit' },
+    { key: 'gjykataLarte', label: 'Gjykata e Lartë' }
+  ];
+
+  fields.forEach(field => {
+    const originalValue = String(originalEntry[field.key as keyof DataEntry] || 'N/A');
+    const updatedValue = String(updatedEntry[field.key as keyof DataEntry] || 'N/A');
+    if (originalValue !== updatedValue) {
+      changes.push({
+        field: field.label,
+        from: originalValue,
+        to: updatedValue
+      });
+    }
+  });
+
+  const changesDetails = notificationSettings.includeDetails ? `
+<strong>Ndryshimet e bëra:</strong>
+<ul>
+  <li><strong>Nr. Rendor:</strong> ${nrRendor || originalEntry.id}</li>
+  <li><strong>Paditesi:</strong> ${updatedEntry.paditesi}</li>
+  ${changes.map(change => `
+  <li><strong>${change.field}:</strong>
+    <br>&nbsp;&nbsp;• Më parë: ${change.from}
+    <br>&nbsp;&nbsp;• Tani: ${change.to}
+  </li>`).join('')}
+  <li><strong>Ndryshuar nga:</strong> ${editor.firstName} ${editor.lastName} (${editor.email})</li>
+  <li><strong>Data e Ndryshimit:</strong> ${updatedEntry.updatedAt?.toLocaleString('sq-AL')}</li>
+</ul>` : '';
+
+  const htmlContent = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
+      <div style="background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <div style="text-align: center; margin-bottom: 30px;">
+          <h1 style="color: #1e40af; margin: 0; font-size: 24px;">Albpetrol SH.A.</h1>
+          <p style="color: #6b7280; margin: 5px 0 0 0; font-size: 14px;">Sistemi i Menaxhimit të Çështjeve Ligjore</p>
+        </div>
+        
+        <div style="background-color: #fef3c7; padding: 20px; border-radius: 6px; border-left: 4px solid #f59e0b; margin-bottom: 20px;">
+          <h2 style="color: #92400e; margin: 0 0 10px 0; font-size: 18px;">Njoftim për Ndryshim</h2>
+          <p style="margin: 0; color: #374151;">Një çështje ligjore është përditësuar në sistem.</p>
+        </div>
+        
+        ${changesDetails}
+        
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; text-align: center;">
+          <p style="color: #6b7280; margin: 0; font-size: 12px;">
+            Ky është një email automatik nga sistemi i menaxhimit të çështjeve ligjore të Albpetrol SH.A.
+          </p>
+          <p style="color: #6b7280; margin: 5px 0 0 0; font-size: 12px;">
+            Ju lutemi mos u përgjigjeni në këtë adresë email.
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const plainTextContent = `
+ALBPETROL SH.A. - Sistemi i Menaxhimit të Çështjeve Ligjore
+
+Njoftim për Ndryshim
+Një çështje ligjore është përditësuar në sistem.
+
+${notificationSettings.includeDetails ? `
+Ndryshimet e bëra:
+- Nr. Rendor: ${nrRendor || originalEntry.id}
+- Paditesi: ${updatedEntry.paditesi}
+${changes.map(change => `- ${change.field}:
+  • Më parë: ${change.from}
+  • Tani: ${change.to}`).join('\n')}
+- Ndryshuar nga: ${editor.firstName} ${editor.lastName} (${editor.email})
+- Data e Ndryshimit: ${updatedEntry.updatedAt?.toLocaleString('sq-AL')}
+` : ''}
+
+---
+Ky është një email automatik nga sistemi i menaxhimit të çështjeve ligjore të Albpetrol SH.A.
+Ju lutemi mos u përgjigjeni në këtë adresë email.
+  `;
+
+  try {
+    await transporter.sendMail({
+      from: process.env.EMAIL_FROM,
+      to: notificationSettings.emailAddresses.join(', '),
+      subject: `Ndryshim në çështjen: ${updatedEntry.paditesi}`,
+      text: plainTextContent,
+      html: htmlContent,
+    });
+    
+    console.log(`Edit notification email sent to: ${notificationSettings.emailAddresses.join(', ')}`);
+  } catch (error) {
+    console.error('Failed to send edit notification email:', error);
+    throw error;
+  }
+}
+
+export async function sendDeleteEntryNotification(
+  deletedEntry: DataEntry,
+  deleter: User,
+  notificationSettings: EmailNotificationData,
+  nrRendor?: number
+): Promise<void> {
+  if (!notificationSettings.enabled || notificationSettings.emailAddresses.length === 0) {
+    return;
+  }
+
+  const entryDetails = notificationSettings.includeDetails ? `
+    
+<strong>Detajet e çështjes së fshirë:</strong>
+<ul>
+  <li><strong>Nr. Rendor:</strong> ${nrRendor || deletedEntry.id}</li>
+  <li><strong>Paditesi:</strong> ${deletedEntry.paditesi}</li>
+  <li><strong>I Paditur:</strong> ${deletedEntry.iPaditur}</li>
+  <li><strong>Person i Tretë:</strong> ${deletedEntry.personITrete || 'N/A'}</li>
+  <li><strong>Objekti i Padisë:</strong> ${deletedEntry.objektiIPadise || 'N/A'}</li>
+  <li><strong>Gjykata e Shkallës së Parë:</strong> ${deletedEntry.gjykataShkalle || 'N/A'}</li>
+  <li><strong>Faza në Gjykatën e Shkallës së Parë:</strong> ${deletedEntry.fazaGjykataShkalle || 'N/A'}</li>
+  <li><strong>Gjykata e Apelit:</strong> ${deletedEntry.gjykataApelit || 'N/A'}</li>
+  <li><strong>Faza në Gjykatën e Apelit:</strong> ${deletedEntry.fazaGjykataApelit || 'N/A'}</li>
+  <li><strong>Faza Aktuale:</strong> ${deletedEntry.fazaAktuale || 'N/A'}</li>
+  <li><strong>Përfaqësuesi i Albpetrol SH.A.:</strong> ${deletedEntry.perfaqesuesi || 'N/A'}</li>
+  <li><strong>Dëmi i Pretenduar:</strong> ${deletedEntry.demiIPretenduar || 'N/A'}</li>
+  <li><strong>Shuma e Caktuar nga Gjykata:</strong> ${deletedEntry.shumaGjykata || 'N/A'}</li>
+  <li><strong>Vendim me Ekzekutim të Përkohshëm:</strong> ${deletedEntry.vendimEkzekutim || 'N/A'}</li>
+  <li><strong>Faza e Ekzekutimit:</strong> ${deletedEntry.fazaEkzekutim || 'N/A'}</li>
+  <li><strong>Gjykata e Lartë:</strong> ${deletedEntry.gjykataLarte || 'N/A'}</li>
+  <li><strong>Fshirë nga:</strong> ${deleter.firstName} ${deleter.lastName} (${deleter.email})</li>
+  <li><strong>Data e Fshirjes:</strong> ${new Date().toLocaleString('sq-AL')}</li>
+</ul>` : '';
+
+  const htmlContent = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
+      <div style="background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <div style="text-align: center; margin-bottom: 30px;">
+          <h1 style="color: #1e40af; margin: 0; font-size: 24px;">Albpetrol SH.A.</h1>
+          <p style="color: #6b7280; margin: 5px 0 0 0; font-size: 14px;">Sistemi i Menaxhimit të Çështjeve Ligjore</p>
+        </div>
+        
+        <div style="background-color: #fef2f2; padding: 20px; border-radius: 6px; border-left: 4px solid #ef4444; margin-bottom: 20px;">
+          <h2 style="color: #991b1b; margin: 0 0 10px 0; font-size: 18px;">Njoftim për Fshirje</h2>
+          <p style="margin: 0; color: #374151;">Një çështje ligjore është fshirë nga sistemi.</p>
+        </div>
+        
+        ${entryDetails}
+        
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; text-align: center;">
+          <p style="color: #6b7280; margin: 0; font-size: 12px;">
+            Ky është një email automatik nga sistemi i menaxhimit të çështjeve ligjore të Albpetrol SH.A.
+          </p>
+          <p style="color: #6b7280; margin: 5px 0 0 0; font-size: 12px;">
+            Ju lutemi mos u përgjigjeni në këtë adresë email.
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const plainTextContent = `
+ALBPETROL SH.A. - Sistemi i Menaxhimit të Çështjeve Ligjore
+
+Njoftim për Fshirje
+Një çështje ligjore është fshirë nga sistemi.
+
+${notificationSettings.includeDetails ? `
+Detajet e çështjes së fshirë:
+- Nr. Rendor: ${nrRendor || deletedEntry.id}
+- Paditesi: ${deletedEntry.paditesi}
+- I Paditur: ${deletedEntry.iPaditur}
+- Person i Tretë: ${deletedEntry.personITrete || 'N/A'}
+- Objekti i Padisë: ${deletedEntry.objektiIPadise || 'N/A'}
+- Gjykata e Shkallës së Parë: ${deletedEntry.gjykataShkalle || 'N/A'}
+- Faza në Gjykatën e Shkallës së Parë: ${deletedEntry.fazaGjykataShkalle || 'N/A'}
+- Gjykata e Apelit: ${deletedEntry.gjykataApelit || 'N/A'}
+- Faza në Gjykatën e Apelit: ${deletedEntry.fazaGjykataApelit || 'N/A'}
+- Faza Aktuale: ${deletedEntry.fazaAktuale || 'N/A'}
+- Përfaqësuesi i Albpetrol SH.A.: ${deletedEntry.perfaqesuesi || 'N/A'}
+- Dëmi i Pretenduar: ${deletedEntry.demiIPretenduar || 'N/A'}
+- Shuma e Caktuar nga Gjykata: ${deletedEntry.shumaGjykata || 'N/A'}
+- Vendim me Ekzekutim të Përkohshëm: ${deletedEntry.vendimEkzekutim || 'N/A'}
+- Faza e Ekzekutimit: ${deletedEntry.fazaEkzekutim || 'N/A'}
+- Gjykata e Lartë: ${deletedEntry.gjykataLarte || 'N/A'}
+- Fshirë nga: ${deleter.firstName} ${deleter.lastName} (${deleter.email})
+- Data e Fshirjes: ${new Date().toLocaleString('sq-AL')}
+` : ''}
+
+---
+Ky është një email automatik nga sistemi i menaxhimit të çështjeve ligjore të Albpetrol SH.A.
+Ju lutemi mos u përgjigjeni në këtë adresë email.
+  `;
+
+  try {
+    await transporter.sendMail({
+      from: process.env.EMAIL_FROM,
+      to: notificationSettings.emailAddresses.join(', '),
+      subject: `Fshirje e çështjes: ${deletedEntry.paditesi}`,
+      text: plainTextContent,
+      html: htmlContent,
+    });
+    
+    console.log(`Delete notification email sent to: ${notificationSettings.emailAddresses.join(', ')}`);
+  } catch (error) {
+    console.error('Failed to send delete notification email:', error);
+    throw error;
+  }
+}
+
 export async function testEmailConnection(): Promise<boolean> {
   try {
     await transporter.verify();

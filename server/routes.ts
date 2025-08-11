@@ -37,7 +37,7 @@ import XLSX from "xlsx";
 import { db } from "./db";
 import { sql } from "drizzle-orm";
 import { sessions } from "@shared/schema";
-import { sendNewEntryNotification, testEmailConnection } from "./email";
+import { sendNewEntryNotification, sendEditEntryNotification, sendDeleteEntryNotification, testEmailConnection } from "./email";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Apply rate limiting to all routes
@@ -185,6 +185,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const validatedData = updateDataEntrySchema.parse(req.body);
       const entry = await storage.updateDataEntry(id, validatedData);
+      
+      // Send email notification for edit
+      try {
+        const emailSettings = await storage.getEmailNotificationSettings();
+        if (emailSettings.enabled && emailSettings.emailAddresses.length > 0) {
+          const editor = await storage.getUser(userId);
+          if (editor) {
+            // Get all entries to calculate correct Nr. Rendor
+            const allEntries = await storage.getDataEntriesForExport();
+            const entryIndex = allEntries.findIndex(e => e.id === entry.id);
+            const nrRendor = entryIndex >= 0 ? entryIndex + 1 : undefined;
+            await sendEditEntryNotification(existingEntry, entry, editor, emailSettings, nrRendor);
+          }
+        }
+      } catch (emailError) {
+        console.error('Failed to send edit notification email:', emailError);
+        // Don't fail the request if email fails
+      }
+      
       res.json(entry);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -210,6 +229,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Permission check: only administrators can delete entries
       if (user?.role !== 'admin') {
         return res.status(403).json({ message: "Only administrators can delete entries" });
+      }
+
+      // Send email notification before deletion
+      try {
+        const emailSettings = await storage.getEmailNotificationSettings();
+        if (emailSettings.enabled && emailSettings.emailAddresses.length > 0) {
+          const deleter = await storage.getUser(userId);
+          if (deleter) {
+            // Get all entries to calculate correct Nr. Rendor
+            const allEntries = await storage.getDataEntriesForExport();
+            const entryIndex = allEntries.findIndex(e => e.id === existingEntry.id);
+            const nrRendor = entryIndex >= 0 ? entryIndex + 1 : undefined;
+            await sendDeleteEntryNotification(existingEntry, deleter, emailSettings, nrRendor);
+          }
+        }
+      } catch (emailError) {
+        console.error('Failed to send delete notification email:', emailError);
+        // Don't fail the request if email fails
       }
 
       await storage.deleteDataEntry(id);

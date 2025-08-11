@@ -15,7 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { AlertCircle, Plus, X, TestTube, Mail } from "lucide-react";
+import { AlertCircle, Plus, X, TestTube, Mail, Download, BookOpen } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function SystemSettings() {
@@ -233,6 +233,54 @@ export default function SystemSettings() {
                       <span className="text-gray-600">Mjedisi:</span>
                       <Badge variant="default">{systemInfo.environment}</Badge>
                     </div>
+                  </CardContent>
+                </Card>
+
+                {/* User Manual Download Card */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <BookOpen className="h-5 w-5 mr-2 text-purple-600" />
+                      Manuali i Përdoruesit
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="text-sm text-gray-600 mb-4">
+                      <p>Shkarkoni manualin e plotë të përdoruesit për udhëzime të detajuara mbi përdorimin e sistemit.</p>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Format:</span>
+                        <Badge variant="outline">PDF</Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Gjuha:</span>
+                        <Badge variant="outline">Shqip</Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Versioni:</span>
+                        <Badge variant="outline">2.0</Badge>
+                      </div>
+                    </div>
+                    <Button 
+                      onClick={() => {
+                        const link = document.createElement('a');
+                        link.href = '/api/download/user-manual';
+                        link.download = 'Manuali_i_Perdoruesit_Albpetrol.pdf';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        toast({
+                          title: "Manuali u Shkarkua",
+                          description: "Manuali i përdoruesit është shkarkuar me sukses.",
+                        });
+                      }}
+                      className="w-full"
+                      variant="default"
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Shkarko Manualin PDF
+                    </Button>
                   </CardContent>
                 </Card>
 

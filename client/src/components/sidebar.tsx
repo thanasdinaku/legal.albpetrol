@@ -114,6 +114,22 @@ export default function Sidebar({ isOpen = true, onClose, className }: SidebarPr
             <i className="fas fa-user-cog"></i>
             <span className="text-sm sm:text-base">Cilësimet</span>
           </button>
+
+          {/* User Manual Download - Available for all users */}
+          <button
+            onClick={() => {
+              const link = document.createElement('a');
+              link.href = '/api/download/user-manual';
+              link.download = 'Manuali_i_Perdoruesit_Albpetrol.pdf';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            }}
+            className="nav-link w-full text-left"
+          >
+            <i className="fas fa-book"></i>
+            <span className="text-sm sm:text-base">Shkarko Manualin</span>
+          </button>
         </div>
       </nav>
     </div>

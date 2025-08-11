@@ -38,6 +38,7 @@ import { db } from "./db";
 import { sql } from "drizzle-orm";
 import { sessions } from "@shared/schema";
 import { sendNewEntryNotification, sendEditEntryNotification, sendDeleteEntryNotification, testEmailConnection } from "./email";
+import { generateUserManual } from "./generate-manual";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Apply rate limiting to all routes
@@ -833,6 +834,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         success: false,
         message: "Email connection test failed" 
       });
+    }
+  });
+
+  // PDF Manual generation route
+  app.get("/api/download/user-manual", isAuthenticated, async (req: any, res) => {
+    try {
+      const pdfBuffer = generateUserManual();
+      
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'attachment; filename="Manuali_i_Perdoruesit_Albpetrol.pdf"');
+      res.setHeader('Content-Length', pdfBuffer.length);
+      
+      res.send(pdfBuffer);
+    } catch (error) {
+      console.error("Error generating PDF manual:", error);
+      res.status(500).json({ message: "Failed to generate user manual" });
     }
   });
 

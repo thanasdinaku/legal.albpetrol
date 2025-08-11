@@ -649,6 +649,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Cannot delete your own account" });
       }
       
+      // Check if the user to be deleted is the default admin
+      const userToDelete = await storage.getUser(userId);
+      if (userToDelete && userToDelete.isDefaultAdmin) {
+        return res.status(403).json({ 
+          message: "Cannot delete the default administrator account. This account must always remain as the system root." 
+        });
+      }
+      
       await storage.deleteUser(userId);
       res.json({ message: "User deleted successfully" });
     } catch (error) {

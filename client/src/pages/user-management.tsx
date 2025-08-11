@@ -25,6 +25,7 @@ interface User {
   profileImageUrl?: string;
   createdAt: string;
   lastActive?: string | null;
+  isDefaultAdmin?: boolean;
 }
 
 interface UserStats {
@@ -205,10 +206,11 @@ export default function UserManagement() {
         description: "User has been successfully deleted.",
       });
     },
-    onError: (error) => {
+    onError: (error: any) => {
+      const errorMessage = error?.message || "Failed to delete user. Please try again.";
       toast({
         title: "Error",
-        description: "Failed to delete user. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     },
@@ -528,9 +530,16 @@ export default function UserManagement() {
                       </TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>
-                        <Badge variant={user.role === 'admin' ? 'default' : 'secondary'}>
-                          {user.role === 'admin' ? 'Administratori' : 'Përdoruesi'}
-                        </Badge>
+                        <div className="flex items-center space-x-2">
+                          <Badge variant={user.role === 'admin' ? 'default' : 'secondary'}>
+                            {user.role === 'admin' ? 'Administratori' : 'Përdoruesi'}
+                          </Badge>
+                          {user.isDefaultAdmin && (
+                            <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200">
+                              ROOT
+                            </Badge>
+                          )}
+                        </div>
                       </TableCell>
                       <TableCell>{formatDate(user.createdAt)}</TableCell>
                       <TableCell>
@@ -568,14 +577,16 @@ export default function UserManagement() {
                                   <RotateCcw className="h-4 w-4 mr-2" />
                                   Rivendos Fjalëkalimin
                                 </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => deleteUserMutation.mutate(user.id)}
-                                  className="text-red-600"
-                                  disabled={deleteUserMutation.isPending}
-                                >
-                                  <Trash2 className="h-4 w-4 mr-2" />
-                                  Fshi Përdoruesin
-                                </DropdownMenuItem>
+                                {!user.isDefaultAdmin && (
+                                  <DropdownMenuItem
+                                    onClick={() => deleteUserMutation.mutate(user.id)}
+                                    className="text-red-600"
+                                    disabled={deleteUserMutation.isPending}
+                                  >
+                                    <Trash2 className="h-4 w-4 mr-2" />
+                                    Fshi Përdoruesin
+                                  </DropdownMenuItem>
+                                )}
                               </DropdownMenuContent>
                             </DropdownMenu>
                           </>

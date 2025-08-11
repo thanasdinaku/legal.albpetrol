@@ -192,10 +192,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (emailSettings.enabled && emailSettings.emailAddresses.length > 0) {
           const editor = await storage.getUser(userId);
           if (editor) {
-            // Get all entries to calculate correct Nr. Rendor
+            // Calculate correct Nr. Rendor using same logic as in storage
             const allEntries = await storage.getDataEntriesForExport();
             const entryIndex = allEntries.findIndex(e => e.id === entry.id);
-            const nrRendor = entryIndex >= 0 ? entryIndex + 1 : undefined;
+            const nrRendor = entryIndex >= 0 ? allEntries.length - entryIndex : undefined;
             await sendEditEntryNotification(existingEntry, entry, editor, emailSettings, nrRendor);
           }
         }
@@ -237,10 +237,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (emailSettings.enabled && emailSettings.emailAddresses.length > 0) {
           const deleter = await storage.getUser(userId);
           if (deleter) {
-            // Get all entries to calculate correct Nr. Rendor
+            // Calculate correct Nr. Rendor using same logic as in storage
             const allEntries = await storage.getDataEntriesForExport();
             const entryIndex = allEntries.findIndex(e => e.id === existingEntry.id);
-            const nrRendor = entryIndex >= 0 ? entryIndex + 1 : undefined;
+            const nrRendor = entryIndex >= 0 ? allEntries.length - entryIndex : undefined;
             await sendDeleteEntryNotification(existingEntry, deleter, emailSettings, nrRendor);
           }
         }

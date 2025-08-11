@@ -74,6 +74,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const entry = await storage.createDataEntry(validatedData);
       
+      // Update user's last activity
+      try {
+        await storage.updateUserLastActivity(userId);
+      } catch (error) {
+        console.error('Failed to update user activity:', error);
+      }
+      
       // Send email notification
       try {
         const emailSettings = await storage.getEmailNotificationSettings();
@@ -186,6 +193,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = updateDataEntrySchema.parse(req.body);
       const entry = await storage.updateDataEntry(id, validatedData);
       
+      // Update user's last activity
+      try {
+        await storage.updateUserLastActivity(userId);
+      } catch (error) {
+        console.error('Failed to update user activity:', error);
+      }
+      
       // Send email notification for edit
       try {
         const emailSettings = await storage.getEmailNotificationSettings();
@@ -229,6 +243,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Permission check: only administrators can delete entries
       if (user?.role !== 'admin') {
         return res.status(403).json({ message: "Only administrators can delete entries" });
+      }
+
+      // Update user's last activity
+      try {
+        await storage.updateUserLastActivity(userId);
+      } catch (error) {
+        console.error('Failed to update user activity:', error);
       }
 
       // Send email notification before deletion

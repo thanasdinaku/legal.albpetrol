@@ -1,0 +1,65 @@
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# sudo systemctl status                                                                                         albpetrol-legal
+● albpetrol-legal.service - Albpetrol Legal Management System
+     Loaded: loaded (/etc/systemd/system/albpetrol-legal.service; enabled; pres>
+     Active: active (running) since Tue 2025-08-12 21:52:49 UTC; 11min ago
+   Main PID: 74047 (node)
+      Tasks: 11 (limit: 9428)
+     Memory: 55.8M (peak: 86.2M)
+        CPU: 710ms
+     CGroup: /system.slice/albpetrol-legal.service
+             └─74047 /usr/bin/node dist/index.js
+
+Aug 12 21:56:47 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.>
+Aug 12 21:56:47 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.>
+Aug 12 21:56:48 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.>
+Aug 12 21:56:48 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.>
+Aug 12 22:01:04 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.>
+Aug 12 22:01:04 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.>
+Aug 12 22:01:05 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.>
+Aug 12 22:01:05 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.>
+Aug 12 22:01:05 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.>
+Aug 12 22:01:05 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.>
+lines 1-20/20 (END)...skipping...
+● albpetrol-legal.service - Albpetrol Legal Management System
+     Loaded: loaded (/etc/systemd/system/albpetrol-legal.service; enabled; preset: enabled)
+     Active: active (running) since Tue 2025-08-12 21:52:49 UTC; 11min ago
+   Main PID: 74047 (node)
+      Tasks: 11 (limit: 9428)
+     Memory: 55.8M (peak: 86.2M)
+        CPU: 710ms
+     CGroup: /system.slice/albpetrol-legal.service
+             └─74047 /usr/bin/node dist/index.js
+
+Aug 12 21:56:47 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.service:14: Standard output type syslog is obsolete, automatically updating to journal. >
+Aug 12 21:56:47 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.service:15: Standard output type syslog is obsolete, automatically updating to journal. >
+Aug 12 21:56:48 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.service:14: Standard output type syslog is obsolete, automatically updating to journal. >
+Aug 12 21:56:48 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.service:15: Standard output type syslog is obsolete, automatically updating to journal. >
+Aug 12 22:01:04 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.service:14: Standard output type syslog is obsolete, automatically updating to journal. >
+Aug 12 22:01:04 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.service:15: Standard output type syslog is obsolete, automatically updating to journal. >
+Aug 12 22:01:05 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.service:14: Standard output type syslog is obsolete, automatically updating to journal. >
+Aug 12 22:01:05 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.service:15: Standard output type syslog is obsolete, automatically updating to journal. >
+Aug 12 22:01:05 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.service:14: Standard output type syslog is obsolete, automatically updating to journal. >
+Aug 12 22:01:05 ceshtjeligjore systemd[1]: /etc/systemd/system/albpetrol-legal.service:15: Standard output type syslog is obsolete, automatically updating to journal. >
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+lines 1-20/20 (END)

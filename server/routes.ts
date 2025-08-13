@@ -51,6 +51,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Ensure default admin exists on startup
   await storage.ensureDefaultAdmin();
   
+  // Security.txt route for responsible disclosure (pentest requirement)
+  app.get('/.well-known/security.txt', (req, res) => {
+    res.type('text/plain');
+    res.send(`Contact: mailto:it.system@albpetrol.al
+Contact: https://legal.albpetrol.al/contact
+Expires: 2026-08-13T12:00:00.000Z
+Preferred-Languages: sq, en
+Canonical: https://legal.albpetrol.al/.well-known/security.txt
+
+# Security Policy for Albpetrol Legal Case Management System
+# 
+# If you discover a security vulnerability, please report it to:
+# - Email: it.system@albpetrol.al
+# - Subject: [SECURITY] Vulnerability Report for legal.albpetrol.al
+#
+# Please include:
+# - Description of the vulnerability
+# - Steps to reproduce
+# - Potential impact
+# - Your contact information for follow-up
+#
+# We appreciate responsible disclosure and will acknowledge
+# your contribution in resolving security issues.`);
+  });
+  
   // Clear old sessions route (for migration)
   app.post('/api/clear-sessions', async (req, res) => {
     try {

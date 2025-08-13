@@ -61,11 +61,26 @@ export default function CaseEntryForm() {
       queryClient.invalidateQueries({ queryKey: ["/api/dashboard/recent-entries"] });
     },
     onError: (error) => {
-      toast({
-        title: "Gabim në shtimin e çështjes",
-        description: error.message || "Ndodhi një gabim gjatë regjistrimit të çështjes",
-        variant: "destructive",
-      });
+      console.error('Data entry submission error:', error);
+      
+      // Handle authentication errors specifically
+      if (error.message.includes('401') || error.message.includes('Unauthorized')) {
+        toast({
+          title: "Sesioni ka skaduar",
+          description: "Ju lutem kyçuni përsëri në sistem",
+          variant: "destructive",
+        });
+        // Redirect to login after a short delay
+        setTimeout(() => {
+          window.location.href = "/auth";
+        }, 2000);
+      } else {
+        toast({
+          title: "Gabim në shtimin e çështjes",
+          description: error.message || "Ndodhi një gabim gjatë regjistrimit të çështjes",
+          variant: "destructive",
+        });
+      }
     },
   });
 

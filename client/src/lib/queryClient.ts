@@ -9,13 +9,18 @@ async function throwIfResNotOk(res: Response) {
       const message = errorResponse.message || errorResponse.error || res.statusText;
       throw new Error(`${res.status}: ${message}`);
     } catch (parseError) {
-      // If JSON parsing fails, fall back to text
-      const text = await res.text() || res.statusText;
-      // If it's HTML content, extract a more meaningful message
-      if (text.includes('<!DOCTYPE')) {
-        throw new Error(`${res.status}: Server error - please try again`);
+      // If JSON parsing fails, try to get text
+      try {
+        const text = await res.text() || res.statusText;
+        // If it's HTML content, extract a more meaningful message
+        if (text.includes('<!DOCTYPE')) {
+          throw new Error(`${res.status}: Server error - please try again`);
+        }
+        throw new Error(`${res.status}: ${text}`);
+      } catch (textError) {
+        // Final fallback
+        throw new Error(`${res.status}: ${res.statusText || 'Unknown error'}`);
       }
-      throw new Error(`${res.status}: ${text}`);
     }
   }
 }

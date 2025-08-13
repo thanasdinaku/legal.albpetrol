@@ -3,8 +3,20 @@ import { rateLimitedFetch, cache } from "@/utils/apiOptimization";
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
-    const text = (await res.text()) || res.statusText;
-    throw new Error(`${res.status}: ${text}`);
+    try {
+      // Try to parse as JSON first (for API errors)
+      const errorResponse = await res.json();
+      const message = errorResponse.message || errorResponse.error || res.statusText;
+      throw new Error(`${res.status}: ${message}`);
+    } catch (parseError) {
+      // If JSON parsing fails, fall back to text
+      const text = await res.text() || res.statusText;
+      // If it's HTML content, extract a more meaningful message
+      if (text.includes('<!DOCTYPE')) {
+        throw new Error(`${res.status}: Server error - please try again`);
+      }
+      throw new Error(`${res.status}: ${text}`);
+    }
   }
 }
 

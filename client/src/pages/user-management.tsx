@@ -122,12 +122,6 @@ export default function UserManagement() {
       }
       
       const response = await apiRequest('/api/admin/users', 'POST', userData);
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('User creation failed:', errorText);
-        throw new Error(`Failed to create user: ${response.status}`);
-      }
-      
       const data = await response.json();
       console.log('User creation response:', data);
       return data;
@@ -156,20 +150,31 @@ export default function UserManagement() {
     },
     onError: (error: any) => {
       console.error('User creation error:', error);
-      toast({
-        title: "Gabim",
-        description: error.message || "Dështoi krijimi i përdoruesit. Ju lutemi provoni përsëri.",
-        variant: "destructive",
-      });
+      
+      // Handle authentication errors specifically
+      if (error.message.includes('401') || error.message.includes('Unauthorized')) {
+        toast({
+          title: "Sesioni ka skaduar",
+          description: "Ju lutem kyçuni përsëri në sistem",
+          variant: "destructive",
+        });
+        // Redirect to login after a short delay
+        setTimeout(() => {
+          window.location.href = "/auth";
+        }, 2000);
+      } else {
+        toast({
+          title: "Gabim",
+          description: error.message || "Dështoi krijimi i përdoruesit. Ju lutemi provoni përsëri.",
+          variant: "destructive",
+        });
+      }
     },
   });
 
   const resetPasswordMutation = useMutation({
     mutationFn: async (userId: string) => {
       const response = await apiRequest(`/api/admin/users/${userId}/reset-password`, 'POST');
-      if (!response.ok) {
-        throw new Error('Failed to reset password');
-      }
       return response.json();
     },
     onSuccess: (data, userId) => {
@@ -185,12 +190,27 @@ export default function UserManagement() {
         description: "Fjalëkalimi i ri i përkohshëm është krijuar me sukses.",
       });
     },
-    onError: (error) => {
-      toast({
-        title: "Gabim",
-        description: "Dështoi rivendosja e fjalëkalimit. Ju lutemi provoni përsëri.",
-        variant: "destructive",
-      });
+    onError: (error: any) => {
+      console.error('Password reset error:', error);
+      
+      // Handle authentication errors specifically
+      if (error.message.includes('401') || error.message.includes('Unauthorized')) {
+        toast({
+          title: "Sesioni ka skaduar",
+          description: "Ju lutem kyçuni përsëri në sistem",
+          variant: "destructive",
+        });
+        // Redirect to login after a short delay
+        setTimeout(() => {
+          window.location.href = "/auth";
+        }, 2000);
+      } else {
+        toast({
+          title: "Gabim",
+          description: error.message || "Dështoi rivendosja e fjalëkalimit. Ju lutemi provoni përsëri.",
+          variant: "destructive",
+        });
+      }
     },
   });
 

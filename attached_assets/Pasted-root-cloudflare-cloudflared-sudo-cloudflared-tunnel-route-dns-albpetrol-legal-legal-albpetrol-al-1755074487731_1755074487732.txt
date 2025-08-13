@@ -1,0 +1,23 @@
+root@cloudflare:~/.cloudflared# sudo cloudflared tunnel route dns albpetrol-legal legal.albpetrol.al
+2025-08-13T08:35:57Z INF Added CNAME legal.albpetrol.al which will route to this tunnel tunnelID=260c74d1-721c-4ede-b273-bf2ce1b232b3
+root@cloudflare:~/.cloudflared# sudo cloudflared tunnel --config /root/.cloudflared/config.yml run albpetrol-legal
+2025-08-13T08:39:40Z INF Starting tunnel tunnelID=260c74d1-721c-4ede-b273-bf2ce1b232b3
+2025-08-13T08:39:40Z INF Version 2025.7.0 (Checksum 51e3909335fd7ba2ed5c696b0a6fb7d4a74f6a15bf36615cea0fccba620cfb3f)
+2025-08-13T08:39:40Z INF GOOS: linux, GOVersion: go1.24.4, GoArch: amd64
+2025-08-13T08:39:40Z INF Settings: map[config:/root/.cloudflared/config.yml cred-file:/root/.cloudflared/260c74d1-721c-4ede-b273-bf2ce1b232b3.json credentials-file:/root/.cloudflared/260c74d1-721c-4ede-b273-bf2ce1b232b3.json]
+2025-08-13T08:39:40Z INF cloudflared will not automatically update if installed by a package manager.
+2025-08-13T08:39:40Z INF Generated Connector ID: 31e434f3-a804-42b4-835f-48fc0c87b587
+2025-08-13T08:39:40Z INF Initial protocol quic
+2025-08-13T08:39:40Z INF ICMP proxy will use 10.5.20.29 as source for IPv4
+2025-08-13T08:39:40Z INF ICMP proxy will use fe80::250:56ff:fe9f:c961 in zone ens33 as source for IPv6
+2025-08-13T08:39:40Z INF ICMP proxy will use 10.5.20.29 as source for IPv4
+2025-08-13T08:39:40Z INF ICMP proxy will use fe80::250:56ff:fe9f:c961 in zone ens33 as source for IPv6
+2025-08-13T08:39:40Z INF Starting metrics server on 127.0.0.1:20242/metrics
+2025-08-13T08:39:40Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.57
+2025-08-13T08:39:41Z INF Registered tunnel connection connIndex=0 connection=01dd6e59-29c5-4964-9a0f-544284b44fa5 event=0 ip=198.41.192.57 location=beg01 protocol=quic
+2025-08-13T08:39:41Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=1 event=0 ip=198.41.200.73
+2025-08-13T08:39:42Z INF Registered tunnel connection connIndex=1 connection=5471ac1a-3f95-4faa-8737-0a9c65d551c9 event=0 ip=198.41.200.73 location=ath01 protocol=quic
+2025-08-13T08:39:42Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=2 event=0 ip=198.41.192.167
+2025-08-13T08:39:43Z INF Registered tunnel connection connIndex=2 connection=af5ba483-7aae-4fab-9852-a35cee5dc7a0 event=0 ip=198.41.192.167 location=beg01 protocol=quic
+2025-08-13T08:39:43Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=3 event=0 ip=198.41.200.63
+2025-08-13T08:39:44Z INF Registered tunnel connection connIndex=3 connection=265fa381-f075-469e-9d56-a32c6b300448 event=0 ip=198.41.200.63 location=ath01 protocol=quic

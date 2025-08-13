@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual i Detajuar - Sistemi CaseRecord Albpetrol</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #ff6b35;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="grad" cx="50%" cy="50%" r="50%"><stop offset="0%" style="stop-color:%23ff6b35;stop-opacity:1" /><stop offset="100%" style="stop-color:%23f7931e;stop-opacity:1" /></radialGradient></defs><circle cx="50" cy="50" r="45" fill="url(%23grad)"/><path d="M30 35 L50 25 L70 35 L65 45 L50 40 L35 45 Z" fill="white"/><path d="M35 50 L65 50 L65 65 L50 75 L35 65 Z" fill="white"/></svg>') center/contain no-repeat;
+        }
+        
+        h1 {
+            color: #ff6b35;
+            font-size: 2.5em;
+            margin: 0;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            border-left: 4px solid #ff6b35;
+            padding-left: 15px;
+            margin-top: 40px;
+        }
+        
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+        }
+        
+        h4 {
+            color: #7f8c8d;
+            margin-top: 25px;
+        }
+        
+        .toc {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+        
+        .toc h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .toc li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .toc li:before {
+            content: "▶";
+            color: #ff6b35;
+            position: absolute;
+            left: 0;
+        }
+        
+        .toc a {
+            color: #2c3e50;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .toc a:hover {
+            color: #ff6b35;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #17a2b8;
+        }
+        
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #28a745;
+        }
+        
+        .steps {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .steps ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .steps li {
+            margin: 10px 0;
+            padding: 8px;
+            background: white;
+            border-radius: 5px;
+            border-left: 3px solid #ff6b35;
+        }
+        
+        code {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: 'Courier New', monospace;
+            color: #e83e8c;
+        }
+        
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        th {
+            background: #ff6b35;
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .contact-section {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .contact-section h3 {
+            color: #ff6b35;
+            margin-top: 0;
+        }
+        
+        .print-button {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 20px;
+            transition: background 0.3s;
+        }
+        
+        .print-button:hover {
+            background: #e55a2b;
+        }
+        
+        @media print {
+            body { 
+                font-size: 12px; 
+                background: white;
+            }
+            .container { 
+                box-shadow: none; 
+                max-width: none;
+                padding: 0;
+            }
+            .print-button { 
+                display: none; 
+            }
+            h2 { 
+                page-break-before: always; 
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .steps {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo"></div>
+            <h1>Manual i Detajuar i Përdoruesit</h1>
+            <p style="font-size: 1.2em; color: #7f8c8d; margin: 10px 0;">Sistemi i Menaxhimit të Çështjeve Ligjore Albpetrol</p>
+            <button class="print-button" onclick="window.print()">🖨️ Printo Manualin</button>
+        </div>
+
+        <div class="toc">
+            <h3>📋 Përmbajtja</h3>
+            <ul>
+                <li><a href="#hyrje">1. Hyrje në Sistem</a></li>
+                <li><a href="#dashboard">2. Dashboard Kryesor</a></li>
+                <li><a href="#ceshtje">3. Menaxhimi i Çështjeve</a></li>
+                <li><a href="#tabela">4. Tabela e të Dhënave</a></li>
+                <li><a href="#eksport">5. Eksportimi i të Dhënave</a></li>
+                <li><a href="#perdorues">6. Menaxhimi i Përdoruesve</a></li>
+                <li><a href="#cilesimet">7. Cilësimet e Sistemit</a></li>
+                <li><a href="#email">8. Email Njoftimet</a></li>
+                <li><a href="#siguria">9. Siguria dhe Fjalëkalimet</a></li>
+                <li><a href="#probleme">10. Problemet e Zakonshme</a></li>
+            </ul>
+        </div>
+
+        <section id="hyrje">
+            <h2>🔑 1. Hyrje në Sistem</h2>
+            
+            <h3>1.1 Aksesi në Sistem</h3>
+            <div class="info">
+                <strong>URL Lokal:</strong> <code>https://10.5.20.31</code><br>
+                <strong>URL Publik:</strong> <code>https://legal.albpetrol.al</code>
+            </div>
+
+            <h3>1.2 Procesi i Identifikimit</h3>
+            
+            <h4>Hapi 1: Faqja e Hyrjes</h4>
+            <div class="steps">
+                <ol>
+                    <li>Hapni naviguesin dhe shkruani adresën e sistemit</li>
+                    <li>Do të shfaqet faqja e hyrjes me logon e Albpetrol</li>
+                    <li>Plotësoni fushat e kërkuara:
+                        <ul>
+                            <li><strong>Adresa e Email-it:</strong> Email-i juaj i regjistruar</li>
+                            <li><strong>Fjalëkalimi:</strong> Fjalëkalimi juaj</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+
+            <h4>Hapi 2: Verifikimi me Dy Faktorë (2FA)</h4>
+            <div class="steps">
+                <ol>
+                    <li>Pas shtypjes së "Kyçu", do të dërgohet kod verifikimi në email</li>
+                    <li>Kontrolloni kutinë e postës (dhe spam folder)</li>
+                    <li>Shkruani kodin 6-shifror</li>
+                    <li>Shtypni "Verifiko" për të hyrë</li>
+                </ol>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Kujdes:</strong> Kodi i verifikimit skadon pas 3 minutave!
+            </div>
+
+            <h3>1.3 Llojet e Përdoruesve</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Lloji</th>
+                            <th>Të Drejtat</th>
+                            <th>Kufizime</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Administrator</strong></td>
+                            <td>Aksesi i plotë në të gjitha funksionet</td>
+                            <td>Asnjë kufizim</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Përdorues i Rregullt</strong></td>
+                            <td>Shikon të gjitha çështjet, edito/fshin vetëm të vetat</td>
+                            <td>Nuk mund të fshijë çështje, aksesi i kufizuar</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="dashboard">
+            <h2>📊 2. Dashboard Kryesor</h2>
+            
+            <h3>2.1 Përmbledhja e Statistikave</h3>
+            <p>Në krye të dashboard-it shfaqen katër statistika kryesore:</p>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Statistika</th>
+                            <th>Përshkrimi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>📁 Totali i Çështjeve</td>
+                            <td>Numri i përgjithshëm i çështjeve të regjistruara</td>
+                        </tr>
+                        <tr>
+                            <td>📅 Çështjet e Sotme</td>
+                            <td>Çështjet e shtuar sot</td>
+                        </tr>
+                        <tr>
+                            <td>⚡ Çështjet Aktive</td>
+                            <td>Çështjet që janë në proces</td>
+                        </tr>
+                        <tr>
+                            <td>✅ Çështjet e Mbyllura</td>
+                            <td>Çështjet e përfunduara</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>2.2 Aktiviteti i Fundit</h3>
+            <p>Shfaq listën e aktiviteteve të fundit:</p>
+            <ul>
+                <li>Çështjet e shtuar së fundmi</li>
+                <li>Ndryshimet e bëra</li>
+                <li>Përdoruesit aktiv</li>
+            </ul>
+
+            <h3>2.3 Navigimi</h3>
+            <div class="info">
+                <strong>Menuja Anësore:</strong><br>
+                🏠 Dashboard - Faqja kryesore<br>
+                ➕ Shtimi i Çështjes - Për çështje të reja<br>
+                📋 Tabela e të Dhënave - Shikimi i të gjitha çështjeve<br>
+                👥 Menaxhimi i Përdoruesve - (Vetëm për admin)<br>
+                ⚙️ Cilësimet - Cilësimet personale dhe sistemit
+            </div>
+        </section>
+
+        <section id="ceshtje">
+            <h2>📝 3. Menaxhimi i Çështjeve</h2>
+            
+            <h3>3.1 Shtimi i Çështjes së Re</h3>
+            
+            <h4>Hapi 1: Aksesi në Formular</h4>
+            <div class="steps">
+                <ol>
+                    <li>Klikoni "Shtimi i Çështjes" në menu</li>
+                    <li>Do të hapet formulari i plotë</li>
+                </ol>
+            </div>
+
+            <h4>Hapi 2: të Dhënat Bazë</h4>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fusha</th>
+                            <th>Përshkrimi</th>
+                            <th>E Detyrueshme</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Nr. Rendor</td>
+                            <td>I gjeneruar automatikisht</td>
+                            <td>Po</td>
+                        </tr>
+                        <tr>
+                            <td>Emri i Palës</td>
+                            <td>Emri i plotë i palës së interesuar</td>
+                            <td>Po</td>
+                        </tr>
+                        <tr>
+                            <td>Objekti i Çështjes</td>
+                            <td>Përshkrim i shkurtër</td>
+                            <td>Po</td>
+                        </tr>
+                        <tr>
+                            <td>Lloji i Çështjes</td>
+                            <td>Kategoria e çështjes</td>
+                            <td>Po</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4>Hapi 3: të Dhënat e Gjykatës</h4>
+            <div class="info">
+                <strong>Gjykatat e Disponueshme:</strong><br>
+                • Gjykata e Apelit Tiranë<br>
+                • Gjykata e Shkallës së Parë Tiranë<br>
+                • Gjykata e Apelit Durrës<br>
+                • Gjykata e Shkallës së Parë Durrës<br>
+                • Gjykata e Apelit Vlorë<br>
+                • Dhe gjykata të tjera...
+            </div>
+
+            <h4>Hapi 4: Datat dhe Statusin</h4>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fusha</th>
+                            <th>Format</th>
+                            <th>Shembull</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Data e Fillimit</td>
+                            <td>DD/MM/YYYY</td>
+                            <td>15/08/2025</td>
+                        </tr>
+                        <tr>
+                            <td>Data e Fundit të Seancës</td>
+                            <td>DD/MM/YYYY</td>
+                            <td>10/08/2025</td>
+                        </tr>
+                        <tr>
+                            <td>Data e Seancës së Ardhshme</td>
+                            <td>DD/MM/YYYY (Opsionale)</td>
+                            <td>25/08/2025</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4>Hapi 5: Ruajtja</h4>
+            <div class="steps">
+                <ol>
+                    <li>Kontrolloni të gjitha fushat për saktësi</li>
+                    <li>Klikoni "Ruaj Çështjen"</li>
+                    <li>Sistemi shfaq mesazh konfirmimi</li>
+                    <li>Email njoftimi dërgohet automatikisht (nëse aktivizuar)</li>
+                </ol>
+            </div>
+
+            <div class="success">
+                <strong>✅ Sukses:</strong> Çdo çështje e re merr automatikisht një Nr. Rendor unik dhe dërgohet email njoftimi.
+            </div>
+
+            <h3>3.2 Editimi i Çështjes</h3>
+            <div class="steps">
+                <ol>
+                    <li>Shkoni te "Tabela e të Dhënave"</li>
+                    <li>Gjeni çështjen që doni të editoni</li>
+                    <li>Klikoni "Edito" në kolonën e veprimeve</li>
+                    <li>Ndryshoni fushat e dëshiruara</li>
+                    <li>Klikoni "Ruaj Ndryshimet"</li>
+                </ol>
+            </div>
+
+            <div class="info">
+                <strong>📝 Auditimi:</strong> Sistemi regjistron automatikisht kush, kur dhe çfarë ndryshoi në çdo çështje.
+            </div>
+        </section>
+
+        <section id="tabela">
+            <h2>📋 4. Tabela e të Dhënave</h2>
+            
+            <h3>4.1 Kolonat e Tabelës</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kolona</th>
+                            <th>Përshkrimi</th>
+                            <th>E Renditshme</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Nr. Rendor</td>
+                            <td>Numri unik i çështjes</td>
+                            <td>Po</td>
+                        </tr>
+                        <tr>
+                            <td>Emri i Palës</td>
+                            <td>Emri i palës së interesuar</td>
+                            <td>Po</td>
+                        </tr>
+                        <tr>
+                            <td>Objekti</td>
+                            <td>Përshkrimi i shkurtër</td>
+                            <td>Jo</td>
+                        </tr>
+                        <tr>
+                            <td>Gjykata</td>
+                            <td>Gjykata përgjegjëse</td>
+                            <td>Po</td>
+                        </tr>
+                        <tr>
+                            <td>Statusi</td>
+                            <td>Gjendja aktuale</td>
+                            <td>Po</td>
+                        </tr>
+                        <tr>
+                            <td>Data e Krijimit</td>
+                            <td>Kur u regjistrua</td>
+                            <td>Po</td>
+                        </tr>
+                        <tr>
+                            <td>Veprimet</td>
+                            <td>Shiko/Edito/Fshi</td>
+                            <td>Jo</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>4.2 Kërkimi dhe Filtrimi</h3>
+            <div class="info">
+                <strong>🔍 Kërkimi i Shpejtë:</strong><br>
+                • Shkruani çfarëdo termi në kutinë e kërkimit<br>
+                • Kërkimi bëhet në të gjitha kolonat<br>
+                • Rezultatet shfaqen në kohë reale
+            </div>
+
+            <h3>4.3 Navigimi në Faqe</h3>
+            <p>Sistemi shfaq 10 çështje për faqe. Përdorni butonat për navigim:</p>
+            <ul>
+                <li>⬅️ <strong>Mëparshme:</strong> Shko në faqen e mëparshme</li>
+                <li>➡️ <strong>Tjetër:</strong> Shko në faqen pasardhëse</li>
+                <li>📄 <strong>Faqe X nga Y:</strong> Informacion pozicioni</li>
+            </ul>
+
+            <h3>4.4 Veprimet mbi Çështjet</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Veprimi</th>
+                            <th>Përdorues i Rregullt</th>
+                            <th>Administrator</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>👁️ Shiko</td>
+                            <td>Të gjitha çështjet</td>
+                            <td>Të gjitha çështjet</td>
+                        </tr>
+                        <tr>
+                            <td>✏️ Edito</td>
+                            <td>Vetëm çështjet e veta</td>
+                            <td>Të gjitha çështjet</td>
+                        </tr>
+                        <tr>
+                            <td>🗑️ Fshi</td>
+                            <td>Nuk lejohet</td>
+                            <td>Të gjitha çështjet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="eksport">
+            <h2>📤 5. Eksportimi i të Dhënave</h2>
+            
+            <h3>5.1 Eksporti Excel (.xlsx)</h3>
+            <div class="steps">
+                <ol>
+                    <li>Shkoni te "Tabela e të Dhënave"</li>
+                    <li>Klikoni butonin "📊 Eksporto Excel"</li>
+                    <li>Fajli shkarkohet automatikisht</li>
+                    <li>Emri: <code>cesjtje_ligjore_YYYY-MM-DD.xlsx</code></li>
+                </ol>
+            </div>
+
+            <h3>5.2 Eksporti CSV (.csv)</h3>
+            <div class="steps">
+                <ol>
+                    <li>Klikoni butonin "📄 Eksporto CSV"</li>
+                    <li>Fajli shkarkohet si .csv</li>
+                    <li>Mund të hapet me Excel ose aplikacione të tjera</li>
+                </ol>
+            </div>
+
+            <h3>5.3 Përmbajtja e Eksportit</h3>
+            <div class="success">
+                <strong>✅ Karakteristikat:</strong><br>
+                • Të gjitha fushat e çështjeve<br>
+                • Headers në gjuhën shqipe<br>
+                • Formatimi i duhur i datave<br>
+                • Kodim UTF-8 për karakteret shqipe<br>
+                • të dhëna të plota pa kufizime
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Kujdes:</strong> Fajllat e eksportuar përmbajnë informacione sensitive. Ruajini në vende të sigurta.
+            </div>
+        </section>
+
+        <section id="perdorues">
+            <h2>👥 6. Menaxhimi i Përdoruesve (Admin)</h2>
+            
+            <div class="warning">
+                <strong>🔒 Aksesi i Kufizuar:</strong> Kjo seksion është i disponueshëm vetëm për administratorët.
+            </div>
+
+            <h3>6.1 Shtimi i Përdoruesit të Ri</h3>
+            <div class="steps">
+                <ol>
+                    <li>Shkoni te "Menaxhimi i Përdoruesve"</li>
+                    <li>Klikoni "➕ Shto Përdorues të Ri"</li>
+                    <li>Plotësoni formën:
+                        <ul>
+                            <li><strong>Email-i:</strong> Do të jetë username-i</li>
+                            <li><strong>Emri:</strong> Emri i përdoruesit</li>
+                            <li><strong>Mbiemri:</strong> Mbiemri i përdoruesit</li>
+                            <li><strong>Roli:</strong> Përdorues ose Administrator</li>
+                        </ul>
+                    </li>
+                    <li>Sistemi gjeneron fjalëkalim të përkohshëm</li>
+                    <li>Dërgojini të dhënat te përdoruesi i ri</li>
+                </ol>
+            </div>
+
+            <h3>6.2 Menaxhimi i Roleve</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Roli</th>
+                            <th>Përshkrimi</th>
+                            <th>Ndryshimi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>👤 User</td>
+                            <td>Përdorues i rregullt</td>
+                            <td>Klikim në dropdown</td>
+                        </tr>
+                        <tr>
+                            <td>👑 Admin</td>
+                            <td>Administrator i plotë</td>
+                            <td>Klikim në dropdown</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>6.3 Fshirja e Përdoruesve</h3>
+            <div class="steps">
+                <ol>
+                    <li>Gjeni përdoruesin në listë</li>
+                    <li>Klikoni butonin "🗑️ Fshi"</li>
+                    <li>Konfirmoni fshirjen</li>
+                </ol>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Kujdes:</strong> Përdoruesi default <code>it.system@albpetrol.al</code> nuk mund të fshihet për siguri.
+            </div>
+        </section>
+
+        <section id="cilesimet">
+            <h2>⚙️ 7. Cilësimet e Sistemit</h2>
+            
+            <h3>7.1 Ndryshimi i Fjalëkalimit</h3>
+            <div class="steps">
+                <ol>
+                    <li>Shkoni te "Cilësimet"</li>
+                    <li>Seksioni "Ndryshoni Fjalëkalimin"</li>
+                    <li>Plotësoni:
+                        <ul>
+                            <li>Fjalëkalimi aktual</li>
+                            <li>Fjalëkalimi i ri</li>
+                            <li>Konfirmimi i fjalëkalimit</li>
+                        </ul>
+                    </li>
+                    <li>Klikoni "💾 Ruaj Ndryshimet"</li>
+                </ol>
+            </div>
+
+            <h3>7.2 Kërkesat për Fjalëkalimin</h3>
+            <div class="info">
+                <strong>📋 Rregullat e Fjalëkalimit:</strong><br>
+                ✅ Minimumi 8 karaktere<br>
+                ✅ Të paktën një shkronjë të madhe (A-Z)<br>
+                ✅ Të paktën një numër (0-9)<br>
+                ✅ Të paktën një karakter special (!@#$%^&*)
+            </div>
+
+            <h3>7.3 Cilësimet e Sistemit (Admin)</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Informacioni</th>
+                            <th>Përshkrimi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>👥 Totali Përdoruesve</td>
+                            <td>Numri i përgjithshëm i përdoruesve</td>
+                        </tr>
+                        <tr>
+                            <td>📁 Totali Çështjeve</td>
+                            <td>Numri i përgjithshëm i çështjeve</td>
+                        </tr>
+                        <tr>
+                            <td>💾 Madhësia e DB</td>
+                            <td>Madhësia e bazës së të dhënave</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="email">
+            <h2>📧 8. Email Njoftimet</h2>
+            
+            <h3>8.1 Konfigurimi (Admin)</h3>
+            <div class="steps">
+                <ol>
+                    <li>Shkoni te "Cilësimet e Sistemit"</li>
+                    <li>Seksioni "Email Njoftimet"</li>
+                    <li>Aktivizoni/ç'aktivizoni njoftimet</li>
+                    <li>Shtoni email adresat për marrjen e njoftimeve</li>
+                    <li>Testoni me "📧 Testo Email"</li>
+                </ol>
+            </div>
+
+            <h3>8.2 Llojet e Njoftimeve</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Lloji</th>
+                            <th>Kur Dërgohet</th>
+                            <th>Përmbajtja</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>🆕 Çështje e Re</td>
+                            <td>Kur krijohet çështje</td>
+                            <td>Të gjitha detajet + Nr. Rendor</td>
+                        </tr>
+                        <tr>
+                            <td>✏️ Editimi</td>
+                            <td>Kur ndryshohet çështje</td>
+                            <td>Krahasimi Para/Pas + detajet</td>
+                        </tr>
+                        <tr>
+                            <td>🗑️ Fshirja</td>
+                            <td>Kur fshihet çështje</td>
+                            <td>të dhënat e plota të çështjes</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>8.3 Formati i Email-eve</h3>
+            <div class="info">
+                <strong>📮 Karakteristikat:</strong><br>
+                • Subject në shqip me identifikues të qartë<br>
+                • Përmbajtje e strukturuar në HTML<br>
+                • Logo e Albpetrol në header<br>
+                • Nënshkrim profesional<br>
+                • Formatim i bukur dhe i lexueshëm
+            </div>
+        </section>
+
+        <section id="siguria">
+            <h2>🔒 9. Siguria dhe Fjalëkalimet</h2>
+            
+            <h3>9.1 Verifikimi me Dy Faktorë (2FA)</h3>
+            <div class="warning">
+                <strong>🛡️ E Detyrueshme:</strong> Të gjithë përdoruesit (përfshi administratorët) duhet të përdorin 2FA.
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Aspekti</th>
+                            <th>Detaji</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>📧 Mënyra</td>
+                            <td>Email me kod 6-shifror</td>
+                        </tr>
+                        <tr>
+                            <td>⏰ Skadimi</td>
+                            <td>3 minuta pas dërgimit</td>
+                        </tr>
+                        <tr>
+                            <td>🔄 Ri-dërgimi</td>
+                            <td>Pasi të skadojë kodi i mëparshëm</td>
+                        </tr>
+                        <tr>
+                            <td>🎯 Qëllimi</td>
+                            <td>Mbrojtje nga aksesi i paautorizuar</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>9.2 Sesionet dhe Siguria</h3>
+            <div class="info">
+                <strong>🕐 Menaxhimi i Sesioneve:</strong><br>
+                • Kohëzgjatja: 7 ditë<br>
+                • Logout automatik pas inaktivitetit<br>
+                • Cookies të sigur me HTTPOnly dhe Secure flags<br>
+                • Mbrojtja nga CSRF me token-a të sigur
+            </div>
+
+            <h3>9.3 Kontrolli i Aksesit</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mbrojtja</th>
+                            <th>Kufiri</th>
+                            <th>Qëllimi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Rate Limiting (Të gjitha)</td>
+                            <td>100 kërkesa/15 min</td>
+                            <td>Mbrojtja nga spam</td>
+                        </tr>
+                        <tr>
+                            <td>Rate Limiting (Sensitive)</td>
+                            <td>50 kërkesa/15 min</td>
+                            <td>Mbrojtja e login/admin</td>
+                        </tr>
+                        <tr>
+                            <td>Content Security Policy</td>
+                            <td>Politika e rreptë</td>
+                            <td>Mbrojtja nga XSS</td>
+                        </tr>
+                        <tr>
+                            <td>HSTS</td>
+                            <td>1 vit</td>
+                            <td>HTTPS i detyrueshëm</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="probleme">
+            <h2>🚨 10. Problemet e Zakonshme</h2>
+            
+            <h3>10.1 Probleme me Hyrjen</h3>
+            
+            <h4>Problem: "Email ose fjalëkalim i gabuar"</h4>
+            <div class="steps">
+                <strong>Zgjidhja:</strong>
+                <ol>
+                    <li>Kontrolloni saktësinë e email-it (pa hapësira)</li>
+                    <li>Sigurohuni që fjalëkalimi është i saktë</li>
+                    <li>Kontrolloni nëse Caps Lock është aktivizuar</li>
+                    <li>Kontaktoni administratorin për rivendosje</li>
+                </ol>
+            </div>
+
+            <h4>Problem: "Shumë kërkesa, provoni më vonë"</h4>
+            <div class="steps">
+                <strong>Zgjidhja:</strong>
+                <ol>
+                    <li>Prisni 15 minuta</li>
+                    <li>Shmangni kliket e shumta të njëpasnjëshme</li>
+                    <li>Rifresko faqen dhe provoni përsëri</li>
+                    <li>Përdorni një IP tjetër nëse e mundur</li>
+                </ol>
+            </div>
+
+            <h3>10.2 Probleme me 2FA</h3>
+            
+            <h4>Problem: Nuk po marr kodin e verifikimit</h4>
+            <div class="steps">
+                <strong>Zgjidhja:</strong>
+                <ol>
+                    <li>Kontrolloni spam/junk folder-in</li>
+                    <li>Prisni disa minuta (mund të ketë vonesë)</li>
+                    <li>Kontrolloni filtrat e email-it</li>
+                    <li>Provoni të ri-dërgoni kodin</li>
+                    <li>Kontaktoni IT support</li>
+                </ol>
+            </div>
+
+            <h4>Problem: Kodi është skaduar</h4>
+            <div class="steps">
+                <strong>Zgjidhja:</strong>
+                <ol>
+                    <li>Kthehuni në faqen e hyrjes</li>
+                    <li>Ribëni login-in për kod të ri</li>
+                    <li>Shkruani kodin brenda 3 minutave</li>
+                </ol>
+            </div>
+
+            <h3>10.3 Probleme me Formularët</h3>
+            
+            <h4>Problem: Formulari nuk ruhet</h4>
+            <div class="steps">
+                <strong>Kontrolle:</strong>
+                <ol>
+                    <li>Të gjitha fushat e detyrueshme janë plotësuar?</li>
+                    <li>Datat janë në formatin e saktë?</li>
+                    <li>Ka lidhje me internetin?</li>
+                    <li>Browser-i është i përditësuar?</li>
+                </ol>
+            </div>
+
+            <h3>10.4 Probleme me Performance</h3>
+            
+            <h4>Problem: Sistemi është i ngadaltë</h4>
+            <div class="steps">
+                <strong>Optimizimi:</strong>
+                <ol>
+                    <li>Kontrolloni lidhjen me internetin</li>
+                    <li>Mbyllni tab-a të tjera të panevojshme</li>
+                    <li>Çaktivizoni extension-et e browser-it</li>
+                    <li>Rifresko faqen (Ctrl+F5)</li>
+                    <li>Provoni browser tjetër</li>
+                    <li>Ribootoni kompjuterin</li>
+                </ol>
+            </div>
+
+            <h3>10.5 Problemet me Eksportimin</h3>
+            
+            <h4>Problem: Fajlli nuk shkarkohet</h4>
+            <div class="steps">
+                <strong>Zgjidhja:</strong>
+                <ol>
+                    <li>Kontrolloni cilësimet e shkarkimeve</li>
+                    <li>Çaktivizoni ad-blocker-ët</li>
+                    <li>Lejoni popup-et për këtë faqe</li>
+                    <li>Provoni browser tjetër</li>
+                    <li>Kontrolloni hapësirën e lirë në disk</li>
+                </ol>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Nëse asnjë zgjidhje nuk funksionon:</strong><br>
+                1. Bëni screenshot të problemit<br>
+                2. Shkruani hapat që çuan në problem<br>
+                3. Kontaktoni mbështetjen teknike
+            </div>
+        </section>
+
+        <div class="contact-section">
+            <h3>📞 Kontakti për Mbështetje</h3>
+            <p><strong>Email Teknik:</strong> <code>it.system@albpetrol.al</code></p>
+            <p><strong>Subjekti:</strong> [MBËSHTETJE] Problema me Sistemin Legal</p>
+            
+            <h4>🛡️ Raporti i Problemeve të Sigurisë</h4>
+            <p><strong>Email:</strong> <code>it.system@albpetrol.al</code></p>
+            <p><strong>Subjekti:</strong> [SECURITY] Problema e Sigurisë</p>
+            
+            <hr style="margin: 20px 0; border-color: #7f8c8d;">
+            
+            <p style="font-size: 0.9em; color: #bdc3c7;">
+                <em>Manual i përditësuar më: 13 Gusht 2025</em><br>
+                <em>Versioni: 2.0</em><br>
+                <em>© 2025 Albpetrol - Sistemi i Menaxhimit të Çështjeve Ligjore</em>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling for table of contents
+        document.querySelectorAll('.toc a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll-to-top functionality
+        function addScrollToTop() {
+            const scrollButton = document.createElement('button');
+            scrollButton.innerHTML = '⬆️';
+            scrollButton.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: #ff6b35;
+                color: white;
+                border: none;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                cursor: pointer;
+                font-size: 20px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+                z-index: 1000;
+                transition: opacity 0.3s;
+                opacity: 0;
+            `;
+            
+            scrollButton.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            
+            document.body.appendChild(scrollButton);
+            
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    scrollButton.style.opacity = '1';
+                } else {
+                    scrollButton.style.opacity = '0';
+                }
+            });
+        }
+        
+        addScrollToTop();
+    </script>
+</body>
+</html>

@@ -2,7 +2,15 @@
 
 This is a full-stack data management system built with React and Express.js, designed for professional database operations with role-based access control. The application provides a comprehensive dashboard for managing data entries with features like user authentication, data visualization, and CRUD operations. It uses a modern tech stack including TypeScript, Tailwind CSS, Drizzle ORM for database management, and shadcn/ui components for a polished user interface.
 
-## Recent Changes (August 13, 2025)
+## Recent Changes (August 15, 2025)
+
+✓ **Critical Filtering and Sorting Fix**: Resolved non-functional filtering and sorting on production server by fixing backend API pagination response structure mismatch
+✓ **Backend API Response Correction**: Updated pagination field names from (page, limit, total) to (currentPage, itemsPerPage, totalItems) to match frontend expectations
+✓ **Production Deployment Synchronization**: Successfully synchronized development environment fixes to production server at https://legal.albpetrol.al
+✓ **Enhanced Search Functionality**: Confirmed comprehensive search across all case fields (paditesi, i paditur, gjykata, etc.) with debounced performance optimization
+✓ **Sorting Buttons Activation**: Enabled "Më të Rejat" and "Më të Vjetrat" sorting functionality with proper backend support and real-time UI updates
+
+## Previous Changes (August 13, 2025)
 
 ✓ **Production Deployment Guide**: Created comprehensive Ubuntu 24.04.3 LTS installation guide with step-by-step commands for production deployment
 ✓ **Security Vulnerability Analysis**: Analyzed and confirmed false positive in security scan - no actual hardcoded credentials found in server/email.ts

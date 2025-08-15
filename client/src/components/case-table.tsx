@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,21 +21,52 @@ import { useAuth } from "@/hooks/useAuth";
 import { CaseEditForm } from "@/components/case-edit-form";
 import type { DataEntry } from "@shared/schema";
 
+// Custom hook for debounced search
+function useDebounced<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
 export default function CaseTable() {
   const { toast } = useToast();
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc'); // desc = most recent first
+  const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
 
   const [editingCase, setEditingCase] = useState<DataEntry | null>(null);
   const [viewingCase, setViewingCase] = useState<DataEntry | null>(null);
+
+  // Debounce search term to avoid excessive API calls
+  const debouncedSearchTerm = useDebounced(searchTerm, 500);
+
+  // Memoized query key to ensure proper cache invalidation
+  const queryKey = useMemo(() => [
+    "/api/data-entries", 
+    { 
+      page: currentPage, 
+      search: debouncedSearchTerm,
+      sortOrder: sortOrder
+    }
+  ], [currentPage, debouncedSearchTerm, sortOrder]);
 
   const {
     data: response,
     isLoading,
     error,
+    refetch,
   } = useQuery<{
     entries: (DataEntry & { createdByName: string; nrRendor: number })[];
     pagination: {
@@ -45,12 +76,10 @@ export default function CaseTable() {
       itemsPerPage: number;
     };
   }>({
-    queryKey: ["/api/data-entries", { 
-      page: currentPage, 
-      search: searchTerm,
-      sortOrder: sortOrder
-    }],
+    queryKey,
     retry: false,
+    staleTime: 30000, // 30 seconds
+    gcTime: 5 * 60 * 1000, // 5 minutes
   });
 
   const deleteMutation = useMutation({
@@ -94,8 +123,8 @@ export default function CaseTable() {
     try {
       // Build query parameters to match current view
       const params = new URLSearchParams();
-      if (searchTerm) {
-        params.append('search', searchTerm);
+      if (debouncedSearchTerm) {
+        params.append('search', debouncedSearchTerm);
       }
       params.append('sortOrder', sortOrder);
       
@@ -144,6 +173,22 @@ export default function CaseTable() {
     setCurrentPage(1); // Reset to first page when sorting changes
   };
 
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1); // Reset to first page when search changes
+  };
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setSortOrder('desc');
+    setCurrentPage(1);
+  };
+
+  // Reset to first page when search term changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearchTerm, sortOrder]);
+
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "-";
     return new Date(dateString).toLocaleDateString("sq-AL");
@@ -158,6 +203,13 @@ export default function CaseTable() {
               <div className="text-center">
                 <h3 className="text-lg font-medium text-gray-900 mb-2">Gabim në ngarkimin e të dhënave</h3>
                 <p className="text-gray-500">{(error as any)?.message || "Ndodhi një gabim"}</p>
+                <Button 
+                  onClick={() => refetch()} 
+                  className="mt-4"
+                  variant="outline"
+                >
+                  Provo Përsëri
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -179,29 +231,49 @@ export default function CaseTable() {
         {/* Filters */}
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle>Filtrat</CardTitle>
+            <CardTitle>Filtrat dhe Kërkimi</CardTitle>
             <CardDescription>Përdorni filtrat për të kërkuar çështje specifike</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
                   placeholder="Kërkoni në të gjitha fushat (paditesi, i paditur, gjykata, etj.)..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => handleSearch(e.target.value)}
                   className="pl-10"
+                  data-testid="input-search-cases"
                 />
               </div>
 
+              <div className="flex space-x-2">
+                <Button
+                  variant={sortOrder === 'desc' ? 'default' : 'outline'}
+                  onClick={() => handleSort('desc')}
+                  className="flex-1"
+                  data-testid="button-sort-newest"
+                >
+                  <SortDesc className="h-4 w-4 mr-2" />
+                  Më të Rejat
+                </Button>
+                <Button
+                  variant={sortOrder === 'asc' ? 'default' : 'outline'}
+                  onClick={() => handleSort('asc')}
+                  className="flex-1"
+                  data-testid="button-sort-oldest"
+                >
+                  <SortAsc className="h-4 w-4 mr-2" />
+                  Më të Vjetrat
+                </Button>
+              </div>
+
               <Button
-                onClick={() => {
-                  setSearchTerm("");
-                  setCurrentPage(1);
-                }}
+                onClick={clearFilters}
                 variant="outline"
+                data-testid="button-clear-filters"
               >
-                Pastro Filtrin
+                Pastro Filtrat
               </Button>
             </div>
           </CardContent>
@@ -215,38 +287,19 @@ export default function CaseTable() {
                 <CardTitle>Çështjet Ligjore</CardTitle>
                 <CardDescription>
                   {response ? `${response.pagination?.totalItems || 0} çështje në total` : ""}
+                  {debouncedSearchTerm && ` (duke kërkuar: "${debouncedSearchTerm}")`}
+                  {sortOrder === 'desc' ? ' - Radhitur nga më të rejat' : ' - Radhitur nga më të vjetrat'}
                 </CardDescription>
               </div>
               <div className="flex flex-wrap gap-2">
-                {/* Sorting buttons */}
-                <div className="flex space-x-1">
-                  <Button
-                    variant={sortOrder === 'desc' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => handleSort('desc')}
-                    disabled={!response?.entries?.length}
-                  >
-                    <SortDesc className="h-4 w-4 mr-2" />
-                    Më të Rejat
-                  </Button>
-                  <Button
-                    variant={sortOrder === 'asc' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => handleSort('asc')}
-                    disabled={!response?.entries?.length}
-                  >
-                    <SortAsc className="h-4 w-4 mr-2" />
-                    Më të Vjetrat
-                  </Button>
-                </div>
-
                 {/* Export buttons */}
-                <div className="flex space-x-1 border-l pl-2 ml-2">
+                <div className="flex space-x-1">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => handleExport('excel')}
                     disabled={!response?.entries?.length}
+                    data-testid="button-export-excel"
                   >
                     <FileSpreadsheet className="h-4 w-4 mr-2" />
                     Excel
@@ -256,6 +309,7 @@ export default function CaseTable() {
                     size="sm"
                     onClick={() => handleExport('csv')}
                     disabled={!response?.entries?.length}
+                    data-testid="button-export-csv"
                   >
                     <Download className="h-4 w-4 mr-2" />
                     CSV
@@ -275,8 +329,24 @@ export default function CaseTable() {
             ) : !response?.entries?.length ? (
               <div className="flex items-center justify-center h-64">
                 <div className="text-center">
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Nuk u gjetën çështje</h3>
-                  <p className="text-gray-500">Nuk ka çështje të regjistruara aktualisht</p>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    {debouncedSearchTerm ? 'Nuk u gjetën rezultate' : 'Nuk u gjetën çështje'}
+                  </h3>
+                  <p className="text-gray-500">
+                    {debouncedSearchTerm 
+                      ? `Nuk ka çështje që përputhen me "${debouncedSearchTerm}"`
+                      : 'Nuk ka çështje të regjistruara aktualisht'
+                    }
+                  </p>
+                  {debouncedSearchTerm && (
+                    <Button 
+                      onClick={clearFilters} 
+                      className="mt-4"
+                      variant="outline"
+                    >
+                      Pastro Kërkimin
+                    </Button>
+                  )}
                 </div>
               </div>
             ) : (

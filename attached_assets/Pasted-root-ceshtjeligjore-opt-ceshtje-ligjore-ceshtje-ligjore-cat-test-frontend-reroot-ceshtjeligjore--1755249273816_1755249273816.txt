@@ -1,0 +1,37 @@
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# cat > test_frontend_reroot@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# cat > test_frontend_requests.sh << 'EOF'
+#!/bin/bashng with authentication..."
+echo "Testing with authentication..." making by examining the built JavaScript
+# Check what requests the frontend is making by examining the built JavaScript
+echo "Checking frontend query structure in built assets..."
+if [ -f dist/public/assets/index-*.js ]; thens | head -1)
+    JS_FILE=$(ls dist/public/assets/index-*.js | head -1)
+    echo "Found JS file: $JS_FILE"
+    # Look for the queryKey structure
+    # Look for the queryKey structure"$JS_FILE" | head -5
+    grep -o '/api/data-entries[^"]*' "$JS_FILE" | head -5
+    # Look for search parameter usage
+    # Look for search parameter usage | head -3
+    grep -o 'search[^,}]*' "$JS_FILE" | head -3
+fiCheck if the frontend is using the correct query parameters
+# Check if the frontend is using the correct query parametersers..."
+echo "Checking if frontend sends search and sortOrder parameters...".*useMemo"
+cat client/src/components/case-table.tsx | grep -A 10 -B 5 "queryKey.*useMemo"
+echo "Checking if search term is properly used in query..."search" client/src/cogrep -n "search.*debouncedSearchTerm\|debouncedSearchTerm.*search" client/src/components/case-table.tsx
+EOFod +x test_frontend_requests.sh
+chmod +x test_frontend_requests.sh
+./test_frontend_requests.sh
+Testing with authentication...
+Checking frontend query structure in built assets...
+Found JS file: dist/public/assets/index-DXnceauS.js
+/api/data-entries
+/api/data-entries
+/api/data-entries/${e.id}`,
+/api/data-entries
+/api/data-entries/${P}`,
+search:!0
+search"||e.type==="tel"||e.type==="url"||e.type==="password")||t==="textarea"||e.contentEditable==="true")
+search
+Checking if frontend sends search and sortOrder parameters...
+Checking if search term is properly used in query...
+53:  const debouncedSearchTerm = useDebounced(searchTerm, 500);
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore#

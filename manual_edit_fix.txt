@@ -1,0 +1,79 @@
+MANUAL EDIT APPROACH:
+
+After restoring from backup, use nano to edit the file manually:
+
+nano client/src/components/case-table.tsx
+
+Then make these specific changes:
+
+1. Change the imports at the top:
+   FROM: import { useState } from "react";
+   TO:   import { useState, useEffect, useMemo } from "react";
+
+2. Add this function after the imports (around line 22):
+   // Custom hook for debounced search
+   function useDebounced<T>(value: T, delay: number): T {
+     const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+     useEffect(() => {
+       const handler = setTimeout(() => {
+         setDebouncedValue(value);
+       }, delay);
+
+       return () => {
+         clearTimeout(handler);
+       };
+     }, [value, delay]);
+
+     return debouncedValue;
+   }
+
+3. Add these lines after the existing state declarations (around line 45):
+   // Debounce search term to avoid excessive API calls
+   const debouncedSearchTerm = useDebounced(searchTerm, 500);
+
+   // Memoized query key to ensure proper cache invalidation
+   const queryKey = useMemo(() => [
+     "/api/data-entries", 
+     { 
+       page: currentPage, 
+       search: debouncedSearchTerm,
+       sortOrder: sortOrder
+     }
+   ], [currentPage, debouncedSearchTerm, sortOrder]);
+
+4. Update the useQuery to use the new queryKey:
+   FROM: queryKey: ["/api/data-entries", { page: currentPage, search: searchTerm, sortOrder: sortOrder }],
+   TO:   queryKey,
+
+5. Add refetch to the useQuery options and add these options:
+   refetch,
+   staleTime: 30000, // 30 seconds
+   gcTime: 5 * 60 * 1000, // 5 minutes
+
+6. Replace searchTerm with debouncedSearchTerm in the handleExport function
+
+7. Add these new handler functions before the formatDate function:
+   const handleSearch = (value: string) => {
+     setSearchTerm(value);
+     setCurrentPage(1); // Reset to first page when search changes
+   };
+
+   const clearFilters = () => {
+     setSearchTerm("");
+     setSortOrder('desc');
+     setCurrentPage(1);
+   };
+
+   // Reset to first page when search term changes
+   useEffect(() => {
+     setCurrentPage(1);
+   }, [debouncedSearchTerm, sortOrder]);
+
+8. Update the search input onChange:
+   FROM: onChange={(e) => setSearchTerm(e.target.value)}
+   TO:   onChange={(e) => handleSearch(e.target.value)}
+
+9. Update the filter section to include sorting buttons and use the new layout
+
+Save with Ctrl+O, Enter, then Ctrl+X to exit nano.

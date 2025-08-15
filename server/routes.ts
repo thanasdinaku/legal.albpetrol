@@ -167,10 +167,10 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
       res.json({
         entries,
         pagination: {
-          page: pageNum,
-          limit: limitNum,
-          total,
+          currentPage: pageNum,
           totalPages: Math.ceil(total / limitNum),
+          totalItems: total,
+          itemsPerPage: limitNum,
         },
       });
     } catch (error) {

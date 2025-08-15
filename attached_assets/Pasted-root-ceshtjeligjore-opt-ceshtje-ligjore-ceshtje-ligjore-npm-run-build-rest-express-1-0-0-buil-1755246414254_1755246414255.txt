@@ -1,0 +1,68 @@
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# npm run build
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bu                                                                                                                                                             ndle --format=esm --outdir=dist
+
+vite v5.4.19 building for production...
+transforming (3) src/main.tsxBrowserslist: browsers data (caniuse-lite) is 10 mo                                                                                                                                                             nths old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#read                                                                                                                                                             me
+✓ 65 modules transformed.
+x Build failed in 1.09s
+error during build:
+[vite:esbuild] Transform failed with 1 error:
+/opt/ceshtje_ligjore/ceshtje_ligjore/client/src/components/case-table.tsx:39:9:                                                                                                                                                              ERROR: Expected ";" but found ":"
+file: /opt/ceshtje_ligjore/ceshtje_ligjore/client/src/components/case-table.tsx:                                                                                                                                                             39:9
+
+Expected ";" but found ":"
+37 |  queryKey,
+38 |  refetch,
+39 |  staleTime: 30000,
+   |           ^
+40 |  gcTime: 5 * 60 * 1000,
+41 |
+
+    at failureErrorWithLog (/opt/ceshtje_ligjore/ceshtje_ligjore/node_modules/vi                                                                                                                                                             te/node_modules/esbuild/lib/main.js:1472:15)
+    at /opt/ceshtje_ligjore/ceshtje_ligjore/node_modules/vite/node_modules/esbui                                                                                                                                                             ld/lib/main.js:755:50
+    at responseCallbacks.<computed> (/opt/ceshtje_ligjore/ceshtje_ligjore/node_m                                                                                                                                                             odules/vite/node_modules/esbuild/lib/main.js:622:9)
+    at handleIncomingPacket (/opt/ceshtje_ligjore/ceshtje_ligjore/node_modules/v                                                                                                                                                             ite/node_modules/esbuild/lib/main.js:677:12)
+    at Socket.readFromStdout (/opt/ceshtje_ligjore/ceshtje_ligjore/node_modules/                                                                                                                                                             vite/node_modules/esbuild/lib/main.js:600:7)
+    at Socket.emit (node:events:524:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# nano client/src/compon                                                                                                                                                             ents/case-table.tsx
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# cp client/src/components/case-table.tsx.backup client/src/components/case-table.tsx
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# wc -l client/src/components/case-table.tsx
+0 client/src/components/case-table.tsx
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# git checkout HEAD -- client/src/components/case-table.tsx
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# ls -la client_backup_*/src/components/case-table.tsx
+-rw-r--r-- 1 root root 24416 Aug 14 21:02 client_backup_20250814_210222/src/components/case-table.tsx
+-rw-r--r-- 1 root root 24416 Aug 15 07:50 client_backup_20250815_075056/src/components/case-table.tsx
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# cp client_backup_20250815_*/src/components/case-table.tsx client/src/components/case-table.tsx
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# npm run build
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.19 building for production...
+Browserslist: browsers data (caniuse-lite) is 10 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2152 modules transformed.
+../dist/public/index.html                                         1.04 kB │ gzip:   0.58 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-DeFfSDSf.css                         71.43 kB │ gzip:  12.57 kB
+../dist/public/assets/index-DRktOb17.js                         594.25 kB │ gzip: 173.88 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.73s
+
+  dist/index.js  119.1kb
+
+⚡ Done in 7ms
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore#

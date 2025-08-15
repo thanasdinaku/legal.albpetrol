@@ -1,0 +1,39 @@
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# cat > debug_production_api.sh << 'EOF'
+#!/bin/bash
+echo "Testing API endpoint response structure..."
+curl -s -X GET "http://localhost:5000/api/data-entries?page=1&limit=10" -H "Accept: application/json" | head -20
+echo "Checking pagination fields in server code..."
+grep -A 10 "pagination:" server/routes.ts
+echo "Testing search functionality..."
+curl -s -X GET "http://localhost:5000/api/data-entries?search=test&page=1&limit=10" -H "Accept: application/json" | head -10
+echo "Recent service logs..."
+journalctl -u albpetrol-legal -n 10 --no-pager
+EOF
+chmod +x debug_production_api.sh
+./debug_production_api.sh
+Testing API endpoint response structure...
+{"message":"Unauthorized"}Checking pagination fields in server code...
+        pagination: {
+     currentPage: pageNum,
+     itemsPerPage: limitNum,
+     totalItems: total,
+     totalPages: Math.ceil(total / limitNum),
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching data entries:", error);
+      res.status(500).json({ message: "Failed to fetch data entries" });
+    }
+Testing search functionality...
+{"message":"Unauthorized"}Recent service logs...
+Aug 15 09:07:23 ceshtjeligjore albpetrol-legal[161467]: 9:07:23 AM [express] POST /api/login 200 in 2096ms :: {"requiresTwoFactor":true,"userId":"8e429db7-1…
+Aug 15 09:07:44 ceshtjeligjore albpetrol-legal[161467]: 9:07:44 AM [express] POST /api/verify-2fa 200 in 20ms :: {"id":"8e429db7-15ae-4cbf-a807-7f4e365a0264…
+Aug 15 09:07:44 ceshtjeligjore albpetrol-legal[161467]: 9:07:44 AM [express] GET /api/dashboard/stats 304 in 5ms :: {"totalEntries":6,"todayEntries":2,"acti…
+Aug 15 09:07:44 ceshtjeligjore albpetrol-legal[161467]: 9:07:44 AM [express] GET /api/dashboard/recent-entries 304 in 12ms :: [{"id":7,"paditesi":"dffdsf","…
+Aug 15 09:07:46 ceshtjeligjore albpetrol-legal[161467]: 9:07:46 AM [express] GET /api/admin/users 200 in 7ms :: [{"id":"b4c949ef-5348-40f9-a347-b6bb365278e2…
+Aug 15 09:07:46 ceshtjeligjore albpetrol-legal[161467]: 9:07:46 AM [express] GET /api/admin/user-stats 200 in 14ms :: {"totalUsers":3,"adminUsers":2,"regula…
+Aug 15 09:07:48 ceshtjeligjore albpetrol-legal[161467]: 9:07:48 AM [express] GET /api/data-entries 304 in 7ms :: {"entries":[{"id":7,"paditesi":"dffdsf","iP…
+Aug 15 09:07:51 ceshtjeligjore albpetrol-legal[161467]: 9:07:51 AM [express] GET /api/data-entries 304 in 6ms :: {"entries":[{"id":7,"paditesi":"dffdsf","iP…
+Aug 15 09:11:21 ceshtjeligjore albpetrol-legal[161467]: 9:11:21 AM [express] GET /api/data-entries 401 in 1ms :: {"message":"Unauthorized"}
+Aug 15 09:11:21 ceshtjeligjore albpetrol-legal[161467]: 9:11:21 AM [express] GET /api/data-entries 401 in 0ms :: {"message":"Unauthorized"}
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore#

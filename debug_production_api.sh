@@ -1,55 +1,53 @@
 #!/bin/bash
-# Deep diagnostic script for production API debugging
+# Debug the actual Edit button issue on production
 
-echo "🔍 Comprehensive production API debugging..."
+echo "🔍 Debugging Edit button redirect issue..."
 
-# 1. Check if the API endpoint responds correctly
-echo "1. Testing API endpoint response structure..."
-curl -s -X GET "https://legal.albpetrol.al/api/data-entries?page=1&limit=10" \
-  -H "Accept: application/json" \
-  -H "Cookie: connect.sid=test" | jq '.' || echo "API not responding with JSON"
+cd /opt/ceshtje_ligjore/ceshtje_ligjore
 
-# 2. Check local API response structure
-echo "2. Testing local API response..."
-curl -s -X GET "http://localhost:5000/api/data-entries?page=1&limit=10" \
-  -H "Accept: application/json" | jq '.' || echo "Local API not responding"
+# Check the actual current structure of the Edit button
+echo "Current Edit button implementation:"
+grep -A 5 -B 5 "Edit.*h-4 w-4" client/src/components/case-table.tsx
 
-# 3. Verify pagination field names in current build
-echo "3. Checking pagination fields in current server code..."
-grep -A 10 "pagination:" server/routes.ts
+echo -e "\n=== Checking for Link components or navigation elements ==="
+grep -n "Link\|href\|navigate\|router" client/src/components/case-table.tsx
 
-# 4. Check if the built server has the correct structure
-echo "4. Checking built server file..."
-if [ -f "dist/index.js" ]; then
-    grep -A 5 -B 5 "pagination" dist/index.js || echo "No pagination found in built file"
-else
-    echo "Built file dist/index.js not found"
-fi
+echo -e "\n=== Checking the Edit dialog implementation ==="
+grep -A 10 -B 5 "editingCase &&" client/src/components/case-table.tsx
 
-# 5. Check service logs for errors
-echo "5. Recent service logs..."
-journalctl -u albpetrol-legal -n 20 --no-pager
+echo -e "\n=== Checking CaseEditForm component ==="
+ls -la client/src/components/case-edit-form.tsx
+head -20 client/src/components/case-edit-form.tsx
 
-# 6. Test with authentication
-echo "6. Testing with proper session..."
-COOKIE=$(curl -s -c - -X POST "https://legal.albpetrol.al/api/auth/login" \
-  -H "Content-Type: application/json" \
-  -d '{"email":"it.system@albpetrol.al","password":"admin123"}' | grep connect.sid | awk '{print $7}')
+echo -e "\n=== Checking for any Table row click handlers ==="
+grep -A 5 -B 5 "TableRow.*onClick\|onClick.*TableRow" client/src/components/case-table.tsx
 
-if [ ! -z "$COOKIE" ]; then
-    echo "Testing authenticated API call..."
-    curl -s -X GET "https://legal.albpetrol.al/api/data-entries?page=1&limit=10&search=test" \
-      -H "Accept: application/json" \
-      -H "Cookie: connect.sid=$COOKIE" | jq '.pagination' || echo "Authenticated API failed"
-else
-    echo "Failed to get authentication cookie"
-fi
+echo -e "\n=== Looking for any form elements that might cause navigation ==="
+grep -n "form\|Form\|action\|submit" client/src/components/case-table.tsx
 
-echo "7. Checking frontend JavaScript for query structure..."
-if [ -f "dist/public/assets/index-*.js" ]; then
-    JS_FILE=$(ls dist/public/assets/index-*.js | head -1)
-    echo "Checking query structure in: $JS_FILE"
-    grep -o 'queryKey.*search.*sortOrder' "$JS_FILE" | head -3 || echo "No query structure found"
-fi
+echo -e "\n=== Checking the actual button structure around Edit ==="
+grep -A 15 -B 5 "canUserModifyEntry" client/src/components/case-table.tsx
 
-echo "Debug complete!"
+echo -e "\n=== Checking for any <a> tags or navigation elements ==="
+grep -n "<a\|</a>" client/src/components/case-table.tsx
+
+echo -e "\n=== Testing if CaseEditForm import works ==="
+node -e "
+try {
+  const fs = require('fs');
+  const content = fs.readFileSync('client/src/components/case-edit-form.tsx', 'utf8');
+  if (content.includes('export function CaseEditForm') || content.includes('export { CaseEditForm }')) {
+    console.log('✅ CaseEditForm export found');
+  } else {
+    console.log('❌ CaseEditForm export not found');
+  }
+} catch (e) {
+  console.log('❌ Error reading case-edit-form.tsx:', e.message);
+}
+"
+
+echo -e "\n=== Checking for JavaScript errors in browser console ==="
+echo "To test: Open browser dev tools, go to Case Management, click Edit button, check console for errors"
+
+echo -e "\n=== Current TypeScript compilation status ==="
+npm run build 2>&1 | head -20

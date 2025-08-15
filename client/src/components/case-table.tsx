@@ -57,7 +57,8 @@ export default function CaseTable() {
     "/api/data-entries", 
     { 
       page: currentPage, 
-      search: debouncedSearchTerm,
+      limit: 10,
+      search: debouncedSearchTerm || undefined,
       sortOrder: sortOrder
     }
   ], [currentPage, debouncedSearchTerm, sortOrder]);
@@ -78,8 +79,8 @@ export default function CaseTable() {
   }>({
     queryKey,
     retry: false,
-    staleTime: 30000, // 30 seconds
-    gcTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 0, // Always fresh for search/sort
+    gcTime: 1 * 60 * 1000, // 1 minute
   });
 
   const deleteMutation = useMutation({
@@ -171,11 +172,15 @@ export default function CaseTable() {
   const handleSort = (order: 'desc' | 'asc') => {
     setSortOrder(order);
     setCurrentPage(1); // Reset to first page when sorting changes
+    // Force refresh by invalidating cache
+    queryClient.invalidateQueries({ queryKey: ["/api/data-entries"] });
   };
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
     setCurrentPage(1); // Reset to first page when search changes
+    // Force refresh by invalidating cache
+    queryClient.invalidateQueries({ queryKey: ["/api/data-entries"] });
   };
 
   const clearFilters = () => {

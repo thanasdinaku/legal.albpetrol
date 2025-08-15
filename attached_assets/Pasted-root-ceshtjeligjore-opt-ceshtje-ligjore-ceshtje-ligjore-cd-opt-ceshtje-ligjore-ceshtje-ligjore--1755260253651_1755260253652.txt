@@ -1,0 +1,86 @@
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# cd /opt/ceshtje_ligjore/ceshtje_ligjore
+
+cat > complete_debugging_solution.sh << 'EOF'
+#!/bin/bash
+# Complete debugging solution for production server
+
+echo "🔧 Complete debugging and fix for production server..."
+
+cd /opt/ceshtje_ligjore/ceshtje_ligjore
+
+echo "=== STEP 1: BACKUP AND ANALYZE ==="
+cp server/routes.ts server/routes.ts.debug.backup.$(date +%Y%m%d_%H%M%S)
+
+echo "Current routes.ts file end (last 20 lines):"
+tail -20 server/routes.ts
+
+echo ""
+echo "=== STEP 2: IDENTIFY DUPLICATE BRACES ==="
+echo "Lines around the syntax error:"
+sed -n '865,880p' server/routes.ts | nl -ba
+
+echo ""
+./complete_debugging_solution.shtion.shserver/routes.tsgerual"10.5.20.31 || echo
+🔧 Complete debugging and fix for production server...
+=== STEP 1: BACKUP AND ANALYZE ===
+Current routes.ts file end (last 20 lines):
+  });
+
+  // HTML Manual route (fallback)
+  app.get("/api/manual/html", isAuthenticated, async (req: any, res) => {
+    try {
+      const htmlContent = generateSimpleManual();
+
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.send(htmlContent);
+    } catch (error) {
+      console.error("Error generating HTML manual:", error);
+      res.status(500).json({ message: "Failed to generate user manual" });
+    }
+  });
+
+  const httpServer = createServer(app);
+  return httpServer;
+}
+    }
+  });
+
+=== STEP 2: IDENTIFY DUPLICATE BRACES ===
+Lines around the syntax error:
+     1        console.error("Error generating HTML manual:", error);
+     2        res.status(500).json({ message: "Failed to generate user manual" });
+     3      }
+     4    });
+     5
+     6    const httpServer = createServer(app);
+     7    return httpServer;
+     8  }
+     9      }
+    10    });
+
+=== STEP 3: CREATE CLEAN ROUTES FILE ===
+Clean file ending:
+  });
+
+  const httpServer = createServer(app);
+  return httpServer;
+}
+
+=== STEP 4: SYNTAX VERIFICATION ===
+node:internal/modules/esm/get_format:189
+  throw new ERR_UNKNOWN_FILE_EXTENSION(ext, filepath);
+        ^
+
+TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".ts" for /opt/ceshtje_ligjore/ceshtje_ligjore/server/routes.ts
+    at Object.getFileProtocolModuleFormat [as file:] (node:internal/modules/esm/get_format:189:9)
+    at defaultGetFormat (node:internal/modules/esm/get_format:232:36)
+    at checkSyntax (node:internal/main/check_syntax:69:20) {
+  code: 'ERR_UNKNOWN_FILE_EXTENSION'
+}
+
+Node.js v20.19.4
+❌ Syntax check FAILED
+Restoring backup...
+
+=== DEBUGGING COMPLETE ===
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore#

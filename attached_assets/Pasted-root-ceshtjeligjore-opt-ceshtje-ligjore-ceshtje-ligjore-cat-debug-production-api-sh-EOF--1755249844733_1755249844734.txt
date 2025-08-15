@@ -1,0 +1,186 @@
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# cat > debug_production_api.sh << 'EOF'
+#!/bin/bash
+echo "Testing API endpoint response structure..."
+curl -s -X GET "http://localhost:5000/api/data-entries?page=1&limit=10" -H "Accept: application/json" | head -20
+echo "Checking pagination fields in server code..."
+grep -A 10 "pagination:" server/routes.ts
+echo "Testing search functionality..."
+curl -s -X GET "http://localhost:5000/api/data-entries?search=test&page=1&limit=10" -H "Accept: application/json" | head -10
+echo "Recent service logs..."
+journalctl -u albpetrol-legal -n 10 --no-pager
+EOF
+chmod +x debug_production_api.sh
+./debug_production_api.sh
+Testing API endpoint response structure...
+{"message":"Unauthorized"}Checking pagination fields in server code...
+        pagination: {
+     currentPage: pageNum,
+     itemsPerPage: limitNum,
+     totalItems: total,
+     totalPages: Math.ceil(total / limitNum),
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching data entries:", error);
+      res.status(500).json({ message: "Failed to fetch data entries" });
+    }
+Testing search functionality...
+{"message":"Unauthorized"}Recent service logs...
+Aug 15 09:07:23 ceshtjeligjore albpetrol-legal[161467]: 9:07:23 AM [express] POST /api/login 200 in 2096ms :: {"requiresTwoFactor":true,"userId":"8e429db7-1…
+Aug 15 09:07:44 ceshtjeligjore albpetrol-legal[161467]: 9:07:44 AM [express] POST /api/verify-2fa 200 in 20ms :: {"id":"8e429db7-15ae-4cbf-a807-7f4e365a0264…
+Aug 15 09:07:44 ceshtjeligjore albpetrol-legal[161467]: 9:07:44 AM [express] GET /api/dashboard/stats 304 in 5ms :: {"totalEntries":6,"todayEntries":2,"acti…
+Aug 15 09:07:44 ceshtjeligjore albpetrol-legal[161467]: 9:07:44 AM [express] GET /api/dashboard/recent-entries 304 in 12ms :: [{"id":7,"paditesi":"dffdsf","…
+Aug 15 09:07:46 ceshtjeligjore albpetrol-legal[161467]: 9:07:46 AM [express] GET /api/admin/users 200 in 7ms :: [{"id":"b4c949ef-5348-40f9-a347-b6bb365278e2…
+Aug 15 09:07:46 ceshtjeligjore albpetrol-legal[161467]: 9:07:46 AM [express] GET /api/admin/user-stats 200 in 14ms :: {"totalUsers":3,"adminUsers":2,"regula…
+Aug 15 09:07:48 ceshtjeligjore albpetrol-legal[161467]: 9:07:48 AM [express] GET /api/data-entries 304 in 7ms :: {"entries":[{"id":7,"paditesi":"dffdsf","iP…
+Aug 15 09:07:51 ceshtjeligjore albpetrol-legal[161467]: 9:07:51 AM [express] GET /api/data-entries 304 in 6ms :: {"entries":[{"id":7,"paditesi":"dffdsf","iP…
+Aug 15 09:11:21 ceshtjeligjore albpetrol-legal[161467]: 9:11:21 AM [express] GET /api/data-entries 401 in 1ms :: {"message":"Unauthorized"}
+Aug 15 09:11:21 ceshtjeligjore albpetrol-legal[161467]: 9:11:21 AM [express] GET /api/data-entries 401 in 0ms :: {"message":"Unauthorized"}
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# cat > test_frontend_reroot@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# cat > test_frontend_requests.sh << 'EOF'
+#!/bin/bashng with authentication..."
+echo "Testing with authentication..." making by examining the built JavaScript
+# Check what requests the frontend is making by examining the built JavaScript
+echo "Checking frontend query structure in built assets..."
+if [ -f dist/public/assets/index-*.js ]; thens | head -1)
+    JS_FILE=$(ls dist/public/assets/index-*.js | head -1)
+    echo "Found JS file: $JS_FILE"
+    # Look for the queryKey structure
+    # Look for the queryKey structure"$JS_FILE" | head -5
+    grep -o '/api/data-entries[^"]*' "$JS_FILE" | head -5
+    # Look for search parameter usage
+    # Look for search parameter usage | head -3
+    grep -o 'search[^,}]*' "$JS_FILE" | head -3
+fiCheck if the frontend is using the correct query parameters
+# Check if the frontend is using the correct query parametersers..."
+echo "Checking if frontend sends search and sortOrder parameters...".*useMemo"
+cat client/src/components/case-table.tsx | grep -A 10 -B 5 "queryKey.*useMemo"
+echo "Checking if search term is properly used in query..."search" client/src/cogrep -n "search.*debouncedSearchTerm\|debouncedSearchTerm.*search" client/src/components/case-table.tsx
+EOFod +x test_frontend_requests.sh
+chmod +x test_frontend_requests.sh
+./test_frontend_requests.sh
+Testing with authentication...
+Checking frontend query structure in built assets...
+Found JS file: dist/public/assets/index-DXnceauS.js
+/api/data-entries
+/api/data-entries
+/api/data-entries/${e.id}`,
+/api/data-entries
+/api/data-entries/${P}`,
+search:!0
+search"||e.type==="tel"||e.type==="url"||e.type==="password")||t==="textarea"||e.contentEditable==="true")
+search
+Checking if frontend sends search and sortOrder parameters...
+Checking if search term is properly used in query...
+53:  const debouncedSearchTerm = useDebounced(searchTerm, 500);
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# cat > fix_caching_issue.sh << 'EOF'
+#!/bin/bash
+echo "Fixing caching issue that prevents search from working..."
+# 1. Temporarily disable aggressive caching for debugging
+cp client/src/lib/queryClient.ts client/src/lib/queryClient.ts.backup
+# 2. Reduce cache time and add search-specific cache clearing
+sed -i 's/cache.set(url, data, 120000);/\/\/ cache.set(url, data, 120000); \/\/ Temporarily disabled/' client/src/lib/queryClient.ts
+sed -i 's/staleTime: 1000 \* 60 \* 10,/staleTime: 0, \/\/ Disable stale time for testing/' client/src/lib/queryClient.ts
+# 3. Build with cache fix
+npm run build
+# 4. Restart service
+systemctl restart albpetrol-legal
+# 5. Test search functionality
+sleep 3
+echo "Testing search API with authentication..."
+# Get a session cookie by logging in
+echo "Getting authentication token..."
+curl -s -c cookies.txt -X POST "http://localhost:5000/api/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"it.system@albpetrol.al","password":"admin123"}'
+# Test search with authentication
+./fix_caching_issue.shssue.she the cache fix permanent."the website now."nd"c&pa
+Fixing caching issue that prevents search from working...
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.19 building for production...
+transforming (3) src/main.tsxBrowserslist: browsers data (caniuse-lite) is 10 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2152 modules transformed.
+../dist/public/index.html                                         1.04 kB │ gzip:   0.58 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-DeFfSDSf.css                         71.43 kB │ gzip:  12.57 kB
+../dist/public/assets/index-DXnceauS.js                         594.41 kB │ gzip: 173.93 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.55s
+
+  dist/index.js  119.1kb
+
+⚡ Done in 10ms
+Testing search API with authentication...
+Getting authentication token...
+{"message":"Invalid email or password"}Testing search with 'test' parameter...
+No totalItems found
+Testing sort with desc parameter...
+No totalItems found
+Cache fix applied! Test the search and sorting on the website now.
+If it works, we can make the cache fix permanent.
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# chmod +x complete_debugging_solution.sh
+./complete_debugging_solution.sh
+chmod: cannot access 'complete_debugging_solution.sh': No such file or directory
+-bash: ./complete_debugging_solution.sh: No such file or directory
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# cat > complete_debugging_solution.sh << 'EOF'
+#!/bin/bash
+echo "=== COMPREHENSIVE FILTERING/SORTING FIX ==="
+# 1. Add debug logging to backend
+echo "1. Adding debug logging..."
+cat >> server/routes.ts << 'LOGGING_EOF'
+  // Debug endpoint to see what parameters frontend sends
+  app.get('/api/debug/request-params', isAuthenticated, (req: any, res) => {
+    console.log('=== FRONTEND REQUEST DEBUG ===');
+    console.log('Query params received:', req.query);
+    console.log('Search:', req.query.search);
+    console.log('Sort:', req.query.sortOrder);
+    console.log('Page:', req.query.page);
+    res.json({ received: req.query, timestamp: new Date().toISOString() });
+  });
+LOGGING_EOF
+# 2. Create a simple test version of case table with explicit URL building
+echo "2. Creating debug version of case table..."
+cat > client/src/components/case-table-debug.tsx << 'COMP_EOF'
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";./complete_debugging_solution.shtion.shd the API URL being called"s/case-table.t
+=== COMPREHENSIVE FILTERING/SORTING FIX ===
+1. Adding debug logging...
+2. Creating debug version of case table...
+3. Building debug version...
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.19 building for production...
+transforming (3) src/main.tsxBrowserslist: browsers data (caniuse-lite) is 10 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2151 modules transformed.
+../dist/public/index.html                                         1.04 kB │ gzip:   0.59 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-Dx2HrjJG.css                         71.06 kB │ gzip:  12.50 kB
+../dist/public/assets/index-CJRj6m52.js                         574.99 kB │ gzip: 171.19 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.56s
+
+  dist/index.js  119.5kb
+
+⚡ Done in 7ms
+✅ Debug version deployed!
+Go to: https://legal.albpetrol.al/data-table
+You should see 'DEBUG VERSION' and the API URL being called
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore#

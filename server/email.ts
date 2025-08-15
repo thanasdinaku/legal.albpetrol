@@ -64,18 +64,27 @@ export async function sendTwoFactorCode(
   `;
 
   const mailOptions = {
-    from: process.env.EMAIL_FROM,
+    from: process.env.SMTP_FROM || process.env.SMTP_USER || 'noreply@albpetrol.al',
     to: user.email,
     subject: 'Kodi i Verifikimit - Albpetrol SH.A.',
     html: htmlContent,
   };
 
   try {
+    console.log(`Attempting to send 2FA code to: ${user.email}`);
+    console.log(`SMTP Config: Host: ${process.env.SMTP_HOST}, Port: ${process.env.SMTP_PORT}, User: ${process.env.SMTP_USER ? 'configured' : 'missing'}`);
+    console.log(`From address: ${mailOptions.from}`);
+    
     await transporter.sendMail(mailOptions);
-    console.log(`Two-factor code sent to: ${user.email}`);
-  } catch (error) {
-    console.error('Failed to send two-factor code email:', error);
-    throw error;
+    console.log(`✅ Two-factor code successfully sent to: ${user.email}`);
+  } catch (error: any) {
+    console.error('❌ Failed to send two-factor code email:', error);
+    console.error('SMTP Error Details:', {
+      message: error?.message,
+      code: error?.code,
+      response: error?.response
+    });
+    throw new Error(`Email delivery failed: ${error?.message || 'Unknown error'}`);
   }
 }
 
@@ -175,7 +184,7 @@ Ju lutemi mos u përgjigjeni në këtë adresë email.
 
   try {
     await transporter.sendMail({
-      from: process.env.EMAIL_FROM,
+      from: process.env.SMTP_FROM || process.env.SMTP_USER || 'noreply@albpetrol.al',
       to: notificationSettings.emailAddresses.join(', '),
       subject: notificationSettings.subject,
       text: plainTextContent,
@@ -377,7 +386,7 @@ Ju lutemi mos u përgjigjeni në këtë adresë email.
 
   try {
     await transporter.sendMail({
-      from: process.env.EMAIL_FROM,
+      from: process.env.SMTP_FROM || process.env.SMTP_USER || 'noreply@albpetrol.al',
       to: notificationSettings.emailAddresses.join(', '),
       subject: `Ndryshim në çështjen: ${updatedEntry.paditesi}`,
       text: plainTextContent,
@@ -487,7 +496,7 @@ Ju lutemi mos u përgjigjeni në këtë adresë email.
 
   try {
     await transporter.sendMail({
-      from: process.env.EMAIL_FROM,
+      from: process.env.SMTP_FROM || process.env.SMTP_USER || 'noreply@albpetrol.al',
       to: notificationSettings.emailAddresses.join(', '),
       subject: `Fshirje e çështjes: ${deletedEntry.paditesi}`,
       text: plainTextContent,

@@ -1,0 +1,159 @@
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# cd /opt/ceshtje_ligjore/ceshtje_ligjore
+
+cat > debug_production_api.sh << 'EOF'
+#!/bin/bash
+# Debug the actual Edit button issue on production
+
+echo "🔍 Debugging Edit button redirect issue..."
+
+cd /opt/ceshtje_ligjore/ceshtje_ligjore
+
+# Check the actual current structure of the Edit button
+echo "Current Edit button implementation:"
+grep -A 5 -B 5 "Edit.*h-4 w-4" client/src/components/case-table.tsx
+
+echo -e "\n=== Checking for Link components or navigation elements ==="
+grep -n "Link\|href\|navigate\|router" client/src/components/case-table.tsx
+
+echo -e "\n=== Checking the Edit dialog implementation ==="
+grep -A 10 -B 5 "editingCase &&" client/src/components/case-table.tsx
+
+echo -e "\n=== Checking CaseEditForm component ==="
+ls -la client/src/components/case-edit-form.tsx
+./debug_production_api.sh_api.sht compilation status ==="ent, click Edit button,
+🔍 Debugging Edit button redirect issue...
+Current Edit button implementation:
+
+=== Checking for Link components or navigation elements ===
+113:      a.href = url;
+
+=== Checking the Edit dialog implementation ===
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Edit Dialog */}
+        {editingCase && (
+          <Dialog open={!!editingCase} onOpenChange={() => setEditingCase(null)}>
+            <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Ndrysho Çështjen #{editingCase.nrRendor}</DialogTitle>
+              </DialogHeader>
+              <CaseEditForm
+                case={editingCase}
+                onSuccess={() => {
+                  setEditingCase(null);
+                  refetch();
+
+=== Checking CaseEditForm component ===
+-rw-r--r-- 1 root root 13364 Aug 12 10:47 client/src/components/case-edit-form.tsx
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import { updateDataEntrySchema, type DataEntry, type UpdateDataEntry } from "@shared/schema";
+
+interface CaseEditFormProps {
+
+=== Checking for any Table row click handlers ===
+
+=== Looking for any form elements that might cause navigation ===
+19:import { CaseEditForm } from "@/components/case-edit-form";
+99:  const handleExport = async (format: 'excel' | 'csv') => {
+105:      const exportUrl = `/api/data-entries/export/${format}?${params.toString()}`;
+114:      a.download = `ceshtjet-ligjore-${new Date().toISOString().slice(0, 10)}.${format === 'excel' ? 'xlsx' : 'csv'}`;
+120:        description: `Skedari ${format.toUpperCase()} u shkarkua`,
+147:  const formatDate = (dateString: string | null) => {
+189:                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+318:                        <TableCell>{formatDate(entry.createdAt)}</TableCell>
+353:                                  <div><strong>Data:</strong> {formatDate(entry.createdAt)}</div>
+429:              <CaseEditForm
+
+=== Checking the actual button structure around Edit ===
+    if (window.confirm("A jeni i sigurt që dëshironi të fshini këtë çështje?")) {
+      deleteMutation.mutate(id);
+    }
+  };
+
+  const canUserModifyEntry = (entry: DataEntry & { createdByName: string }) => {
+    return user?.role === "admin" || entry.createdById === user?.id;
+  };
+
+  const canUserDeleteEntry = () => user?.role === "admin";
+
+  const handleExport = async (format: 'excel' | 'csv') => {
+    try {
+      const params = new URLSearchParams();
+      if (debouncedSearchTerm) params.append('search', debouncedSearchTerm);
+      params.append('sortOrder', sortOrder);
+
+      const exportUrl = `/api/data-entries/export/${format}?${params.toString()}`;
+      const response = await fetch(exportUrl, { credentials: 'include' });
+
+      if (!response.ok) throw new Error('Export failed');
+--
+                                  <div><strong>Data:</strong> {formatDate(entry.createdAt)}</div>
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+
+                            {canUserModifyEntry(entry) && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setEditingCase(entry)}
+                                data-testid={`button-edit-${entry.id}`}
+                              >
+                                <Edit className="h-3 w-3" />
+                              </Button>
+                            )}
+
+                            {canUserDeleteEntry() && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleDelete(entry.id)}
+
+=== Checking for any <a> tags or navigation elements ===
+
+=== Testing if CaseEditForm import works ===
+✅ CaseEditForm export found
+
+=== Checking for JavaScript errors in browser console ===
+To test: Open browser dev tools, go to Case Management, click Edit button, check console for errors
+
+=== Current TypeScript compilation status ===
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.19 building for production...
+transforming...
+Browserslist: browsers data (caniuse-lite) is 10 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2152 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/public/index.html                                         1.04 kB │ gzip:   0.59 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-Bl2zcZUT.css                         71.28 kB │ gzip:  12.54 kB
+../dist/public/assets/index-ueokYg6-.js                         590.37 kB │ gzip: 173.82 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore#

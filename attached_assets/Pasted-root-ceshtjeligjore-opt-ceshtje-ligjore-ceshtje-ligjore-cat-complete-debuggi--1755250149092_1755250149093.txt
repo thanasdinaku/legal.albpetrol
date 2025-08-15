@@ -1,0 +1,83 @@
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# cat > complete_debuggi                                                                                                                                                             ng_solution.sh << 'EOF'
+#!/bin/bash
+echo "=== COMPREHENSIVE FILTERING/SORTING FIX ==="
+# 1. Add debug logging to backend
+echo "1. Adding debug logging..."
+cat >> server/routes.ts << 'LOGGING_EOF'
+  // Debug endpoint to see what parameters frontend sends
+  app.get('/api/debug/request-params', isAuthenticated, (req: any, res) => {
+    console.log('=== FRONTEND REQUEST DEBUG ===');
+    console.log('Query params received:', req.query);
+    console.log('Search:', req.query.search);
+    console.log('Sort:', req.query.sortOrder);
+    console.log('Page:', req.query.page);
+    res.json({ received: req.query, timestamp: new Date().toISOString() });
+  });
+LOGGING_EOF
+# 2. Create a simple test version of case table with explicit URL building
+echo "2. Creating debug version of case table..."
+cat > client/src/components/case-table-debug.tsx << 'COMP_EOF'
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";                                                                                                                                                             ./complete_debugging_solution.shtion.shd the API URL being called"s/case-table.t
+=== COMPREHENSIVE FILTERING/SORTING FIX ===
+1. Adding debug logging...
+2. Creating debug version of case table...
+3. Building debug version...
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bu                                                                                                                                                             ndle --format=esm --outdir=dist
+
+vite v5.4.19 building for production...
+transforming (3) src/main.tsxBrowserslist: browsers data (caniuse-lite) is 10 mo                                                                                                                                                             nths old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#read                                                                                                                                                             me
+✓ 2151 modules transformed.
+../dist/public/index.html                                         1.04 kB │ gzip                                                                                                                                                             :   0.59 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-Dx2HrjJG.css                         71.06 kB │ gzip                                                                                                                                                             :  12.50 kB
+../dist/public/assets/index-CJRj6m52.js                         574.99 kB │ gzip                                                                                                                                                             : 171.19 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollu                                                                                                                                                             pjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.56s
+
+  dist/index.js  119.5kb
+
+⚡ Done in 7ms
+✅ Debug version deployed!
+Go to: https://legal.albpetrol.al/data-table
+You should see 'DEBUG VERSION' and the API URL being called
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# systemctl status albpe                                                                                                                                                             trol-legal --no-pager
+● albpetrol-legal.service - Albpetrol Legal Management System
+     Loaded: loaded (/etc/systemd/system/albpetrol-legal.service; enabled; prese                                                                                                                                                             t: enabled)
+     Active: activating (auto-restart) (Result: exit-code) since Fri 2025-08-15                                                                                                                                                              09:25:25 UTC; 1s ago
+    Process: 162888 ExecStart=/usr/bin/node dist/index.js (code=exited, status=1                                                                                                                                                             /FAILURE)
+   Main PID: 162888 (code=exited, status=1/FAILURE)
+        CPU: 553ms
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# netstat -tlnp | grep :                                                                                                                                                             5000
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# journalctl -u albpetro                                                                                                                                                             l-legal -n 20 --no-pager
+Aug 15 09:25:36 ceshtjeligjore albpetrol-legal[162905]:     at file:///opt/cesht                                                                                                                                                             je_ligjore/ceshtje_ligjore/dist/index.js:2741:1
+Aug 15 09:25:36 ceshtjeligjore albpetrol-legal[162905]:     at ModuleJob.run (no                                                                                                                                                             de:internal/modules/esm/module_job:263:25)
+Aug 15 09:25:36 ceshtjeligjore albpetrol-legal[162905]:     at async ModuleLoade                                                                                                                                                             r.import (node:internal/modules/esm/loader:540:24)
+Aug 15 09:25:36 ceshtjeligjore albpetrol-legal[162905]:     at async asyncRunEnt                                                                                                                                                             ryPointWithESMLoader (node:internal/modules/run_main:117:5)
+Aug 15 09:25:36 ceshtjeligjore albpetrol-legal[162905]: Node.js v20.19.4
+Aug 15 09:25:36 ceshtjeligjore systemd[1]: albpetrol-legal.service: Main process                                                                                                                                                              exited, code=exited, status=1/FAILURE
+Aug 15 09:25:36 ceshtjeligjore systemd[1]: albpetrol-legal.service: Failed with                                                                                                                                                              result 'exit-code'.
+Aug 15 09:25:46 ceshtjeligjore systemd[1]: albpetrol-legal.service: Scheduled re                                                                                                                                                             start job, restart counter is at 24.
+Aug 15 09:25:46 ceshtjeligjore systemd[1]: Started albpetrol-legal.service - Alb                                                                                                                                                             petrol Legal Management System.
+Aug 15 09:25:46 ceshtjeligjore albpetrol-legal[162923]: file:///opt/ceshtje_ligj                                                                                                                                                             ore/ceshtje_ligjore/dist/index.js:2741
+Aug 15 09:25:46 ceshtjeligjore albpetrol-legal[162923]: app.get("/api/debug/requ                                                                                                                                                             est-params", isAuthenticated, (req, res) => {
+Aug 15 09:25:46 ceshtjeligjore albpetrol-legal[162923]: ^
+Aug 15 09:25:46 ceshtjeligjore albpetrol-legal[162923]: ReferenceError: app is n                                                                                                                                                             ot defined
+Aug 15 09:25:46 ceshtjeligjore albpetrol-legal[162923]:     at file:///opt/cesht                                                                                                                                                             je_ligjore/ceshtje_ligjore/dist/index.js:2741:1
+Aug 15 09:25:46 ceshtjeligjore albpetrol-legal[162923]:     at ModuleJob.run (no                                                                                                                                                             de:internal/modules/esm/module_job:263:25)
+Aug 15 09:25:46 ceshtjeligjore albpetrol-legal[162923]:     at async ModuleLoade                                                                                                                                                             r.import (node:internal/modules/esm/loader:540:24)
+Aug 15 09:25:46 ceshtjeligjore albpetrol-legal[162923]:     at async asyncRunEnt                                                                                                                                                             ryPointWithESMLoader (node:internal/modules/run_main:117:5)
+Aug 15 09:25:46 ceshtjeligjore albpetrol-legal[162923]: Node.js v20.19.4
+Aug 15 09:25:46 ceshtjeligjore systemd[1]: albpetrol-legal.service: Main process                                                                                                                                                              exited, code=exited, status=1/FAILURE
+Aug 15 09:25:46 ceshtjeligjore systemd[1]: albpetrol-legal.service: Failed with                                                                                                                                                              result 'exit-code'.
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore#

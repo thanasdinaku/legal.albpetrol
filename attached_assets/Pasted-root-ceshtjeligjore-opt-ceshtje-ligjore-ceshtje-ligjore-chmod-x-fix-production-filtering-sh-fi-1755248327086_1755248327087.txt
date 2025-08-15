@@ -1,0 +1,56 @@
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore# chmod +x fix_production_filtering.sh
+./fix_production_filtering.sh
+Fixing filtering and sorting functionality...
+Building application...
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.19 building for production...
+transforming (3) src/main.tsxBrowserslist: browsers data (caniuse-lite) is 10 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2152 modules transformed.
+../dist/public/index.html                                         1.04 kB │ gzip:   0.58 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-DeFfSDSf.css                         71.43 kB │ gzip:  12.57 kB
+../dist/public/assets/index-DXnceauS.js                         594.41 kB │ gzip: 173.93 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.82s
+✘ [ERROR] Expected "}" but found ":"
+
+    server/routes.ts:147:27:
+      147 │      totalItems: totalItems: total,
+          │                            ^
+          ╵                            }
+
+1 error
+Build failed, restoring backup...
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.19 building for production...
+transforming (3) src/main.tsxBrowserslist: browsers data (caniuse-lite) is 10 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2152 modules transformed.
+../dist/public/index.html                                         1.04 kB │ gzip:   0.58 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-DeFfSDSf.css                         71.43 kB │ gzip:  12.57 kB
+../dist/public/assets/index-DXnceauS.js                         594.41 kB │ gzip: 173.93 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.50s
+
+  dist/index.js  119.1kb
+
+⚡ Done in 7ms
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore#

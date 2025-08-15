@@ -892,6 +892,23 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
     }
   });
 
+  // Markdown Manual route - serves the exact content from MANUAL_PERDORUESI_DETAJUAR.md
+  app.get("/api/manual/markdown", isAuthenticated, async (req: any, res) => {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      
+      const manualPath = path.join(process.cwd(), 'MANUAL_PERDORUESI_DETAJUAR.md');
+      const markdownContent = fs.readFileSync(manualPath, 'utf8');
+      
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      res.send(markdownContent);
+    } catch (error) {
+      console.error("Error reading markdown manual:", error);
+      res.status(500).json({ message: "Failed to load user manual" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

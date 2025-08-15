@@ -115,37 +115,13 @@ export default function Sidebar({ isOpen = true, onClose, className }: SidebarPr
             <span className="text-sm sm:text-base">Cilësimet</span>
           </button>
 
-          {/* User Manual Download - Available for all users */}
+          {/* User Manual - Available for all users */}
           <button
-            onClick={async () => {
-              try {
-                const response = await fetch('/api/download/user-manual');
-                if (response.ok) {
-                  const blob = await response.blob();
-                  const url = window.URL.createObjectURL(blob);
-                  const link = document.createElement('a');
-                  link.href = url;
-                  link.download = 'Manuali_i_Perdoruesit_Albpetrol.pdf';
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
-                  window.URL.revokeObjectURL(url);
-                } else if (response.status === 401) {
-                  // If PDF fails due to auth, try HTML version
-                  window.open('/api/manual/html', '_blank');
-                } else {
-                  throw new Error('Download failed');
-                }
-              } catch (error) {
-                console.error('Download error:', error);
-                // Fallback to HTML version
-                window.open('/api/manual/html', '_blank');
-              }
-            }}
-            className="nav-link w-full text-left"
+            onClick={() => handleNavigation('/manual')}
+            className={isActive('/manual') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
           >
             <i className="fas fa-book"></i>
-            <span className="text-sm sm:text-base">Shkarko Manualin</span>
+            <span className="text-sm sm:text-base">Manual i Përdoruesit</span>
           </button>
         </div>
       </nav>

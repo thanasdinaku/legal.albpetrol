@@ -13,6 +13,7 @@ import DataTable from "@/pages/data-table";
 import UserManagement from "@/pages/user-management";
 import SystemSettings from "@/pages/system-settings";
 import SettingsPage from "@/pages/settings-page";
+import ManualPage from "@/pages/manual";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -46,6 +47,7 @@ function Router() {
           <Route path="/user-management" component={UserManagement} />
           <Route path="/system-settings" component={SystemSettings} />
           <Route path="/settings" component={SettingsPage} />
+          <Route path="/manual" component={ManualPage} />
         </>
       )}
       <Route component={NotFound} />

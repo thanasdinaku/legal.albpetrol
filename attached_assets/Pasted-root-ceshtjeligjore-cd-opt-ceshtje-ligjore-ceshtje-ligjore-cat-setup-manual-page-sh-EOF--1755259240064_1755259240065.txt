@@ -1,0 +1,67 @@
+root@ceshtjeligjore:~# cd /opt/ceshtje_ligjore/ceshtje_ligjore
+cat > setup_manual_page.sh << 'EOF'
+#!/bin/bash
+# Setup manual page to display exact MANUAL_PERDORUESI_DETAJUAR.md content
+echo "🔧 Setting up manual page with exact markdown content..."
+cd /opt/ceshtje_ligjore/ceshtje_ligjore
+# 1. Add markdown route to server/routes.ts
+echo "Adding markdown API route..."
+cat >> server/routes.ts << 'ROUTE_EOF'
+  // Markdown Manual route - serves the exact content from MANUAL_PERDORUESI_DETAJUAR.md
+  app.get("/api/manual/markdown", isAuthenticated, async (req: any, res) => {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+
+      const manualPath = path.join(process.cwd(), 'MANUAL_PERDORUESI_DETAJUAR.md');
+      const markdownContent = fs.readFileSync(manualPath, 'utf8');
+
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      res.send(markdownContent);
+    } catch (error) {
+      console.error("Error reading markdown manual:", error);
+./setup_manual_page.shpage.shetrol-legal --no-pagerfile changes"l/manual"span>\
+🔧 Setting up manual page with exact markdown content...
+Adding markdown API route...
+Creating manual page component...
+Adding manual route to App.tsx...
+Updating sidebar navigation...
+Building application...
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.19 building for production...
+transforming (3) src/main.tsxBrowserslist: browsers data (caniuse-lite) is 10 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2153 modules transformed.
+../dist/public/index.html                                         1.04 kB │ gzip:   0.59 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-KkR7Gwyk.css                         90.48 kB │ gzip:  14.74 kB
+../dist/public/assets/index-adbD44N1.js                         594.13 kB │ gzip: 174.59 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.70s
+
+  dist/index.js  120.0kb
+
+⚡ Done in 7ms
+✅ Build successful!
+Restarting production service...
+Waiting for service to start...
+❌ Service failed to start
+● albpetrol-legal.service - Albpetrol Legal Management System
+     Loaded: loaded (/etc/systemd/system/albpetrol-legal.service; enabled; preset: enabled)
+     Active: activating (auto-restart) (Result: exit-code) since Fri 2025-08-15 11:59:02 UTC; 4s ago
+    Process: 172113 ExecStart=/usr/bin/node dist/index.js (code=exited, status=1/FAILURE)
+   Main PID: 172113 (code=exited, status=1/FAILURE)
+        CPU: 556ms
+
+Aug 15 11:59:02 ceshtjeligjore systemd[1]: albpetrol-legal.service: Main pr…LURE
+Aug 15 11:59:02 ceshtjeligjore systemd[1]: albpetrol-legal.service: Failed …de'.
+Hint: Some lines were ellipsized, use -l to show in full.
+root@ceshtjeligjore:/opt/ceshtje_ligjore/ceshtje_ligjore#

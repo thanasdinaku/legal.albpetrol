@@ -100,7 +100,7 @@ export function setupAuth(app: Express) {
   });
 
   // Login route
-  app.post("/api/login", (req, res, next) => {
+  app.post("/api/auth/login", (req, res, next) => {
     passport.authenticate("local", async (err: any, user: User | false) => {
       if (err) {
         return res.status(500).json({ message: "Internal server error" });
@@ -135,7 +135,7 @@ export function setupAuth(app: Express) {
     })(req, res, next);
   });
 
-  app.post("/api/verify-2fa", async (req, res) => {
+  app.post("/api/auth/verify-2fa", async (req, res) => {
     try {
       const { userId, code } = req.body;
       
@@ -172,7 +172,7 @@ export function setupAuth(app: Express) {
   });
 
   // Logout route
-  app.post("/api/logout", (req, res, next) => {
+  app.post("/api/auth/logout", (req, res, next) => {
     req.logout((err) => {
       if (err) return next(err);
       res.redirect("/auth");
@@ -180,7 +180,7 @@ export function setupAuth(app: Express) {
   });
 
   // Handle GET logout for direct navigation
-  app.get("/api/logout", (req, res, next) => {
+  app.get("/api/auth/logout", (req, res, next) => {
     req.logout((err) => {
       if (err) return next(err);
       res.redirect("/auth");

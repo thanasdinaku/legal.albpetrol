@@ -2,81 +2,7 @@
 
 This is a full-stack data management system built with React and Express.js, designed for professional database operations with role-based access control. The application provides a comprehensive dashboard for managing data entries with features like user authentication, data visualization, and CRUD operations. It uses a modern tech stack including TypeScript, Tailwind CSS, Drizzle ORM for database management, and shadcn/ui components for a polished user interface.
 
-## Recent Changes (August 15, 2025)
-
-✓ **Critical Filtering and Sorting Fix**: Resolved non-functional filtering and sorting on production server by fixing backend API pagination response structure mismatch
-✓ **Backend API Response Correction**: Updated pagination field names from (page, limit, total) to (currentPage, itemsPerPage, totalItems) to match frontend expectations
-✓ **Production Deployment Synchronization**: Successfully synchronized development environment fixes to production server at https://legal.albpetrol.al
-✓ **Enhanced Search Functionality**: Confirmed comprehensive search across all case fields (paditesi, i paditur, gjykata, etc.) with debounced performance optimization
-✓ **Sorting Buttons Activation**: Enabled "Më të Rejat" and "Më të Vjetrat" sorting functionality with proper backend support and real-time UI updates
-✓ **Edit Button Functionality Fixed**: Replaced production case-table.tsx component with working version, resolved dialog opening issues and proper event handling
-✓ **User Management Cleanup**: Removed thanas.dinaku@albpetrol.al user after transferring all data entries and system settings to it.system@albpetrol.al, maintaining single root administrator configuration
-✓ **Foreign Key Constraint Resolution**: Successfully handled all database foreign key constraints (data_entries, system_settings) during user removal process
-✓ **Manual Page Implementation**: Added markdown route to serve exact MANUAL_PERDORUESI_DETAJUAR.md content at /manual endpoint with proper Albanian language display
-✓ **Production Syntax Error Resolution**: Fixed duplicate closing braces in server/routes.ts that prevented service startup after manual page integration
-✓ **Comprehensive Security Assessment**: Completed penetration testing revealing excellent security posture (8.2/10) with Cloudflare WAF successfully blocking all automated attack attempts
-✓ **GitHub Synchronization Ready**: Created comprehensive sync script to push all production fixes, security improvements, and documentation to thanasdinaku/ceshtje_ligjore.git repository
-
-## Previous Changes (August 13, 2025)
-
-✓ **Production Deployment Guide**: Created comprehensive Ubuntu 24.04.3 LTS installation guide with step-by-step commands for production deployment
-✓ **Security Vulnerability Analysis**: Analyzed and confirmed false positive in security scan - no actual hardcoded credentials found in server/email.ts
-✓ **Ubuntu Production Deployment**: Successfully deployed system to Ubuntu 24.04.3 LTS with PostgreSQL, Nginx, and systemd service configuration
-✓ **Network Configuration**: Resolved connectivity issues and confirmed application accessible within local network at http://10.5.20.31
-✓ **SSL Certificate Configuration**: Implemented self-signed SSL certificates with Nginx HTTPS configuration for secure local access
-✓ **Cloudflare Argo Tunnel Setup**: Successfully configured Cloudflare tunnel (ID: 260c74d1-721c-4ede-b273-bf2ce1b232b3) for legal.albpetrol.al subdomain with global external access
-✓ **Tunnel Service Configuration**: Created systemd service for cloudflared with automatic startup and proper routing to application server at http://10.5.20.31:5000
-✓ **Database Administrator Access**: Confirmed default admin account exists (it.system@albpetrol.al) with reset password functionality
-✓ **Application Access Verified**: Successfully confirmed local access at https://10.5.20.31 with Albanian interface and Albpetrol branding
-✓ **Login Authentication Fixed**: Resolved password hash compatibility issue using correct scrypt algorithm format for admin access
-✓ **Security Hardening Complete**: Implemented all pentest security recommendations including Content-Security-Policy, Strict-Transport-Security headers, and security.txt file
-✓ **Production System Ready**: Complete deployment with functional authentication, database connectivity, and enterprise-grade security infrastructure
-✓ **Detailed User Manual Created**: Comprehensive Albanian-language user manual covering all system features, troubleshooting, and security procedures in both Markdown and HTML formats
-
-## Previous Changes (August 11, 2025)
-
-✓ **Default Admin Email Updated**: Changed default admin account from admin@albpetrol.al to it.system@albpetrol.al (real email address)
-✓ **Enhanced 2FA Security**: Removed admin bypass - all users including default admin now require multi-factor authentication
-✓ **Default Admin Protection**: Added protection to prevent deletion of it.system@albpetrol.al account - cannot be deleted by any administrator
-✓ **PDF User Manual with Visual Guides**: Created comprehensive Albanian-language user manual with detailed print-screen explanations for every step, download functionality available from system settings and sidebar navigation
-
-## Previous Changes (August 8, 2025)
-
-✓ **Database Schema Implemented**: Created users and data_entries tables with proper relationships and constraints
-✓ **Authentication System Redesigned**: Converted from external to private password-based authentication service
-✓ **Default Admin Account**: Automatically creates it.system@albpetrol.al / admin123 on first application startup  
-✓ **Login System**: Albanian-language login page with Albpetrol branding and secure session management
-✓ **Password Security**: Implemented secure password hashing with salt and validation
-✓ **Settings Page**: Built password change functionality with form validation and security checks
-✓ **Admin User Creation**: System for administrators to create user accounts with temporary passwords
-✓ **Role-Based Access Control**: Maintained user/admin permissions with proper middleware protection
-✓ **Dashboard Features**: Built statistics dashboard with real-time data and recent activity tracking
-✓ **Data Entry System**: Implemented form validation and data submission with proper error handling
-✓ **Data Table Interface**: Created paginated table with horizontal scrolling to display all 19 Albanian legal case fields
-✓ **Export System**: Added Excel and CSV export functionality with Albanian headers
-✓ **Mobile Responsive Design**: Implemented mobile-first design with responsive navigation, forms, and tables
-✓ **Court Field Dropdowns**: Converted court fields to dropdown selectors with specific Albanian court options
-✓ **Enhanced UX**: Added lighter grey placeholder text for better visual hierarchy and user experience
-✓ **Authentication Flow Fixed**: Resolved logout-login cycle with proper routing and navigation
-✓ **Clean Login Interface**: Removed administrator credentials display for professional appearance
-✓ **Save Settings Functionality**: Activated 'Save Settings' button with database persistence for all system configuration changes
-✓ **Password Policy Display**: Converted password policy from editable textarea to read-only styled display for system security
-✓ **Permission System Enhancement**: Updated access control so regular users can view all records but only edit/delete their own entries
-✓ **Role-Based Data Access**: Administrators maintain full CRUD access while regular users have view-only access to others' records
-✓ **Export Functionality for All Users**: Updated export routes from admin-only to authenticated users for Excel and CSV downloads
-✓ **View Button Addition**: Added View button in Actions column for all users to view detailed case information in read-only modal
-✓ **Delete Permission Restriction**: Removed delete functionality for regular users; only administrators can now delete data entries
-✓ **Password Validation Rules**: Implemented comprehensive password requirements (8+ characters, uppercase, number, special character) with frontend and backend validation
-✓ **Court Dropdown Updates**: Updated court selection options for consistency - "Gjykata e Apelit" and "Gjykata e Shkallës së Parë" now include full court names
-✓ **Export Headers Synchronization**: Updated Excel and CSV export headers and data mapping to match current data entry form structure exactly
-✓ **System Settings Cleanup**: Removed backup and restoration features from System Settings, keeping only database statistics and core system information
-✓ **General Settings Removal**: Removed non-functional "Cilësimet e Përgjithshme" section from System Settings for cleaner interface
-✓ **Email Notification System**: Implemented comprehensive email notifications for new data entries with SMTP configuration, customizable recipients, professional Albanian templates, and admin management interface
-✓ **Complete CRUD Email Notifications**: Added email notifications for all data operations - create, edit (with before/after comparison), and delete (with full entry details)
-✓ **Comprehensive User Activity Tracking**: Implemented real-time activity tracking that updates user's last activity timestamp for all database operations (login, create, edit, delete)
-✓ **Two-Factor Authentication System**: Implemented comprehensive 2FA with email verification codes that expire in 3 minutes, professional Albanian email templates, and seamless authentication flow for all users including administrators
-
-The application now provides complete legal case management with private authentication enhanced by two-factor email verification, seamless logout-login flow with security codes, admin-controlled user creation, Excel and CSV export capabilities for all users, proper role-based permissions with administrator-only deletion rights, strong password validation, synchronized export functionality, simplified system settings with database statistics only, comprehensive email notifications for all data operations (create/edit/delete) with detailed change tracking and proper Nr. Rendor numbering, real-time user activity tracking for all database interactions, and streamlined Albanian-language interface with professional security features.
+The project's business vision is to provide a robust, secure, and user-friendly platform for managing legal case data, specifically tailored for organizations like Albpetrol. Its market potential lies in offering a specialized data management solution for legal departments that require stringent access control, comprehensive data tracking, and efficient reporting. The project ambitions include achieving enterprise-grade security and reliability, comprehensive real-time user activity tracking, and an intuitive Albanian-language interface.
 
 # User Preferences
 
@@ -85,64 +11,72 @@ Preferred communication style: Simple, everyday language.
 # System Architecture
 
 ## Frontend Architecture
-- **Framework**: React 18 with TypeScript and Vite for fast development and building
-- **UI Library**: shadcn/ui components built on Radix UI primitives for accessibility
-- **Styling**: Tailwind CSS with custom design tokens and responsive design
-- **State Management**: TanStack React Query for server state management and caching
-- **Routing**: Wouter for lightweight client-side routing
-- **Forms**: React Hook Form with Zod validation for type-safe form handling
+- **Framework**: React 18 with TypeScript and Vite.
+- **UI Library**: shadcn/ui components built on Radix UI primitives.
+- **Styling**: Tailwind CSS with custom design tokens and responsive design.
+- **State Management**: TanStack React Query for server state management.
+- **Routing**: Wouter for lightweight client-side routing.
+- **Forms**: React Hook Form with Zod validation.
 
 ## Backend Architecture
-- **Runtime**: Node.js with Express.js framework
-- **Language**: TypeScript with ES modules
-- **Database ORM**: Drizzle ORM with type-safe queries and migrations
-- **Session Management**: Express sessions with PostgreSQL storage
-- **Build System**: esbuild for production bundling with platform-specific optimization
+- **Runtime**: Node.js with Express.js.
+- **Language**: TypeScript with ES modules.
+- **Database ORM**: Drizzle ORM with type-safe queries and migrations.
+- **Session Management**: Express sessions with PostgreSQL storage.
+- **Build System**: esbuild for production bundling.
 
 ## Database Design
-- **Primary Database**: PostgreSQL with Neon serverless driver
-- **Schema Management**: Drizzle migrations with schema-first approach
-- **Tables**: Users, sessions, and data entries with proper relationships
-- **Enums**: Role-based permissions (user/admin), entry status, and priority levels
-- **Indexes**: Optimized for session expiration and query performance
+- **Primary Database**: PostgreSQL with Neon serverless driver.
+- **Schema Management**: Drizzle migrations with a schema-first approach.
+- **Tables**: Users, sessions, and data entries with proper relationships.
+- **Enums**: Role-based permissions (user/admin), entry status, and priority levels.
+- **Indexes**: Optimized for session expiration and query performance.
 
 ## Authentication & Authorization
-- **Provider**: Replit OIDC authentication with OpenID Connect
-- **Session Storage**: PostgreSQL-backed sessions with configurable TTL
-- **Security**: HTTP-only cookies, CSRF protection, and secure session handling
-- **Role System**: User and admin roles with different permission levels
+- **Provider**: Replit OIDC authentication.
+- **Session Storage**: PostgreSQL-backed sessions.
+- **Security**: HTTP-only cookies, CSRF protection, and secure session handling.
+- **Role System**: User and admin roles with different permission levels, including protection for the default admin account.
+- **Two-Factor Authentication**: Implemented with email verification codes.
 
 ## API Architecture
-- **Design**: RESTful API with consistent error handling and response formats
-- **Validation**: Zod schemas for request/response validation
-- **Error Handling**: Centralized error middleware with proper HTTP status codes
-- **Logging**: Request/response logging with performance monitoring
+- **Design**: RESTful API with consistent error handling.
+- **Validation**: Zod schemas for request/response validation.
+- **Error Handling**: Centralized error middleware.
+- **Logging**: Request/response logging with performance monitoring.
+
+## Key Features
+- **Data Management**: CRUD operations for legal case data with 19 Albanian legal case fields.
+- **User Management**: Admin-controlled user creation with role-based access control.
+- **Data Export**: Excel and CSV export functionality with Albanian headers for all authenticated users.
+- **Email Notifications**: Comprehensive email notifications for all data operations (create, edit, delete) with customizable recipients and Albanian templates.
+- **Activity Tracking**: Real-time user activity tracking for all database interactions.
+- **User Manual**: Comprehensive Albanian-language user manual accessible within the system.
 
 # External Dependencies
 
 ## Core Runtime Dependencies
-- **@neondatabase/serverless**: Serverless PostgreSQL driver for Neon database
-- **drizzle-orm**: Type-safe ORM with PostgreSQL dialect support
-- **express**: Web application framework with middleware ecosystem
+- **@neondatabase/serverless**: Serverless PostgreSQL driver for Neon.
+- **drizzle-orm**: Type-safe ORM.
+- **express**: Web application framework.
 
 ## Authentication Services
-- **openid-client**: OpenID Connect client for Replit authentication
-- **passport**: Authentication middleware with strategy pattern
-- **connect-pg-simple**: PostgreSQL session store for Express sessions
+- **openid-client**: OpenID Connect client.
+- **passport**: Authentication middleware.
+- **connect-pg-simple**: PostgreSQL session store for Express.
 
 ## UI and Frontend Libraries
-- **@radix-ui/***: Comprehensive suite of accessible UI primitives
-- **@tanstack/react-query**: Server state management with caching and synchronization
-- **@hookform/resolvers**: Form validation resolvers for React Hook Form
-- **tailwindcss**: Utility-first CSS framework with design system
+- **@radix-ui/***: Accessible UI primitives.
+- **@tanstack/react-query**: Server state management.
+- **@hookform/resolvers**: Form validation resolvers for React Hook Form.
+- **tailwindcss**: Utility-first CSS framework.
 
 ## Development and Build Tools
-- **vite**: Fast build tool with HMR and optimized bundling
-- **tsx**: TypeScript execution for Node.js development
-- **esbuild**: Fast JavaScript bundler for production builds
-- **drizzle-kit**: Database migration and schema management tools
+- **vite**: Fast build tool.
+- **tsx**: TypeScript execution for Node.js.
+- **esbuild**: Fast JavaScript bundler.
+- **drizzle-kit**: Database migration and schema management tools.
 
 ## Database and Storage
-- **PostgreSQL**: Primary database with ACID compliance and advanced features
-- **Sessions Table**: Persistent session storage with automatic cleanup
-- **Migration System**: Version-controlled database schema changes
+- **PostgreSQL**: Primary database.
+- **Cloudflare**: Used for DNS management, WAF, and Argo Tunnel for external access.

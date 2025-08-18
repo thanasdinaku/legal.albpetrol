@@ -55,7 +55,7 @@ export default function Sidebar({ isOpen = true, onClose, className }: SidebarPr
               className="w-24 h-16 sm:w-32 sm:h-20 object-contain mx-auto"
             />
             <div>
-              <h1 className="text-base sm:text-lg font-bold text-gray-900 leading-tight">Pasqyra e Ceshtjeve Ligjore</h1>
+              <h1 className="text-base sm:text-lg font-bold text-gray-900 leading-tight">Sistemi i Menaxhimit të Rasteve Ligjore</h1>
               <p className="text-xs sm:text-sm text-gray-500 capitalize">{user?.role === 'admin' ? 'Administrator' : 'Përdorues'}</p>
             </div>
           </div>

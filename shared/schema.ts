@@ -53,6 +53,7 @@ export const dataEntries = pgTable("data_entries", {
   objektiIPadise: text("objekti_i_padise"), // Objekti I Padise
   gjykataShkalle: varchar("gjykata_shkalle", { length: 255 }), // Gjykata e Shk. I
   fazaGjykataShkalle: varchar("faza_gjykata_shkalle", { length: 255 }), // Faza në të cilën ndodhet proçesi (Shkalle I)
+  zhvillimiSeancesShkalleI: timestamp("zhvillimi_seances_shkalle_i"), // Zhvillimi i seances gjyqesorë data,ora (Shkalle I)
   gjykataApelit: varchar("gjykata_apelit", { length: 255 }), // Gjykata e Apelit
   fazaGjykataApelit: varchar("faza_gjykata_apelit", { length: 255 }), // Faza në të cilën ndodhet proçesi (Apelit)
   fazaAktuale: varchar("faza_aktuale", { length: 255 }), // Faza në të cilën ndodhet proçesi (current)

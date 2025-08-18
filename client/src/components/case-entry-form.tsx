@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -13,6 +15,10 @@ import { insertDataEntrySchema, type InsertDataEntry } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
+import { CalendarIcon, Clock } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { sq } from "date-fns/locale";
 
 const formSchema = insertDataEntrySchema.omit({
   createdById: true,
@@ -33,6 +39,7 @@ export default function CaseEntryForm() {
       objektiIPadise: "",
       gjykataShkalle: "",
       fazaGjykataShkalle: "",
+      zhvillimiSeancesShkalleI: undefined,
       gjykataApelit: "",
       fazaGjykataApelit: "",
       fazaAktuale: "",
@@ -218,7 +225,91 @@ export default function CaseEntryForm() {
                       </FormItem>
                     )}
                   />
+                </div>
 
+                {/* Zhvillimi i seances gjyqesorë data,ora (Shkalle I) */}
+                <FormField
+                  control={form.control}
+                  name="zhvillimiSeancesShkalleI"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel>Zhvillimi i seances gjyqesorë data,ora (Shkallë I)</FormLabel>
+                      <div className="flex space-x-3">
+                        {/* Date Picker */}
+                        <div className="flex-1">
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant="outline"
+                                  className={cn(
+                                    "w-full pl-3 text-left font-normal",
+                                    !field.value && "text-muted-foreground"
+                                  )}
+                                >
+                                  {field.value ? (
+                                    format(field.value, "dd/MM/yyyy", { locale: sq })
+                                  ) : (
+                                    <span>Zgjidhni datën</span>
+                                  )}
+                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar
+                                mode="single"
+                                selected={field.value ? new Date(field.value) : undefined}
+                                onSelect={(date) => {
+                                  if (date) {
+                                    const currentDateTime = field.value ? new Date(field.value) : new Date();
+                                    const newDateTime = new Date(date);
+                                    newDateTime.setHours(currentDateTime.getHours());
+                                    newDateTime.setMinutes(currentDateTime.getMinutes());
+                                    field.onChange(newDateTime);
+                                  }
+                                }}
+                                locale={sq}
+                                disabled={(date) => date < new Date("1900-01-01")}
+                                initialFocus
+                              />
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                        
+                        {/* Time Input */}
+                        <div className="flex-1">
+                          <div className="relative">
+                            <Input
+                              type="time"
+                              className="pl-10"
+                              value={
+                                field.value
+                                  ? format(field.value, "HH:mm")
+                                  : ""
+                              }
+                              onChange={(e) => {
+                                const timeValue = e.target.value; // "HH:mm" format
+                                if (timeValue) {
+                                  const currentDate = field.value ? new Date(field.value) : new Date();
+                                  const [hours, minutes] = timeValue.split(":").map(Number);
+                                  const newDateTime = new Date(currentDate);
+                                  newDateTime.setHours(hours);
+                                  newDateTime.setMinutes(minutes);
+                                  field.onChange(newDateTime);
+                                }
+                              }}
+                            />
+                            <Clock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                          </div>
+                        </div>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Gjykata e Apelit */}
                   <FormField
                     control={form.control}

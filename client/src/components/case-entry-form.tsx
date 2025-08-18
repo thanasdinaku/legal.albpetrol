@@ -190,10 +190,10 @@ export default function CaseEntryForm() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="Gjykata e Shkallës së Parë e Rrethit Gjyqësor Vlorë">Gjykata e Shkallës së Parë e Rrethit Gjyqësor Vlorë</SelectItem>
-                            <SelectItem value="Gjykata e Shkallës së Parë e Rrethit Gjyqësor Berat">Gjykata e Shkallës së Parë e Rrethit Gjyqësor Berat</SelectItem>
-                            <SelectItem value="Gjykata e Shkallës së Parë e Rrethit Gjyqësor Elbasan">Gjykata e Shkallës së Parë e Rrethit Gjyqësor Elbasan</SelectItem>
-                            <SelectItem value="Gjykata e Shkallës së Parë e Rrethit Gjyqësor Fier">Gjykata e Shkallës së Parë e Rrethit Gjyqësor Fier</SelectItem>
+                            <SelectItem value="Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm Vlore">Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm Vlore</SelectItem>
+                            <SelectItem value="Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm Berat">Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm Berat</SelectItem>
+                            <SelectItem value="Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm Elbasan">Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm Elbasan</SelectItem>
+                            <SelectItem value="Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm Fier">Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm Fier</SelectItem>
                             <SelectItem value="Gjykata e Shkallës së Parë Administrative Lushnjë">Gjykata e Shkallës së Parë Administrative Lushnjë</SelectItem>
                             <SelectItem value="Gjykata e Shkallës së Parë Administrative Tiranë">Gjykata e Shkallës së Parë Administrative Tiranë</SelectItem>
                             <SelectItem value="Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm Tiranë">Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm Tiranë</SelectItem>

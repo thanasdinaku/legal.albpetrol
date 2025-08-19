@@ -90,6 +90,26 @@ export default function CaseEntryForm() {
 
   const onSubmit = async (data: FormData) => {
     console.log("Form submission data:", data);
+    
+    // Check required fields
+    if (!data.paditesi || data.paditesi.trim() === "") {
+      toast({
+        title: "Gabim në plotësimin e formularit",
+        description: "Fusha 'Paditesi' është e detyrueshme",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!data.iPaditur || data.iPaditur.trim() === "") {
+      toast({
+        title: "Gabim në plotësimin e formularit", 
+        description: "Fusha 'I Paditur' është e detyrueshme",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     await createMutation.mutateAsync(data);
   };
 
@@ -173,7 +193,13 @@ export default function CaseEntryForm() {
                       <FormItem>
                         <FormLabel className="text-red-600">Paditesi (Emër e Mbiemër) *</FormLabel>
                         <FormControl>
-                          <Input placeholder="Emri dhe mbiemri i paditsit" {...field} value={field.value || ""} />
+                          <Input 
+                            placeholder="Emri dhe mbiemri i paditsit" 
+                            {...field} 
+                            value={field.value || ""} 
+                            required
+                            className={field.value && field.value.trim() === "" ? "border-red-500" : ""}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -186,7 +212,13 @@ export default function CaseEntryForm() {
                       <FormItem>
                         <FormLabel className="text-red-600">I Paditur *</FormLabel>
                         <FormControl>
-                          <Input placeholder="p.sh. Albpetrol SH.A." {...field} value={field.value || ""} />
+                          <Input 
+                            placeholder="p.sh. Albpetrol SH.A." 
+                            {...field} 
+                            value={field.value || ""} 
+                            required
+                            className={field.value && field.value.trim() === "" ? "border-red-500" : ""}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

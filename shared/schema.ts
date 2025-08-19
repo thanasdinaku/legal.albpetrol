@@ -149,6 +149,33 @@ export const insertDataEntrySchema = createInsertSchema(dataEntries).omit({
   createdById: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  // Ensure required fields have proper validation
+  paditesi: z.string().min(1, "Paditesi është i kërkuar"),
+  iPaditur: z.string().min(1, "I Paditur është i kërkuar"),
+  // Make sure optional fields can be empty strings or null
+  personITrete: z.string().optional(),
+  objektiIPadise: z.string().optional(),
+  gjykataShkalle: z.string().optional(),
+  fazaGjykataShkalle: z.string().optional(),
+  zhvillimiSeancesShkalleI: z.string().optional(),
+  gjykataApelit: z.string().optional(),
+  fazaGjykataApelit: z.string().optional(),
+  zhvillimiSeancesApel: z.string().optional(),
+  fazaAktuale: z.string().optional(),
+  perfaqesuesi: z.string().optional(),
+  demiIPretenduar: z.string().optional(),
+  shumaGjykata: z.string().optional(),
+  vendimEkzekutim: z.string().optional(),
+  fazaEkzekutim: z.string().optional(),
+  ankimuar: z.string().optional(),
+  perfunduar: z.string().optional(),
+  gjykataLarte: z.string().optional(),
+  attachments: z.array(z.object({
+    name: z.string(),
+    url: z.string(),
+    path: z.string()
+  })).optional().default([])
 });
 
 export const updateDataEntrySchema = createInsertSchema(dataEntries).omit({

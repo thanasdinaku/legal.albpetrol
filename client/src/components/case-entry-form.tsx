@@ -56,8 +56,8 @@ export default function CaseEntryForm() {
     mutationFn: async (data: FormData) => {
       const transformedData = {
         ...data,
-        zhvillimiSeancesShkalleI: data.zhvillimiSeancesShkalleI ? new Date(data.zhvillimiSeancesShkalleI).toISOString() : "",
-        zhvillimiSeancesApel: data.zhvillimiSeancesApel ? new Date(data.zhvillimiSeancesApel).toISOString() : ""
+        zhvillimiSeancesShkalleI: data.zhvillimiSeancesShkalleI || "",
+        zhvillimiSeancesApel: data.zhvillimiSeancesApel || ""
       };
       console.log("Submitting case data:", transformedData);
       const response = await apiRequest("/api/data-entries", "POST", transformedData);
@@ -248,72 +248,13 @@ export default function CaseEntryForm() {
                   render={({ field }) => (
                     <FormItem className="space-y-3">
                       <FormLabel>Zhvillimi i seances gjyqesorë data,ora (Shkallë I)</FormLabel>
-                      <div className="flex space-x-3">
-                        <div className="flex-1">
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant="outline"
-                                  className={cn(
-                                    "w-full pl-3 text-left font-normal",
-                                    !field.value && "text-muted-foreground"
-                                  )}
-                                >
-                                  {field.value ? (
-                                    format(field.value, "dd/MM/yyyy")
-                                  ) : (
-                                    <span>Zgjidhni datën</span>
-                                  )}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar
-                                mode="single"
-                                selected={field.value ? new Date(field.value) : undefined}
-                                onSelect={(date) => {
-                                  if (date) {
-                                    const currentDateTime = field.value ? new Date(field.value) : new Date();
-                                    const newDateTime = new Date(date);
-                                    newDateTime.setHours(currentDateTime.getHours());
-                                    newDateTime.setMinutes(currentDateTime.getMinutes());
-                                    field.onChange(newDateTime);
-                                  }
-                                }}
-                                disabled={(date) => date < new Date("1900-01-01")}
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </div>
-                        <div className="flex-1">
-                          <div className="relative">
-                            <Input
-                              type="time"
-                              className="pl-10"
-                              value={
-                                field.value
-                                  ? format(field.value, "HH:mm")
-                                  : ""
-                              }
-                              onChange={(e) => {
-                                const timeValue = e.target.value;
-                                if (timeValue) {
-                                  const currentDate = field.value ? new Date(field.value) : new Date();
-                                  const [hours, minutes] = timeValue.split(":").map(Number);
-                                  const newDateTime = new Date(currentDate);
-                                  newDateTime.setHours(hours);
-                                  newDateTime.setMinutes(minutes);
-                                  field.onChange(newDateTime);
-                                }
-                              }}
-                            />
-                            <Clock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                          </div>
-                        </div>
-                      </div>
+                      <FormControl>
+                        <Input
+                          type="datetime-local"
+                          {...field}
+                          value={field.value || ""}
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -367,72 +308,13 @@ export default function CaseEntryForm() {
                   render={({ field }) => (
                     <FormItem className="space-y-3">
                       <FormLabel>Zhvillimi i seances gjyqesorë data,ora (Apel)</FormLabel>
-                      <div className="flex space-x-3">
-                        <div className="flex-1">
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant="outline"
-                                  className={cn(
-                                    "w-full pl-3 text-left font-normal",
-                                    !field.value && "text-muted-foreground"
-                                  )}
-                                >
-                                  {field.value ? (
-                                    format(field.value, "dd/MM/yyyy")
-                                  ) : (
-                                    <span>Zgjidhni datën</span>
-                                  )}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar
-                                mode="single"
-                                selected={field.value ? new Date(field.value) : undefined}
-                                onSelect={(date) => {
-                                  if (date) {
-                                    const currentDateTime = field.value ? new Date(field.value) : new Date();
-                                    const newDateTime = new Date(date);
-                                    newDateTime.setHours(currentDateTime.getHours());
-                                    newDateTime.setMinutes(currentDateTime.getMinutes());
-                                    field.onChange(newDateTime);
-                                  }
-                                }}
-                                disabled={(date) => date < new Date("1900-01-01")}
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </div>
-                        <div className="flex-1">
-                          <div className="relative">
-                            <Input
-                              type="time"
-                              className="pl-10"
-                              value={
-                                field.value
-                                  ? format(field.value, "HH:mm")
-                                  : ""
-                              }
-                              onChange={(e) => {
-                                const timeValue = e.target.value;
-                                if (timeValue) {
-                                  const currentDate = field.value ? new Date(field.value) : new Date();
-                                  const [hours, minutes] = timeValue.split(":").map(Number);
-                                  const newDateTime = new Date(currentDate);
-                                  newDateTime.setHours(hours);
-                                  newDateTime.setMinutes(minutes);
-                                  field.onChange(newDateTime);
-                                }
-                              }}
-                            />
-                            <Clock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                          </div>
-                        </div>
-                      </div>
+                      <FormControl>
+                        <Input
+                          type="datetime-local"
+                          {...field}
+                          value={field.value || ""}
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}

@@ -57,12 +57,12 @@ export const dataEntries = pgTable("data_entries", {
   // First Instance Court Information
   gjykataShkalle: varchar("gjykata_shkalle", { length: 500 }), // Gjykata e Shkallës së Parë
   fazaGjykataShkalle: varchar("faza_gjykata_shkalle", { length: 255 }), // Faza në të cilën ndodhet procesi (Shkallë I)
-  zhvillimiSeancesShkalleI: timestamp("zhvillimi_seances_shkalle_i"), // Zhvillimi i seances gjyqesorë data,ora (Shkallë I)
+  zhvillimiSeancesShkalleI: timestamp("zhvillimi_seances_shkalle_i", { mode: "string" }), // Zhvillimi i seances gjyqesorë data,ora (Shkallë I)
   
   // Appeal Court Information
   gjykataApelit: varchar("gjykata_apelit", { length: 500 }), // Gjykata e Apelit
   fazaGjykataApelit: varchar("faza_gjykata_apelit", { length: 255 }), // Faza në të cilën ndodhet procesi (Apel)
-  zhvillimiSeancesApel: timestamp("zhvillimi_seances_apel"), // Zhvillimi i seances gjyqesorë data,ora (Apel) - NEW FROM CSV
+  zhvillimiSeancesApel: timestamp("zhvillimi_seances_apel", { mode: "string" }), // Zhvillimi i seances gjyqesorë data,ora (Apel) - NEW FROM CSV
   
   // Current Status
   fazaAktuale: varchar("faza_aktuale", { length: 255 }), // Faza në të cilën ndodhet proçesi

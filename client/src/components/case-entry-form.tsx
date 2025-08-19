@@ -56,8 +56,8 @@ export default function CaseEntryForm() {
     mutationFn: async (data: FormData) => {
       const transformedData = {
         ...data,
-        zhvillimiSeancesShkalleI: data.zhvillimiSeancesShkalleI ? new Date(data.zhvillimiSeancesShkalleI).toISOString() : null,
-        zhvillimiSeancesApel: data.zhvillimiSeancesApel ? new Date(data.zhvillimiSeancesApel).toISOString() : null
+        zhvillimiSeancesShkalleI: data.zhvillimiSeancesShkalleI || undefined,
+        zhvillimiSeancesApel: data.zhvillimiSeancesApel || undefined
       };
       console.log("Submitting case data:", transformedData);
       const response = await apiRequest("/api/data-entries", "POST", transformedData);

@@ -36,10 +36,10 @@ export default function CaseEntryForm() {
       objektiIPadise: "",
       gjykataShkalle: "",
       fazaGjykataShkalle: "",
-      zhvillimiSeancesShkalleI: undefined,
+      zhvillimiSeancesShkalleI: "",
       gjykataApelit: "",
       fazaGjykataApelit: "",
-      zhvillimiSeancesApel: undefined,
+      zhvillimiSeancesApel: "",
       fazaAktuale: "",
       perfaqesuesi: "",
       demiIPretenduar: "",
@@ -56,8 +56,8 @@ export default function CaseEntryForm() {
     mutationFn: async (data: FormData) => {
       const transformedData = {
         ...data,
-        zhvillimiSeancesShkalleI: data.zhvillimiSeancesShkalleI || undefined,
-        zhvillimiSeancesApel: data.zhvillimiSeancesApel || undefined
+        zhvillimiSeancesShkalleI: data.zhvillimiSeancesShkalleI ? new Date(data.zhvillimiSeancesShkalleI).toISOString() : "",
+        zhvillimiSeancesApel: data.zhvillimiSeancesApel ? new Date(data.zhvillimiSeancesApel).toISOString() : ""
       };
       console.log("Submitting case data:", transformedData);
       const response = await apiRequest("/api/data-entries", "POST", transformedData);

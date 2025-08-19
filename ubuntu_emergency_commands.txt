@@ -1,19 +1,86 @@
-URGENT: Your file got corrupted during the copy operation. Run these commands immediately:
+# UBUNTU EMERGENCY DEPLOYMENT COMMANDS
+# Copy and paste these commands directly on your server
 
-systemctl stop albpetrol-legal
-cd /opt/ceshtje_ligjore/ceshtje_ligjore
+# Step 1: Remove corrupted file
+rm -f client/src/components/case-entry-form.tsx
 
-# Restore from backup
-cp client/src/components/case-table.tsx.backup client/src/components/case-table.tsx
+# Step 2: Create working component
+cat << 'COMPONENT_EOF' > client/src/components/case-entry-form.tsx
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import { insertDataEntrySchema, type InsertDataEntry } from "@shared/schema";
 
-# Clear build cache completely  
-rm -rf dist/
-rm -rf node_modules/.vite/
+export default function CaseEntryForm() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-# Try building with original file first
-npm run build
+  const form = useForm<InsertDataEntry>({
+    resolver: zodResolver(insertDataEntrySchema),
+    defaultValues: {
+      paditesi: "",
+      iPaditur: "",
+      personITrete: "",
+      objektiIPadise: "",
+      gjykataShkalle: "",
+      fazaGjykataShkalle: "",
+      gjykataApelit: "",
+      fazaGjykataApelit: "",
+      fazaAktuale: "",
+      perfaqesuesi: "",
+      demiIPretenduar: "",
+      shumaGjykata: "",
+      vendimEkzekutim: "",
+      fazaEkzekutim: "",
+      gjykataLarte: "",
+    },
+  });
 
-# If that works, start service
-systemctl start albpetrol-legal
+  const createMutation = useMutation({
+    mutationFn: async (data: InsertDataEntry) => apiRequest("/api/data-entries", "POST", data),
+    onSuccess: () => {
+      toast({ title: "Çështja u regjistrua", description: "Të dhënat u ruajtën me sukses" });
+      form.reset();
+      queryClient.invalidateQueries({ queryKey: ["/api/data-entries"] });
+    },
+    onError: (error: any) => {
+      toast({ title: "Gabim", description: error.message || "Ndodhi një gabim", variant: "destructive" });
+    },
+  });
 
-# Then we'll apply the fix properly using nano editor instead of cat
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6">Regjistro Çështje të Re</h1>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit((data) => createMutation.mutate(data))} className="space-y-4">
+          <FormField control={form.control} name="paditesi" render={({ field }) => (
+            <FormItem><FormLabel>Paditesi</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+          )} />
+          <FormField control={form.control} name="iPaditur" render={({ field }) => (
+            <FormItem><FormLabel>I Paditur</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+          )} />
+          <FormField control={form.control} name="objektiIPadise" render={({ field }) => (
+            <FormItem><FormLabel>Objekti i Padisë</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>
+          )} />
+          <Button type="submit" disabled={createMutation.isPending}>
+            {createMutation.isPending ? "Duke regjistruar..." : "Regjistro Çështjen"}
+          </Button>
+        </form>
+      </Form>
+    </div>
+  );
+}
+COMPONENT_EOF
+
+# Step 3: Fix server storage issues  
+sed -i 's/import { eq, desc, asc, and, or, sql, getTableColumns }/import { eq, desc, asc, and, ilike, or, sql, getTableColumns }/' server/storage.ts
+
+# Step 4: Build and deploy
+npm run build && sudo systemctl restart albpetrol-legal && sleep 15 && sudo systemctl status albpetrol-legal --no-pager && echo "SUCCESS: https://legal.albpetrol.al"

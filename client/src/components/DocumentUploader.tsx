@@ -4,7 +4,7 @@ import Uppy from "@uppy/core";
 import { DashboardModal } from "@uppy/react";
 import "@uppy/core/dist/style.min.css";
 import "@uppy/dashboard/dist/style.min.css";
-import AwsS3 from "@uppy/aws-s3";
+import XHRUpload from "@uppy/xhr-upload";
 import type { UploadResult } from "@uppy/core";
 import { Button } from "@/components/ui/button";
 import { FileText, Upload } from "lucide-react";
@@ -49,8 +49,8 @@ export function DocumentUploader({
   children,
 }: DocumentUploaderProps) {
   const [showModal, setShowModal] = useState(false);
-  const [uppy] = useState(() =>
-    new Uppy({
+  const [uppy] = useState(() => {
+    const uppyInstance = new Uppy({
       restrictions: {
         maxNumberOfFiles,
         maxFileSize,
@@ -58,10 +58,22 @@ export function DocumentUploader({
       },
       autoProceed: false,
       debug: true,
-    })
-      .use(AwsS3, {
-        shouldUseMultipart: false,
-        getUploadParameters: onGetUploadParameters,
+    });
+
+    uppyInstance
+      .use(XHRUpload, {
+        method: 'PUT',
+        formData: false,
+        bundle: false,
+        limit: maxNumberOfFiles,
+        endpoint: 'placeholder', // Will be updated per file
+        getResponseData: (xhr: XMLHttpRequest) => {
+          return { url: xhr.responseURL };
+        },
+        shouldRetry: (xhr: XMLHttpRequest) => {
+          const status = xhr.status;
+          return status === 500 || status === 503 || status === 504;
+        }
       })
       .on("upload-error", (file, error, response) => {
         console.error("Upload error details:", { 
@@ -84,8 +96,28 @@ export function DocumentUploader({
         });
         onComplete?.(result);
         setShowModal(false);
-      })
-  );
+      });
+
+    // Update upload endpoint for each file
+    uppyInstance.on('file-added', async (file) => {
+      try {
+        const params = await onGetUploadParameters();
+        console.log('Setting upload endpoint for file:', file.name, 'URL:', params.url);
+        
+        const xhrPlugin = uppyInstance.getPlugin('XHRUpload') as any;
+        if (xhrPlugin) {
+          xhrPlugin.opts.endpoint = params.url;
+          xhrPlugin.opts.headers = {
+            'Content-Type': file.type || 'application/octet-stream'
+          };
+        }
+      } catch (error) {
+        console.error('Error setting upload parameters:', error);
+      }
+    });
+
+    return uppyInstance;
+  });
 
   return (
     <div>

@@ -99,8 +99,8 @@ export function setupAuth(app: Express) {
     }
   });
 
-  // Login route
-  app.post("/api/auth/login", (req, res, next) => {
+  // Login route (both endpoints for compatibility)
+  app.post("/api/login", (req, res, next) => {
     passport.authenticate("local", async (err: any, user: User | false) => {
       if (err) {
         return res.status(500).json({ message: "Internal server error" });

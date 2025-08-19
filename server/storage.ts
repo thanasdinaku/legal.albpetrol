@@ -317,7 +317,7 @@ export class DatabaseStorage implements IStorage {
   async createDataEntry(entry: InsertDataEntry): Promise<DataEntry> {
     const [dataEntry] = await db
       .insert(dataEntries)
-      .values([entry])
+      .values(entry)
       .returning();
     return dataEntry;
   }
@@ -348,6 +348,7 @@ export class DatabaseStorage implements IStorage {
           ilike(dataEntries.vendimEkzekutim, searchTerm),
           ilike(dataEntries.fazaEkzekutim, searchTerm),
           ilike(dataEntries.gjykataLarte, searchTerm),
+          ilike(users.firstName, searchTerm)
         )
       );
     }
@@ -415,6 +416,7 @@ export class DatabaseStorage implements IStorage {
           ilike(dataEntries.vendimEkzekutim, `%${filters.search}%`),
           ilike(dataEntries.fazaEkzekutim, `%${filters.search}%`),
           ilike(dataEntries.gjykataLarte, `%${filters.search}%`),
+          ilike(users.firstName, `%${filters.search}%`)
         )
       );
     }
@@ -543,6 +545,7 @@ export class DatabaseStorage implements IStorage {
           ilike(dataEntries.vendimEkzekutim, `%${filters.search}%`),
           ilike(dataEntries.fazaEkzekutim, `%${filters.search}%`),
           ilike(dataEntries.gjykataLarte, `%${filters.search}%`),
+          ilike(users.firstName, `%${filters.search}%`)
         )
       );
     }

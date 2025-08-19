@@ -15,9 +15,11 @@ import { insertDataEntrySchema } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
-import { CalendarIcon, Clock } from "lucide-react";
+import { CalendarIcon, Clock, FileText, Download, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { DocumentUploader } from "@/components/DocumentUploader";
+import type { UploadResult } from "@uppy/core";
 
 const formSchema = insertDataEntrySchema;
 
@@ -26,6 +28,7 @@ type FormData = z.infer<typeof formSchema>;
 export default function CaseEntryForm() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [attachments, setAttachments] = useState<Array<{ name: string; url: string; path: string }>>([]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -57,7 +60,8 @@ export default function CaseEntryForm() {
       const transformedData = {
         ...data,
         zhvillimiSeancesShkalleI: data.zhvillimiSeancesShkalleI || "",
-        zhvillimiSeancesApel: data.zhvillimiSeancesApel || ""
+        zhvillimiSeancesApel: data.zhvillimiSeancesApel || "",
+        attachments: attachments
       };
       console.log("Submitting case data:", transformedData);
       const response = await apiRequest("/api/data-entries", "POST", transformedData);
@@ -69,6 +73,7 @@ export default function CaseEntryForm() {
         description: "Çështja ligjore u regjistrua në bazën e të dhënave",
       });
       form.reset();
+      setAttachments([]);
       queryClient.invalidateQueries({ queryKey: ["/api/data-entries"] });
       queryClient.invalidateQueries({ queryKey: ["/api/dashboard/stats"] });
       queryClient.invalidateQueries({ queryKey: ["/api/dashboard/recent-entries"] });
@@ -86,6 +91,40 @@ export default function CaseEntryForm() {
   const onSubmit = async (data: FormData) => {
     console.log("Form submission data:", data);
     await createMutation.mutateAsync(data);
+  };
+
+  // Document upload handlers
+  const handleGetUploadParameters = async () => {
+    const response = await apiRequest("/api/documents/upload", "POST");
+    const data = await response.json();
+    return { method: "PUT" as const, url: data.uploadURL };
+  };
+
+  const handleUploadComplete = (result: UploadResult<Record<string, unknown>, Record<string, unknown>>) => {
+    const uploadedFiles = (result.successful || []).map((file) => {
+      const originalName = file.name || 'document';
+      const uploadURL = file.uploadURL as string;
+      
+      // Extract document path from the upload URL for download purposes
+      const urlParts = new URL(uploadURL);
+      const documentPath = urlParts.pathname.split('/').slice(-2).join('/'); // Get last two path segments
+      
+      return {
+        name: originalName,
+        url: uploadURL,
+        path: `/documents/${documentPath}`,
+      };
+    });
+    
+    setAttachments(prev => [...prev, ...uploadedFiles]);
+    toast({
+      title: "Dokumentet u ngarkuan me sukses",
+      description: `${uploadedFiles.length} dokument(e) u shtuan në çështje`,
+    });
+  };
+
+  const removeAttachment = (index: number) => {
+    setAttachments(prev => prev.filter((_, i) => i !== index));
   };
 
   // Court options exactly from CSV
@@ -438,6 +477,70 @@ export default function CaseEntryForm() {
                       </FormItem>
                     )}
                   />
+                </div>
+              </div>
+
+              {/* Document Attachments */}
+              <div className="space-y-6">
+                <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Dokumente të Bashkangjitura</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-gray-600">
+                      Mund të bashkangjitnit dokumente PDF ose Word që lidhen me çështjen ligjore
+                    </p>
+                    <DocumentUploader
+                      maxNumberOfFiles={5}
+                      maxFileSize={10485760} // 10MB
+                      onGetUploadParameters={handleGetUploadParameters}
+                      onComplete={handleUploadComplete}
+                    />
+                  </div>
+                  
+                  {/* Display uploaded attachments */}
+                  {attachments.length > 0 && (
+                    <div className="space-y-3">
+                      <h4 className="text-sm font-medium text-gray-700">
+                        Dokumente të Ngarkuara ({attachments.length})
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {attachments.map((attachment, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border"
+                          >
+                            <div className="flex items-center space-x-2 min-w-0">
+                              <FileText className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                              <span className="text-sm text-gray-700 truncate" title={attachment.name}>
+                                {attachment.name}
+                              </span>
+                            </div>
+                            <div className="flex items-center space-x-1">
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => window.open(attachment.path, '_blank')}
+                                className="h-8 w-8 p-0"
+                                data-testid={`download-attachment-${index}`}
+                              >
+                                <Download className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => removeAttachment(index)}
+                                className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                data-testid={`remove-attachment-${index}`}
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 

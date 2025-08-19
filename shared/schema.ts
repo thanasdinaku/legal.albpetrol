@@ -79,6 +79,9 @@ export const dataEntries = pgTable("data_entries", {
   perfunduar: varchar("perfunduar", { length: 255 }), // Përfunduar - NEW FROM CSV
   gjykataLarte: varchar("gjykata_larte", { length: 255 }), // Gjykata e Lartë
   
+  // File attachments (PDF, Word documents)
+  attachments: jsonb("attachments").default('[]'),
+  
   // System fields
   createdById: varchar("created_by_id").notNull().references(() => users.id),
   createdAt: timestamp("created_at").defaultNow(),

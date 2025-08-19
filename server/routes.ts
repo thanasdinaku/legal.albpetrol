@@ -40,6 +40,7 @@ import { sessions } from "@shared/schema";
 import { sendNewEntryNotification, sendEditEntryNotification, sendDeleteEntryNotification, testEmailConnection } from "./email";
 import { generateUserManual } from "./fixed-manual";
 import { generateSimpleManual } from "./simple-manual";
+import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Apply rate limiting to all routes
@@ -917,6 +918,33 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
     } catch (error) {
       console.error("Error reading markdown manual:", error);
       res.status(500).json({ message: "Failed to load user manual" });
+    }
+  });
+
+  // Document upload routes
+  app.post("/api/documents/upload", isAuthenticated, async (req, res) => {
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const uploadURL = await objectStorageService.getDocumentUploadURL();
+      res.json({ uploadURL });
+    } catch (error) {
+      console.error("Error generating document upload URL:", error);
+      res.status(500).json({ error: "Failed to generate upload URL" });
+    }
+  });
+
+  // Document download route
+  app.get("/documents/:documentPath(*)", isAuthenticated, async (req, res) => {
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const documentFile = await objectStorageService.getDocumentFile(req.path);
+      objectStorageService.downloadObject(documentFile, res);
+    } catch (error) {
+      console.error("Error downloading document:", error);
+      if (error instanceof ObjectNotFoundError) {
+        return res.sendStatus(404);
+      }
+      return res.sendStatus(500);
     }
   });
 

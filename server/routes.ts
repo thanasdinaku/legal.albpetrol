@@ -363,10 +363,11 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
           // Headers matching the current data entry form exactly
           [
             'Nr. Rendor', 'Paditesi (Emër e Mbiemër)', 'I Paditur', 'Person i Tretë', 'Objekti i Padisë', 
-            'Gjykata e Shkallës së Parë', 'Faza në të cilën ndodhet procesi (Shkallë I)', 'Gjykata e Apelit', 
-            'Faza në të cilën ndodhet procesi (Apel)', 'Faza në të cilën ndodhet proçesi', 'Përfaqësuesi i Albpetrol SH.A.', 
-            'Dëmi i Pretenduar në Objekt', 'Shuma e Caktuar nga Gjykata me Vendim', 'Vendim me Ekzekutim të Përkohshëm', 
-            'Faza në të cilën ndodhet Ekzekutimi', 'Gjykata e Lartë', 'Krijuar nga', 'Krijuar më'
+            'Gjykata e Shkallës së Parë', 'Faza në të cilën ndodhet procesi (Shkallë I)', 'Zhvillimi i seances gjyqesorë data,ora (Shkallë I)',
+            'Gjykata e Apelit', 'Faza në të cilën ndodhet procesi (Apel)', 'Zhvillimi i seances gjyqesorë data,ora (Apel)',
+            'Faza në të cilën ndodhet proçesi', 'Përfaqësuesi i Albpetrol SH.A.', 'Dëmi i Pretenduar në Objekt', 
+            'Shuma e Caktuar nga Gjykata me Vendim', 'Vendim me Ekzekutim të Përkohshëm', 'Faza në të cilën ndodhet Ekzekutimi', 
+            'Gjykata e Lartë', 'Krijuar nga', 'Krijuar më'
           ],
           // Data rows mapped to correct structure
           ...entries.map(entry => [
@@ -377,8 +378,10 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
             entry.objektiIPadise || '',                                                 // Objekti i Padisë
             entry.gjykataShkalle || '',                                                 // Gjykata e Shkallës së Parë
             entry.fazaGjykataShkalle || '',                                            // Faza në të cilën ndodhet procesi (Shkallë I)
+            entry.zhvillimiSeancesShkalleI || '',                                       // Zhvillimi i seances gjyqesorë data,ora (Shkallë I)
             entry.gjykataApelit || '',                                                  // Gjykata e Apelit
             entry.fazaGjykataApelit || '',                                             // Faza në të cilën ndodhet procesi (Apel)
+            entry.zhvillimiSeancesApel || '',                                          // Zhvillimi i seances gjyqesorë data,ora (Apel)
             entry.fazaAktuale || '',                                                    // Faza në të cilën ndodhet proçesi
             entry.perfaqesuesi || '',                                                   // Përfaqësuesi i Albpetrol SH.A.
             entry.demiIPretenduar || '',                                               // Dëmi i Pretenduar në Objekt
@@ -402,8 +405,10 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
           { wch: 25 }, // Objekti i Padisë
           { wch: 35 }, // Gjykata e Shkallës së Parë
           { wch: 30 }, // Faza në të cilën ndodhet procesi (Shkallë I)
+          { wch: 30 }, // Zhvillimi i seances gjyqesorë data,ora (Shkallë I)
           { wch: 35 }, // Gjykata e Apelit
           { wch: 30 }, // Faza në të cilën ndodhet procesi (Apel)
+          { wch: 30 }, // Zhvillimi i seances gjyqesorë data,ora (Apel)
           { wch: 25 }, // Faza në të cilën ndodhet proçesi
           { wch: 25 }, // Përfaqësuesi i Albpetrol SH.A.
           { wch: 25 }, // Dëmi i Pretenduar në Objekt
@@ -427,12 +432,12 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
 
         // Merge cells for the main title across all columns
         worksheet['!merges'] = [
-          { s: { c: 0, r: 0 }, e: { c: 17, r: 0 } } // Merge A1 to R1 (18 columns)
+          { s: { c: 0, r: 0 }, e: { c: 19, r: 0 } } // Merge A1 to T1 (20 columns)
         ];
 
         // Style the header row (row 3)
         const headerRowIndex = 2; // 0-indexed, so row 3
-        for (let col = 0; col < 18; col++) {
+        for (let col = 0; col < 20; col++) {
           const cellRef = XLSX.utils.encode_cell({ r: headerRowIndex, c: col });
           if (worksheet[cellRef]) {
             worksheet[cellRef].s = {
@@ -451,7 +456,7 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
 
         // Add borders to data cells
         for (let row = 3; row < worksheetData.length; row++) {
-          for (let col = 0; col < 18; col++) {
+          for (let col = 0; col < 20; col++) {
             const cellRef = XLSX.utils.encode_cell({ r: row, c: col });
             if (worksheet[cellRef]) {
               worksheet[cellRef].s = {
@@ -484,10 +489,11 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
         // CSV export - headers matching form exactly
         const csvHeaders = [
           'Nr. Rendor', 'Paditesi (Emër e Mbiemër)', 'I Paditur', 'Person i Tretë', 'Objekti i Padisë',
-          'Gjykata e Shkallës së Parë', 'Faza në të cilën ndodhet procesi (Shkallë I)', 'Gjykata e Apelit', 
-          'Faza në të cilën ndodhet procesi (Apel)', 'Faza në të cilën ndodhet proçesi', 'Përfaqësuesi i Albpetrol SH.A.',
-          'Dëmi i Pretenduar në Objekt', 'Shuma e Caktuar nga Gjykata me Vendim', 'Vendim me Ekzekutim të Përkohshëm',
-          'Faza në të cilën ndodhet Ekzekutimi', 'Gjykata e Lartë', 'Krijuar nga', 'Krijuar më'
+          'Gjykata e Shkallës së Parë', 'Faza në të cilën ndodhet procesi (Shkallë I)', 'Zhvillimi i seances gjyqesorë data,ora (Shkallë I)',
+          'Gjykata e Apelit', 'Faza në të cilën ndodhet procesi (Apel)', 'Zhvillimi i seances gjyqesorë data,ora (Apel)',
+          'Faza në të cilën ndodhet proçesi', 'Përfaqësuesi i Albpetrol SH.A.', 'Dëmi i Pretenduar në Objekt',
+          'Shuma e Caktuar nga Gjykata me Vendim', 'Vendim me Ekzekutim të Përkohshëm', 'Faza në të cilën ndodhet Ekzekutimi', 
+          'Gjykata e Lartë', 'Krijuar nga', 'Krijuar më'
         ];
 
         const csvRows = entries.map(entry => [
@@ -498,8 +504,10 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
           `"${entry.objektiIPadise || ''}"`,                                          // Objekti i Padisë
           `"${entry.gjykataShkalle || ''}"`,                                          // Gjykata e Shkallës së Parë
           `"${entry.fazaGjykataShkalle || ''}"`,                                      // Faza në të cilën ndodhet procesi (Shkallë I)
+          `"${entry.zhvillimiSeancesShkalleI || ''}"`,                               // Zhvillimi i seances gjyqesorë data,ora (Shkallë I)
           `"${entry.gjykataApelit || ''}"`,                                           // Gjykata e Apelit
           `"${entry.fazaGjykataApelit || ''}"`,                                       // Faza në të cilën ndodhet procesi (Apel)
+          `"${entry.zhvillimiSeancesApel || ''}"`,                                   // Zhvillimi i seances gjyqesorë data,ora (Apel)
           `"${entry.fazaAktuale || ''}"`,                                             // Faza në të cilën ndodhet proçesi
           `"${entry.perfaqesuesi || ''}"`,                                            // Përfaqësuesi i Albpetrol SH.A.
           `"${entry.demiIPretenduar || ''}"`,                                         // Dëmi i Pretenduar në Objekt

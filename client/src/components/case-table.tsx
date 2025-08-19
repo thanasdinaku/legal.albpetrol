@@ -367,8 +367,10 @@ export default function CaseTable() {
                         <TableHead className="min-w-[200px]">Objekti i Padisë</TableHead>
                         <TableHead className="min-w-[150px]">Gjykata Shkallë së Parë e</TableHead>
                         <TableHead className="min-w-[180px]">Faza Shkallë I</TableHead>
+                        <TableHead className="min-w-[180px]">Zhvillimi i seances gjyqesorë (Shkallë I)</TableHead>
                         <TableHead className="min-w-[150px]">Gjykata Apelit</TableHead>
                         <TableHead className="min-w-[180px]">Faza Apelit</TableHead>
+                        <TableHead className="min-w-[180px]">Zhvillimi i seances gjyqesorë (Apel)</TableHead>
                         <TableHead className="min-w-[150px]">Faza në të cilën ndodhet proçesi</TableHead>
                         <TableHead className="min-w-[150px]">Përfaqësuesi</TableHead>
                         <TableHead className="min-w-[150px]">Demi i Pretenduar</TableHead>
@@ -394,8 +396,10 @@ export default function CaseTable() {
                           </TableCell>
                           <TableCell className="max-w-[150px] truncate">{caseItem.gjykataShkalle || "-"}</TableCell>
                           <TableCell className="max-w-[180px] truncate">{caseItem.fazaGjykataShkalle || "-"}</TableCell>
+                          <TableCell className="max-w-[180px] truncate">{caseItem.zhvillimiSeancesShkalleI || "-"}</TableCell>
                           <TableCell className="max-w-[150px] truncate">{caseItem.gjykataApelit || "-"}</TableCell>
                           <TableCell className="max-w-[180px] truncate">{caseItem.fazaGjykataApelit || "-"}</TableCell>
+                          <TableCell className="max-w-[180px] truncate">{caseItem.zhvillimiSeancesApel || "-"}</TableCell>
                           <TableCell className="max-w-[150px] truncate">{caseItem.fazaAktuale || "-"}</TableCell>
                           <TableCell className="max-w-[150px] truncate">{caseItem.perfaqesuesi || "-"}</TableCell>
                           <TableCell className="max-w-[150px] truncate">{caseItem.demiIPretenduar || "-"}</TableCell>
@@ -512,12 +516,20 @@ export default function CaseTable() {
                     <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.fazaGjykataShkalle || "-"}</p>
                   </div>
                   <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Zhvillimi i seances gjyqesorë (Shkallë I)</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.zhvillimiSeancesShkalleI || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">Gjykata Apelit</label>
                     <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.gjykataApelit || "-"}</p>
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">Faza Apelit</label>
                     <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.fazaGjykataApelit || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Zhvillimi i seances gjyqesorë (Apel)</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.zhvillimiSeancesApel || "-"}</p>
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">Faza Aktuale</label>

@@ -94,10 +94,12 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
   app.post('/api/data-entries', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.id;
-      const validatedData = insertDataEntrySchema.parse({
-        ...req.body,
+      // Validate form data first, then add system fields
+      const formData = insertDataEntrySchema.parse(req.body);
+      const validatedData = {
+        ...formData,
         createdById: userId,
-      });
+      };
       
       const entry = await storage.createDataEntry(validatedData);
       

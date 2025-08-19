@@ -143,6 +143,7 @@ export const changePasswordSchema = z.object({
 
 export const insertDataEntrySchema = createInsertSchema(dataEntries).omit({
   id: true,
+  createdById: true,
   createdAt: true,
   updatedAt: true,
 });

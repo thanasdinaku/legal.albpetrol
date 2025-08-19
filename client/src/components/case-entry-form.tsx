@@ -19,9 +19,7 @@ import { CalendarIcon, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 
-const formSchema = insertDataEntrySchema.omit({
-  createdById: true,
-});
+const formSchema = insertDataEntrySchema;
 
 type FormData = z.infer<typeof formSchema>;
 

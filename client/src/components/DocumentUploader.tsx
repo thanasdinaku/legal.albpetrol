@@ -62,13 +62,22 @@ export function DocumentUploader({
 
     uppyInstance
       .use(XHRUpload, {
-        method: 'PUT',
-        formData: false,
+        endpoint: '/api/documents/upload-file',
+        method: 'POST',
+        formData: true,
+        fieldName: 'document',
         bundle: false,
         limit: maxNumberOfFiles,
-        endpoint: 'placeholder', // Will be updated per file
+        headers: {
+          // Let the browser set Content-Type with boundary for multipart
+        },
         getResponseData: (xhr: XMLHttpRequest) => {
-          return { url: xhr.responseURL };
+          try {
+            const response = JSON.parse(xhr.responseText);
+            return response;
+          } catch {
+            return { url: xhr.responseURL };
+          }
         },
         shouldRetry: (xhr: XMLHttpRequest) => {
           const status = xhr.status;
@@ -98,22 +107,9 @@ export function DocumentUploader({
         setShowModal(false);
       });
 
-    // Update upload endpoint for each file
-    uppyInstance.on('file-added', async (file) => {
-      try {
-        const params = await onGetUploadParameters();
-        console.log('Setting upload endpoint for file:', file.name, 'URL:', params.url);
-        
-        const xhrPlugin = uppyInstance.getPlugin('XHRUpload') as any;
-        if (xhrPlugin) {
-          xhrPlugin.opts.endpoint = params.url;
-          xhrPlugin.opts.headers = {
-            'Content-Type': file.type || 'application/octet-stream'
-          };
-        }
-      } catch (error) {
-        console.error('Error setting upload parameters:', error);
-      }
+    // Log file additions for debugging
+    uppyInstance.on('file-added', (file) => {
+      console.log('File added for upload:', file.name, 'Type:', file.type);
     });
 
     return uppyInstance;

@@ -153,6 +153,50 @@ export class ObjectStorageService {
     const documentId = rawObjectPath.slice(documentDir.length);
     return `/documents/${documentId}`;
   }
+
+  // Server-side upload method to bypass network restrictions
+  async uploadDocumentBuffer(
+    buffer: Buffer, 
+    originalName: string, 
+    mimeType: string
+  ): Promise<string> {
+    const privateObjectDir = this.getPrivateObjectDir();
+    if (!privateObjectDir) {
+      throw new Error(
+        "PRIVATE_OBJECT_DIR not set. Create a bucket in 'Object Storage' " +
+          "tool and set PRIVATE_OBJECT_DIR env var."
+      );
+    }
+
+    // Generate unique filename with original extension
+    const fileExtension = originalName.split('.').pop() || 'bin';
+    const uniqueId = randomUUID();
+    const fileName = `${uniqueId}.${fileExtension}`;
+    
+    const fullPath = `${privateObjectDir}/documents/${fileName}`;
+    const { bucketName, objectName } = parseObjectPath(fullPath);
+
+    console.log("Uploading to bucket:", bucketName, "object:", objectName);
+
+    const bucket = objectStorageClient.bucket(bucketName);
+    const file = bucket.file(objectName);
+
+    // Upload the buffer directly to Google Cloud Storage
+    await file.save(buffer, {
+      metadata: {
+        contentType: mimeType,
+        metadata: {
+          originalName: originalName,
+          uploadedAt: new Date().toISOString(),
+        }
+      }
+    });
+
+    console.log("Successfully uploaded file to object storage");
+    
+    // Return the normalized document path for client use
+    return `/documents/documents/${fileName}`;
+  }
 }
 
 function parseObjectPath(path: string): {

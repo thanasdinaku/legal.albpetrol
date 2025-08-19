@@ -41,6 +41,29 @@ import { sendNewEntryNotification, sendEditEntryNotification, sendDeleteEntryNot
 import { generateUserManual } from "./fixed-manual";
 import { generateSimpleManual } from "./simple-manual";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
+import multer from "multer";
+
+// Configure multer for file uploads
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    // Accept only PDF, DOC, and DOCX files
+    const allowedTypes = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ];
+    
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only PDF, DOC, and DOCX files are allowed'));
+    }
+  }
+});
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Apply rate limiting to all routes
@@ -930,6 +953,45 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
     } catch (error) {
       console.error("Error generating document upload URL:", error);
       res.status(500).json({ error: "Failed to generate upload URL" });
+    }
+  });
+
+  // Server-side file upload handler to bypass network restrictions
+  app.post("/api/documents/upload-file", isAuthenticated, upload.single('document'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No file provided" });
+      }
+
+      console.log("Received file upload:", {
+        filename: req.file.originalname,
+        size: req.file.size,
+        mimetype: req.file.mimetype
+      });
+
+      const objectStorageService = new ObjectStorageService();
+      
+      // Upload file to object storage using server-side method
+      const documentPath = await objectStorageService.uploadDocumentBuffer(
+        req.file.buffer,
+        req.file.originalname,
+        req.file.mimetype
+      );
+
+      console.log("File uploaded successfully to:", documentPath);
+
+      // Return the document path for client use
+      res.json({ 
+        url: documentPath,
+        originalName: req.file.originalname,
+        size: req.file.size,
+        type: req.file.mimetype
+      });
+
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      res.status(500).json({ error: "Failed to upload file: " + errorMessage });
     }
   });
 

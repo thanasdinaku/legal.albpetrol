@@ -129,6 +129,7 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
       res.status(201).json(entry);
     } catch (error) {
       if (error instanceof z.ZodError) {
+        console.error("Validation errors:", error.errors);
         return res.status(400).json({ message: "Validation error", errors: error.errors });
       }
       console.error("Error creating data entry:", error);

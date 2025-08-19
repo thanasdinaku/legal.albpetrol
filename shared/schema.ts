@@ -44,26 +44,42 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-// Legal cases table (Albanian court system)
+// Legal cases table (Albanian court system) - Exact CSV structure
 export const dataEntries = pgTable("data_entries", {
-  id: serial("id").primaryKey(), // This serves as Nr. Rendor (auto-incrementing row number)
-  paditesi: varchar("paditesi", { length: 255 }).notNull(), // Paditesi (Emer e Mbiemer)
-  iPaditur: varchar("i_paditur", { length: 255 }).notNull(), // I Paditur
-  personITrete: varchar("person_i_trete", { length: 255 }), // Person I Trete
-  objektiIPadise: text("objekti_i_padise"), // Objekti I Padise
-  gjykataShkalle: varchar("gjykata_shkalle", { length: 255 }), // Gjykata e Shk. I
-  fazaGjykataShkalle: varchar("faza_gjykata_shkalle", { length: 255 }), // Faza në të cilën ndodhet proçesi (Shkalle I)
-  zhvillimiSeancesShkalleI: timestamp("zhvillimi_seances_shkalle_i"), // Zhvillimi i seances gjyqesorë data,ora (Shkalle I)
-  gjykataApelit: varchar("gjykata_apelit", { length: 255 }), // Gjykata e Apelit
-  fazaGjykataApelit: varchar("faza_gjykata_apelit", { length: 255 }), // Faza në të cilën ndodhet proçesi (Apelit)
-  fazaAktuale: varchar("faza_aktuale", { length: 255 }), // Faza në të cilën ndodhet proçesi (current)
-  perfaqesuesi: varchar("perfaqesuesi", { length: 255 }), // Perfaqesuesi I Albpetrol SH.A.
-  demiIPretenduar: varchar("demi_i_pretenduar", { length: 255 }), // Demi i pretenduar ne objekt
-  shumaGjykata: varchar("shuma_gjykata", { length: 255 }), // Shuma e caktuar nga Gjykata me vendim
-  vendimEkzekutim: varchar("vendim_ekzekutim", { length: 255 }), // Vendim me ekzekutim te perkohshem
-  fazaEkzekutim: varchar("faza_ekzekutim", { length: 255 }), // Faza ne te cilen ndodhet
-
-  gjykataLarte: varchar("gjykata_larte", { length: 255 }), // Gjykata e Larte
+  id: serial("id").primaryKey(), // Nr. Rendor (auto-incrementing)
+  
+  // Basic Case Information (Required fields marked with * in CSV)
+  paditesi: varchar("paditesi", { length: 255 }).notNull(), // Paditesi (Emër e Mbiemër)*
+  iPaditur: varchar("i_paditur", { length: 255 }).notNull(), // I Paditur*
+  personITrete: varchar("person_i_trete", { length: 255 }), // Person i Tretë
+  objektiIPadise: text("objekti_i_padise"), // Objekti i Padisë
+  
+  // First Instance Court Information
+  gjykataShkalle: varchar("gjykata_shkalle", { length: 500 }), // Gjykata e Shkallës së Parë
+  fazaGjykataShkalle: varchar("faza_gjykata_shkalle", { length: 255 }), // Faza në të cilën ndodhet procesi (Shkallë I)
+  zhvillimiSeancesShkalleI: timestamp("zhvillimi_seances_shkalle_i"), // Zhvillimi i seances gjyqesorë data,ora (Shkallë I)
+  
+  // Appeal Court Information
+  gjykataApelit: varchar("gjykata_apelit", { length: 500 }), // Gjykata e Apelit
+  fazaGjykataApelit: varchar("faza_gjykata_apelit", { length: 255 }), // Faza në të cilën ndodhet procesi (Apel)
+  zhvillimiSeancesApel: timestamp("zhvillimi_seances_apel"), // Zhvillimi i seances gjyqesorë data,ora (Apel) - NEW FROM CSV
+  
+  // Current Status
+  fazaAktuale: varchar("faza_aktuale", { length: 255 }), // Faza në të cilën ndodhet proçesi
+  perfaqesuesi: varchar("perfaqesuesi", { length: 255 }), // Përfaqësuesi i Albpetrol SH.A.
+  
+  // Financial Information
+  demiIPretenduar: varchar("demi_i_pretenduar", { length: 255 }), // Dëmi i Pretenduar në Objekt
+  shumaGjykata: varchar("shuma_gjykata", { length: 255 }), // Shuma e Caktuar nga Gjykata me Vendim
+  vendimEkzekutim: varchar("vendim_ekzekutim", { length: 255 }), // Vendim me Ekzekutim të përkohshëm
+  fazaEkzekutim: varchar("faza_ekzekutim", { length: 255 }), // Faza në të cilën ndodhet
+  
+  // Final Status Fields from CSV
+  ankimuar: varchar("ankimuar", { length: 255 }), // Ankimuar - NEW FROM CSV
+  perfunduar: varchar("perfunduar", { length: 255 }), // Përfunduar - NEW FROM CSV
+  gjykataLarte: varchar("gjykata_larte", { length: 255 }), // Gjykata e Lartë
+  
+  // System fields
   createdById: varchar("created_by_id").notNull().references(() => users.id),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),

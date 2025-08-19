@@ -101,18 +101,21 @@ export default function CaseEntryForm() {
   };
 
   const handleUploadComplete = (result: UploadResult<Record<string, unknown>, Record<string, unknown>>) => {
+    console.log("Upload complete result:", result);
     const uploadedFiles = (result.successful || []).map((file) => {
       const originalName = file.name || 'document';
       const uploadURL = file.uploadURL as string;
+      console.log("Processing uploaded file:", { name: originalName, uploadURL });
       
-      // Extract document path from the upload URL for download purposes
+      // Extract document ID from the upload URL
       const urlParts = new URL(uploadURL);
-      const documentPath = urlParts.pathname.split('/').slice(-2).join('/'); // Get last two path segments
+      const pathSegments = urlParts.pathname.split('/').filter(Boolean);
+      const documentId = pathSegments[pathSegments.length - 1]; // Get the last segment (UUID)
       
       return {
         name: originalName,
         url: uploadURL,
-        path: `/documents/${documentPath}`,
+        path: `/documents/documents/${documentId}`, // Match the server path structure
       };
     });
     

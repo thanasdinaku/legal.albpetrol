@@ -57,12 +57,31 @@ export function DocumentUploader({
         allowedFileTypes: ['.pdf', '.doc', '.docx'],
       },
       autoProceed: false,
+      debug: true,
     })
       .use(AwsS3, {
         shouldUseMultipart: false,
         getUploadParameters: onGetUploadParameters,
       })
+      .on("upload-error", (file, error, response) => {
+        console.error("Upload error details:", { 
+          file: file?.name, 
+          error: error?.message || error, 
+          response: response,
+          status: response?.status
+        });
+      })
+      .on("upload-success", (file, response) => {
+        console.log("Upload success:", { file: file?.name, response });
+      })
+      .on("error", (error) => {
+        console.error("General Uppy error:", error);
+      })
       .on("complete", (result) => {
+        console.log("Upload complete result:", {
+          successful: result.successful?.length || 0,
+          failed: result.failed?.length || 0
+        });
         onComplete?.(result);
         setShowModal(false);
       })

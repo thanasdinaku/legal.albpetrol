@@ -281,6 +281,44 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
               )}
             />
 
+            {/* Zhvillimi Seances Shkalle I */}
+            <FormField
+              control={form.control}
+              name="zhvillimiSeancesShkalleI"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>Zhvillimi i seances gjyqesorë data,ora (Shkallë I)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="datetime-local"
+                      {...field}
+                      value={field.value || ""}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Zhvillimi Seances Apel */}
+            <FormField
+              control={form.control}
+              name="zhvillimiSeancesApel"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>Zhvillimi i seances gjyqesorë data,ora (Apel)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="datetime-local"
+                      {...field}
+                      value={field.value || ""}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             {/* Faza Aktuale */}
             <FormField
               control={form.control}
@@ -378,20 +416,9 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Gjykata e Lartë</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value || ""}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Zgjidhni gjykatën e lartë" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {supremeCourtOptions.map((court) => (
-                        <SelectItem key={court} value={court}>
-                          {court}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Input placeholder="P.Sh. Po, në proces" {...field} value={field.value || ""} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

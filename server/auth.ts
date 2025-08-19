@@ -135,7 +135,7 @@ export function setupAuth(app: Express) {
     })(req, res, next);
   });
 
-  app.post("/api/auth/verify-2fa", async (req, res) => {
+  app.post("/api/verify-2fa", async (req, res) => {
     try {
       const { userId, code } = req.body;
       

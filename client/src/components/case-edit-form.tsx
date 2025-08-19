@@ -93,15 +93,15 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
       const uploadURL = file.uploadURL as string;
       console.log("Processing uploaded file:", { name: originalName, uploadURL });
       
-      // Extract document ID from the upload URL
-      const urlParts = new URL(uploadURL);
-      const pathSegments = urlParts.pathname.split('/').filter(Boolean);
-      const documentId = pathSegments[pathSegments.length - 1]; // Get the last segment (UUID)
+      // Extract document ID from the upload URL path
+      // uploadURL is already in format: /documents/documents/UUID.extension
+      const pathSegments = uploadURL.split('/').filter(Boolean);
+      const documentId = pathSegments[pathSegments.length - 1]; // Get the last segment (UUID.extension)
       
       return {
         name: originalName,
-        url: uploadURL,
-        path: `/documents/documents/${documentId}`, // Match the server path structure
+        url: uploadURL, // This is the path returned from server
+        path: uploadURL, // Use the same path since it's already in correct format
       };
     });
     

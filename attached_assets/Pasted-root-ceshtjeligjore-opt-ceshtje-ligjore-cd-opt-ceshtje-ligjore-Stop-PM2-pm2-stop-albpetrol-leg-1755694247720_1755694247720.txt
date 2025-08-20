@@ -1,0 +1,119 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Stop PM2
+pm2 stop albpetrol-legal
+pm2 delete albpetrol-legal
+
+# Complete clean reinstall
+rm -rf node_modules dist
+npm cache clean --force
+npm install
+
+# Rebuild
+npm run build
+
+# Test directly first
+timeout 10s node dist/index.js &
+sleep 5
+ss -tlnp | grep 5000
+
+# If that fails, try with tsx
+if ! ss -tlnp | grep -q 5000; then
+  pkill -f "node dist/index.js"
+  echo "Trying with tsx..."
+  timeout 10s npx tsx dist/index.js &
+curl -I http://localhost:5000nes 10 --nostreamt.log',og',
+[PM2] Applying action stopProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 7    │ stopped   │ 0%       │ 0b       │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Applying action deleteProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+npm warn using --force Recommended protections disabled.
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+
+added 656 packages, and audited 657 packages in 15s
+
+80 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+failed to load config from /opt/ceshtje-ligjore/vite.config.ts
+error during build:
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'vite' imported from /opt/ceshtje-ligjore/node_modules/.vite-temp/vite.config.ts.timestamp-1755694212068-659f23609bff2.mjs
+    at packageResolve (node:internal/modules/esm/resolve:873:9)
+    at moduleResolve (node:internal/modules/esm/resolve:946:18)
+    at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+    at ModuleJob._link (node:internal/modules/esm/module_job:130:49)
+[2] 18689
+node:internal/modules/cjs/loader:1215
+  throw err;
+  ^
+
+Error: Cannot find module '/opt/ceshtje-ligjore/dist/index.js'
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)
+    at Module._load (node:internal/modules/cjs/loader:1043:27)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+    at node:internal/main/run_main_module:28:49 {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: []
+}
+
+Node.js v20.19.4
+[2]-  Exit 1                  timeout 10s node dist/index.js
+Trying with tsx...
+[2] 18707
+[PM2][WARN] Applications albpetrol-legal not running, starting...
+[PM2] App [albpetrol-legal] launched (1 instances)
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 0    │ online    │ 0%       │ 14.5mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[2]-  Terminated              timeout 10s npx tsx dist/index.js
+[TAILING] Tailing last 10 lines for [albpetrol-legal] process (change the value with --lines option)
+/var/log/pm2/albpetrol-legal-out-0.log last 10 lines:
+0|albpetro | 2025-08-20T12:30:49: 📧 2FA codes will be displayed in console for: it.system@albpetrol.al
+0|albpetro | 2025-08-20T12:30:49: ✨ Features: Professional UI with Albpetrol logo, 2FA, Real Dashboard matching Replit exactly
+0|albpetro | 2025-08-20T12:33:57: Starting Albpetrol Legal System with Professional Replit Interface...
+0|albpetro | 2025-08-20T12:33:57: ✅ Albpetrol Legal System (Professional Replit Interface) running on port 5000
+0|albpetro | 2025-08-20T12:33:57: 🌐 Server accessible at http://0.0.0.0:5000
+0|albpetro | 2025-08-20T12:33:57: 🔐 Test Login: it.system@albpetrol.al / Admin2025!
+0|albpetro | 2025-08-20T12:33:57: 📧 2FA codes will be displayed in console for: it.system@albpetrol.al
+0|albpetro | 2025-08-20T12:33:57: ✨ Features: Professional UI with Albpetrol logo, 2FA, Real Dashboard matching Replit exactly
+0|albpetro | 2025-08-20T12:34:22: Login attempt: it.system@albpetrol.al
+0|albpetro | 2025-08-20T12:34:22: 2FA code generated for it.system@albpetrol.al: 416375
+
+/var/log/pm2/albpetrol-legal-error-0.log last 10 lines:
+0|albpetro | 2025-08-20T12:48:19:     at moduleResolve (node:internal/modules/esm/resolve:946:18)
+0|albpetro | 2025-08-20T12:48:19:     at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+0|albpetro | 2025-08-20T12:48:19:     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+0|albpetro | 2025-08-20T12:48:19:     at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+0|albpetro | 2025-08-20T12:48:19:     at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+0|albpetro | 2025-08-20T12:48:19:     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+0|albpetro | 2025-08-20T12:48:19:     at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+0|albpetro | 2025-08-20T12:48:19:   code: 'ERR_MODULE_NOT_FOUND'
+0|albpetro | 2025-08-20T12:48:19: }
+0|albpetro | 2025-08-20T12:50:23: npm warn exec The following package was not found and will be installed: tsx@4.20.4
+
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Couldn't connect to server
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

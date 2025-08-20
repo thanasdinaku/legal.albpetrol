@@ -1,0 +1,65 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # Test server connection first
+curl http://localhost:5000/api/health
+
+# Check what nginx is actually serving
+curl -I http://10.5.20.31/
+
+# Check the HTML file content
+curl -s http://10.5.20.31/ | head -15
+
+# Check if JavaScript file exists and is accessible
+curl -I http://localhost:5000/assets/index-BtDfTy6g.js
+
+# Check the file structure
+ls -la dist/public/
+ls -la dist/public/assets/
+{"status":"ok","app":"Albpetrol Legal System","timestamp":"2025-08-20T11:03:03.583Z"}HTTP/1.1 200 OK
+Server: nginx/1.24.0 (Ubuntu)
+Date: Wed, 20 Aug 2025 11:03:03 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Length: 858
+Connection: keep-alive
+X-Powered-By: Express
+Accept-Ranges: bytes
+Cache-Control: public, max-age=0
+Last-Modified: Wed, 20 Aug 2025 10:51:51 GMT
+ETag: W/"35a-198c71b49e9"
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Sistemi i Menaxhimit të Rasteve Ligjore</title>
+    <meta name="description" content="Sistem profesional i menaxhimit të rasteve ligjore me kontroll të aksesit të bazuar në role për operacione efikase në bazën e të dhënave.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="module" crossorigin src="/assets/index-BtDfTy6g.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DoXX-CQz.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Accept-Ranges: bytes
+Cache-Control: public, max-age=0
+Last-Modified: Wed, 20 Aug 2025 10:51:51 GMT
+ETag: W/"35a-198c71b49e9"
+Content-Type: text/html; charset=UTF-8
+Content-Length: 858
+Date: Wed, 20 Aug 2025 11:03:03 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+total 16
+drwxr-xr-x 3 root root 4096 Aug 20 10:51 .
+drwxr-xr-x 3 root root 4096 Aug 20 10:57 ..
+drwxr-xr-x 2 root root 4096 Aug 20 10:51 assets
+-rw-r--r-- 1 root root  858 Aug 20 10:51 index.html
+total 12
+drwxr-xr-x 2 root root 4096 Aug 20 10:51 .
+drwxr-xr-x 3 root root 4096 Aug 20 10:51 ..
+-rw-r--r-- 1 root root 2796 Aug 20 10:51 index-DoXX-CQz.css
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 
+

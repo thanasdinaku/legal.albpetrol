@@ -1,0 +1,62 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cat > dist/public/assets/index-Bv9ka2U9.js << 'JSEOF'
+// Albanian Legal Case Management System - Complete React Application
+import React from 'https://esm.sh/react@18.2.0';
+import ReactDOM from 'https://esm.sh/react-dom@18.2.0/client';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+function App() {
+  const [user, setUser] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+  const [entries, setEntries] = React.useState([]);
+  const [stats, setStats] = React.useState({});
+  const [currentView, setCurrentView] = React.useState('dashboard');
+
+  React.useEffect(() => {
+    fetch('/api/auth/user')
+      .then(res => res.ok ? res.json() : null)
+      .then(userData => {
+        setUser(userData);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+JSEOFrender(React.createElement(App));im e sipër.')tSize: '16px' }Raporte'),e' '
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cat > dist/public/assets/index-C3xJPPxz.css << 'CSSEOF'
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  line-height: 1.6;
+  color: #374151;
+  background-color: #f8f9fa;
+  font-size: 16px;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+CSSEOFdding: 12px 20px !important;; }
+root@ceshtjeligjore:/opt/ceshtje-ligjore# pm2 restart albpetrol-legal
+echo "✅ Complete React application deployed!"
+echo "🌐 Access: http://10.5.20.31"
+echo "👤 Login: it.system@albpetrol.al / Admin2025!"
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 2    │ online    │ 0%       │ 18.6mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+✅ Complete React application deployed!
+🌐 Access: http://10.5.20.31
+👤 Login: it.system@albpetrol.al / Admin2025!
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

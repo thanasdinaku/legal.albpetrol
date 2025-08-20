@@ -1,0 +1,94 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Install all required dependencies including dev dependencies
+npm install --save-dev @vitejs/plugin-react @types/node
+
+# Try building just the backend first (skip frontend vite build)
+npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+# Check if backend build worked
+if [ -f "dist/index.js" ]; then
+  echo "BACKEND BUILD SUCCESS!"
+  ls -la dist/index.js
+  
+  # Set environment variables and test
+  export NODE_ENV=production
+  export PORT=5000
+  export DATABASE_URL="postgresql://ceshtje_user:Albpetrol2025@localhost:5432/ceshtje_ligjore"
+  export SESSION_SECRET="albpetrol_ceshtje_ligjore_secret_2025_production_ready"
+  export ISSUER_URL="https://replit.com/oidc"
+  
+  # Test the backend server
+  timeout 20s node dist/index.js > backend_test.log 2>&1 &
+  SERVER_PID=$!
+  sleep 10
+  
+  # Test if backend responds
+  echo "Testing backend server..."
+  curl -v http://localhost:5000/ 2>&1 | head -10
+  
+  echo "=== BACKEND SERVER OUTPUT ==="
+  cat backend_test.log | head -15
+  
+  # If backend works, configure PM2 and complete deployment
+  if curl -s http://localhost:5000/ >/dev/null 2>&1; then
+    echo "🎉 BACKEND IS WORKING!"
+echo "=== DEPLOYMENT STATUS CHECK ==="cking logs"..."et_2025_production_ready',htje_ligjore',
+
+removed 1 package, changed 2 packages, and audited 584 packages in 4s
+
+77 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 low, 1 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+Need to install the following packages:
+esbuild@0.25.9
+Ok to proceed? (y) y
+
+
+  dist/index.js  133.9kb
+
+⚡ Done in 9ms
+BACKEND BUILD SUCCESS!
+-rw-r--r-- 1 root root 137063 Aug 20 08:30 dist/index.js
+[1] 14758
+[1]+  Exit 1                  timeout 20s node dist/index.js > backend_test.log 2>&1
+Testing backend server...
+* Host localhost:5000 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying [::1]:5000...
+* connect to ::1 port 5000 from ::1 port 59096 failed: Connection refused
+*   Trying 127.0.0.1:5000...
+* connect to 127.0.0.1 port 5000 from 127.0.0.1 port 35684 failed: Connection refused
+* Failed to connect to localhost port 5000 after 0 ms: Couldn't connect to server
+=== BACKEND SERVER OUTPUT ===
+node:internal/modules/esm/resolve:873
+  throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+        ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'vite' imported from /opt/ceshtje-ligjore/dist/index.js
+    at packageResolve (node:internal/modules/esm/resolve:873:9)
+    at moduleResolve (node:internal/modules/esm/resolve:946:18)
+    at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+    at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+  code: 'ERR_MODULE_NOT_FOUND'
+}
+Backend not responding - checking logs
+=== DEPLOYMENT STATUS CHECK ===
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 
+

@@ -1,0 +1,60 @@
+root@ceshtjeligjore:~# # Clean package cache
+apt autoremove -y
+apt autoclean
+
+# Remove all application directories
+rm -rf /opt/*
+rm -rf /var/www/*
+rm -rf /etc/nginx
+rm -rf /var/lib/postgresql
+rm -rf /root/.pm2
+rm -rf /root/.npm
+rm -rf /home/*/.pm2
+
+# Clean systemd services
+systemctl disable postgresql nginx pm2-* 2>/dev/null
+rm -f /etc/systemd/system/pm2-*.service
+systemctl daemon-reload
+
+# Reset firewall if configured
+ufw --force reset 2>/dev/null
+
+# Update system to latest
+apt update
+echo "=== CLEANUP COMPLETED ==="gres|nginx)" | grep -v grep
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+0 upgraded, 0 newly installed, 0 to remove and 1 not upgraded.
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Backing up 'user.rules' to '/etc/ufw/user.rules.20250820_074759'
+Backing up 'before.rules' to '/etc/ufw/before.rules.20250820_074759'
+Backing up 'after.rules' to '/etc/ufw/after.rules.20250820_074759'
+Backing up 'user6.rules' to '/etc/ufw/user6.rules.20250820_074759'
+Backing up 'before6.rules' to '/etc/ufw/before6.rules.20250820_074759'
+Backing up 'after6.rules' to '/etc/ufw/after6.rules.20250820_074759'
+
+Hit:1 http://security.ubuntu.com/ubuntu noble-security InRelease
+Hit:2 http://al.archive.ubuntu.com/ubuntu noble InRelease                    
+Hit:3 https://deb.nodesource.com/node_20.x nodistro InRelease
+Hit:4 http://al.archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:5 http://al.archive.ubuntu.com/ubuntu noble-backports InRelease
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+1 package can be upgraded. Run 'apt list --upgradable' to see it.
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Calculating upgrade... Done
+Get more security updates through Ubuntu Pro with 'esm-apps' enabled:
+  libzvbi-common libavcodec60 libzvbi0t64 libavutil58 libswresample4
+Learn more about Ubuntu Pro at https://ubuntu.com/pro
+The following upgrades have been deferred due to phasing:
+  intel-media-va-driver
+0 upgraded, 0 newly installed, 0 to remove and 1 not upgraded.
+root        2291  0.0  0.0   2704  2048 ?        Ss   07:41   0:00 fusermount3 -o rw,nosuid,nodev,fsname=portal,auto_unmount,subtype=portal -- /run/user/1000/doc
+=== CLEANUP COMPLETED ===
+root@ceshtjeligjore:~# 

@@ -4,7 +4,7 @@ This is a full-stack legal case management system built with React and Express.j
 
 The project's business vision is to provide a robust, secure, and user-friendly platform for managing legal case data, specifically tailored for organizations like Albpetrol. Its market potential lies in offering a specialized data management solution for legal departments that require stringent access control, comprehensive data tracking, and efficient reporting. The project ambitions include achieving enterprise-grade security and reliability, comprehensive real-time user activity tracking, and an intuitive Albanian-language interface.
 
-**Deployment Status**: Successfully deployed complete React application matching Replit interface on Ubuntu 24.04.3 LTS server at http://10.5.20.31 with PM2 process management, Nginx reverse proxy, and PostgreSQL database. Full React dashboard with authentication, statistics cards, and data tables deployed. Transfer script `ubuntu_react_transfer.sh` created for deployment replication. Production environment is stable and operational as of August 20, 2025.
+**Deployment Status**: Successfully deployed complete React application on Ubuntu 24.04.3 LTS server at http://10.5.20.31 with PM2 process management, Nginx reverse proxy, and PostgreSQL database. React application features professional Albanian login page, dashboard with statistics cards (Total Cases, Today, Active), authentication flow, and responsive design. Transfer completed August 20, 2025 with working React application serving from `/dist/public/` directory using ESM React imports from CDN. Production environment is stable and operational.
 
 # User Preferences
 

@@ -1,0 +1,160 @@
+root@ceshtjeligjore:~# # Create application directory
+mkdir -p /opt/ceshtje-ligjore
+cd /opt/ceshtje-ligjore
+
+# Clone fresh application
+git clone https://github.com/thanasdinaku/ceshtje_ligjore.git .
+
+# Install dependencies
+npm install
+
+# Check if clone successful
+ls -la
+echo "=== APPLICATION CLONED ==="
+Cloning into '.'...
+remote: Enumerating objects: 2017, done.
+remote: Counting objects: 100% (2017/2017), done.
+remote: Compressing objects: 100% (618/618), done.
+remote: Total 2017 (delta 1416), reused 1975 (delta 1374), pack-reused 0 (from 0)
+Receiving objects: 100% (2017/2017), 5.90 MiB | 1.60 MiB/s, done.
+Resolving deltas: 100% (1416/1416), done.
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+
+added 681 packages, and audited 682 packages in 16s
+
+89 packages are looking for funding
+  run `npm fund` for details
+
+10 vulnerabilities (1 low, 8 moderate, 1 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+total 1356
+drwxr-xr-x   9 root root   4096 Aug 20 07:56 .
+drwxr-xr-x   3 root root   4096 Aug 20 07:56 ..
+-rw-r--r--   1 root root  12920 Aug 20 07:56 add_court_session_field.sh
+-rw-r--r--   1 root root   5130 Aug 20 07:56 add_elbasan_court.sh
+-rw-r--r--   1 root root   1017 Aug 20 07:56 ADMIN_LOGIN_CREDENTIALS.md
+-rw-r--r--   1 root root  28221 Aug 20 07:56 apply_production_fix.sh
+drwxr-xr-x   2 root root  20480 Aug 20 07:56 attached_assets
+-rw-r--r--   1 root root  20152 Aug 20 07:56 auto_fix_form.sh
+-rw-r--r--   1 root root   9312 Aug 20 07:56 build_complete_database_from_csv.sh
+-rw-r--r--   1 root root  10699 Aug 20 07:56 build_database_exact_csv_structure.sh
+-rw-r--r--   1 root root   8861 Aug 20 07:56 build_database_from_scratch.sh
+drwxr-xr-x   4 root root   4096 Aug 20 07:56 client
+-rw-r--r--   1 root root   2168 Aug 20 07:56 cloudflare_configuration.md
+-rw-r--r--   1 root root   9019 Aug 20 07:56 complete_court_session_field.sh
+-rw-r--r--   1 root root  26377 Aug 20 07:56 complete_csv_form_component.tsx
+-rw-r--r--   1 root root   4302 Aug 20 07:56 complete_debugging_solution.sh
+-rw-r--r--   1 root root  23759 Aug 20 07:56 complete_fix_syntax_errors.sh
+-rw-r--r--   1 root root  15391 Aug 20 07:56 complete_form_rebuild.sh
+-rw-r--r--   1 root root   5691 Aug 20 07:56 complete_user_cleanup.sh
+-rw-r--r--   1 root root    459 Aug 20 07:56 components.json
+-rw-r--r--   1 root root   6734 Aug 20 07:56 comprehensive_security_analysis.md
+-rw-r--r--   1 root root    273 Aug 20 07:56 cookies.txt
+-rw-r--r--   1 root root    903 Aug 20 07:56 create_admin_user.sh
+-rw-r--r--   1 root root  18923 Aug 20 07:56 create_pentest_pdf.html
+-rw-r--r--   1 root root   3453 Aug 20 07:56 debug_production_api.sh
+-rwxr-xr-x   1 root root   2172 Aug 20 07:56 deploy_cloudflare_rule.sh
+-rw-r--r--   1 root root   2309 Aug 20 07:56 deploy_filtering_fix_production.sh
+-rwxr-xr-x   1 root root   3511 Aug 20 07:56 deploy_filtering_fix.sh
+-rw-r--r--   1 root root    325 Aug 20 07:56 drizzle.config.ts
+-rw-r--r--   1 root root   5415 Aug 20 07:56 emergency_database_restoration.sh
+-rw-r--r--   1 root root   2020 Aug 20 07:56 emergency_syntax_fix.sh
+-rwxr-xr-x   1 root root   5750 Aug 20 07:56 find_header_locations.sh
+-rw-r--r--   1 root root   3657 Aug 20 07:56 fix_2fa_email_production.sh
+-rw-r--r--   1 root root   2886 Aug 20 07:56 fix_cache_and_verify.sh
+-rw-r--r--   1 root root   5098 Aug 20 07:56 fix_case_submission_error.sh
+-rwxr-xr-x   1 root root   3160 Aug 20 07:56 fix_cloudflare_api_blocking.sh
+-rwxr-xr-x   1 root root   4046 Aug 20 07:56 fix_cloudflare_tunnel_api.sh
+-rw-r--r--   1 root root  11991 Aug 20 07:56 fix_court_session_field.sh
+-rw-r--r--   1 root root   1256 Aug 20 07:56 fix_database_connection.sh
+-rw-r--r--   1 root root   3812 Aug 20 07:56 fix_data_table_error.sh
+-rw-r--r--   1 root root   5182 Aug 20 07:56 fix_edit_button_production.sh
+-rw-r--r--   1 root root  20191 Aug 20 07:56 fix_filtering_complete.sh
+-rw-r--r--   1 root root  28777 Aug 20 07:56 fix_filtering_sorting.sh
+-rw-r--r--   1 root root   6788 Aug 20 07:56 fix_header_ubuntu.sh
+-rw-r--r--   1 root root  21517 Aug 20 07:56 fix_incomplete_form.sh
+-rw-r--r--   1 root root   5972 Aug 20 07:56 fix_manual_page_production.sh
+-rw-r--r--   1 root root   1023 Aug 20 07:56 fix_pm2_env_loading.sh
+-rw-r--r--   1 root root   4430 Aug 20 07:56 fix_production_filtering.sh
+-rw-r--r--   1 root root   2605 Aug 20 07:56 fix_routes_directly.sh
+-rw-r--r--   1 root root   1972 Aug 20 07:56 fix_storage_syntax.sh
+-rw-r--r--   1 root root   5009 Aug 20 07:56 fix_syntax_error_direct.sh
+-rw-r--r--   1 root root   3460 Aug 20 07:56 fix_syntax_error.sh
+-rw-r--r--   1 root root   2770 Aug 20 07:56 fix_ubuntu_final.sh
+-rw-r--r--   1 root root   3133 Aug 20 07:56 fix_ubuntu.sh
+-rw-r--r--   1 root root   8705 Aug 20 07:56 generate_pdf_report.js
+-rw-r--r--   1 root root  10599 Aug 20 07:56 generate_pentest_pdf.js
+drwxr-xr-x   8 root root   4096 Aug 20 07:56 .git
+-rw-r--r--   1 root root    665 Aug 20 07:56 .gitignore
+-rw-r--r--   1 root root  12087 Aug 20 07:56 INSTALLATION_GUIDE_UBUNTU.md
+-rw-r--r--   1 root root   2401 Aug 20 07:56 manual_edit_fix.txt
+-rw-r--r--   1 root root  11417 Aug 20 07:56 MANUAL_PERDORUESI_DETAJUAR.md
+drwxr-xr-x 454 root root  20480 Aug 20 07:57 node_modules
+-rw-r--r--   1 root root   4252 Aug 20 07:56 package.json
+-rw-r--r--   1 root root 408566 Aug 20 07:57 package-lock.json
+-rw-r--r--   1 root root   8175 Aug 20 07:56 Penetration_Test_Report_Legal_Albpetrol_20250815.txt
+-rwxr-xr-x   1 root root   7846 Aug 20 07:56 pentest_legal_albpetrol.sh
+-rw-r--r--   1 root root  15108 Aug 20 07:56 pentest_report_20250815_132608.txt
+-rw-r--r--   1 root root   5516 Aug 20 07:56 PENTEST_REPORT_legal_albpetrol_al.md
+-rw-r--r--   1 root root     80 Aug 20 07:56 postcss.config.js
+drwxr-xr-x   2 root root   4096 Aug 20 07:56 production_backup_20250815_084119
+-rw-r--r--   1 root root   2998 Aug 20 07:56 production_deployment_guide.md
+-rw-r--r--   1 root root   1537 Aug 20 07:56 quick_restore_guide.md
+-rw-r--r--   1 root root   3072 Aug 20 07:56 RECOVERY_INSTRUCTIONS.md
+-rw-r--r--   1 root root   2616 Aug 20 07:56 remove_thanas_user_fixed.sh
+-rw-r--r--   1 root root   1268 Aug 20 07:56 remove_thanas_user.sh
+-rw-r--r--   1 root root    900 Aug 20 07:56 .replit
+-rw-r--r--   1 root root   4537 Aug 20 07:56 replit.md
+-rw-r--r--   1 root root    996 Aug 20 07:56 reset_admin_password.sh
+drwxr-xr-x   2 root root   4096 Aug 20 07:56 server
+-rw-r--r--   1 root root   2435 Aug 20 07:56 setup_manual_page.sh
+drwxr-xr-x   2 root root   4096 Aug 20 07:56 shared
+-rw-r--r--   1 root root   4521 Aug 20 07:56 sync_to_github.sh
+-rw-r--r--   1 root root   2644 Aug 20 07:56 tailwind.config.ts
+-rw-r--r--   1 root root     26 Aug 20 07:56 test_manual.pdf
+-rw-r--r--   1 root root   3061 Aug 20 07:56 transfer_and_remove_user.sh
+-rw-r--r--   1 root root   4278 Aug 20 07:56 transfer_and_remove_user_simple.sh
+-rw-r--r--   1 root root    657 Aug 20 07:56 tsconfig.json
+-rw-r--r--   1 root root   8861 Aug 20 07:56 ubuntu_complete_deployment.sh
+-rw-r--r--   1 root root  27083 Aug 20 07:56 ubuntu_complete_diagnostic_fix.sh
+-rw-r--r--   1 root root   1308 Aug 20 07:56 ubuntu_complete_fix.sh
+-rw-r--r--   1 root root   8346 Aug 20 07:56 ubuntu_complete_restoration.sh
+-rw-r--r--   1 root root   6283 Aug 20 07:56 UBUNTU_CONFIG_COLLECTION.sh
+-rw-r--r--   1 root root   4344 Aug 20 07:56 ubuntu_database_recovery.sh
+-rw-r--r--   1 root root   1798 Aug 20 07:56 ubuntu_data_entry_fix.sh
+-rw-r--r--   1 root root   7965 Aug 20 07:56 ubuntu_deployment_script.sh
+-rw-r--r--   1 root root   1674 Aug 20 07:56 ubuntu_ecosystem_fix.sh
+-rw-r--r--   1 root root    532 Aug 20 07:56 ubuntu_emergency_commands.txt
+-rw-r--r--   1 root root   1377 Aug 20 07:56 ubuntu_emergency_fix.sh
+-rw-r--r--   1 root root   1411 Aug 20 07:56 ubuntu_final_pm2_fix.sh
+-rw-r--r--   1 root root   1100 Aug 20 07:56 ubuntu_final_verification.sh
+-rw-r--r--   1 root root   1089 Aug 20 07:56 ubuntu_fix_form_loading.sh
+-rw-r--r--   1 root root   4255 Aug 20 07:56 ubuntu_fix_script.sh
+-rw-r--r--   1 root root   5327 Aug 20 07:56 UBUNTU_FRESH_DEPLOYMENT.md
+-rw-r--r--   1 root root   5534 Aug 20 07:56 ubuntu_fresh_deployment.sh
+-rw-r--r--   1 root root    930 Aug 20 07:56 ubuntu_immediate_fix.sh
+-rw-r--r--   1 root root  27425 Aug 20 07:56 ubuntu_manual_fix_commands.sh
+-rw-r--r--   1 root root   3040 Aug 20 07:56 UBUNTU_MANUAL_FIX.md
+-rwxr-xr-x   1 root root  11282 Aug 20 07:56 ubuntu_production_deployment.sh
+-rw-r--r--   1 root root   2681 Aug 20 07:56 UBUNTU_PRODUCTION_FIX.md
+-rw-r--r--   1 root root   4597 Aug 20 07:56 UBUNTU_SECURITY_ANALYSIS_GUIDE.md
+-rw-r--r--   1 root root   6763 Aug 20 07:56 update_court_names.sh
+-rw-r--r--   1 root root   5619 Aug 20 07:56 update_headers_exact.sh
+-rwxr-xr-x   1 root root   5086 Aug 20 07:56 update_header_text_ubuntu.sh
+-rwxr-xr-x   1 root root   2149 Aug 20 07:56 verify_header_changes.sh
+-rw-r--r--   1 root root    971 Aug 20 07:56 vite.config.ts
+-rw-r--r--   1 root root   7686 Aug 20 07:56 working_form_fix.sh
+=== APPLICATION CLONED ===
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

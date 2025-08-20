@@ -1,0 +1,80 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Clean Vite cache
+rm -rf node_modules/.vite .vite dist/public
+
+# Install React and Vite properly
+npm install react react-dom @types/react @types/react-dom
+npm install --save-dev vite @vitejs/plugin-react typescript
+
+# Create working React app structure
+mkdir -p client/src
+
+# Create index.html
+cat > client/index.html << 'EOF'
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Albpetrol - Sistemi Ligjor</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+curl -I http://localhost:5000null --root client --outDir ../dist/publicius: '8px
+
+up to date, audited 657 packages in 2s
+
+80 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+
+up to date, audited 657 packages in 4s
+
+80 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+file:///usr/lib/node_modules/vite/dist/node/cli.js:314
+			for (const name of Object.keys(options)) if (name !== "--" && !this.hasOption(name) && !globalCommand.hasOption(name)) throw new CACError(`Unknown option \`${name.length > 1 ? `--${name}` : `-${name}`}\``);
+			                                                                                                                             ^
+
+CACError: Unknown option `--root`
+    at Command.checkUnknownOptions (file:///usr/lib/node_modules/vite/dist/node/cli.js:314:129)
+    at CAC.runMatchedCommand (file:///usr/lib/node_modules/vite/dist/node/cli.js:477:11)
+    at CAC.parse (file:///usr/lib/node_modules/vite/dist/node/cli.js:433:17)
+    at file:///usr/lib/node_modules/vite/dist/node/cli.js:706:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+
+Node.js v20.19.4
+ls: cannot access 'dist/public/': No such file or directory
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 1    │ online    │ 0%       │ 11.6mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Couldn't connect to server
+HTTP/1.1 502 Bad Gateway
+Server: nginx/1.24.0 (Ubuntu)
+Date: Wed, 20 Aug 2025 12:57:27 GMT
+Content-Type: text/html
+Content-Length: 166
+Connection: keep-alive
+
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

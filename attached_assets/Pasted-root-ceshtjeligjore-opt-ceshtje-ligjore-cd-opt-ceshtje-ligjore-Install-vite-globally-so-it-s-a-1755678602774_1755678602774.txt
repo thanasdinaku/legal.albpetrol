@@ -1,0 +1,89 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Install vite globally so it's available
+npm install -g vite@latest
+
+# Also install locally to be sure
+npm install vite esbuild typescript
+
+# Verify vite is available
+which vite
+
+# Now rebuild
+npm run build
+
+# If build succeeds, test the rebuilt application
+if [ -f "dist/index.js" ]; then
+  echo "BUILD SUCCESS!"
+  
+  # Set environment variables
+  export NODE_ENV=production
+  export PORT=5000
+  export DATABASE_URL="postgresql://ceshtje_user:Albpetrol2025@localhost:5432/ceshtje_ligjore"
+  export SESSION_SECRET="albpetrol_ceshtje_ligjore_secret_2025_production_ready"
+  export ISSUER_URL="https://replit.com/oidc"
+  
+  # Test the rebuilt application
+  timeout 15s node dist/index.js > server_final_test.log 2>&1 &
+  SERVER_PID=$!
+  sleep 8
+  
+  # Test connection
+  curl -I http://localhost:5000/ && echo "SERVER RESPONDING!" || echo "Server not responding"
+  
+  echo "=== FINAL SERVER OUTPUT ==="
+  cat server_final_test.log | head -10
+echo "=== BUILD AND TEST COMPLETED ==="s"'on scripts"
+⠇
+
+
+
+
+added 13 packages in 2m
+
+5 packages are looking for funding
+  run `npm fund` for details
+
+up to date, audited 585 packages in 2s
+
+77 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 low, 1 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+/usr/bin/vite
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+failed to load config from /opt/ceshtje-ligjore/vite.config.ts
+error during build:
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'vite' imported from /opt/ceshtje-ligjore/node_modules/.vite-temp/vite.config.ts.timestamp-1755678587539-2c557bc077a4.mjs
+    at packageResolve (node:internal/modules/esm/resolve:873:9)
+    at moduleResolve (node:internal/modules/esm/resolve:946:18)
+    at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+    at ModuleJob._link (node:internal/modules/esm/module_job:130:49)
+BUILD FAILED - checking package.json scripts
+  "scripts": {
+    "dev": "NODE_ENV=development tsx server/index.ts",
+    "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+    "start": "NODE_ENV=production node dist/index.js",
+    "check": "tsc",
+    "db:push": "drizzle-kit push"
+=== BUILD AND TEST COMPLETED ===
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

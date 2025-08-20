@@ -1,0 +1,31 @@
+# Ubuntu Server Git Setup Commands
+# Copy and paste these commands on your Ubuntu server
+
+# Step 1: Configure Git identity
+cd /opt/ceshtje-ligjore
+git config --global user.name "Thanas Dinaku"
+git config --global user.email "thanas.dinaku@albpetrol.al"
+
+# Step 2: After creating Personal Access Token on GitHub, run:
+# (Replace YOUR_PERSONAL_ACCESS_TOKEN with the actual token)
+
+git remote set-url origin https://thanasdinaku:YOUR_PERSONAL_ACCESS_TOKEN@github.com/thanasdinaku/ceshtje_ligjore.git
+
+# Step 3: Test the connection
+git ls-remote origin
+
+# Step 4: If successful, you can now commit and push
+git add .
+git commit -m "feat: configure ubuntu server authentication"
+git push origin main
+
+# Example Personal Access Token URL format:
+# https://thanasdinaku:ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@github.com/thanasdinaku/ceshtje_ligjore.git
+
+# Step 5: For future commits
+git add .
+git commit -m "your commit message"
+git push origin main
+
+# Step 6: For updates (pull latest changes)
+git pull origin main

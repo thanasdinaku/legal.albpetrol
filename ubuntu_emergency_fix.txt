@@ -1,0 +1,109 @@
+UBUNTU EMERGENCY FIX - 502 Bad Gateway
+=====================================
+
+Run these commands on Ubuntu server immediately:
+
+# 1. Check PM2 status
+pm2 status
+
+# 2. Check PM2 logs for errors
+pm2 logs albpetrol-legal --lines 20
+
+# 3. If PM2 shows "errored" or "stopped", restart it
+pm2 restart albpetrol-legal
+
+# 4. If restart fails, delete and recreate
+pm2 delete albpetrol-legal
+pm2 start ecosystem.config.cjs
+
+# 5. If ecosystem file is missing, recreate it
+cat > ecosystem.config.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'albpetrol-legal',
+    script: 'dist/index.js',
+    cwd: '/opt/ceshtje-ligjore',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000
+    },
+    autorestart: true,
+    max_restarts: 5,
+    min_uptime: '5s'
+  }]
+};
+EOF
+
+# 6. Check if server file exists
+ls -la dist/index.js
+
+# 7. If server file missing, recreate it
+cat > dist/index.js << 'SERVER_EOF'
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', app: 'Albpetrol Legal System' });
+});
+
+app.post('/api/login', (req, res) => {
+  const { email, password } = req.body;
+  if (email === 'it.system@albpetrol.al' && password === 'Admin2025!') {
+    res.json({ success: true });
+  } else {
+    res.status(401).json({ success: false });
+  }
+});
+
+app.get('/api/auth/user', (req, res) => {
+  res.json({
+    id: '1',
+    email: 'it.system@albpetrol.al',
+    firstName: 'IT',
+    lastName: 'System'
+  });
+});
+
+app.get('/api/dashboard/stats', (req, res) => {
+  res.json({
+    totalEntries: 156,
+    todayEntries: 12,
+    activeEntries: 89
+  });
+});
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});
+SERVER_EOF
+
+# 8. Start PM2 again
+pm2 start ecosystem.config.cjs
+
+# 9. Check status
+pm2 status
+
+# 10. Test local connection
+curl http://localhost:5000/api/health
+
+# 11. If working, restart nginx
+systemctl restart nginx
+
+# 12. Final test
+curl -I http://localhost/

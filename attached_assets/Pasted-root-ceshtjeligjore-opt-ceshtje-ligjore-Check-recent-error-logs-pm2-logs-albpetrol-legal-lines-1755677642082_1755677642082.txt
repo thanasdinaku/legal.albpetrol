@@ -1,0 +1,413 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # Check recent error logs
+pm2 logs albpetrol-legal --lines 10 --err
+
+# Check if there's a more fundamental issue
+pm2 describe albpetrol-legal
+
+# Let's also check if the database is accessible
+psql -h localhost -U ceshtje_user -d ceshtje_ligjore -c "SELECT 1;" || echo "Database connection test failed"
+
+# Check if port 5000 is being used
+netstat -tlnp | grep :5000
+
+# Try starting the application directly to see the exact error
+node dist/index.js
+[TAILING] Tailing last 10 lines for [albpetrol-legal] process (change the value with --lines option)
+/opt/ceshtje-ligjore/logs/err-0.log last 10 lines:
+0|albpetro | 2025-08-20T08:10:49:   [Symbol(kError)]: Error: connect ECONNREFUSED 127.0.0.1:443
+0|albpetro | 2025-08-20T08:10:49:       at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|albpetro | 2025-08-20T08:10:49:     errno: -111,
+0|albpetro | 2025-08-20T08:10:49:     code: 'ECONNREFUSED',
+0|albpetro | 2025-08-20T08:10:49:     syscall: 'connect',
+0|albpetro | 2025-08-20T08:10:49:     address: '127.0.0.1',
+0|albpetro | 2025-08-20T08:10:49:     port: 443
+0|albpetro | 2025-08-20T08:10:49:   },
+0|albpetro | 2025-08-20T08:10:49:   [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443'
+0|albpetro | 2025-08-20T08:10:49: }
+
+0|albpetrol-legal  | 2025-08-20T08:10:57: ErrorEvent {
+0|albpetrol-legal  | 2025-08-20T08:10:57:   [Symbol(kTarget)]: WebSocket {
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _events: [Object: null prototype] {
+0|albpetrol-legal  | 2025-08-20T08:10:57:       error: [Function],
+0|albpetrol-legal  | 2025-08-20T08:10:57:       message: [Function],
+0|albpetrol-legal  | 2025-08-20T08:10:57:       close: [Function],
+0|albpetrol-legal  | 2025-08-20T08:10:57:       open: [Function]
+0|albpetrol-legal  | 2025-08-20T08:10:57:     },
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _eventsCount: 4,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _maxListeners: undefined,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _binaryType: 'arraybuffer',
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _closeCode: 1006,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _closeFrameReceived: false,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _closeFrameSent: false,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _closeMessage: <Buffer >,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _closeTimer: null,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _errorEmitted: true,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _extensions: {},
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _paused: false,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _protocol: '',
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _readyState: 3,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _receiver: null,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _sender: null,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _socket: null,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _bufferedAmount: 0,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _isServer: false,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _redirects: 0,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _autoPong: true,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _url: 'wss://localhost/v2',
+0|albpetrol-legal  | 2025-08-20T08:10:57:     _req: null,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     [Symbol(shapeMode)]: false,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     [Symbol(kCapture)]: false
+0|albpetrol-legal  | 2025-08-20T08:10:57:   },
+0|albpetrol-legal  | 2025-08-20T08:10:57:   [Symbol(kType)]: 'error',
+0|albpetrol-legal  | 2025-08-20T08:10:57:   [Symbol(kError)]: Error: connect ECONNREFUSED 127.0.0.1:443
+0|albpetrol-legal  | 2025-08-20T08:10:57:       at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|albpetrol-legal  | 2025-08-20T08:10:57:     errno: -111,
+0|albpetrol-legal  | 2025-08-20T08:10:57:     code: 'ECONNREFUSED',
+0|albpetrol-legal  | 2025-08-20T08:10:57:     syscall: 'connect',
+0|albpetrol-legal  | 2025-08-20T08:10:57:     address: '127.0.0.1',
+0|albpetrol-legal  | 2025-08-20T08:10:57:     port: 443
+0|albpetrol-legal  | 2025-08-20T08:10:57:   },
+0|albpetrol-legal  | 2025-08-20T08:10:57:   [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443'
+0|albpetrol-legal  | 2025-08-20T08:10:57: }
+0|albpetrol-legal  | 2025-08-20T08:11:05: ErrorEvent {
+0|albpetrol-legal  | 2025-08-20T08:11:05:   [Symbol(kTarget)]: WebSocket {
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _events: [Object: null prototype] {
+0|albpetrol-legal  | 2025-08-20T08:11:05:       error: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:05:       message: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:05:       close: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:05:       open: [Function]
+0|albpetrol-legal  | 2025-08-20T08:11:05:     },
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _eventsCount: 4,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _maxListeners: undefined,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _binaryType: 'arraybuffer',
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _closeCode: 1006,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _closeFrameReceived: false,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _closeFrameSent: false,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _closeMessage: <Buffer >,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _closeTimer: null,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _errorEmitted: true,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _extensions: {},
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _paused: false,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _protocol: '',
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _readyState: 3,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _receiver: null,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _sender: null,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _socket: null,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _bufferedAmount: 0,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _isServer: false,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _redirects: 0,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _autoPong: true,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _url: 'wss://localhost/v2',
+0|albpetrol-legal  | 2025-08-20T08:11:05:     _req: null,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     [Symbol(shapeMode)]: false,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     [Symbol(kCapture)]: false
+0|albpetrol-legal  | 2025-08-20T08:11:05:   },
+0|albpetrol-legal  | 2025-08-20T08:11:05:   [Symbol(kType)]: 'error',
+0|albpetrol-legal  | 2025-08-20T08:11:05:   [Symbol(kError)]: Error: connect ECONNREFUSED 127.0.0.1:443
+0|albpetrol-legal  | 2025-08-20T08:11:05:       at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|albpetrol-legal  | 2025-08-20T08:11:05:     errno: -111,
+0|albpetrol-legal  | 2025-08-20T08:11:05:     code: 'ECONNREFUSED',
+0|albpetrol-legal  | 2025-08-20T08:11:05:     syscall: 'connect',
+0|albpetrol-legal  | 2025-08-20T08:11:05:     address: '127.0.0.1',
+0|albpetrol-legal  | 2025-08-20T08:11:05:     port: 443
+0|albpetrol-legal  | 2025-08-20T08:11:05:   },
+0|albpetrol-legal  | 2025-08-20T08:11:05:   [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443'
+0|albpetrol-legal  | 2025-08-20T08:11:05: }
+0|albpetrol-legal  | 2025-08-20T08:11:13: ErrorEvent {
+0|albpetrol-legal  | 2025-08-20T08:11:13:   [Symbol(kTarget)]: WebSocket {
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _events: [Object: null prototype] {
+0|albpetrol-legal  | 2025-08-20T08:11:13:       error: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:13:       message: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:13:       close: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:13:       open: [Function]
+0|albpetrol-legal  | 2025-08-20T08:11:13:     },
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _eventsCount: 4,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _maxListeners: undefined,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _binaryType: 'arraybuffer',
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _closeCode: 1006,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _closeFrameReceived: false,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _closeFrameSent: false,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _closeMessage: <Buffer >,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _closeTimer: null,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _errorEmitted: true,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _extensions: {},
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _paused: false,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _protocol: '',
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _readyState: 3,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _receiver: null,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _sender: null,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _socket: null,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _bufferedAmount: 0,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _isServer: false,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _redirects: 0,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _autoPong: true,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _url: 'wss://localhost/v2',
+0|albpetrol-legal  | 2025-08-20T08:11:13:     _req: null,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     [Symbol(shapeMode)]: false,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     [Symbol(kCapture)]: false
+0|albpetrol-legal  | 2025-08-20T08:11:13:   },
+0|albpetrol-legal  | 2025-08-20T08:11:13:   [Symbol(kType)]: 'error',
+0|albpetrol-legal  | 2025-08-20T08:11:13:   [Symbol(kError)]: Error: connect ECONNREFUSED 127.0.0.1:443
+0|albpetrol-legal  | 2025-08-20T08:11:13:       at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|albpetrol-legal  | 2025-08-20T08:11:13:     errno: -111,
+0|albpetrol-legal  | 2025-08-20T08:11:13:     code: 'ECONNREFUSED',
+0|albpetrol-legal  | 2025-08-20T08:11:13:     syscall: 'connect',
+0|albpetrol-legal  | 2025-08-20T08:11:13:     address: '127.0.0.1',
+0|albpetrol-legal  | 2025-08-20T08:11:13:     port: 443
+0|albpetrol-legal  | 2025-08-20T08:11:13:   },
+0|albpetrol-legal  | 2025-08-20T08:11:13:   [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443'
+0|albpetrol-legal  | 2025-08-20T08:11:13: }
+0|albpetrol-legal  | 2025-08-20T08:11:21: ErrorEvent {
+0|albpetrol-legal  | 2025-08-20T08:11:21:   [Symbol(kTarget)]: WebSocket {
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _events: [Object: null prototype] {
+0|albpetrol-legal  | 2025-08-20T08:11:21:       error: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:21:       message: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:21:       close: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:21:       open: [Function]
+0|albpetrol-legal  | 2025-08-20T08:11:21:     },
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _eventsCount: 4,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _maxListeners: undefined,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _binaryType: 'arraybuffer',
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _closeCode: 1006,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _closeFrameReceived: false,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _closeFrameSent: false,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _closeMessage: <Buffer >,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _closeTimer: null,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _errorEmitted: true,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _extensions: {},
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _paused: false,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _protocol: '',
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _readyState: 3,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _receiver: null,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _sender: null,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _socket: null,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _bufferedAmount: 0,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _isServer: false,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _redirects: 0,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _autoPong: true,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _url: 'wss://localhost/v2',
+0|albpetrol-legal  | 2025-08-20T08:11:21:     _req: null,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     [Symbol(shapeMode)]: false,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     [Symbol(kCapture)]: false
+0|albpetrol-legal  | 2025-08-20T08:11:21:   },
+0|albpetrol-legal  | 2025-08-20T08:11:21:   [Symbol(kType)]: 'error',
+0|albpetrol-legal  | 2025-08-20T08:11:21:   [Symbol(kError)]: Error: connect ECONNREFUSED 127.0.0.1:443
+0|albpetrol-legal  | 2025-08-20T08:11:21:       at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|albpetrol-legal  | 2025-08-20T08:11:21:     errno: -111,
+0|albpetrol-legal  | 2025-08-20T08:11:21:     code: 'ECONNREFUSED',
+0|albpetrol-legal  | 2025-08-20T08:11:21:     syscall: 'connect',
+0|albpetrol-legal  | 2025-08-20T08:11:21:     address: '127.0.0.1',
+0|albpetrol-legal  | 2025-08-20T08:11:21:     port: 443
+0|albpetrol-legal  | 2025-08-20T08:11:21:   },
+0|albpetrol-legal  | 2025-08-20T08:11:21:   [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443'
+0|albpetrol-legal  | 2025-08-20T08:11:21: }
+0|albpetrol-legal  | 2025-08-20T08:11:29: ErrorEvent {
+0|albpetrol-legal  | 2025-08-20T08:11:29:   [Symbol(kTarget)]: WebSocket {
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _events: [Object: null prototype] {
+0|albpetrol-legal  | 2025-08-20T08:11:29:       error: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:29:       message: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:29:       close: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:29:       open: [Function]
+0|albpetrol-legal  | 2025-08-20T08:11:29:     },
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _eventsCount: 4,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _maxListeners: undefined,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _binaryType: 'arraybuffer',
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _closeCode: 1006,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _closeFrameReceived: false,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _closeFrameSent: false,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _closeMessage: <Buffer >,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _closeTimer: null,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _errorEmitted: true,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _extensions: {},
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _paused: false,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _protocol: '',
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _readyState: 3,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _receiver: null,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _sender: null,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _socket: null,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _bufferedAmount: 0,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _isServer: false,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _redirects: 0,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _autoPong: true,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _url: 'wss://localhost/v2',
+0|albpetrol-legal  | 2025-08-20T08:11:29:     _req: null,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     [Symbol(shapeMode)]: false,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     [Symbol(kCapture)]: false
+0|albpetrol-legal  | 2025-08-20T08:11:29:   },
+0|albpetrol-legal  | 2025-08-20T08:11:29:   [Symbol(kType)]: 'error',
+0|albpetrol-legal  | 2025-08-20T08:11:29:   [Symbol(kError)]: Error: connect ECONNREFUSED 127.0.0.1:443
+0|albpetrol-legal  | 2025-08-20T08:11:29:       at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|albpetrol-legal  | 2025-08-20T08:11:29:     errno: -111,
+0|albpetrol-legal  | 2025-08-20T08:11:29:     code: 'ECONNREFUSED',
+0|albpetrol-legal  | 2025-08-20T08:11:29:     syscall: 'connect',
+0|albpetrol-legal  | 2025-08-20T08:11:29:     address: '127.0.0.1',
+0|albpetrol-legal  | 2025-08-20T08:11:29:     port: 443
+0|albpetrol-legal  | 2025-08-20T08:11:29:   },
+0|albpetrol-legal  | 2025-08-20T08:11:29:   [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443'
+0|albpetrol-legal  | 2025-08-20T08:11:29: }
+0|albpetrol-legal  | 2025-08-20T08:11:37: ErrorEvent {
+0|albpetrol-legal  | 2025-08-20T08:11:37:   [Symbol(kTarget)]: WebSocket {
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _events: [Object: null prototype] {
+0|albpetrol-legal  | 2025-08-20T08:11:37:       error: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:37:       message: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:37:       close: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:37:       open: [Function]
+0|albpetrol-legal  | 2025-08-20T08:11:37:     },
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _eventsCount: 4,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _maxListeners: undefined,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _binaryType: 'arraybuffer',
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _closeCode: 1006,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _closeFrameReceived: false,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _closeFrameSent: false,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _closeMessage: <Buffer >,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _closeTimer: null,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _errorEmitted: true,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _extensions: {},
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _paused: false,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _protocol: '',
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _readyState: 3,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _receiver: null,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _sender: null,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _socket: null,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _bufferedAmount: 0,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _isServer: false,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _redirects: 0,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _autoPong: true,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _url: 'wss://localhost/v2',
+0|albpetrol-legal  | 2025-08-20T08:11:37:     _req: null,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     [Symbol(shapeMode)]: false,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     [Symbol(kCapture)]: false
+0|albpetrol-legal  | 2025-08-20T08:11:37:   },
+0|albpetrol-legal  | 2025-08-20T08:11:37:   [Symbol(kType)]: 'error',
+0|albpetrol-legal  | 2025-08-20T08:11:37:   [Symbol(kError)]: Error: connect ECONNREFUSED 127.0.0.1:443
+0|albpetrol-legal  | 2025-08-20T08:11:37:       at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|albpetrol-legal  | 2025-08-20T08:11:37:     errno: -111,
+0|albpetrol-legal  | 2025-08-20T08:11:37:     code: 'ECONNREFUSED',
+0|albpetrol-legal  | 2025-08-20T08:11:37:     syscall: 'connect',
+0|albpetrol-legal  | 2025-08-20T08:11:37:     address: '127.0.0.1',
+0|albpetrol-legal  | 2025-08-20T08:11:37:     port: 443
+0|albpetrol-legal  | 2025-08-20T08:11:37:   },
+0|albpetrol-legal  | 2025-08-20T08:11:37:   [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443'
+0|albpetrol-legal  | 2025-08-20T08:11:37: }
+0|albpetrol-legal  | 2025-08-20T08:11:45: ErrorEvent {
+0|albpetrol-legal  | 2025-08-20T08:11:45:   [Symbol(kTarget)]: WebSocket {
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _events: [Object: null prototype] {
+0|albpetrol-legal  | 2025-08-20T08:11:45:       error: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:45:       message: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:45:       close: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:45:       open: [Function]
+0|albpetrol-legal  | 2025-08-20T08:11:45:     },
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _eventsCount: 4,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _maxListeners: undefined,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _binaryType: 'arraybuffer',
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _closeCode: 1006,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _closeFrameReceived: false,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _closeFrameSent: false,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _closeMessage: <Buffer >,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _closeTimer: null,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _errorEmitted: true,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _extensions: {},
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _paused: false,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _protocol: '',
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _readyState: 3,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _receiver: null,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _sender: null,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _socket: null,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _bufferedAmount: 0,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _isServer: false,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _redirects: 0,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _autoPong: true,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _url: 'wss://localhost/v2',
+0|albpetrol-legal  | 2025-08-20T08:11:45:     _req: null,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     [Symbol(shapeMode)]: false,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     [Symbol(kCapture)]: false
+0|albpetrol-legal  | 2025-08-20T08:11:45:   },
+0|albpetrol-legal  | 2025-08-20T08:11:45:   [Symbol(kType)]: 'error',
+0|albpetrol-legal  | 2025-08-20T08:11:45:   [Symbol(kError)]: Error: connect ECONNREFUSED 127.0.0.1:443
+0|albpetrol-legal  | 2025-08-20T08:11:45:       at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|albpetrol-legal  | 2025-08-20T08:11:45:     errno: -111,
+0|albpetrol-legal  | 2025-08-20T08:11:45:     code: 'ECONNREFUSED',
+0|albpetrol-legal  | 2025-08-20T08:11:45:     syscall: 'connect',
+0|albpetrol-legal  | 2025-08-20T08:11:45:     address: '127.0.0.1',
+0|albpetrol-legal  | 2025-08-20T08:11:45:     port: 443
+0|albpetrol-legal  | 2025-08-20T08:11:45:   },
+0|albpetrol-legal  | 2025-08-20T08:11:45:   [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443'
+0|albpetrol-legal  | 2025-08-20T08:11:45: }
+0|albpetrol-legal  | 2025-08-20T08:11:53: ErrorEvent {
+0|albpetrol-legal  | 2025-08-20T08:11:53:   [Symbol(kTarget)]: WebSocket {
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _events: [Object: null prototype] {
+0|albpetrol-legal  | 2025-08-20T08:11:53:       error: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:53:       message: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:53:       close: [Function],
+0|albpetrol-legal  | 2025-08-20T08:11:53:       open: [Function]
+0|albpetrol-legal  | 2025-08-20T08:11:53:     },
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _eventsCount: 4,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _maxListeners: undefined,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _binaryType: 'arraybuffer',
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _closeCode: 1006,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _closeFrameReceived: false,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _closeFrameSent: false,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _closeMessage: <Buffer >,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _closeTimer: null,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _errorEmitted: true,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _extensions: {},
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _paused: false,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _protocol: '',
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _readyState: 3,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _receiver: null,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _sender: null,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _socket: null,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _bufferedAmount: 0,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _isServer: false,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _redirects: 0,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _autoPong: true,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _url: 'wss://localhost/v2',
+0|albpetrol-legal  | 2025-08-20T08:11:53:     _req: null,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     [Symbol(shapeMode)]: false,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     [Symbol(kCapture)]: false
+0|albpetrol-legal  | 2025-08-20T08:11:53:   },
+0|albpetrol-legal  | 2025-08-20T08:11:53:   [Symbol(kType)]: 'error',
+0|albpetrol-legal  | 2025-08-20T08:11:53:   [Symbol(kError)]: Error: connect ECONNREFUSED 127.0.0.1:443
+0|albpetrol-legal  | 2025-08-20T08:11:53:       at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|albpetrol-legal  | 2025-08-20T08:11:53:     errno: -111,
+0|albpetrol-legal  | 2025-08-20T08:11:53:     code: 'ECONNREFUSED',
+0|albpetrol-legal  | 2025-08-20T08:11:53:     syscall: 'connect',
+0|albpetrol-legal  | 2025-08-20T08:11:53:     address: '127.0.0.1',
+0|albpetrol-legal  | 2025-08-20T08:11:53:     port: 443
+0|albpetrol-legal  | 2025-08-20T08:11:53:   },
+0|albpetrol-legal  | 2025-08-20T08:11:53:   [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443'
+0|albpetrol-legal  | 2025-08-20T08:11:53: }
+^C
+ Describing process with id 0 - name albpetrol-legal 
+┌───────────────────┬──────────────────────────────────────────┐
+│ status            │ waiting restart                          │
+│ name              │ albpetrol-legal                          │
+│ namespace         │ default                                  │
+│ version           │ 1.0.0                                    │
+│ restarts          │ 19                                       │
+│ uptime            │ 0                                        │
+│ entire log path   │ /opt/ceshtje-ligjore/logs/combined-0.log │
+│ script path       │ /opt/ceshtje-ligjore/dist/index.js       │
+│ script args       │ N/A                                      │
+│ error log path    │ /opt/ceshtje-ligjore/logs/err-0.log      │
+│ out log path      │ /opt/ceshtje-ligjore/logs/out-0.log      │
+│ pid path          │ /root/.pm2/pids/albpetrol-legal-0.pid    │
+│ interpreter       │ node                                     │
+│ interpreter args  │ N/A                                      │
+│ script id         │ 0                                        │
+│ exec cwd          │ /opt/ceshtje-ligjore                     │
+│ exec mode         │ fork_mode                                │
+│ node.js version   │ 20.19.4                                  │
+│ node env          │ production                               │
+│ watch & reload    │ ✘                                        │
+│ unstable restarts │ 0                                        │
+│ created at        │ 2025-08-20T08:09:19.494Z                 │
+└───────────────────┴──────────────────────────────────────────┘
+ Divergent env variables from local env 
+
+
+ Add your own code metrics: http://bit.ly/code-metrics
+ Use `pm2 logs albpetrol-legal [--lines 1000]` to display logs
+ Use `pm2 env 0` to display environment variables
+ Use `pm2 monit` to monitor CPU and Memory usage albpetrol-legal
+Password for user ceshtje_user: 

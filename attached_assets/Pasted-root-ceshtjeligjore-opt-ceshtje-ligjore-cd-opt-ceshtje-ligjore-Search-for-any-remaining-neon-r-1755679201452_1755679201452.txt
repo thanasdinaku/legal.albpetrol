@@ -1,0 +1,74 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Search for any remaining neon references in the entire source
+find . -name "*.ts" -o -name "*.js" -o -name "*.json" | xargs grep -l -i "neondatabase" 2>/dev/null || echo "No source files with Neon found"
+
+# Check if package.json still has any neon references
+cat package.json | grep -i neon || echo "No Neon in package.json"
+
+# The issue might be in the import chain - let's check what the routes file imports
+echo "=== CHECKING ROUTES IMPORTS ==="
+head -10 server/routes.ts
+
+# Let's create a minimal test server that bypasses all the complex routing
+cat > server/minimal.ts << 'EOF'
+import express from "express";
+import { Pool } from 'pg';
+
+const app = express();
+
+// Simple health check route
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+app.get('/', (req, res) => {
+  res.send('<h1>Albpetrol Legal System</h1><p>Status: Running</p>');
+});
+
+const port = parseInt(process.env.PORT || '5000', 10);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Minimal server running on port ${port}`);
+});
+EOF
+
+# Build and test minimal server
+echo "=== MINIMAL SERVER TEST COMPLETE ===" the routing/auth chainWORKS!"32/ceshtje_ligjore"tfile=dist/minimal.js
+./dist/production-clean.js
+./package-lock.json
+./server/db.ts
+./node_modules/drizzle-orm/package.json
+./node_modules/drizzle-orm/neon-serverless/migrator.d.ts
+./node_modules/drizzle-orm/neon-serverless/session.d.ts
+./node_modules/drizzle-orm/neon-serverless/driver.js
+./node_modules/drizzle-orm/neon-serverless/driver.d.ts
+./node_modules/drizzle-orm/neon-serverless/session.js
+./node_modules/drizzle-orm/neon-http/session.d.ts
+./node_modules/drizzle-orm/neon-http/driver.js
+./node_modules/drizzle-orm/neon-http/driver.d.ts
+./node_modules/.package-lock.json
+No source files with Neon found
+No Neon in package.json
+=== CHECKING ROUTES IMPORTS ===
+import type { Express } from "express";
+import { createServer, type Server } from "http";
+import { storage } from "./storage";
+import { setupAuth, isAuthenticated, isAdmin, hashPassword } from "./auth";
+import {
+  createUserSchema,
+  loginSchema,
+  changePasswordSchema,
+  insertCheckpointSchema,
+  type CreateUser,
+
+  dist/minimal.js  453b 
+
+⚡ Done in 4ms
+Testing minimal server...
+[1] 15347
+Minimal server running on port 5000
+<h1>Albpetrol Legal System</h1><p>Status: Running</p>✅ MINIMAL SERVER WORKS!
+{"status":"OK","timestamp":"2025-08-20T08:39:40.213Z"}✅ API ENDPOINT WORKS!
+=== MINIMAL SERVER TEST COMPLETE ===
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 
+

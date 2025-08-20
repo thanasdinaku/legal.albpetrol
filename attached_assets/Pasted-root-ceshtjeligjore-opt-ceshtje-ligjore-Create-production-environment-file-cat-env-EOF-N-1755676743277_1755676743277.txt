@@ -1,0 +1,51 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # Create production environment file
+cat > .env << 'EOF'
+NODE_ENV=production
+PORT=5000
+DATABASE_URL=postgresql://ceshtje_user:Albpetrol2025@localhost:5432/ceshtje_ligjore
+PGHOST=localhost
+PGPORT=5432
+PGDATABASE=ceshtje_ligjore
+PGUSER=ceshtje_user
+PGPASSWORD=Albpetrol2025
+SESSION_SECRET=AlbpetrolLegal2025SecretKey123456789
+ADMIN_EMAIL=it.system@albpetrol.al
+ADMIN_PASSWORD=Admin2025!
+EOF
+
+# Build the application
+npm run build
+
+# Check build success
+ls -la dist/
+echo "=== ENVIRONMENT & BUILD COMPLETED ==="
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.19 building for production...
+transforming (3) src/main.tsxBrowserslist: browsers data (caniuse-lite) is 10 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2388 modules transformed.
+../dist/public/index.html                                         1.09 kB │ gzip:   0.62 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-DoXX-CQz.css                        157.31 kB │ gzip:  25.09 kB
+../dist/public/assets/index-BtDfTy6g.js                         820.82 kB │ gzip: 244.47 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 5.11s
+
+  dist/index.js  133.9kb
+
+⚡ Done in 12ms
+total 148
+drwxr-xr-x  3 root root   4096 Aug 20 07:58 .
+drwxr-xr-x 10 root root   4096 Aug 20 07:58 ..
+-rw-r--r--  1 root root 137063 Aug 20 07:58 index.js
+drwxr-xr-x  4 root root   4096 Aug 20 07:58 public
+=== ENVIRONMENT & BUILD COMPLETED ===
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

@@ -1,0 +1,121 @@
+oot@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Fix the esbuild command (use outdir OR outfile, not both)
+npx esbuild server/production.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/production.js
+
+# Verify the build worked
+ls -la dist/production.js
+
+# Test the production server with proper environment
+export NODE_ENV=production
+export PORT=5000
+export DATABASE_URL="postgresql://ceshtje_user:Albpetrol2025@localhost:5432/ceshtje_ligjore"
+export SESSION_SECRET="albpetrol_ceshtje_ligjore_secret_2025_production_ready"
+export ISSUER_URL="https://replit.com/oidc"
+
+echo "Starting production server test..."
+timeout 20s node dist/production.js > production_test.log 2>&1 &
+SERVER_PID=$!
+sleep 12
+
+# Test server response
+curl -v http://localhost:5000/api/health 2>&1 | head -5
+curl -v http://localhost:5000/ 2>&1 | head -5
+
+echo "=== PRODUCTION SERVER LOGS ==="
+cat production_test.log
+
+# If server responds, configure for deployment
+if curl -s http://localhost:5000/ >/dev/null 2>&1; then
+  echo "🎉 SUCCESS! Production server is working!"
+  
+  # Create proper PM2 ecosystem for production server
+  cat > ecosystem.config.cjs << 'EOF'
+module.exports = {
+  apps: [{
+echo "=== FINAL DEPLOYMENT STATUS ==="ng - checking logs for issues"ion_ready',htje_ligjore',
+
+  dist/production.js  131.4kb
+
+⚡ Done in 7ms
+-rw-r--r-- 1 root root 134582 Aug 20 08:34 dist/production.js
+Starting production server test...
+[1] 14945
+[1]+  Exit 1                  timeout 20s node dist/production.js > production_test.log 2>&1
+* Host localhost:5000 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+* Host localhost:5000 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+=== PRODUCTION SERVER LOGS ===
+
+file:///opt/ceshtje-ligjore/node_modules/@neondatabase/serverless/index.mjs:1345
+o?t(o):n(u)},"cb"),s=new r(function(o,u){n=o,t=u}).catch(o=>{throw Error.captureStackTrace(
+                                                                         ^
+ErrorEvent {
+  [Symbol(kTarget)]: WebSocket {
+    _events: [Object: null prototype] {
+      error: [Function: onError] {
+        [Symbol(kIsForOnEventAttribute)]: false,
+        [Symbol(kListener)]: [Function (anonymous)]
+      },
+      message: [Function: onMessage] {
+        [Symbol(kIsForOnEventAttribute)]: false,
+        [Symbol(kListener)]: [Function (anonymous)]
+      },
+      close: [Function: onClose] {
+        [Symbol(kIsForOnEventAttribute)]: false,
+        [Symbol(kListener)]: [Function (anonymous)]
+      },
+      open: [Function: onOpen] {
+        [Symbol(kIsForOnEventAttribute)]: false,
+        [Symbol(kListener)]: [Function: handleWebSocketOpen]
+      }
+    },
+    _eventsCount: 4,
+    _maxListeners: undefined,
+    _binaryType: 'arraybuffer',
+    _closeCode: 1006,
+    _closeFrameReceived: false,
+    _closeFrameSent: false,
+    _closeMessage: Buffer(0) [Uint8Array] [],
+    _closeTimer: null,
+    _errorEmitted: true,
+    _extensions: {},
+    _paused: false,
+    _protocol: '',
+    _readyState: 3,
+    _receiver: null,
+    _sender: null,
+    _socket: null,
+    _bufferedAmount: 0,
+    _isServer: false,
+    _redirects: 0,
+    _autoPong: true,
+    _url: 'wss://localhost/v2',
+    _req: null,
+    [Symbol(shapeMode)]: false,
+    [Symbol(kCapture)]: false
+  },
+  [Symbol(kType)]: 'error',
+  [Symbol(kError)]: Error: connect ECONNREFUSED 127.0.0.1:443
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+    errno: -111,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 443
+  },
+  [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443'
+}
+
+Node.js v20.19.4
+Production server not responding - checking logs for issues
+=== FINAL DEPLOYMENT STATUS ===
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 
+

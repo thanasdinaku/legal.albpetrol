@@ -1,0 +1,70 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Stop PM2
+pm2 stop albpetrol-legal
+
+# Create a simple static HTML frontend (no complex build needed)
+mkdir -p dist/public
+
+cat > dist/public/index.html << 'EOF'
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Albpetrol - Sistemi Ligjor</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0; 
+            padding: 2rem; 
+            color: #333; 
+        }
+        .container { 
+curl -I http://localhost:5000 lidhjen me API: ' + error.message;ent = ;oLocaleSt
+[PM2] Applying action stopProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 1    │ stopped   │ 0%       │ 0b       │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 1    │ online    │ 0%       │ 17.8mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 1    │ online    │ 0%       │ 58.3mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Accept-Ranges: bytes
+Cache-Control: public, max-age=0
+Last-Modified: Wed, 20 Aug 2025 12:58:57 GMT
+ETag: W/"946-198c78fa908"
+Content-Type: text/html; charset=UTF-8
+Content-Length: 2374
+Date: Wed, 20 Aug 2025 12:59:02 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+HTTP/1.1 200 OK
+Server: nginx/1.24.0 (Ubuntu)
+Date: Wed, 20 Aug 2025 12:59:02 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Length: 2374
+Connection: keep-alive
+X-Powered-By: Express
+Accept-Ranges: bytes
+Cache-Control: public, max-age=0
+Last-Modified: Wed, 20 Aug 2025 12:58:57 GMT
+ETag: W/"946-198c78fa908"
+
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

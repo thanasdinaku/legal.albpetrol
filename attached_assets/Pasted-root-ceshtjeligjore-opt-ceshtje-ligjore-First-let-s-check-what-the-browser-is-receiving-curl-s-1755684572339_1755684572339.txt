@@ -1,0 +1,51 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # First, let's check what the browser is receiving
+curl -s http://localhost:5000/ > test_response.html
+head -20 test_response.html
+
+# Create a simple working React app without ESM imports
+cat > dist/public/assets/index-Bv9ka2U9.js << 'EOF'
+// Simple React Application using UMD builds
+console.log('JavaScript file loading...');
+
+// Wait for React libraries to load
+window.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM loaded, initializing React...');
+  
+  // Simple React app without ESM imports
+  const { createElement: h, useState, useEffect } = React;
+  const { createRoot } = ReactDOM;
+  
+  function App() {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+    
+    useEffect(() => {
+      console.log('Fetching user data...');
+o"ho "Open browser developer tools (F12) and check Console tab for debugging inf
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Sistemi i Menaxhimit të Rasteve Ligjore</title>
+    <meta name="description" content="Sistem profesional i menaxhimit të rasteve ligjore me kontroll të aksesit të bazuar në role për operacione efikase në bazën e të dhënave.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="module" crossorigin src="/assets/index-Bv9ka2U9.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-C3xJPPxz.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 6    │ online    │ 0%       │ 18.0mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+✅ Fixed React application with UMD builds - check browser console for logs
+Open browser developer tools (F12) and check Console tab for debugging info
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

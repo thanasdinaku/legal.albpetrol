@@ -1,0 +1,33 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # Stop the failing PM2 process
+pm2 stop albpetrol-legal
+pm2 delete albpetrol-legal
+
+# The issue is likely Neon serverless driver trying to connect to wrong endpoint
+# Let's test direct PostgreSQL connection first
+PGPASSWORD=Albpetrol2025 psql -h localhost -U ceshtje_user -d ceshtje_ligjore -c "SELECT version();"
+
+# Check what's in our current .env file
+head -5 .env
+[PM2] Applying action stopProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ 1.0.0   │ fork    │ 0        │ 0      │ 42   │ stopped   │ 0%       │ 0b       │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2] Applying action deleteProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+                                                               version                                                                
+--------------------------------------------------------------------------------------------------------------------------------------
+ PostgreSQL 16.9 (Ubuntu 16.9-0ubuntu0.24.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0, 64-bit
+(1 row)
+
+NODE_ENV=production
+PORT=5000
+DATABASE_URL=postgresql://ceshtje_user:Albpetrol2025@localhost:5432/ceshtje_ligjore
+PGHOST=localhost
+PGPORT=5432
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

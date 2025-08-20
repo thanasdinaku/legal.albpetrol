@@ -1,0 +1,110 @@
+root@ceshtjeligjore:~# # Install PM2 globally
+npm install -g pm2@latest
+
+# Install Nginx
+apt install -y nginx
+
+# Check installations
+pm2 --version
+nginx -v
+
+echo "=== PM2 AND NGINX INSTALLED ==="
+
+changed 133 packages in 11s
+
+13 packages are looking for funding
+  run `npm fund` for details
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 11.5.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.5.2
+npm notice To update run: npm install -g npm@11.5.2
+npm notice
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+  nginx-common
+Suggested packages:
+  fcgiwrap nginx-doc
+The following NEW packages will be installed:
+  nginx nginx-common
+0 upgraded, 2 newly installed, 0 to remove and 1 not upgraded.
+Need to get 564 kB of archives.
+After this operation, 1,596 kB of additional disk space will be used.
+Get:1 http://al.archive.ubuntu.com/ubuntu noble-updates/main amd64 nginx-common all 1.24.0-2ubuntu7.4 [43.4 kB]
+Get:2 http://al.archive.ubuntu.com/ubuntu noble-updates/main amd64 nginx amd64 1.24.0-2ubuntu7.4 [521 kB]
+Fetched 564 kB in 1s (915 kB/s)
+Preconfiguring packages ...
+Selecting previously unselected package nginx-common.
+(Reading database ... 238469 files and directories currently installed.)
+Preparing to unpack .../nginx-common_1.24.0-2ubuntu7.4_all.deb ...
+Unpacking nginx-common (1.24.0-2ubuntu7.4) ...
+Selecting previously unselected package nginx.
+Preparing to unpack .../nginx_1.24.0-2ubuntu7.4_amd64.deb ...
+Unpacking nginx (1.24.0-2ubuntu7.4) ...
+Setting up nginx-common (1.24.0-2ubuntu7.4) ...
+Created symlink /etc/systemd/system/multi-user.target.wants/nginx.service → /usr
+/lib/systemd/system/nginx.service.
+Setting up nginx (1.24.0-2ubuntu7.4) ...
+ * Upgrading binary nginx                                                [ OK ] 
+Processing triggers for man-db (2.12.0-4build2) ...
+Processing triggers for ufw (0.36.2-6) ...
+Scanning processes...                                                           
+Scanning candidates...                                                          
+Scanning linux images...                                                        
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+User sessions running outdated binaries:
+ admuser @ session #2: gdm-wayland-ses[2282]
+ admuser @ user manager service: gnome-session-b[2386], gnome-shell[2426],
+  systemd[2195]
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+
+                        -------------
+
+__/\\\\\\\\\\\\\____/\\\\____________/\\\\____/\\\\\\\\\_____
+ _\/\\\/////////\\\_\/\\\\\\________/\\\\\\__/\\\///////\\\___
+  _\/\\\_______\/\\\_\/\\\//\\\____/\\\//\\\_\///______\//\\\__
+   _\/\\\\\\\\\\\\\/__\/\\\\///\\\/\\\/_\/\\\___________/\\\/___
+    _\/\\\/////////____\/\\\__\///\\\/___\/\\\________/\\\//_____
+     _\/\\\_____________\/\\\____\///_____\/\\\_____/\\\//________
+      _\/\\\_____________\/\\\_____________\/\\\___/\\\/___________
+       _\/\\\_____________\/\\\_____________\/\\\__/\\\\\\\\\\\\\\\_
+        _\///______________\///______________\///__\///////////////__
+
+
+                          Runtime Edition
+
+        PM2 is a Production Process Manager for Node.js applications
+                     with a built-in Load Balancer.
+
+                Start and Daemonize any application:
+                $ pm2 start app.js
+
+                Load Balance 4 instances of api.js:
+                $ pm2 start api.js -i 4
+
+                Monitor in production:
+                $ pm2 monitor
+
+                Make pm2 auto-boot at server restart:
+                $ pm2 startup
+
+                To go further checkout:
+                http://pm2.io/
+
+
+                        -------------
+
+[PM2] Spawning PM2 daemon with pm2_home=/root/.pm2
+[PM2] PM2 Successfully daemonized
+6.0.8
+nginx version: nginx/1.24.0 (Ubuntu)
+=== PM2 AND NGINX INSTALLED ===
+root@ceshtjeligjore:~# 

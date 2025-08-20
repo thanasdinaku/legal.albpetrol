@@ -1,0 +1,255 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # Stop PM2 process
+pm2 stop albpetrol-legal
+pm2 delete albpetrol-legal
+
+# Check if there are any other Neon references in node_modules or dependencies
+cd /opt/ceshtje-ligjore
+grep -r "wss://localhost/v2" . || echo "No WebSocket references found"
+
+# Check what's actually listening on ports
+netstat -tlnp | grep -E ":(443|5000)"
+
+# Try running the application directly to see startup logs
+timeout 10s node dist/index.js &
+sleep 3
+curl -I http://localhost:5000/ || echo "Server not responding"
+pkill -f "node dist/index.js"
+
+echo "=== DEBUGGING COMPLETED ==="
+[PM2] Applying action stopProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ 1.0.0   │ fork    │ 0        │ 0      │ 13   │ stopped   │ 0%       │ 0b       │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2] Applying action deleteProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+./logs/err-0.log:2025-08-20T08:03:09:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:03:17:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:03:25:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:03:33:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:03:41:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:03:50:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:03:57:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:04:06:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:04:14:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:04:21:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:04:29:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:04:38:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:04:46:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:04:54:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:05:02:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:05:10:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:05:18:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:05:26:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:05:34:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:05:42:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:05:50:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:05:58:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:06:06:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:06:14:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:06:23:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:06:31:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:06:39:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:06:47:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:06:55:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:07:03:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:07:11:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:07:19:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:07:27:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:07:35:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:07:44:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:07:51:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:08:00:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:08:08:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:08:16:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:08:24:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:08:32:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:08:40:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:08:48:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:08:56:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:09:04:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:09:12:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:09:20:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:09:28:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:09:36:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:09:44:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:09:52:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:10:00:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:10:08:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:10:16:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:10:24:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:10:32:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:10:41:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:10:49:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:10:57:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:11:05:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:11:13:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:11:21:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:11:29:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:11:37:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:11:45:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:11:53:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:12:01:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:12:09:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:12:17:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:12:25:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:12:33:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:12:41:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:12:50:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:12:58:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:13:06:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:13:14:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:13:22:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:13:30:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:13:38:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:13:46:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:13:54:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:14:03:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:14:10:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:14:19:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:14:27:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:14:35:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:14:43:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:14:51:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:14:59:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:18:43:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:18:51:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:18:59:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:19:07:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:19:16:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:19:24:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:19:32:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:19:40:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:19:48:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:19:56:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:20:04:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:20:12:     _url: 'wss://localhost/v2',
+./logs/err-0.log:2025-08-20T08:20:20:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:03:09:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:03:17:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:03:25:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:03:33:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:03:41:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:03:50:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:03:57:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:04:06:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:04:14:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:04:21:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:04:29:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:04:38:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:04:46:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:04:54:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:05:02:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:05:10:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:05:18:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:05:26:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:05:34:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:05:42:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:05:50:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:05:58:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:06:06:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:06:14:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:06:23:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:06:31:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:06:39:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:06:47:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:06:55:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:07:03:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:07:11:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:07:19:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:07:27:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:07:35:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:07:44:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:07:51:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:08:00:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:08:08:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:08:16:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:08:24:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:08:32:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:08:40:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:08:48:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:08:56:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:09:04:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:09:12:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:09:20:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:09:28:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:09:36:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:09:44:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:09:52:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:10:00:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:10:08:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:10:16:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:10:24:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:10:32:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:10:41:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:10:49:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:10:57:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:11:05:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:11:13:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:11:21:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:11:29:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:11:37:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:11:45:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:11:53:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:12:01:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:12:09:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:12:17:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:12:25:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:12:33:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:12:41:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:12:50:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:12:58:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:13:06:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:13:14:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:13:22:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:13:30:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:13:38:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:13:46:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:13:54:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:14:03:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:14:10:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:14:19:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:14:27:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:14:35:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:14:43:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:14:51:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:14:59:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:18:43:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:18:51:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:18:59:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:19:07:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:19:16:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:19:24:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:19:32:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:19:40:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:19:48:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:19:56:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:20:04:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:20:12:     _url: 'wss://localhost/v2',
+./logs/combined-0.log:2025-08-20T08:20:20:     _url: 'wss://localhost/v2',
+[1] 14001
+file:///opt/ceshtje-ligjore/dist/index.js:246
+      throw new Error(
+            ^
+
+Error: DATABASE_URL must be set. Did you forget to provision a database?
+    at server/db.ts (file:///opt/ceshtje-ligjore/dist/index.js:246:13)
+    at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+    at server/storage.ts (file:///opt/ceshtje-ligjore/dist/index.js:955:5)
+    at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+    at file:///opt/ceshtje-ligjore/dist/index.js:1395:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v20.19.4
+[1]+  Exit 1                  timeout 10s node dist/index.js
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Couldn't connect to server
+Server not responding
+=== DEBUGGING COMPLETED ===
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

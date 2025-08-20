@@ -1,0 +1,38 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Stop PM2 to make changes  
+pm2 stop albpetrol-legal
+
+# Backup current basic version
+mv dist dist_basic_backup_$(date +%Y%m%d_%H%M%S)
+
+# Create new professional React application
+mkdir -p dist/public/assets
+
+# Create complete HTML with proper React loading
+cat > dist/public/index.html << 'HTML_EOF'
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Sistemi i Menaxhimit të Rasteve Ligjore</title>
+    <meta name="description" content="Sistem profesional i menaxhimit të rasteve ligjore me kontroll të aksesit të bazuar në role për operacione efikase në bazën e të dhënave.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;echo "✅ Professional React interface deployed!"3,minmax(0,1fr))}case;letter-spa
+[PM2] Applying action stopProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 1    │ stopped   │ 0%       │ 0b       │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 1    │ online    │ 0%       │ 25.1mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+✅ Professional React interface deployed!
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

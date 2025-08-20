@@ -1,0 +1,42 @@
+IMMEDIATE UBUNTU FIX - Copy and paste these commands:
+
+# Fix the PM2 configuration file (it needs .cjs extension for CommonJS)
+cd /opt/ceshtje-ligjore
+
+# Remove the malformed config file
+rm ecosystem.config.js
+
+# Create correct PM2 configuration with .cjs extension
+cat > ecosystem.config.cjs << 'ECOSYSTEM_EOF'
+module.exports = {
+  apps: [{
+    name: 'albpetrol-legal',
+    script: 'dist/index.js',
+    cwd: '/opt/ceshtje-ligjore',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000
+    },
+    autorestart: true,
+    max_restarts: 5,
+    min_uptime: '5s'
+  }]
+};
+ECOSYSTEM_EOF
+
+# Start PM2 with the correct file
+pm2 start ecosystem.config.cjs
+
+# Check status
+pm2 status
+
+# Test the server
+curl http://localhost:5000/api/health
+
+# If it works, restart nginx
+systemctl restart nginx
+
+# Final test
+curl -I http://localhost/

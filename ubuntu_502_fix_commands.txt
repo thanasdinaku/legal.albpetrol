@@ -1,0 +1,129 @@
+UBUNTU 502 BAD GATEWAY FIX COMMANDS
+===================================
+
+Run these commands on the Ubuntu server (10.5.20.31) as root user:
+
+1. Connect to server:
+ssh root@10.5.20.31
+
+2. Navigate to application directory:
+cd /opt/ceshtje-ligjore
+
+3. Check current PM2 status:
+pm2 status
+
+4. Check PM2 logs to see errors:
+pm2 logs albpetrol-legal --lines 20
+
+5. Stop and remove all PM2 processes:
+pm2 stop all
+pm2 delete all
+
+6. Check if port 5000 is free:
+netstat -tlnp | grep :5000
+
+7. Create new PM2 ecosystem configuration:
+cat > ecosystem.config.js << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'albpetrol-legal',
+    script: 'dist/index.js',
+    cwd: '/opt/ceshtje-ligjore',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000,
+      DATABASE_URL: 'postgresql://ceshtje_user:Albpetrol2025@localhost:5432/ceshtje_ligjore',
+      SESSION_SECRET: 'albpetrol-production-secret-2025'
+    },
+    error_file: '/var/log/pm2/albpetrol-legal-error.log',
+    out_file: '/var/log/pm2/albpetrol-legal-out.log',
+    log_file: '/var/log/pm2/albpetrol-legal.log',
+    time: true,
+    autorestart: true,
+    max_restarts: 10,
+    min_uptime: '10s'
+  }]
+};
+EOF
+
+8. Start PM2 with new configuration:
+pm2 start ecosystem.config.js
+
+9. Check PM2 status:
+pm2 status
+
+10. Test local application:
+curl http://localhost:5000/
+
+11. Check Nginx configuration:
+nginx -t
+
+12. Restart Nginx:
+systemctl restart nginx
+
+13. Test full application:
+curl -I http://localhost/
+
+14. If still failing, check server file exists:
+ls -la dist/index.js
+
+15. If server file missing, recreate it:
+cat > dist/index.js << 'SERVER_EOF'
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// Serve static files from public directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// API routes placeholder
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// Catch all handler: send back React's index.html file
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});
+SERVER_EOF
+
+16. Restart PM2 after recreating server:
+pm2 restart albpetrol-legal
+
+17. Final verification:
+pm2 status
+curl -I http://localhost/
+curl -I http://10.5.20.31/
+
+TROUBLESHOOTING:
+================
+
+If port 5000 is occupied by another process:
+sudo kill -9 $(sudo lsof -t -i:5000)
+
+If Nginx shows configuration errors:
+sudo nginx -t
+sudo systemctl reload nginx
+
+If PM2 shows "errored" status:
+pm2 logs albpetrol-legal
+pm2 restart albpetrol-legal
+
+Check all logs:
+pm2 logs --lines 50
+
+EXPECTED RESULT:
+================
+After running these commands, http://10.5.20.31 should show the Albanian legal case management login page.

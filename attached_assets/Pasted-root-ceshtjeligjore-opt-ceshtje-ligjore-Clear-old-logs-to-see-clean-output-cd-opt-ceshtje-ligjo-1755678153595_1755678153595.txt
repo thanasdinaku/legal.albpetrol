@@ -1,0 +1,70 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # Clear old logs to see clean output
+cd /opt/ceshtje-ligjore
+rm -rf logs/*
+
+# Check if the Express server actually starts and serves on port 5000
+timeout 15s node dist/index.js > server_test.log 2>&1 &
+SERVER_PID=$!
+sleep 5
+
+# Test if server responds (might work despite WebSocket errors)
+curl -v http://localhost:5000/ 2>&1 | head -20
+
+# Check what's actually in the server output
+echo "=== SERVER OUTPUT ==="
+cat server_test.log | head -20
+
+# Kill test server
+kill $SERVER_PID 2>/dev/null
+
+# If server works, configure nginx and start properly
+if curl -s http://localhost:5000/ > /dev/null; then
+  echo "SERVER IS WORKING! Setting up Nginx..."
+  
+  # Configure Nginx
+  cat > /etc/nginx/sites-available/albpetrol-legal << 'EOF'
+server {
+    listen 80;
+    server_name 10.5.20.31 localhost;
+    location / {
+        proxy_pass http://localhost:5000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+fiecho "Server not responding - needs further debugging".20.31 ==="s-enabled/
+[1] 14092
+[1]+  Exit 1                  timeout 15s node dist/index.js > server_test.log 2>&1
+* Host localhost:5000 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying [::1]:5000...
+* connect to ::1 port 5000 from ::1 port 39620 failed: Connection refused
+*   Trying 127.0.0.1:5000...
+* connect to 127.0.0.1 port 5000 from 127.0.0.1 port 60760 failed: Connection refused
+* Failed to connect to localhost port 5000 after 0 ms: Couldn't connect to server
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+* Closing connection
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Couldn't connect to server
+=== SERVER OUTPUT ===
+file:///opt/ceshtje-ligjore/dist/index.js:246
+      throw new Error(
+            ^
+
+Error: DATABASE_URL must be set. Did you forget to provision a database?
+    at server/db.ts (file:///opt/ceshtje-ligjore/dist/index.js:246:13)
+    at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+    at server/storage.ts (file:///opt/ceshtje-ligjore/dist/index.js:955:5)
+    at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+    at file:///opt/ceshtje-ligjore/dist/index.js:1395:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v20.19.4
+Server not responding - needs further debugging
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 
+

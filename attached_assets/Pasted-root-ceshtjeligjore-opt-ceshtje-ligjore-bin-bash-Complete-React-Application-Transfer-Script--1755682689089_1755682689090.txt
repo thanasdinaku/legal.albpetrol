@@ -1,0 +1,81 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# #!/bin/bash
+
+# Complete React Application Transfer Script for Ubuntu Server
+# This script transfers the working Replit React application to Ubuntu at 10.5.20.31
+
+echo "=== TRANSFERRING COMPLETE REACT APPLICATION TO UBUNTU ==="
+
+# Execute on Ubuntu server
+ssh root@10.5.20.31 << 'EOF'
+
+cd /opt/ceshtje-ligjore
+
+# Stop current server
+pm2 stop albpetrol-legal
+
+# Create complete asset structure
+mkdir -p dist/public/assets
+
+# Transfer the working React index.html
+cat > dist/public/index.html << 'HTMLEOF'
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+HTMLEOFy>id="root"></div>" crossorigin href="/assets/index-C3xJPPxz.css">cript>e
+=== TRANSFERRING COMPLETE REACT APPLICATION TO UBUNTU ===
+> ^C
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # You're already on Ubuntu server, so run these commands directly:
+
+cd /opt/ceshtje-ligjore
+
+# Stop current server
+pm2 stop albpetrol-legal
+
+# Create complete asset structure
+mkdir -p dist/public/assets
+
+# Create the React HTML file
+cat > dist/public/index.html << 'HTMLEOF'
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Sistemi i Menaxhimit të Rasteve Ligjore</title>
+    <meta name="description" content="Sistem profesional i menaxhimit të rasteve ligjore me kontroll të aksesit të bazuar në role për operacione efikase në bazën e të dhënave.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;JSEOFrender(React.createElement(App));im e sipër.')tSize: '16px' }Raporte'),e' '
+[PM2] Applying action stopProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 1    │ stopped   │ 0%       │ 0b       │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # You're already on Ubuntu server, so run these commands directly:
+
+cd /opt/ceshtje-ligjore
+
+# Stop current server
+pm2 stop albpetrol-legal
+
+# Create complete asset structure
+mkdir -p dist/public/assets
+
+# Create the React HTML file
+cat > dist/public/index.html << 'HTMLEOF'
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Sistemi i Menaxhimit të Rasteve Ligjore</title>
+    <meta name="description" content="Sistem profesional i menaxhimit të rasteve ligjore me kontroll të aksesit të bazuar në role për operacione efikase në bazën e të dhënave.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;JSEOFrender(React.createElement(App));im e sipër.')tSize: '16px' }Raporte'),e' '
+[PM2] Applying action stopProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 1    │ stopped   │ 0%       │ 0b       │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

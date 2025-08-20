@@ -1,0 +1,219 @@
+import { sql } from "drizzle-orm";
+import {
+  index,
+  jsonb,
+  pgTable,
+  timestamp,
+  varchar,
+  text,
+  serial,
+  pgEnum,
+  boolean,
+} from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
+
+// Session storage table (mandatory for Replit Auth)
+export const sessions = pgTable(
+  "sessions",
+  {
+    sid: varchar("sid").primaryKey(),
+    sess: jsonb("sess").notNull(),
+    expire: timestamp("expire").notNull(),
+  },
+  (table) => [index("IDX_session_expire").on(table.expire)],
+);
+
+// User roles enum
+export const userRoleEnum = pgEnum("user_role", ["user", "admin"]);
+
+// User storage table
+export const users = pgTable("users", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: varchar("email").unique().notNull(),
+  firstName: varchar("first_name").notNull(),
+  lastName: varchar("last_name").notNull(),
+  password: varchar("password").notNull(),
+  profileImageUrl: varchar("profile_image_url"),
+  role: userRoleEnum("role").default("user").notNull(),
+  isDefaultAdmin: boolean("is_default_admin").default(false),
+  lastLogin: timestamp("last_login"),
+  twoFactorCode: varchar("two_factor_code"),
+  twoFactorCodeExpiry: timestamp("two_factor_code_expiry"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Legal cases table (Albanian court system) - Exact CSV structure
+export const dataEntries = pgTable("data_entries", {
+  id: serial("id").primaryKey(), // Nr. Rendor (auto-incrementing)
+  
+  // Basic Case Information (Required fields marked with * in CSV)
+  paditesi: varchar("paditesi", { length: 255 }).notNull(), // Paditesi (Emër e Mbiemër)*
+  iPaditur: varchar("i_paditur", { length: 255 }).notNull(), // I Paditur*
+  personITrete: varchar("person_i_trete", { length: 255 }), // Person i Tretë
+  objektiIPadise: text("objekti_i_padise"), // Objekti i Padisë
+  
+  // First Instance Court Information
+  gjykataShkalle: varchar("gjykata_shkalle", { length: 500 }), // Gjykata e Shkallës së Parë
+  fazaGjykataShkalle: varchar("faza_gjykata_shkalle", { length: 255 }), // Faza në të cilën ndodhet procesi (Shkallë I)
+  zhvillimiSeancesShkalleI: varchar("zhvillimi_seances_shkalle_i"), // Zhvillimi i seances gjyqesorë data,ora (Shkallë I)
+  
+  // Appeal Court Information
+  gjykataApelit: varchar("gjykata_apelit", { length: 500 }), // Gjykata e Apelit
+  fazaGjykataApelit: varchar("faza_gjykata_apelit", { length: 255 }), // Faza në të cilën ndodhet procesi (Apel)
+  zhvillimiSeancesApel: varchar("zhvillimi_seances_apel"), // Zhvillimi i seances gjyqesorë data,ora (Apel) - NEW FROM CSV
+  
+  // Current Status
+  fazaAktuale: varchar("faza_aktuale", { length: 255 }), // Faza në të cilën ndodhet proçesi
+  perfaqesuesi: varchar("perfaqesuesi", { length: 255 }), // Përfaqësuesi i Albpetrol SH.A.
+  
+  // Financial Information
+  demiIPretenduar: varchar("demi_i_pretenduar", { length: 255 }), // Dëmi i Pretenduar në Objekt
+  shumaGjykata: varchar("shuma_gjykata", { length: 255 }), // Shuma e Caktuar nga Gjykata me Vendim
+  vendimEkzekutim: varchar("vendim_ekzekutim", { length: 255 }), // Vendim me Ekzekutim të përkohshëm
+  fazaEkzekutim: varchar("faza_ekzekutim", { length: 255 }), // Faza në të cilën ndodhet
+  
+  // Final Status Fields from CSV
+  ankimuar: varchar("ankimuar", { length: 255 }), // Ankimuar - NEW FROM CSV
+  perfunduar: varchar("perfunduar", { length: 255 }), // Përfunduar - NEW FROM CSV
+  gjykataLarte: varchar("gjykata_larte", { length: 255 }), // Gjykata e Lartë
+  
+  // File attachments (PDF, Word documents)
+  attachments: jsonb("attachments").default('[]'),
+  
+  // System fields
+  createdById: varchar("created_by_id").notNull().references(() => users.id),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Database checkpoints table for backup/restore functionality
+export const databaseCheckpoints = pgTable("database_checkpoints", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(), // Display name for checkpoint
+  description: text("description"), // Optional description
+  filePath: varchar("file_path", { length: 500 }).notNull(), // Path to backup file
+  fileSize: varchar("file_size", { length: 50 }), // Size in readable format (e.g., "1.2 MB")
+  createdById: varchar("created_by_id").notNull().references(() => users.id),
+  createdAt: timestamp("created_at").defaultNow(),
+  isAutoBackup: boolean("is_auto_backup").default(false), // True for automated backups
+});
+
+// System settings table for storing application configuration
+export const systemSettings = pgTable("system_settings", {
+  id: serial("id").primaryKey(),
+  settingKey: varchar("setting_key", { length: 255 }).notNull().unique(),
+  settingValue: jsonb("setting_value").notNull(),
+  updatedById: varchar("updated_by_id").notNull().references(() => users.id),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Insert schemas
+export const insertUserSchema = createInsertSchema(users).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const createUserSchema = createInsertSchema(users).omit({
+  id: true,
+  isDefaultAdmin: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+});
+
+// Password validation function
+const passwordValidation = z.string()
+  .min(8, "Fjalëkalimi duhet të jetë të paktën 8 karaktere")
+  .regex(/[A-Z]/, "Fjalëkalimi duhet të përmbajë të paktën një shkronjë të madhe")
+  .regex(/[0-9]/, "Fjalëkalimi duhet të përmbajë të paktën një numër")
+  .regex(/[!@#$%^&*(),.?":{}|<>]/, "Fjalëkalimi duhet të përmbajë të paktën një karakter special");
+
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, "Fjalëkalimi aktual është i kërkuar"),
+  newPassword: passwordValidation,
+  confirmPassword: z.string().min(1, "Konfirmimi i fjalëkalimit është i kërkuar"),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: "Fjalëkalimet nuk përputhen",
+  path: ["confirmPassword"],
+});
+
+export const insertDataEntrySchema = createInsertSchema(dataEntries).omit({
+  id: true,
+  createdById: true,
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  // Ensure required fields have proper validation
+  paditesi: z.string().min(1, "Paditesi është i kërkuar"),
+  iPaditur: z.string().min(1, "I Paditur është i kërkuar"),
+  // Make sure optional fields can be empty strings or null
+  personITrete: z.string().optional(),
+  objektiIPadise: z.string().optional(),
+  gjykataShkalle: z.string().optional(),
+  fazaGjykataShkalle: z.string().optional(),
+  zhvillimiSeancesShkalleI: z.string().optional(),
+  gjykataApelit: z.string().optional(),
+  fazaGjykataApelit: z.string().optional(),
+  zhvillimiSeancesApel: z.string().optional(),
+  fazaAktuale: z.string().optional(),
+  perfaqesuesi: z.string().optional(),
+  demiIPretenduar: z.string().optional(),
+  shumaGjykata: z.string().optional(),
+  vendimEkzekutim: z.string().optional(),
+  fazaEkzekutim: z.string().optional(),
+  ankimuar: z.string().optional(),
+  perfunduar: z.string().optional(),
+  gjykataLarte: z.string().optional(),
+  attachments: z.array(z.object({
+    name: z.string(),
+    url: z.string(),
+    path: z.string()
+  })).optional().default([])
+});
+
+export const updateDataEntrySchema = createInsertSchema(dataEntries).omit({
+  id: true,
+  createdById: true,
+  createdAt: true,
+  updatedAt: true,
+}).partial();
+
+export const insertCheckpointSchema = createInsertSchema(databaseCheckpoints).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertSystemSettingsSchema = createInsertSchema(systemSettings).omit({
+  id: true,
+  updatedAt: true,
+});
+
+// Email notification schemas
+export const emailNotificationSchema = z.object({
+  enabled: z.boolean().default(true),
+  emailAddresses: z.array(z.string().email()).min(1, "Të paktën një adresë email është e kërkuar"),
+  subject: z.string().min(1, "Tema është e kërkuar").default("Hyrje e re në sistemin e menaxhimit të çështjeve ligjore"),
+  includeDetails: z.boolean().default(true),
+});
+
+// Types
+export type User = typeof users.$inferSelect;
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type CreateUser = z.infer<typeof createUserSchema>;
+export type LoginData = z.infer<typeof loginSchema>;
+export type ChangePasswordData = z.infer<typeof changePasswordSchema>;
+export type DataEntry = typeof dataEntries.$inferSelect;
+export type InsertDataEntry = z.infer<typeof insertDataEntrySchema>;
+export type UpdateDataEntry = z.infer<typeof updateDataEntrySchema>;
+export type DatabaseCheckpoint = typeof databaseCheckpoints.$inferSelect;
+export type InsertCheckpoint = z.infer<typeof insertCheckpointSchema>;
+export type SystemSettings = typeof systemSettings.$inferSelect;
+export type InsertSystemSettings = z.infer<typeof insertSystemSettingsSchema>;
+export type EmailNotificationSettings = z.infer<typeof emailNotificationSchema>;

@@ -1,0 +1,78 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # Check application status
+pm2 status
+
+# View real-time logs
+pm2 logs albpetrol-legal
+
+# Restart if needed
+pm2 restart albpetrol-legal
+
+# Check nginx status
+systemctl status nginx
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ 1.0.0   │ fork    │ 15503    │ 69s    │ 0    │ online    │ 0%       │ 63.0mb   │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[TAILING] Tailing last 15 lines for [albpetrol-legal] process (change the value with --lines option)
+/opt/ceshtje-ligjore/logs/error.log last 15 lines:
+/opt/ceshtje-ligjore/logs/out.log last 15 lines:
+0|albpetro | 2025-08-20 08:41 +00:00: Albpetrol Legal System running on port 5000
+
+
+
+^C
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ 1.0.0   │ fork    │ 15905    │ 0s     │ 1    │ online    │ 0%       │ 19.5mb   │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+● nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; preset: enabled)
+     Active: active (running) since Wed 2025-08-20 08:41:17 UTC; 4min 17s ago
+       Docs: man:nginx(8)
+   Main PID: 15485 (nginx)
+      Tasks: 3 (limit: 9428)
+     Memory: 2.4M (peak: 2.6M)
+        CPU: 10ms
+     CGroup: /system.slice/nginx.service
+             ├─15485 "nginx: master process /usr/sbin/nginx -g daemon on; master_process on;"
+             ├─15486 "nginx: worker process"
+             └─15488 "nginx: worker process"
+
+Aug 20 08:41:17 ceshtjeligjore systemd[1]: Starting nginx.service - A high performance web server and a reverse proxy server...
+Aug 20 08:41:17 ceshtjeligjore systemd[1]: Started nginx.service - A high performance web server and a reverse proxy server.
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cls
+Command 'cls' not found, but there are 20 similar ones.
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # View application status
+pm2 status
+
+# Monitor real-time logs  
+pm2 logs albpetrol-legal
+
+# Restart application if needed
+pm2 restart albpetrol-legal
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ 1.0.0   │ fork    │ 15905    │ 83s    │ 1    │ online    │ 0%       │ 62.0mb   │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[TAILING] Tailing last 15 lines for [albpetrol-legal] process (change the value with --lines option)
+/opt/ceshtje-ligjore/logs/error.log last 15 lines:
+/opt/ceshtje-ligjore/logs/out.log last 15 lines:
+0|albpetro | 2025-08-20 08:41 +00:00: Albpetrol Legal System running on port 5000
+0|albpetro | 2025-08-20 08:45 +00:00: Albpetrol Legal System running on port 5000
+
+^C
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ 1.0.0   │ fork    │ 16020    │ 0s     │ 2    │ online    │ 0%       │ 18.0mb   │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

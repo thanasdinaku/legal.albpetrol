@@ -1,0 +1,147 @@
+root@ceshtjeligjore:~# # Install basic development tools
+apt install -y curl wget git build-essential software-properties-common
+
+# Install Node.js 20
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+apt-get install -y nodejs
+
+# Verify Node.js installation
+node --version
+npm --version
+
+echo "=== NODE.JS INSTALLED ==="
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+curl is already the newest version (8.5.0-2ubuntu10.6).
+wget is already the newest version (1.21.4-1ubuntu4.1).
+git is already the newest version (1:2.43.0-1ubuntu7.3).
+software-properties-common is already the newest version (0.99.49.3).
+software-properties-common set to manually installed.
+The following additional packages will be installed:
+  g++ g++-13 g++-13-x86-64-linux-gnu g++-x86-64-linux-gnu libstdc++-13-dev
+Suggested packages:
+  g++-multilib g++-13-multilib gcc-13-doc libstdc++-13-doc
+The following NEW packages will be installed:
+  build-essential g++ g++-13 g++-13-x86-64-linux-gnu g++-x86-64-linux-gnu
+  libstdc++-13-dev
+0 upgraded, 6 newly installed, 0 to remove and 1 not upgraded.
+Need to get 14.6 MB of archives.
+After this operation, 56.6 MB of additional disk space will be used.
+Get:1 http://al.archive.ubuntu.com/ubuntu noble-updates/main amd64 libstdc++-13-dev amd64 13.3.0-6ubuntu2~24.04 [2,420 kB]
+Get:2 http://al.archive.ubuntu.com/ubuntu noble-updates/main amd64 g++-13-x86-64-linux-gnu amd64 13.3.0-6ubuntu2~24.04 [12.2 MB]
+Get:3 http://al.archive.ubuntu.com/ubuntu noble-updates/main amd64 g++-13 amd64 13.3.0-6ubuntu2~24.04 [16.1 kB]
+Get:4 http://al.archive.ubuntu.com/ubuntu noble/main amd64 g++-x86-64-linux-gnu amd64 4:13.2.0-7ubuntu1 [964 B]
+Get:5 http://al.archive.ubuntu.com/ubuntu noble/main amd64 g++ amd64 4:13.2.0-7ubuntu1 [1,100 B]
+Get:6 http://al.archive.ubuntu.com/ubuntu noble/main amd64 build-essential amd64 12.10ubuntu1 [4,928 B]
+Fetched 14.6 MB in 5s (2,924 kB/s)           
+Selecting previously unselected package libstdc++-13-dev:amd64.
+(Reading database ... 230254 files and directories currently installed.)
+Preparing to unpack .../0-libstdc++-13-dev_13.3.0-6ubuntu2~24.04_amd64.deb ...
+Unpacking libstdc++-13-dev:amd64 (13.3.0-6ubuntu2~24.04) ...
+Selecting previously unselected package g++-13-x86-64-linux-gnu.
+Preparing to unpack .../1-g++-13-x86-64-linux-gnu_13.3.0-6ubuntu2~24.04_amd64.de
+b ...
+Unpacking g++-13-x86-64-linux-gnu (13.3.0-6ubuntu2~24.04) ...
+Selecting previously unselected package g++-13.
+Preparing to unpack .../2-g++-13_13.3.0-6ubuntu2~24.04_amd64.deb ...
+Unpacking g++-13 (13.3.0-6ubuntu2~24.04) ...
+Selecting previously unselected package g++-x86-64-linux-gnu.
+Preparing to unpack .../3-g++-x86-64-linux-gnu_4%3a13.2.0-7ubuntu1_amd64.deb ...
+Unpacking g++-x86-64-linux-gnu (4:13.2.0-7ubuntu1) ...
+Selecting previously unselected package g++.
+Preparing to unpack .../4-g++_4%3a13.2.0-7ubuntu1_amd64.deb ...
+Unpacking g++ (4:13.2.0-7ubuntu1) ...
+Selecting previously unselected package build-essential.
+Preparing to unpack .../5-build-essential_12.10ubuntu1_amd64.deb ...
+Unpacking build-essential (12.10ubuntu1) ...
+Setting up libstdc++-13-dev:amd64 (13.3.0-6ubuntu2~24.04) ...
+Setting up g++-13-x86-64-linux-gnu (13.3.0-6ubuntu2~24.04) ...
+Setting up g++-x86-64-linux-gnu (4:13.2.0-7ubuntu1) ...
+Setting up g++-13 (13.3.0-6ubuntu2~24.04) ...
+Setting up g++ (4:13.2.0-7ubuntu1) ...
+update-alternatives: using /usr/bin/g++ to provide /usr/bin/c++ (c++) in auto mo
+de
+Setting up build-essential (12.10ubuntu1) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+Scanning processes...                                                           
+Scanning candidates...                                                          
+Scanning linux images...                                                        
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+User sessions running outdated binaries:
+ admuser @ session #2: gdm-wayland-ses[2282]
+ admuser @ user manager service: gnome-session-b[2386], gnome-shell[2426],
+  systemd[2195]
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2025-08-20 07:49:20 - Installing pre-requisites
+Hit:1 http://al.archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://security.ubuntu.com/ubuntu noble-security InRelease
+Hit:3 http://al.archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:4 https://deb.nodesource.com/node_20.x nodistro InRelease
+Hit:5 http://al.archive.ubuntu.com/ubuntu noble-backports InRelease
+Reading package lists... Done
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+apt-transport-https is already the newest version (2.8.3).
+ca-certificates is already the newest version (20240203).
+curl is already the newest version (8.5.0-2ubuntu10.6).
+gnupg is already the newest version (2.4.4-2ubuntu17.3).
+0 upgraded, 0 newly installed, 0 to remove and 1 not upgraded.
+Hit:1 http://al.archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://al.archive.ubuntu.com/ubuntu noble-updates InRelease   
+Hit:3 https://deb.nodesource.com/node_20.x nodistro InRelease       
+Hit:4 http://security.ubuntu.com/ubuntu noble-security InRelease    
+Hit:5 http://al.archive.ubuntu.com/ubuntu noble-backports InRelease
+Reading package lists... Done
+2025-08-20 07:49:23 - Repository configured successfully.
+2025-08-20 07:49:23 - To install Node.js, run: apt-get install nodejs -y
+2025-08-20 07:49:23 - You can use N|solid Runtime as a node.js alternative
+2025-08-20 07:49:23 - To install N|solid Runtime, run: apt-get install nsolid -y 
+
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following NEW packages will be installed:
+  nodejs
+0 upgraded, 1 newly installed, 0 to remove and 1 not upgraded.
+Need to get 32.0 MB of archives.
+After this operation, 199 MB of additional disk space will be used.
+Get:1 https://deb.nodesource.com/node_20.x nodistro/main amd64 nodejs amd64 20.19.4-1nodesource1 [32.0 MB]
+Fetched 32.0 MB in 4s (9,006 kB/s) 
+Selecting previously unselected package nodejs.
+(Reading database ... 231147 files and directories currently installed.)
+Preparing to unpack .../nodejs_20.19.4-1nodesource1_amd64.deb ...
+Unpacking nodejs (20.19.4-1nodesource1) ...
+Setting up nodejs (20.19.4-1nodesource1) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+Scanning processes...                                                           
+Scanning candidates...                                                          
+Scanning linux images...                                                        
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+User sessions running outdated binaries:
+ admuser @ session #2: gdm-wayland-ses[2282]
+ admuser @ user manager service: gnome-session-b[2386], gnome-shell[2426],
+  systemd[2195]
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+v20.19.4
+10.8.2
+=== NODE.JS INSTALLED ===
+root@ceshtjeligjore:~# 
+root@ceshtjeligjore:~# 
+root@ceshtjeligjore:~# 
+root@ceshtjeligjore:~# 

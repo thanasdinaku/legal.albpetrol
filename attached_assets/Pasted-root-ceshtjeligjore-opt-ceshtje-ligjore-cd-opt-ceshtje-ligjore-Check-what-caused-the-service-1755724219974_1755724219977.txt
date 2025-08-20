@@ -1,0 +1,103 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Check what caused the service failure
+systemctl status cloudflared.service --no-pager -l
+journalctl -xeu cloudflared.service --no-pager -n 10
+
+# Most likely it's a config syntax issue or missing credentials
+# Let's verify the credentials file exists
+ls -la /etc/cloudflared/cert.json
+
+# Try manual start to see exact error
+/usr/bin/cloudflared --config /etc/cloudflared/config.yml tunnel run
+● cloudflared.service - cloudflared
+     Loaded: loaded (/etc/systemd/system/cloudflared.service; enabled; preset: enabled)
+     Active: activating (auto-restart) (Result: exit-code) since Wed 2025-08-20 21:07:06 UTC; 2s ago
+    Process: 51736 ExecStart=/usr/bin/cloudflared --no-autoupdate --config /etc/cloudflared/config.yml tunnel run (code=exited, status=1/FAILURE)
+   Main PID: 51736 (code=exited, status=1/FAILURE)
+        CPU: 65ms
+Aug 20 21:07:00 ceshtjeligjore cloudflared[51726]: error parsing tunnel ID: legal-albpetrol is neither the ID nor the name of any of your tunnels
+Aug 20 21:07:00 ceshtjeligjore systemd[1]: cloudflared.service: Main process exited, code=exited, status=1/FAILURE
+░░ Subject: Unit process exited
+░░ Defined-By: systemd
+░░ Support: http://www.ubuntu.com/support
+░░
+░░ An ExecStart= process belonging to unit cloudflared.service has exited.
+░░
+░░ The process' exit code is 'exited' and its exit status is 1.
+Aug 20 21:07:00 ceshtjeligjore systemd[1]: cloudflared.service: Failed with result 'exit-code'.
+░░ Subject: Unit failed
+░░ Defined-By: systemd
+░░ Support: http://www.ubuntu.com/support
+░░
+░░ The unit cloudflared.service has entered the 'failed' state with result 'exit-code'.
+Aug 20 21:07:00 ceshtjeligjore systemd[1]: Failed to start cloudflared.service - cloudflared.
+░░ Subject: A start job for unit cloudflared.service has failed
+░░ Defined-By: systemd
+░░ Support: http://www.ubuntu.com/support
+░░
+░░ A start job for unit cloudflared.service has finished with a failure.
+░░
+░░ The job identifier is 486362 and the job result is failed.
+Aug 20 21:07:05 ceshtjeligjore systemd[1]: cloudflared.service: Scheduled restart job, restart counter is at 20.
+░░ Subject: Automatic restarting of a unit has been scheduled
+░░ Defined-By: systemd
+░░ Support: http://www.ubuntu.com/support
+░░
+░░ Automatic restarting of the unit cloudflared.service has been scheduled, as the result for
+░░ the configured Restart= setting for the unit.
+Aug 20 21:07:05 ceshtjeligjore systemd[1]: Starting cloudflared.service - cloudflared...
+░░ Subject: A start job for unit cloudflared.service has begun execution
+░░ Defined-By: systemd
+░░ Support: http://www.ubuntu.com/support
+░░
+░░ A start job for unit cloudflared.service has begun execution.
+░░
+░░ The job identifier is 486477.
+Aug 20 21:07:06 ceshtjeligjore cloudflared[51736]: error parsing tunnel ID: legal-albpetrol is neither the ID nor the name of any of your tunnels
+Aug 20 21:07:06 ceshtjeligjore systemd[1]: cloudflared.service: Main process exited, code=exited, status=1/FAILURE
+░░ Subject: Unit process exited
+░░ Defined-By: systemd
+░░ Support: http://www.ubuntu.com/support
+░░
+░░ An ExecStart= process belonging to unit cloudflared.service has exited.
+░░
+░░ The process' exit code is 'exited' and its exit status is 1.
+Aug 20 21:07:06 ceshtjeligjore systemd[1]: cloudflared.service: Failed with result 'exit-code'.
+░░ Subject: Unit failed
+░░ Defined-By: systemd
+░░ Support: http://www.ubuntu.com/support
+░░
+░░ The unit cloudflared.service has entered the 'failed' state with result 'exit-code'.
+Aug 20 21:07:06 ceshtjeligjore systemd[1]: Failed to start cloudflared.service - cloudflared.
+░░ Subject: A start job for unit cloudflared.service has failed
+░░ Defined-By: systemd
+░░ Support: http://www.ubuntu.com/support
+░░
+░░ A start job for unit cloudflared.service has finished with a failure.
+░░
+░░ The job identifier is 486477 and the job result is failed.
+ls: cannot access '/etc/cloudflared/cert.json': No such file or directory
+error parsing tunnel ID: legal-albpetrol is neither the ID nor the name of any of your tunnels
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Stop the failing service
+systemctl stop cloudflared
+systemctl disable cloudflared
+
+# Test local access still works
+curl -I http://10.5.20.31
+Removed "/etc/systemd/system/multi-user.target.wants/cloudflared.service".
+HTTP/1.1 200 OK
+Server: nginx/1.24.0 (Ubuntu)
+Date: Wed, 20 Aug 2025 21:09:30 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Length: 2374
+Connection: keep-alive
+X-Powered-By: Express
+Accept-Ranges: bytes
+Cache-Control: public, max-age=0
+Last-Modified: Wed, 20 Aug 2025 12:58:57 GMT
+ETag: W/"946-198c78fa908"
+
+root@ceshtjeligjore:/opt/ceshtje-ligjore#

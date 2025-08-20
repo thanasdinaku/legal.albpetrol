@@ -1,8 +1,10 @@
 # Overview
 
-This is a full-stack data management system built with React and Express.js, designed for professional database operations with role-based access control. The application provides a comprehensive dashboard for managing data entries with features like user authentication, data visualization, and CRUD operations. It uses a modern tech stack including TypeScript, Tailwind CSS, Drizzle ORM for database management, and shadcn/ui components for a polished user interface.
+This is a full-stack legal case management system built with React and Express.js, designed for professional database operations with role-based access control. The application provides a comprehensive dashboard for managing Albanian legal case data with features like user authentication, data visualization, and CRUD operations. It uses a modern tech stack including TypeScript, Tailwind CSS, Drizzle ORM for database management, and shadcn/ui components for a polished user interface.
 
 The project's business vision is to provide a robust, secure, and user-friendly platform for managing legal case data, specifically tailored for organizations like Albpetrol. Its market potential lies in offering a specialized data management solution for legal departments that require stringent access control, comprehensive data tracking, and efficient reporting. The project ambitions include achieving enterprise-grade security and reliability, comprehensive real-time user activity tracking, and an intuitive Albanian-language interface.
+
+**Deployment Status**: Successfully deployed on Ubuntu 24.04.3 LTS server at http://10.5.20.31 with PM2 process management, Nginx reverse proxy, and PostgreSQL database. Production environment is stable and operational as of August 20, 2025.
 
 # User Preferences
 

@@ -1,0 +1,314 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cat > /opt/ceshtje-ligjore/complete_deployment_script.sh << 'SCRIPT_END'
+#!/bin/bash
+
+echo "🚀 Complete Albpetrol Legal System Deployment Script"
+echo "=================================================="
+echo "This script deploys the Albanian Legal Case Management System"
+echo "from GitHub to Ubuntu 24.04.3 LTS with full Git integration"
+
+# Check if running as root
+if [ "$EUID" -ne 0 ]; then
+    echo "❌ Please run as root: sudo bash $0"
+    exit 1
+fi
+
+# Configuration
+REPO_URL="https://github.com/thanasdinaku/ceshtje_ligjore.git"
+APP_DIR="/opt/ceshtje-ligjore"
+DB_NAME="albpetrol_legal_db"
+DB_USER="albpetrol_user"
+DB_PASS="SecurePass2025"
+ADMIN_EMAIL="it.system@albpetrol.al"
+
+echo "📋 Configuration:"
+chmod +x /opt/ceshtje-ligjore/complete_deployment_script.sh '{print $1}'):5000"r
+root@ceshtjeligjore:/opt/ceshtje-ligjore# sudo /opt/ceshtje-ligjore/complete_deployment_script.sh
+🚀 Complete Albpetrol Legal System Deployment Script
+==================================================
+This script deploys the Albanian Legal Case Management System
+from GitHub to Ubuntu 24.04.3 LTS with full Git integration
+📋 Configuration:
+   Repository: https://github.com/thanasdinaku/ceshtje_ligjore.git
+   App Directory: /opt/ceshtje-ligjore
+   Database: albpetrol_legal_db
+   Admin Email: it.system@albpetrol.al
+🔄 Updating system packages...
+Get:1 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Hit:2 http://al.archive.ubuntu.com/ubuntu noble InRelease                      
+Get:3 http://al.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]     
+Hit:4 https://deb.nodesource.com/node_20.x nodistro InRelease                  
+Get:5 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1,081 kB]
+Get:6 http://al.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+Get:7 http://al.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1,341 kB]
+Get:8 http://security.ubuntu.com/ubuntu noble-security/main Translation-en [187 kB]
+Get:9 http://security.ubuntu.com/ubuntu noble-security/main amd64 Components [21.6 kB]
+Get:10 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [1,625 kB]
+Get:11 http://security.ubuntu.com/ubuntu noble-security/restricted Translation-en [359 kB]
+Get:12 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Components [212 B]
+Get:13 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [881 kB]
+Get:14 http://security.ubuntu.com/ubuntu noble-security/universe Translation-en [195 kB]
+Get:15 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Components [52.2 kB]
+Get:16 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Components [208 B]
+Get:17 http://al.archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [175 kB]
+Get:18 http://al.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Components [212 B]
+Get:19 http://al.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1,124 kB]
+Get:20 http://al.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [377 kB]
+Get:21 http://al.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]
+Get:22 http://al.archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [7,072 B]
+Get:23 http://al.archive.ubuntu.com/ubuntu noble-backports/restricted amd64 Components [216 B]
+Get:24 http://al.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [19.2 kB]
+Get:25 http://al.archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Components [212 B]
+Fetched 7,825 kB in 4s (2,194 kB/s)                                     
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+1 package can be upgraded. Run 'apt list --upgradable' to see it.
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Calculating upgrade... Done
+Get more security updates through Ubuntu Pro with 'esm-apps' enabled:
+  libzvbi-common libavcodec60 libzvbi0t64 libavutil58 libswresample4
+Learn more about Ubuntu Pro at https://ubuntu.com/pro
+The following upgrades have been deferred due to phasing:
+  intel-media-va-driver
+0 upgraded, 0 newly installed, 0 to remove and 1 not upgraded.
+📦 Installing Node.js...
+2025-08-20 12:39:39 - Installing pre-requisites
+Hit:1 http://al.archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://al.archive.ubuntu.com/ubuntu noble-updates InRelease          
+Hit:3 https://deb.nodesource.com/node_20.x nodistro InRelease       
+Hit:4 http://al.archive.ubuntu.com/ubuntu noble-backports InRelease
+Hit:5 http://security.ubuntu.com/ubuntu noble-security InRelease
+Reading package lists... Done
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+apt-transport-https is already the newest version (2.8.3).
+ca-certificates is already the newest version (20240203).
+curl is already the newest version (8.5.0-2ubuntu10.6).
+gnupg is already the newest version (2.4.4-2ubuntu17.3).
+0 upgraded, 0 newly installed, 0 to remove and 1 not upgraded.
+Hit:1 http://al.archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://al.archive.ubuntu.com/ubuntu noble-updates InRelease   
+Get:3 https://deb.nodesource.com/node_18.x nodistro InRelease [12.1 kB]
+Hit:4 http://security.ubuntu.com/ubuntu noble-security InRelease    
+Hit:5 http://al.archive.ubuntu.com/ubuntu noble-backports InRelease
+Get:6 https://deb.nodesource.com/node_18.x nodistro/main amd64 Packages [11.6 kB]
+Fetched 23.7 kB in 1s (25.9 kB/s)   
+Reading package lists... Done
+2025-08-20 12:39:43 - Repository configured successfully.
+2025-08-20 12:39:43 - To install Node.js, run: apt-get install nodejs -y
+2025-08-20 12:39:43 - You can use N|solid Runtime as a node.js alternative
+2025-08-20 12:39:43 - To install N|solid Runtime, run: apt-get install nsolid -y 
+
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+nodejs is already the newest version (20.19.4-1nodesource1).
+git is already the newest version (1:2.43.0-1ubuntu7.3).
+curl is already the newest version (8.5.0-2ubuntu10.6).
+0 upgraded, 0 newly installed, 0 to remove and 1 not upgraded.
+🗄️ Installing PostgreSQL...
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+postgresql is already the newest version (16+257build1.1).
+postgresql-contrib is already the newest version (16+257build1.1).
+0 upgraded, 0 newly installed, 0 to remove and 1 not upgraded.
+⚙️ Installing PM2...
+
+changed 133 packages in 11s
+
+13 packages are looking for funding
+  run `npm fund` for details
+🔐 Setting up PostgreSQL database...
+ERROR:  role "albpetrol_user" already exists
+ALTER ROLE
+ERROR:  database "albpetrol_legal_db" already exists
+GRANT
+You are now connected to database "albpetrol_legal_db" as user "postgres".
+GRANT
+ALTER DEFAULT PRIVILEGES
+ALTER DEFAULT PRIVILEGES
+🔑 Configuring PostgreSQL authentication...
+📁 Creating application directory...
+📥 Cloning repository from GitHub...
+Repository exists, pulling latest changes...
+From https://github.com/thanasdinaku/ceshtje_ligjore
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+🔧 Configuring Git identity...
+📦 Installing dependencies...
+npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+
+added 111 packages, and audited 766 packages in 5s
+
+95 packages are looking for funding
+  run `npm fund` for details
+
+6 vulnerabilities (5 moderate, 1 high)
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+🛠️ Installing drizzle-kit...
+
+up to date, audited 766 packages in 1s
+
+95 packages are looking for funding
+  run `npm fund` for details
+
+6 vulnerabilities (5 moderate, 1 high)
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+📝 Creating production .env file...
+🔨 Building application...
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.19 building for production...
+✓ 2399 modules transformed.
+dist/public/index.html                                         1.09 kB │ gzip:   0.62 kB
+dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+dist/public/assets/index-DPP8Sud3.css                        156.99 kB │ gzip:  25.08 kB
+dist/public/assets/index-BQ4hcx7k.js                         815.41 kB │ gzip: 242.37 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 5.70s
+
+  dist/index.js  133.4kb
+
+⚡ Done in 7ms
+🗄️ Setting up database schema...
+No config path provided, using default 'drizzle.config.ts'
+Reading config file '/opt/ceshtje-ligjore/drizzle.config.ts'
+Using 'pg' driver for database querying
+[✓] Pulling schema from database...
+
++ first_name column will be created
+
++ last_name column will be created
+
++ password column will be created
+
++ profile_image_url column will be created
+
++ is_default_admin column will be created
+
++ last_login column will be created
+
++ two_factor_code column will be created
+
++ two_factor_code_expiry column will be created
+
++ created_at column will be created
+
++ updated_at column will be created
+--- all columns conflicts in users table resolved ---
+
+· You're about to add users_email_unique unique constraint to the table, which contains 1 items. If this statement fails, you will receive an error from the database. Do you want to truncate users table?
+
+ Warning  Found data-loss statements:
+· You're about to change role column type from varchar to user_role with 1 items
+· You're about to add not-null first_name column without default value, which contains 1 items
+· You're about to add not-null last_name column without default value, which contains 1 items
+· You're about to add not-null password column without default value, which contains 1 items
+· You're about to delete firstName column in users table with 1 items
+· You're about to delete lastName column in users table with 1 items
+· You're about to delete isDefaultAdmin column in users table with 1 items
+· You're about to delete createdAt column in users table with 1 items
+· You're about to delete updatedAt column in users table with 1 items
+
+THIS ACTION WILL CAUSE DATA LOSS AND CANNOT BE REVERTED
+
+Do you still want to push changes?
+[x] All changes were aborted
+👤 Creating admin user...
+
+NOTICE:  relation "sessions" already exists, skipping
+CREATE TABLE
+NOTICE:  relation "users" already exists, skipping
+CREATE TABLE
+INSERT 0 1
+      id      |         email          | role  | isDefaultAdmin 
+--------------+------------------------+-------+----------------
+ admin-system | it.system@albpetrol.al | admin | t
+(1 row)
+
+⚙️ Creating PM2 configuration...
+🚀 Starting application with PM2...
+
+
+
+
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ 1.0.0   │ fork    │ 17576    │ 0s     │ 5    │ online    │ 0%       │ 18.1mb   │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2] Saving current process list...
+[PM2] Successfully saved in /root/.pm2/dump.pm2
+[PM2] Init System found: systemd
+Platform systemd
+Template
+[Unit]
+Description=PM2 process manager
+Documentation=https://pm2.keymetrics.io/
+After=network.target
+
+[Service]
+Type=forking
+User=root
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+Environment=PM2_HOME=/root/.pm2
+PIDFile=/root/.pm2/pm2.pid
+Restart=on-failure
+
+ExecStart=/usr/lib/node_modules/pm2/bin/pm2 resurrect
+ExecReload=/usr/lib/node_modules/pm2/bin/pm2 reload all
+ExecStop=/usr/lib/node_modules/pm2/bin/pm2 kill
+
+[Install]
+WantedBy=multi-user.target
+
+Target path
+/etc/systemd/system/pm2-root.service
+Command list
+[ 'systemctl enable pm2-root' ]
+[PM2] Writing init configuration in /etc/systemd/system/pm2-root.service
+[PM2] Making script booting at startup...
+[PM2] [-] Executing: systemctl enable pm2-root...
+[PM2] [v] Command successfully executed.
++---------------------------------------+
+[PM2] Freeze a process list on reboot via:
+$ pm2 save
+
+[PM2] Remove init script via:
+$ pm2 unstartup systemd
+
+✅ Deployment completed successfully!
+🌐 Application running at: http://10.5.20.31:5000
+📧 Admin email: it.system@albpetrol.al
+🔧 Use ./update.sh for future updates
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

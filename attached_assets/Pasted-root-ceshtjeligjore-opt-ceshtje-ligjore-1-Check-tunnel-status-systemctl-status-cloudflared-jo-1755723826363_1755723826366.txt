@@ -1,0 +1,66 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # 1. Check tunnel status
+systemctl status cloudflared
+journalctl -u cloudflared -n 10
+
+# 2. Restart the tunnel service
+systemctl stop cloudflared
+systemctl start cloudflared
+
+# 3. Wait and verify
+sleep 10
+systemctl status cloudflared
+Warning: The unit file, source configuration file or drop-ins of cloudflared.service changed on disk. Run 'systemctl daemon-reload' to reload units.
+● cloudflared.service - cloudflared
+     Loaded: loaded (/etc/systemd/system/cloudflared.service; enabled; preset: enabled)
+     Active: active (running) since Wed 2025-08-20 09:20:35 UTC; 11h ago
+   Main PID: 1522 (cloudflared)
+      Tasks: 8 (limit: 9428)
+     Memory: 54.7M (peak: 57.2M)
+        CPU: 2min 15.083s
+     CGroup: /system.slice/cloudflared.service
+             └─1522 /usr/bin/cloudflared --no-autoupdate --config /etc/cloudflared/config.yml tunnel run
+
+Aug 20 18:29:31 ceshtjeligjore cloudflared[1522]: 2025-08-20T18:29:31Z ERR unable to send local configuration error="context deadline exceeded"
+Aug 20 18:31:50 ceshtjeligjore cloudflared[1522]: 2025-08-20T18:31:50Z WRN Failed to serve tunnel connection error="context canceled" connIndex=0 event=0 ip=198.41.192>
+Aug 20 18:31:50 ceshtjeligjore cloudflared[1522]: 2025-08-20T18:31:50Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.67
+Aug 20 18:31:50 ceshtjeligjore cloudflared[1522]: 2025-08-20T18:31:50Z WRN Connection terminated error="context canceled" connIndex=0
+Aug 20 18:31:51 ceshtjeligjore cloudflared[1522]: 2025-08-20T18:31:51Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.4>
+Aug 20 18:31:51 ceshtjeligjore cloudflared[1522]: 2025-08-20T18:31:51Z INF Registered tunnel connection connIndex=0 connection=dd6dde36-3d5e-4c66-9293-270001e5d78d eve>
+Aug 20 20:03:25 ceshtjeligjore cloudflared[1522]: 2025-08-20T20:03:25Z ERR  error="Unable to reach the origin service. The service may be down or it may not be respond>
+Aug 20 20:03:25 ceshtjeligjore cloudflared[1522]: 2025-08-20T20:03:25Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may >
+Aug 20 20:59:26 ceshtjeligjore cloudflared[1522]: 2025-08-20T20:59:26Z ERR  error="Unable to reach the origin service. The service may be down or it may not be respond>
+Aug 20 20:59:26 ceshtjeligjore cloudflared[1522]: 2025-08-20T20:59:26Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may >
+Aug 20 18:29:31 ceshtjeligjore cloudflared[1522]: 2025-08-20T18:29:31Z ERR unable to send local configuration error="context deadline exceeded"
+Aug 20 18:31:50 ceshtjeligjore cloudflared[1522]: 2025-08-20T18:31:50Z WRN Failed to serve tunnel connection error="context canceled" connIndex=0 event=0 ip=198.41.192>
+Aug 20 18:31:50 ceshtjeligjore cloudflared[1522]: 2025-08-20T18:31:50Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.67
+Aug 20 18:31:50 ceshtjeligjore cloudflared[1522]: 2025-08-20T18:31:50Z WRN Connection terminated error="context canceled" connIndex=0
+Aug 20 18:31:51 ceshtjeligjore cloudflared[1522]: 2025-08-20T18:31:51Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.4>
+Aug 20 18:31:51 ceshtjeligjore cloudflared[1522]: 2025-08-20T18:31:51Z INF Registered tunnel connection connIndex=0 connection=dd6dde36-3d5e-4c66-9293-270001e5d78d eve>
+Aug 20 20:03:25 ceshtjeligjore cloudflared[1522]: 2025-08-20T20:03:25Z ERR  error="Unable to reach the origin service. The service may be down or it may not be respond>
+Aug 20 20:03:25 ceshtjeligjore cloudflared[1522]: 2025-08-20T20:03:25Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may >
+Aug 20 20:59:26 ceshtjeligjore cloudflared[1522]: 2025-08-20T20:59:26Z ERR  error="Unable to reach the origin service. The service may be down or it may not be respond>
+Aug 20 20:59:26 ceshtjeligjore cloudflared[1522]: 2025-08-20T20:59:26Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may >
+Warning: The unit file, source configuration file or drop-ins of cloudflared.service changed on disk. Run 'systemctl daemon-reload' to reload units.
+Warning: The unit file, source configuration file or drop-ins of cloudflared.service changed on disk. Run 'systemctl daemon-reload' to reload units.
+Warning: The unit file, source configuration file or drop-ins of cloudflared.service changed on disk. Run 'systemctl daemon-reload' to reload units.
+● cloudflared.service - cloudflared
+     Loaded: loaded (/etc/systemd/system/cloudflared.service; enabled; preset: enabled)
+     Active: active (running) since Wed 2025-08-20 21:02:39 UTC; 10s ago
+   Main PID: 51081 (cloudflared)
+      Tasks: 8 (limit: 9428)
+     Memory: 16.4M (peak: 16.8M)
+        CPU: 129ms
+     CGroup: /system.slice/cloudflared.service
+             └─51081 /usr/bin/cloudflared --no-autoupdate --config /etc/cloudflared/config.yml tunnel run
+
+Aug 20 21:02:39 ceshtjeligjore cloudflared[51081]: 2025-08-20T21:02:39Z INF Starting metrics server on 127.0.0.1:20241/metrics
+Aug 20 21:02:39 ceshtjeligjore cloudflared[51081]: 2025-08-20T21:02:39Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.>
+Aug 20 21:02:39 ceshtjeligjore cloudflared[51081]: 2025-08-20T21:02:39Z INF Registered tunnel connection connIndex=0 connection=b2c36106-5f67-4472-997b-50a1d77c783e ev>
+Aug 20 21:02:39 ceshtjeligjore cloudflared[51081]: 2025-08-20T21:02:39Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=1 event=0 ip=198.>
+Aug 20 21:02:39 ceshtjeligjore systemd[1]: Started cloudflared.service - cloudflared.
+Aug 20 21:02:39 ceshtjeligjore cloudflared[51081]: 2025-08-20T21:02:39Z INF Registered tunnel connection connIndex=1 connection=475d72f6-dcde-496e-b009-58a651492bf3 ev>
+Aug 20 21:02:40 ceshtjeligjore cloudflared[51081]: 2025-08-20T21:02:40Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=2 event=0 ip=198.>
+Aug 20 21:02:40 ceshtjeligjore cloudflared[51081]: 2025-08-20T21:02:40Z INF Registered tunnel connection connIndex=2 connection=4c3529d1-8611-401a-a67d-2391d529ff6d ev>
+Aug 20 21:02:41 ceshtjeligjore cloudflared[51081]: 2025-08-20T21:02:41Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=3 event=0 ip=198.>
+Aug 20 21:02:41 ceshtjeligjore cloudflared[51081]: 2025-08-20T21:02:41Z INF Registered tunnel connection connIndex=3 connection=76438f2a-7b2e-4fb6-9dba-23d75788f00d ev>
+root@ceshtjeligjore:/opt/ceshtje-ligjore#

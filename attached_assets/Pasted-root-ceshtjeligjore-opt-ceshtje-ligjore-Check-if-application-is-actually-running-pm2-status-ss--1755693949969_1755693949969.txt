@@ -1,0 +1,71 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # Check if application is actually running
+pm2 status
+ss -tlnp | grep 5000
+
+# Test direct connection (should work)
+curl -I http://localhost:5000
+
+# Check Nginx error logs
+tail -10 /var/log/nginx/error.log
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 5    │ online    │ 0%       │ 76.4mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Couldn't connect to server
+2025/08/20 10:52:24 [error] 9161#9161: *10 connect() failed (111: Connection refused) while connecting to upstream, client: 10.5.20.31, server: 10.5.20.31, request: "GET / HTTP/1.1", upstream: "http://127.0.0.1:5000/", host: "10.5.20.31"
+2025/08/20 10:53:20 [error] 9161#9161: *22 connect() failed (111: Connection refused) while connecting to upstream, client: 10.5.20.31, server: 10.5.20.31, request: "GET / HTTP/1.1", upstream: "http://127.0.0.1:5000/", host: "10.5.20.31"
+2025/08/20 10:57:10 [error] 9161#9161: *24 connect() failed (111: Connection refused) while connecting to upstream, client: 127.0.0.1, server: 10.5.20.31, request: "HEAD / HTTP/1.1", upstream: "http://127.0.0.1:5000/", host: "localhost"
+2025/08/20 10:59:58 [error] 9161#9161: *26 connect() failed (111: Connection refused) while connecting to upstream, client: 10.5.20.31, server: 10.5.20.31, request: "GET / HTTP/1.1", upstream: "http://127.0.0.1:5000/", host: "10.5.20.31"
+2025/08/20 12:40:44 [error] 9162#9162: *152 connect() failed (111: Connection refused) while connecting to upstream, client: 10.5.20.31, server: 10.5.20.31, request: "GET / HTTP/1.1", upstream: "http://127.0.0.1:5000/", host: "10.5.20.31", referrer: "http://10.5.20.31/"
+2025/08/20 12:40:46 [error] 9162#9162: *152 connect() failed (111: Connection refused) while connecting to upstream, client: 10.5.20.31, server: 10.5.20.31, request: "GET / HTTP/1.1", upstream: "http://127.0.0.1:5000/", host: "10.5.20.31", referrer: "http://10.5.20.31/"
+2025/08/20 12:40:46 [error] 9162#9162: *152 connect() failed (111: Connection refused) while connecting to upstream, client: 10.5.20.31, server: 10.5.20.31, request: "GET / HTTP/1.1", upstream: "http://127.0.0.1:5000/", host: "10.5.20.31", referrer: "http://10.5.20.31/"
+2025/08/20 12:40:47 [error] 9162#9162: *152 connect() failed (111: Connection refused) while connecting to upstream, client: 10.5.20.31, server: 10.5.20.31, request: "GET / HTTP/1.1", upstream: "http://127.0.0.1:5000/", host: "10.5.20.31", referrer: "http://10.5.20.31/"
+2025/08/20 12:40:47 [error] 9162#9162: *152 connect() failed (111: Connection refused) while connecting to upstream, client: 10.5.20.31, server: 10.5.20.31, request: "GET / HTTP/1.1", upstream: "http://127.0.0.1:5000/", host: "10.5.20.31", referrer: "http://10.5.20.31/"
+2025/08/20 12:41:01 [error] 9162#9162: *158 connect() failed (111: Connection refused) while connecting to upstream, client: 10.5.20.31, server: 10.5.20.31, request: "GET /api/health HTTP/1.1", upstream: "http://127.0.0.1:5000/api/health", host: "10.5.20.31"
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # Create correct Nginx configuration
+cat > /etc/nginx/sites-available/albpetrol-legal << 'EOF'
+server {
+    listen 80;
+    server_name legal.albpetrol.al 10.5.20.31 localhost;
+
+    location / {
+        proxy_pass http://127.0.0.1:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 300;
+        proxy_connect_timeout 300;
+        proxy_send_timeout 300;
+    }
+}
+EOF
+
+# Enable the site and remove default
+curl -I http://localhost       # Through Nginx (should work after fix)bled/
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 6    │ online    │ 0%       │ 19.3mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Couldn't connect to server
+HTTP/1.1 502 Bad Gateway
+Server: nginx/1.24.0 (Ubuntu)
+Date: Wed, 20 Aug 2025 12:45:33 GMT
+Content-Type: text/html
+Content-Length: 166
+Connection: keep-alive
+
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

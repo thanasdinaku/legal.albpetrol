@@ -1,0 +1,87 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Install vite and all frontend dependencies properly
+npm install vite @vitejs/plugin-react @types/react @types/react-dom typescript
+
+# Build just the frontend first using vite directly
+npx vite build
+
+# Check if frontend build succeeded
+ls -la dist/public/
+
+# If frontend build worked, test the complete server
+if [ -d "dist/public" ]; then
+  echo "✅ Frontend built successfully!"
+  
+  # Test the complete server
+  export NODE_ENV=production
+  export PORT=5000
+  export DATABASE_URL="postgresql://ceshtje_user:Albpetrol2025@localhost:5432/ceshtje_ligjore"
+  export SESSION_SECRET="albpetrol_ceshtje_ligjore_secret_2025_production_ready"
+  export ISSUER_URL="https://replit.com/oidc"
+  
+  timeout 15s node dist/complete.js > complete_test.log 2>&1 &
+  SERVER_PID=$!
+  sleep 8
+  
+  # Test if complete app works
+  curl -s http://localhost:5000/ | head -5
+  
+  echo "=== COMPLETE SERVER LOGS ==="
+  cat complete_test.log | head -10
+  
+  kill $SERVER_PID 2>/dev/null
+  
+  # If it works, restart PM2 with complete app
+echo "=== FRONTEND BUILD STATUS ===" no frontend build"""
+
+up to date, audited 655 packages in 3s
+
+80 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+failed to load config from /opt/ceshtje-ligjore/vite.config.ts
+error during build:
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'vite' imported from /opt/ceshtje-ligjore/node_modules/.vite-temp/vite.config.ts.timestamp-1755680131987-335a9c61042e4.mjs
+    at packageResolve (node:internal/modules/esm/resolve:873:9)
+    at moduleResolve (node:internal/modules/esm/resolve:946:18)
+    at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+    at ModuleJob._link (node:internal/modules/esm/module_job:130:49)
+ls: cannot access 'dist/public/': No such file or directory
+❌ Frontend build failed - checking vite config
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
+import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
+
+export default defineConfig({
+  plugins: [
+    react(),
+    runtimeErrorOverlay(),
+    ...(process.env.NODE_ENV !== "production" &&
+Trying alternative build method...
+failed to load config from /opt/ceshtje-ligjore/vite.config.ts
+error during build:
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'vite' imported from /opt/ceshtje-ligjore/node_modules/.vite-temp/vite.config.ts.timestamp-1755680132346-be28d47a765cf.mjs
+    at packageResolve (node:internal/modules/esm/resolve:873:9)
+    at moduleResolve (node:internal/modules/esm/resolve:946:18)
+    at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+    at ModuleJob._link (node:internal/modules/esm/module_job:130:49)
+ls: cannot access 'dist/public/': No such file or directory
+Still no frontend build
+=== FRONTEND BUILD STATUS ===
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

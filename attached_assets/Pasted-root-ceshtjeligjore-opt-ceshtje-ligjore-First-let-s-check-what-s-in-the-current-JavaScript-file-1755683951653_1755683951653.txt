@@ -1,0 +1,63 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # First, let's check what's in the current JavaScript file
+head -20 dist/public/assets/index-Bv9ka2U9.js
+
+# Clear and recreate the complete JavaScript file
+rm -f dist/public/assets/index-Bv9ka2U9.js
+
+# Create the complete working React application in parts to avoid truncation
+cat > dist/public/assets/index-Bv9ka2U9.js << 'EOF'
+import React from 'https://esm.sh/react@18.2.0';
+import ReactDOM from 'https://esm.sh/react-dom@18.2.0/client';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+function App() {
+  const [user, setUser] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+  
+  React.useEffect(() => {
+    fetch('/api/auth/user')
+      .then(res => res.ok ? res.json() : null)
+      .then(userData => {
+        setUser(userData);
+        setLoading(false);
+echo "✅ React application fixed - refresh browser to see login page"color: '#d9
+import React from 'https://esm.sh/react@18.2.0';
+import ReactDOM from 'https://esm.sh/react-dom@18.2.0/client';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+function App() {
+  const [user, setUser] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+  
+  React.useEffect(() => {
+    fetch('/api/auth/user')
+      .then(res => res.ok ? res.json() : null)
+      .then(userData => {
+        setUser(userData);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 5    │ online    │ 0%       │ 19.5mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+✅ React application fixed - refresh browser to see login page
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # Check the file size and ending
+wc -l dist/public/assets/index-Bv9ka2U9.js
+tail -5 dist/public/assets/index-Bv9ka2U9.js
+340 dist/public/assets/index-Bv9ka2U9.js
+    ])
+  ]);
+}
+
+root.render(React.createElement(App));
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

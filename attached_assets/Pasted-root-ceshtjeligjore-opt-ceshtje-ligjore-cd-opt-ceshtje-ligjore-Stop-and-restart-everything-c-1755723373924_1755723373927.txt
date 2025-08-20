@@ -1,0 +1,68 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Stop and restart everything clean
+pm2 stop albpetrol-legal
+pm2 delete albpetrol-legal
+
+# Verify files exist
+ls -la dist/index.js dist/public/index.html
+
+# Restart PM2
+pm2 start ecosystem.config.cjs
+
+# Check status
+sleep 3
+pm2 status
+curl -I http://localhost:5000
+curl -I http://localhost
+[PM2] Applying action stopProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 2    │ stopped   │ 0%       │ 0b       │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Applying action deleteProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+-rw-r--r-- 1 root root 1376 Aug 20 12:55 dist/index.js
+-rw-r--r-- 1 root root 2374 Aug 20 12:58 dist/public/index.html
+[PM2][WARN] Applications albpetrol-legal not running, starting...
+[PM2] App [albpetrol-legal] launched (1 instances)
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 0    │ online    │ 0%       │ 17.4mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 0    │ online    │ 0%       │ 59.4mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Accept-Ranges: bytes
+Cache-Control: public, max-age=0
+Last-Modified: Wed, 20 Aug 2025 12:58:57 GMT
+ETag: W/"946-198c78fa908"
+Content-Type: text/html; charset=UTF-8
+Content-Length: 2374
+Date: Wed, 20 Aug 2025 20:55:39 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+HTTP/1.1 200 OK
+Server: nginx/1.24.0 (Ubuntu)
+Date: Wed, 20 Aug 2025 20:55:39 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Length: 2374
+Connection: keep-alive
+X-Powered-By: Express
+Accept-Ranges: bytes
+Cache-Control: public, max-age=0
+Last-Modified: Wed, 20 Aug 2025 12:58:57 GMT
+ETag: W/"946-198c78fa908"
+
+root@ceshtjeligjore:/opt/ceshtje-ligjore#

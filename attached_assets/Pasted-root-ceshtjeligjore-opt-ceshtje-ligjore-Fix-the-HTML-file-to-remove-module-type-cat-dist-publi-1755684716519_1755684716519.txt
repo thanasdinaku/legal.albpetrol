@@ -1,0 +1,60 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # Fix the HTML file to remove module type
+cat > dist/public/index.html << 'EOF'
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistemi i Menaxhimit të Rasteve Ligjore</title>
+    <meta name="description" content="Sistem profesional i menaxhimit të rasteve ligjore me kontroll të aksesit të bazuar në role për operacione efikase në bazën e të dhënave.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- React UMD builds -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <link rel="stylesheet" href="/assets/index-C3xJPPxz.css">
+  </head>
+  <body>
+echo "Check browser at http://10.5.20.31 and press F12 to see console logs"
+=== HTML file content ===
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistemi i Menaxhimit të Rasteve Ligjore</title>
+    <meta name="description" content="Sistem profesional i menaxhimit të rasteve ligjore me kontroll të aksesit të bazuar në role për operacione efikase në bazën e të dhënave.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- React UMD builds -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <link rel="stylesheet" href="/assets/index-C3xJPPxz.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- Regular script tag, NOT module -->
+    <script src="/assets/index-Bv9ka2U9.js"></script>
+  </body>
+</html>
+=== Testing React CDN ===
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 302 
+date: Wed, 20 Aug 2025 10:11:37 GMT
+content-type: text/plain;charset=UTF-8
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 7    │ online    │ 0%       │ 17.6mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+=== Server response test ===
+✅ Fixed HTML module issue - browser should now load React properly
+Check browser at http://10.5.20.31 and press F12 to see console logs
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

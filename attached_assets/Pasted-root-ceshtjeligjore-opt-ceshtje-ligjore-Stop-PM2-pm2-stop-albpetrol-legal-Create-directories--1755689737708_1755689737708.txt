@@ -1,0 +1,35 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # Stop PM2
+pm2 stop albpetrol-legal
+
+# Create directories
+mkdir -p /opt/ceshtje-ligjore/static
+
+# Copy the professional interface files
+cp /tmp/replit_interface/dist/public/index.html /opt/ceshtje-ligjore/dist/public/
+cp /tmp/replit_interface/dist/public/assets/replit-app.js /opt/ceshtje-ligjore/dist/public/assets/
+cp /tmp/replit_interface/static/albpetrol-logo.png /opt/ceshtje-ligjore/static/
+
+# Update the server to handle static files and 2FA
+cp /tmp/replit_interface/ubuntu_server_update.js /opt/ceshtje-ligjore/dist/index.js
+
+# Start PM2
+pm2 start ecosystem.config.cjs
+[PM2] Applying action stopProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 2    │ stopped   │ 0%       │ 0b       │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+cp: cannot stat '/tmp/replit_interface/dist/public/index.html': No such file or directory
+cp: cannot stat '/tmp/replit_interface/dist/public/assets/replit-app.js': No such file or directory
+cp: cannot stat '/tmp/replit_interface/static/albpetrol-logo.png': No such file or directory
+cp: cannot stat '/tmp/replit_interface/ubuntu_server_update.js': No such file or directory
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 2    │ online    │ 0%       │ 26.1mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

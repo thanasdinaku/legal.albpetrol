@@ -1,0 +1,74 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # Stop the current PM2 process
+pm2 stop albpetrol-legal
+pm2 delete albpetrol-legal
+
+# Check if the main application is actually working despite WebSocket errors
+curl -I http://localhost:5000/
+
+# Check what's actually in the error logs that are concerning
+tail -20 logs/err-0.log
+
+# Restart with more verbose logging to see what's really happening
+pm2 start ecosystem.config.cjs
+
+# Wait a moment for startup
+sleep 3
+
+# Test the main application endpoint
+curl http://localhost:5000/ | head -10
+
+# Check if the app is actually serving pages despite WebSocket errors
+pm2 status
+
+echo "=== APPLICATION RESTART COMPLETED ==="
+[PM2] Applying action stopProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ 1.0.0   │ fork    │ 0        │ 0      │ 45   │ stopped   │ 0%       │ 0b       │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2] Applying action deleteProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Couldn't connect to server
+2025-08-20T08:09:12:     _bufferedAmount: 0,
+2025-08-20T08:09:12:     _isServer: false,
+2025-08-20T08:09:12:     _redirects: 0,
+2025-08-20T08:09:12:     _autoPong: true,
+2025-08-20T08:09:12:     _url: 'wss://localhost/v2',
+2025-08-20T08:09:12:     _req: null,
+2025-08-20T08:09:12:     [Symbol(shapeMode)]: false,
+2025-08-20T08:09:12:     [Symbol(kCapture)]: false
+2025-08-20T08:09:12:   },
+2025-08-20T08:09:12:   [Symbol(kType)]: 'error',
+2025-08-20T08:09:12:   [Symbol(kError)]: Error: connect ECONNREFUSED 127.0.0.1:443
+2025-08-20T08:09:12:       at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+2025-08-20T08:09:12:     errno: -111,
+2025-08-20T08:09:12:     code: 'ECONNREFUSED',
+2025-08-20T08:09:12:     syscall: 'connect',
+2025-08-20T08:09:12:     address: '127.0.0.1',
+2025-08-20T08:09:12:     port: 443
+2025-08-20T08:09:12:   },
+2025-08-20T08:09:12:   [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443'
+2025-08-20T08:09:12: }
+[PM2][WARN] Applications albpetrol-legal not running, starting...
+[PM2] App [albpetrol-legal] launched (1 instances)
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ 1.0.0   │ fork    │ 12798    │ 0s     │ 0    │ online    │ 0%       │ 19.5mb   │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Couldn't connect to server
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ 1.0.0   │ fork    │ 12798    │ 0      │ 0    │ │ 0%       │ 0b       │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+=== APPLICATION RESTART COMPLETED ===
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

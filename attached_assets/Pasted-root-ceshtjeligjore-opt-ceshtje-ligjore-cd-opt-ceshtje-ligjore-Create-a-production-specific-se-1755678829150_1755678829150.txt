@@ -1,0 +1,56 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Create a production-specific server entry point
+cat > server/production.ts << 'EOF'
+import express, { type Request, Response, NextFunction } from "express";
+import { registerRoutes } from "./routes";
+import path from "path";
+
+const app = express();
+
+// Simple logging function for production
+export function log(message: string, source = "express") {
+  const formattedTime = new Date().toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit", 
+    second: "2-digit",
+    hour12: true,
+  });
+  console.log(`${formattedTime} [${source}] ${message}`);
+}
+
+// Security headers
+app.use((req, res, next) => {
+  res.setHeader('Content-Security-Policy', 
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+    "style-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data: https:; " +
+    "font-src 'self' data:; " +
+    "connect-src 'self'; " +
+    "frame-ancestors 'none';"
+  );
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+echo "=== PRODUCTION SERVER TEST COMPLETE ==="on_test.log 2>&1 &duction_ready"shtje_ligjore"-outdir=dist --outfile=dist/production.js
+✘ [ERROR] Cannot use both "outfile" and "outdir"
+
+1 error
+Testing production server...
+[1] 14877
+[1]+  Exit 1                  timeout 15s node dist/production.js > production_test.log 2>&1
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Couldn't connect to server
+=== PRODUCTION SERVER OUTPUT ===
+node:internal/modules/cjs/loader:1215
+  throw err;
+  ^
+
+Error: Cannot find module '/opt/ceshtje-ligjore/dist/production.js'
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)
+    at Module._load (node:internal/modules/cjs/loader:1043:27)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+    at node:internal/main/run_main_module:28:49 {
+  code: 'MODULE_NOT_FOUND',
+=== PRODUCTION SERVER TEST COMPLETE ===
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

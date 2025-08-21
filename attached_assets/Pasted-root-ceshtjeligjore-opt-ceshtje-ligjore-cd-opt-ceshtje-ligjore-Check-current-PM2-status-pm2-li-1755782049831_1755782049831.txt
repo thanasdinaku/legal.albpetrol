@@ -1,0 +1,163 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Check current PM2 status
+pm2 list
+
+# Check detailed logs to see what's failing
+pm2 logs --lines 20
+
+# Check if the process is actually listening on port 5000
+netstat -tlnp | grep 5000
+
+# Check if there are any processes using the port
+lsof -i :5000
+
+# Try accessing the application directly on the server
+curl -v http://localhost:5000
+
+# If the application isn't running properly, let's restart it with a simpler approach
+pm2 delete all
+
+# Try running the application directly without PM2 first to see any errors
+cd /opt/ceshtje-ligjore
+npm run dev
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ 1.0.0   │ fork    │ 27246    │ 56s    │ 4    │ online    │ 0%       │ 53.3mb   │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[TAILING] Tailing last 20 lines for [all] processes (change the value with --lines option)
+/root/.pm2/pm2.log last 20 lines:
+PM2        | 2025-08-21T13:10:41: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2        | 2025-08-21T13:10:41: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:10:41: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T13:10:42: PM2 log: Stopping app:albpetrol-legal id:0
+PM2        | 2025-08-21T13:10:42: PM2 log: App [albpetrol-legal:0] exited with code [0] via signal [SIGINT]
+PM2        | 2025-08-21T13:10:42: PM2 log: pid=26803 msg=process killed
+PM2        | 2025-08-21T13:10:42: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:10:42: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T13:11:11: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2        | 2025-08-21T13:11:11: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:11:11: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T13:11:24: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2        | 2025-08-21T13:11:24: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:11:24: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T13:12:14: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2        | 2025-08-21T13:12:14: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:12:14: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T13:12:17: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2        | 2025-08-21T13:12:17: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:12:17: PM2 log: App [albpetrol-legal:0] online
+
+/root/.pm2/logs/albpetrol-legal-error.log last 20 lines:
+0|albpetro | 1:12:17 PM [vite] Pre-transform error: Failed to load url /src/main.tsx?v=oA2G69eTaDhwsBmNwWeNx (resolved id: /src/main.tsx?v=oA2G69eTaDhwsBmNwWeNx). Does the file exist?
+0|albpetro | Setup failed: Error: Command failed: tsx server/index.ts
+0|albpetro |     at genericNodeError (node:internal/errors:984:15)
+0|albpetro |     at wrappedFn (node:internal/errors:538:14)
+0|albpetro |     at checkExecSyncError (node:child_process:891:11)
+0|albpetro |     at execSync (node:child_process:963:15)
+0|albpetro |     at Object.<anonymous> (/opt/ceshtje-ligjore/start_server.cjs:18:3)
+0|albpetro |     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+0|albpetro |     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+0|albpetro |     at Module.load (node:internal/modules/cjs/loader:1275:32)
+0|albpetro |     at Module._load (node:internal/modules/cjs/loader:1096:12)
+0|albpetro |     at cjsLoader (node:internal/modules/esm/translators:298:15) {
+0|albpetro |   status: 1,
+0|albpetro |   signal: null,
+0|albpetro |   output: [ null, null, null ],
+0|albpetro |   pid: 27222,
+0|albpetro |   stdout: null,
+0|albpetro |   stderr: null
+0|albpetro | }
+0|albpetro | NODE_ENV=production is not supported in the .env file. Only NODE_ENV=development is supported to create a development build of your project. If you need to set process.env.NODE_ENV, you can set it in the Vite config instead.
+
+/root/.pm2/logs/albpetrol-legal-out.log last 20 lines:
+0|albpetro | Setting up database...
+0|albpetro | Database exists, checking tables...
+0|albpetro | No config path provided, using default 'drizzle.config.ts'
+0|albpetro | Reading config file '/opt/ceshtje-ligjore/drizzle.config.ts'
+0|albpetro | [⣷] Pulling schema from database...
+[✓] Pulling schema from database...
+0|albpetro | 
+0|albpetro | [i] No changes detected
+0|albpetro | Database setup complete. Starting server...
+0|albpetro | 1:12:17 PM [express] serving on port 5000
+0|albpetro | Setting up database...
+0|albpetro | Database exists, checking tables...
+0|albpetro | No config path provided, using default 'drizzle.config.ts'
+0|albpetro | Reading config file '/opt/ceshtje-ligjore/drizzle.config.ts'
+0|albpetro | [⣷] Pulling schema from database...
+[✓] Pulling schema from database...
+0|albpetro | 
+0|albpetro | [i] No changes detected
+0|albpetro | Database setup complete. Starting server...
+0|albpetro | 1:12:20 PM [express] serving on port 5000
+
+^C
+tcp        0      0 0.0.0.0:5000            0.0.0.0:*               LISTEN      27299/node          
+COMMAND   PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+node    27299 root   33u  IPv4 109211      0t0  TCP *:5000 (LISTEN)
+* Host localhost:5000 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+*   Trying [::1]:5000...
+* connect to ::1 port 5000 from ::1 port 38378 failed: Connection refused
+*   Trying 127.0.0.1:5000...
+* Connected to localhost (127.0.0.1) port 5000
+> GET / HTTP/1.1
+> Host: localhost:5000
+> User-Agent: curl/8.5.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< X-Powered-By: Express
+< Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none';
+< Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+< X-Content-Type-Options: nosniff
+< X-Frame-Options: DENY
+< X-XSS-Protection: 1; mode=block
+< Referrer-Policy: strict-origin-when-cross-origin
+< Vary: Origin
+< Content-Type: text/html; charset=utf-8
+< Date: Thu, 21 Aug 2025 13:13:35 GMT
+< Connection: keep-alive
+< Keep-Alive: timeout=5
+< Content-Length: 1283
+< 
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh";
+injectIntoGlobalHook(window);
+window.$RefreshReg$ = () => {};
+window.$RefreshSig$ = () => (type) => type;</script>
+
+    <script type="module" src="/@vite/client"></script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Sistemi i Menaxhimit të Rasteve Ligjore</title>
+    <meta name="description" content="Sistem profesional i menaxhimit të rasteve ligjore me kontroll të aksesit të bazuar në role për operacione efikase në bazën e të dhënave.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx?v=oxk2dyfnwUGaxX0kqA0fo"></script>
+    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
+    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
+  </body>
+</html>
+* Connection #0 to host localhost left intact
+[PM2] Applying action deleteProcessId on app [all](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+
+> rest-express@1.0.0 dev
+> NODE_ENV=development tsx server/index.ts
+
+1:13:37 PM [express] serving on port 5000
+1:13:46 PM [vite] Pre-transform error: Failed to load url /src/main.tsx?v=IvYDMiVyXVOuVTkiM46HZ (resolved id: /src/main.tsx?v=IvYDMiVyXVOuVTkiM46HZ). Does the file exist?
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

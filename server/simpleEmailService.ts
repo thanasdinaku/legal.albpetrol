@@ -1,6 +1,6 @@
-import nodemailer from 'nodemailer';
+import { MailService } from '@sendgrid/mail';
 
-// Simple email service using nodemailer with Gmail SMTP
+// Simple email service using SendGrid for real email delivery
 const formatDateTime = (dateTimeString: string): string => {
   if (!dateTimeString) return '';
   
@@ -20,14 +20,13 @@ const formatDateTime = (dateTimeString: string): string => {
   }
 };
 
-// Create a test transporter that logs emails to console instead of sending
-const createTransporter = () => {
-  return nodemailer.createTransporter({
-    streamTransport: true,
-    newline: 'unix',
-    buffer: true
-  });
-};
+// Initialize SendGrid mail service
+if (!process.env.SENDGRID_API_KEY) {
+  throw new Error("SENDGRID_API_KEY environment variable must be set");
+}
+
+const mailService = new MailService();
+mailService.setApiKey(process.env.SENDGRID_API_KEY);
 
 interface EmailParams {
   to: string;
@@ -39,18 +38,25 @@ interface EmailParams {
 
 export async function sendEmail(params: EmailParams): Promise<boolean> {
   try {
-    console.log('=== EMAIL NOTIFICATION ===');
+    console.log('=== SENDING REAL EMAIL ===');
     console.log(`To: ${params.to}`);
     console.log(`From: ${params.from}`);
     console.log(`Subject: ${params.subject}`);
-    console.log(`Text: ${params.text}`);
-    console.log('=========================');
+    console.log('==========================');
     
-    // For demonstration, we'll simulate successful email sending
-    // In production, you would replace this with actual email service
+    // Send actual email using SendGrid
+    await mailService.send({
+      to: params.to,
+      from: params.from || 'it.system@albpetrol.al',
+      subject: params.subject,
+      text: params.text,
+      html: params.html,
+    });
+    
+    console.log(`✓ Email sent successfully to ${params.to}`);
     return true;
   } catch (error) {
-    console.error('Email sending error:', error);
+    console.error('SendGrid email error:', error);
     return false;
   }
 }
@@ -58,13 +64,21 @@ export async function sendEmail(params: EmailParams): Promise<boolean> {
 // Test basic email connectivity
 export async function testEmailConnection(): Promise<boolean> {
   try {
-    console.log('=== EMAIL CONNECTION TEST ===');
-    console.log('Email service is ready and operational');
-    console.log('All notifications will be logged to console');
-    console.log('=============================');
+    console.log('=== TESTING SENDGRID CONNECTION ===');
+    
+    // Test SendGrid by sending a simple test email
+    await mailService.send({
+      to: 'it.system@albpetrol.al',
+      from: 'it.system@albpetrol.al',
+      subject: 'SendGrid Connection Test',
+      text: 'This is a test to verify SendGrid is working properly.',
+      html: '<p>This is a test to verify SendGrid is working properly.</p>'
+    });
+    
+    console.log('✓ SendGrid connection verified successfully');
     return true;
   } catch (error) {
-    console.error('Email connection test failed:', error);
+    console.error('SendGrid connection test failed:', error);
     return false;
   }
 }

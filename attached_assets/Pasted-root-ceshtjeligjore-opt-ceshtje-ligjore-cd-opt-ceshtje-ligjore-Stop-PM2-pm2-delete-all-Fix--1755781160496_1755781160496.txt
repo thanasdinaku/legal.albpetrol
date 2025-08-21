@@ -1,0 +1,104 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Stop PM2
+pm2 delete all
+
+# Fix the drizzle config for SQLite
+cat > drizzle.config.ts << 'EOF'
+import { defineConfig } from 'drizzle-kit';
+
+export default defineConfig({
+  schema: './shared/schema.ts',
+  out: './drizzle',
+  dialect: 'sqlite',
+  dbCredentials: {
+    url: './database.sqlite'
+  }
+});
+EOF
+
+# Update server db.ts for SQLite
+cat > server/db.ts << 'EOF'
+import Database from 'better-sqlite3';
+import { drizzle } from 'drizzle-orm/better-sqlite3';
+import * as schema from "@shared/schema";
+
+const sqlite = new Database('./database.sqlite');
+export const db = drizzle(sqlite, { schema });
+EOF
+
+# Create SQLite environment
+cat > .env << 'EOF'
+DATABASE_URL=file:./database.sqlite
+NODE_ENV=production
+PORT=5000
+SESSION_SECRET=your_random_secret_here
+pm2 logs --lines 10.config.cjsuntime)RT: 5000 }
+[PM2] Applying action deleteProcessId on app [all](ids: [ 0 ])
+[PM2] [all](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+
+up to date, audited 793 packages in 2s
+
+101 packages are looking for funding
+  run `npm fund` for details
+
+6 vulnerabilities (5 moderate, 1 high)
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.19 building for production...
+✓ 2399 modules transformed.
+dist/public/index.html                                         1.09 kB │ gzip:   0.62 kB
+dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+dist/public/assets/index-DPP8Sud3.css                        156.99 kB │ gzip:  25.08 kB
+dist/public/assets/index-BQ4hcx7k.js                         815.41 kB │ gzip: 242.37 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 4.49s
+
+  dist/index.js  133.2kb
+
+⚡ Done in 11ms
+
+> rest-express@1.0.0 db:push
+> drizzle-kit push
+
+No config path provided, using default 'drizzle.config.ts'
+Reading config file '/opt/ceshtje-ligjore/drizzle.config.ts'
+[✓] Pulling schema from database...
+
+[i] No changes detected
+[PM2][WARN] Applications albpetrol-legal not running, starting...
+[PM2][ERROR] Error: Script not found: /opt/ceshtje-ligjore/tsx
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[TAILING] Tailing last 10 lines for [all] processes (change the value with --lines option)
+/root/.pm2/pm2.log last 10 lines:
+PM2        | 2025-08-21T12:56:02: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2        | 2025-08-21T12:56:02: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T12:56:02: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T12:56:02: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2        | 2025-08-21T12:56:02: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T12:56:02: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T12:56:02: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2        | 2025-08-21T12:56:02: PM2 log: Script /usr/bin/npm had too many unstable restarts (16). Stopped. "errored"
+PM2        | 2025-08-21T12:58:33: PM2 log: Stopping app:albpetrol-legal id:0
+PM2        | 2025-08-21T12:58:33: PM2 error: app=albpetrol-legal id=0 does not have a pid
+
+

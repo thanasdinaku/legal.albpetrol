@@ -440,7 +440,7 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
             entry.perfunduar || '',                                                     // Përfunduar
             entry.gjykataLarte || '',                                                   // Gjykata e Lartë
             (entry as any).createdByName || 'Përdorues i panjohur',                    // Krijuar nga
-            entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : '' // Krijuar më
+            entry.createdAt ? formatDateTime(entry.createdAt.toISOString()).split(' ')[0] : '' // Krijuar më (only date part)
           ])
         ];
 
@@ -570,7 +570,7 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
           `"${entry.perfunduar || ''}"`,                                              // Përfunduar
           `"${entry.gjykataLarte || ''}"`,                                            // Gjykata e Lartë
           `"${(entry as any).createdByName || 'Përdorues i panjohur'}"`,             // Krijuar nga
-          entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : '' // Krijuar më
+          entry.createdAt ? formatDateTime(entry.createdAt.toISOString()).split(' ')[0] : '' // Krijuar më (only date part)
         ]);
 
         const csvContent = [csvHeaders.join(','), ...csvRows.map(row => row.join(','))].join('\n');

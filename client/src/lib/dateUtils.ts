@@ -26,7 +26,7 @@ export const formatDateTime = (dateTimeString: string | null | undefined): strin
 };
 
 /**
- * Formats a date string to Albanian locale format
+ * Formats a date string to DD-MM-YYYY format
  * @param dateString - The date string to format
  * @returns Formatted date string
  */
@@ -37,7 +37,11 @@ export const formatDate = (dateString: string | null | undefined): string => {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return '';
     
-    return date.toLocaleDateString('sq-AL');
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    
+    return `${day}-${month}-${year}`;
   } catch (error) {
     return '';
   }

@@ -14,6 +14,9 @@ interface EmailNotificationSettings {
   enabled: boolean;
   recipientEmail: string;
   senderEmail: string;
+  emailAddresses?: string[];
+  subject?: string;
+  includeDetails?: boolean;
 }
 
 export default function EmailNotificationSettings() {
@@ -22,7 +25,10 @@ export default function EmailNotificationSettings() {
   const [formData, setFormData] = useState<EmailNotificationSettings>({
     enabled: false,
     recipientEmail: '',
-    senderEmail: 'legal-system@albpetrol.al'
+    senderEmail: 'legal-system@albpetrol.al',
+    emailAddresses: [],
+    subject: '',
+    includeDetails: true
   });
 
   // Test email mutation
@@ -56,7 +62,14 @@ export default function EmailNotificationSettings() {
   // Update form data when settings are loaded
   useEffect(() => {
     if (settings) {
-      setFormData(settings);
+      setFormData({
+        enabled: settings.enabled || false,
+        recipientEmail: settings.recipientEmail || (settings.emailAddresses?.[0] || ''),
+        senderEmail: settings.senderEmail || 'legal-system@albpetrol.al',
+        emailAddresses: settings.emailAddresses || [],
+        subject: settings.subject || '',
+        includeDetails: settings.includeDetails || true
+      });
     }
   }, [settings]);
 
@@ -107,7 +120,15 @@ export default function EmailNotificationSettings() {
       return;
     }
 
-    saveMutation.mutate(formData);
+    // Prepare data with both legacy and new format for compatibility
+    const dataToSave = {
+      ...formData,
+      emailAddresses: formData.recipientEmail ? [formData.recipientEmail] : [],
+      subject: formData.subject || "Hyrje e re në sistemin e menaxhimit të çështjeve ligjore",
+      includeDetails: formData.includeDetails || true
+    };
+
+    saveMutation.mutate(dataToSave);
   };
 
   if (isLoading) {

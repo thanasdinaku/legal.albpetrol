@@ -202,6 +202,9 @@ export const emailNotificationSchema = z.object({
   emailAddresses: z.array(z.string().email()).min(1, "Të paktën një adresë email është e kërkuar"),
   subject: z.string().min(1, "Tema është e kërkuar").default("Hyrje e re në sistemin e menaxhimit të çështjeve ligjore"),
   includeDetails: z.boolean().default(true),
+  // New unified email notification fields
+  recipientEmail: z.string().email().optional(),
+  senderEmail: z.string().email().optional(),
 });
 
 // System backups table

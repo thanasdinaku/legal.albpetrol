@@ -317,7 +317,7 @@ export class DatabaseStorage implements IStorage {
   async createDataEntry(entry: InsertDataEntry): Promise<DataEntry> {
     const [dataEntry] = await db
       .insert(dataEntries)
-      .values(entry)
+      .values([entry])
       .returning();
     return dataEntry;
   }
@@ -728,10 +728,29 @@ export class DatabaseStorage implements IStorage {
         enabled: true,
         emailAddresses: [],
         subject: "Hyrje e re në sistemin e menaxhimit të çështjeve ligjore",
-        includeDetails: true
+        includeDetails: true,
+        recipientEmail: '',
+        senderEmail: ''
       };
     }
-    return setting.settingValue;
+    
+    const settings = setting.settingValue as any;
+    
+    // Ensure backward compatibility - if new fields don't exist, initialize them
+    if (!settings.recipientEmail && settings.emailAddresses && settings.emailAddresses.length > 0) {
+      settings.recipientEmail = settings.emailAddresses[0];
+    }
+    if (!settings.senderEmail) {
+      settings.senderEmail = 'legal-system@albpetrol.al';
+    }
+    if (!settings.recipientEmail) {
+      settings.recipientEmail = '';
+    }
+    if (!settings.senderEmail) {
+      settings.senderEmail = '';
+    }
+    
+    return settings;
   }
 
   async saveEmailNotificationSettings(settings: any, updatedById: string): Promise<void> {

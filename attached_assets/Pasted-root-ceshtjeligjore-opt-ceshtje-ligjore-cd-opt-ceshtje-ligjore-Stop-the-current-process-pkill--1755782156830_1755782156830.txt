@@ -1,0 +1,87 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Stop the current process
+pkill -f "tsx server/index.ts"
+pm2 delete all 2>/dev/null || true
+
+# Check the actual file structure
+ls -la client/
+ls -la client/src/
+
+# The main.tsx should be in client/src/ but the server is looking for /src/main.tsx
+# Let's check the vite config and fix the path issue
+
+# Check current vite config
+cat vite.config.ts
+
+# Create the correct directory structure if missing
+mkdir -p client/src
+
+# Check if main.tsx exists in the right place
+find . -name "main.tsx" -type f
+
+# If main.tsx doesn't exist, let's create it
+cat > client/src/main.tsx << 'EOF'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+npm run dev the application normallynir, Helvetica, Arial, sans-serif;en">Loading...</div>;
+total 32
+drwxr-xr-x  5 root root  4096 Aug 21 11:55 .
+drwxr-xr-x 17 root root 12288 Aug 21 13:10 ..
+drwxr-xr-x  3 root root  4096 Aug 20 12:40 dist
+-rw-r--r--  1 root root  1004 Aug 21 11:55 index.html
+drwxr-xr-x  3 root root  4096 Aug 20 07:56 public
+drwxr-xr-x  7 root root  4096 Aug 21 11:55 src
+total 44
+drwxr-xr-x 7 root root 4096 Aug 21 11:55 .
+drwxr-xr-x 5 root root 4096 Aug 21 11:55 ..
+-rw-r--r-- 1 root root 2307 Aug 21 11:55 App.tsx
+drwxr-xr-x 3 root root 4096 Aug 20 07:56 components
+drwxr-xr-x 2 root root 4096 Aug 20 07:56 hooks
+-rw-r--r-- 1 root root 5598 Aug 20 07:56 index.css
+drwxr-xr-x 2 root root 4096 Aug 20 07:56 lib
+-rw-r--r-- 1 root root  157 Aug 21 11:55 main.tsx
+drwxr-xr-x 2 root root 4096 Aug 20 07:56 pages
+drwxr-xr-x 2 root root 4096 Aug 20 07:56 utils
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './client/src'),
+      '@shared': path.resolve(__dirname, './shared'),
+      '@assets': path.resolve(__dirname, './attached_assets'),
+    },
+  },
+  build: {
+    outDir: 'dist/public',
+  },
+  server: {
+    port: 3000,
+  },
+});
+./client/src/main.tsx
+
+> rest-express@1.0.0 dev
+> NODE_ENV=development tsx server/index.ts
+
+1:15:02 PM [express] serving on port 5000
+
+
+^C
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

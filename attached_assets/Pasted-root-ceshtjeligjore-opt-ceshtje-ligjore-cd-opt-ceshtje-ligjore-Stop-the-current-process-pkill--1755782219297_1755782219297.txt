@@ -1,0 +1,59 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Stop the current process
+pkill -f "tsx server/index.ts"
+
+# Check the server configuration - the issue is the server only binds to localhost
+# We need to make it bind to 0.0.0.0 to accept external connections
+
+# Find the server configuration in server/index.ts
+grep -n "listen\|port" server/index.ts
+
+# Fix the server to bind to 0.0.0.0 instead of localhost
+sed -i 's/localhost/0.0.0.0/g' server/index.ts
+
+# Also check vite configuration - it should serve on all interfaces
+cat > vite.config.ts << 'EOF'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './client/src'),
+      '@shared': path.resolve(__dirname, './shared'),
+      '@assets': path.resolve(__dirname, './attached_assets'),
+    },
+  },
+  build: {
+    outDir: 'dist/public',
+npm run dev the applicationll is activeking port 5000
+1:import express, { type Request, Response, NextFunction } from "express";
+2:import { registerRoutes } from "./routes";
+3:import { setupVite, serveStatic, log } from "./vite";
+20:  // Strict Transport Security header
+21:  res.setHeader('Strict-Transport-Security', 
+78:  // importantly only setup vite in development and after
+87:  // ALWAYS serve the app on the port specified in the environment variable PORT
+88:  // Other ports are firewalled. Default to 5000 if not specified.
+90:  // It is the only port that is not firewalled.
+91:  const port = parseInt(process.env.PORT || '5000', 10);
+92:  server.listen({
+93:    port,
+97:    log(`serving on port ${port}`);
+Status: inactive
+Rules updated
+Rules updated (v6)
+
+> rest-express@1.0.0 dev
+> NODE_ENV=development tsx server/index.ts
+
+1:16:32 PM [express] serving on port 5000
+^C
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

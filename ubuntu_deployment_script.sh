@@ -1,310 +1,208 @@
 #!/bin/bash
 
-# Complete Ubuntu Deployment Script for Albanian Legal Case Management System
-# Run this script on your Ubuntu 24.04.3 LTS server
+# Complete Replit.dev to Ubuntu Server Deployment Script
+set -e
 
-set -e  # Exit on any error
+echo "=== Deploying Complete Replit.dev Application to Ubuntu Server ==="
+echo "Starting deployment at: $(date)"
 
-echo "=========================================="
-echo "Albanian Legal Case Management Deployment"
-echo "Starting fresh installation..."
-echo "=========================================="
+# Configuration
+APP_DIR="/opt/ceshtje-ligjore"
+BACKUP_DIR="/opt/ceshtje-ligjore-backup-$(date +%Y%m%d_%H%M%S)"
+DB_NAME="albpetrol_legal_db" 
+DB_USER="legal_admin"
+DB_PASSWORD="SecurePass2024!"
+GITHUB_REPO="https://github.com/thanasdinaku/ceshtje_ligjore.git"
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
-
-log_info() {
-    echo -e "${GREEN}[INFO]${NC} $1"
-}
-
-log_warn() {
-    echo -e "${YELLOW}[WARN]${NC} $1"
-}
-
-log_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
-}
-
-# Check if running as root
-if [[ $EUID -ne 0 ]]; then
-   log_error "This script must be run as root (use sudo -i)"
-   exit 1
+echo "1. Creating backup of existing deployment..."
+if [ -d "$APP_DIR" ]; then
+    cp -r "$APP_DIR" "$BACKUP_DIR"
+    echo "Backup created at: $BACKUP_DIR"
 fi
 
-# Create non-root user for application if needed
-if ! id "appuser" &>/dev/null; then
-    log_info "Creating application user..."
-    useradd -m -s /bin/bash appuser
-    usermod -aG sudo appuser
-fi
+echo "2. Installing required system dependencies..."
+apt update
+apt install -y curl wget git build-essential postgresql postgresql-contrib nginx
 
-# Update system
-log_info "Updating system packages..."
-apt update && apt upgrade -y
-
-# Install required packages
-log_info "Installing required packages..."
-apt install -y curl wget git build-essential
-
-# Install Node.js 20
-log_info "Installing Node.js 20..."
+echo "3. Installing Node.js 20..."
 curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-apt-get install -y nodejs
+apt install -y nodejs
 
-# Install PostgreSQL
-log_info "Installing PostgreSQL..."
-apt install -y postgresql postgresql-contrib
-
-# Install Nginx
-log_info "Installing Nginx..."
-apt install -y nginx
-
-# Install PM2 for process management
-log_info "Installing PM2..."
+echo "4. Installing PM2 globally..."
 npm install -g pm2
 
-# Stop any existing services
-log_info "Stopping existing services..."
-systemctl stop nginx || true
-systemctl stop postgresql || true
-pm2 kill || true
-
-# Start PostgreSQL
-log_info "Starting PostgreSQL..."
+echo "5. Setting up PostgreSQL database..."
 systemctl start postgresql
 systemctl enable postgresql
 
-# Create application directory
-APP_DIR="/opt/ceshtje-ligjore"
-log_info "Creating application directory: $APP_DIR"
-rm -rf $APP_DIR
-mkdir -p $APP_DIR
-chown appuser:appuser $APP_DIR
-
-# Clone the repository as appuser
-log_info "Cloning repository..."
-sudo -u appuser git clone https://github.com/thanasdinaku/ceshtje_ligjore.git $APP_DIR
-
-# Change to app directory
-cd $APP_DIR
-
-# Install dependencies
-log_info "Installing Node.js dependencies..."
-sudo -u appuser npm install
-
-# Set up PostgreSQL database
-log_info "Setting up PostgreSQL database..."
-
-# Generate random password for database
-DB_PASSWORD=$(openssl rand -base64 32)
-DB_NAME="ceshtje_ligjore"
-DB_USER="ceshtje_user"
-
-# Create database and user
-sudo -u postgres psql << EOF
-DROP DATABASE IF EXISTS $DB_NAME;
-DROP USER IF EXISTS $DB_USER;
-CREATE DATABASE $DB_NAME;
-CREATE USER $DB_USER WITH ENCRYPTED PASSWORD '$DB_PASSWORD';
-GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;
-ALTER USER $DB_USER CREATEDB;
+# Configure PostgreSQL
+sudo -u postgres psql << 'PSQL_EOF'
+DROP DATABASE IF EXISTS albpetrol_legal_db;
+DROP USER IF EXISTS legal_admin;
+CREATE USER legal_admin WITH PASSWORD 'SecurePass2024!';
+CREATE DATABASE albpetrol_legal_db OWNER legal_admin;
+GRANT ALL PRIVILEGES ON DATABASE albpetrol_legal_db TO legal_admin;
+ALTER USER legal_admin CREATEDB;
 \q
-EOF
+PSQL_EOF
 
-# Create environment file
-log_info "Creating environment configuration..."
-cat > .env << EOF
-# Database Configuration
-DATABASE_URL=postgresql://$DB_USER:$DB_PASSWORD@localhost:5432/$DB_NAME
+echo "6. Setting up application directory..."
+mkdir -p "$APP_DIR"
+cd "$APP_DIR"
+
+echo "7. Cloning complete application from GitHub..."
+if [ -d ".git" ]; then
+    git fetch origin
+    git reset --hard origin/main
+    git pull origin main
+else
+    git clone "$GITHUB_REPO" .
+fi
+
+echo "8. Setting up environment variables..."
+cat > .env << 'ENV_EOF'
+DATABASE_URL=postgresql://legal_admin:SecurePass2024!@localhost:5432/albpetrol_legal_db
 PGHOST=localhost
 PGPORT=5432
-PGDATABASE=$DB_NAME
-PGUSER=$DB_USER
-PGPASSWORD=$DB_PASSWORD
-
-# Application Configuration
+PGDATABASE=albpetrol_legal_db
+PGUSER=legal_admin
+PGPASSWORD=SecurePass2024!
 NODE_ENV=production
 PORT=5000
-
-# Session Configuration
-SESSION_SECRET=$(openssl rand -base64 64)
-
-# Admin Configuration
+SESSION_SECRET=your_session_secret_here_change_this
+SENDGRID_API_KEY=
+SENDGRID_FROM_EMAIL=noreply@albpetrol.al
+SENDGRID_FROM_NAME=Sistemi i Menaxhimit të Rasteve Ligjore
+APP_NAME=Legal Case Management System
+APP_VERSION=1.0.0
 ADMIN_EMAIL=it.system@albpetrol.al
-ADMIN_PASSWORD=Admin2025!
+BCRYPT_ROUNDS=12
+JWT_SECRET=your_jwt_secret_here_change_this
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+MAX_FILE_SIZE=10485760
+UPLOAD_DIR=/opt/ceshtje-ligjore/uploads
+BACKUP_DIR=/opt/ceshtje-ligjore/backups
+BACKUP_RETENTION_DAYS=30
+AUTO_BACKUP_ENABLED=true
+AUTO_BACKUP_INTERVAL=daily
+ENV_EOF
 
-# Email Configuration (Optional - configure later)
-# SMTP_HOST=
-# SMTP_PORT=587
-# SMTP_USER=
-# SMTP_PASS=
-# EMAIL_FROM=
-EOF
+echo "9. Installing dependencies and building..."
+npm install
+npm run build
+npm run db:push
 
-chown appuser:appuser .env
+echo "10. Creating directories..."
+mkdir -p uploads backups logs scripts
 
-log_info "Database credentials saved to .env file"
-
-# Build the application
-log_info "Building the application..."
-sudo -u appuser npm run build
-
-# Run database migrations
-log_info "Running database migrations..."
-sudo -u appuser npm run db:push
-
-# Create PM2 ecosystem file
-log_info "Creating PM2 configuration..."
-cat > ecosystem.config.js << EOF
+echo "11. Setting up PM2 configuration..."
+cat > ecosystem.config.cjs << 'PM2_EOF'
 module.exports = {
   apps: [{
     name: 'albpetrol-legal',
     script: 'npm',
     args: 'start',
+    cwd: '/opt/ceshtje-ligjore',
     instances: 1,
-    autorestart: true,
-    watch: false,
-    max_memory_restart: '1G',
     env: {
       NODE_ENV: 'production',
       PORT: 5000
     },
-    error_file: '/var/log/pm2/albpetrol-legal-error.log',
-    out_file: '/var/log/pm2/albpetrol-legal-out.log',
-    log_file: '/var/log/pm2/albpetrol-legal.log'
+    log_file: '/opt/ceshtje-ligjore/logs/combined.log',
+    out_file: '/opt/ceshtje-ligjore/logs/out.log',
+    error_file: '/opt/ceshtje-ligjore/logs/error.log',
+    merge_logs: true,
+    max_memory_restart: '1G'
   }]
-}
-EOF
+};
+PM2_EOF
 
-chown appuser:appuser ecosystem.config.js
-
-# Create log directory
-mkdir -p /var/log/pm2
-chown appuser:appuser /var/log/pm2
-
-# Configure Nginx
-log_info "Configuring Nginx..."
-cat > /etc/nginx/sites-available/albpetrol-legal << EOF
+echo "12. Setting up Nginx..."
+cat > /etc/nginx/sites-available/albpetrol-legal << 'NGINX_EOF'
 server {
     listen 80;
-    server_name legal.albpetrol.al localhost;
-
-    # Security headers
-    add_header X-Content-Type-Options nosniff;
-    add_header X-Frame-Options DENY;
-    add_header X-XSS-Protection "1; mode=block";
+    server_name _;
+    
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
 
     location / {
         proxy_pass http://localhost:5000;
         proxy_http_version 1.1;
-        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-        proxy_cache_bypass \$http_upgrade;
-        proxy_read_timeout 300s;
-        proxy_connect_timeout 75s;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
     }
 
-    # Handle large file uploads
-    client_max_body_size 10M;
+    location /uploads/ {
+        alias /opt/ceshtje-ligjore/uploads/;
+    }
 }
-EOF
+NGINX_EOF
 
-# Enable the site
 ln -sf /etc/nginx/sites-available/albpetrol-legal /etc/nginx/sites-enabled/
 rm -f /etc/nginx/sites-enabled/default
 
-# Test Nginx configuration
-nginx -t
+echo "13. Setting up permissions..."
+chown -R www-data:www-data /opt/ceshtje-ligjore
+chmod 600 /opt/ceshtje-ligjore/.env
 
-# Start services
-log_info "Starting services..."
+echo "14. Starting services..."
+nginx -t
 systemctl restart nginx
 systemctl enable nginx
 
-# Start the application with PM2 as appuser
-log_info "Starting the application..."
-sudo -u appuser pm2 start $APP_DIR/ecosystem.config.js
-sudo -u appuser pm2 save
+pm2 delete all 2>/dev/null || true
+pm2 start ecosystem.config.cjs
 
-# Setup PM2 startup
-sudo -u appuser pm2 startup | grep -E "sudo.*pm2" | sh
+echo "15. Creating admin user..."
+node -e "
+const { Pool } = require('pg');
+const bcrypt = require('bcrypt');
 
-# Configure firewall
-log_info "Configuring firewall..."
-ufw allow 22
-ufw allow 80
-ufw allow 443
-ufw allow 5000
-ufw --force enable
+const pool = new Pool({
+  connectionString: 'postgresql://legal_admin:SecurePass2024!@localhost:5432/albpetrol_legal_db'
+});
 
-# Create a simple health check script
-cat > /usr/local/bin/check-app-health.sh << EOF
-#!/bin/bash
-if curl -f http://localhost:5000 > /dev/null 2>&1; then
-    echo "Application is running"
-    exit 0
-else
-    echo "Application is not responding, restarting..."
-    sudo -u appuser pm2 restart albpetrol-legal
-    exit 1
-fi
-EOF
+async function createAdmin() {
+  try {
+    const hashedPassword = await bcrypt.hash('admin123', 12);
+    await pool.query(\`
+      INSERT INTO users (id, email, first_name, last_name, password, role, is_default_admin)
+      VALUES (gen_random_uuid(), 'it.system@albpetrol.al', 'System', 'Administrator', \$1, 'admin', true)
+      ON CONFLICT (email) DO UPDATE SET
+        password = EXCLUDED.password,
+        role = 'admin',
+        is_default_admin = true
+    \`, [hashedPassword]);
+    console.log('Admin user created successfully');
+  } catch (error) {
+    console.error('Error creating admin user:', error);
+  } finally {
+    await pool.end();
+  }
+}
 
-chmod +x /usr/local/bin/check-app-health.sh
+createAdmin();
+" || echo "Admin user will be created on first application start"
 
-# Display final information
-log_info "Deployment completed successfully!"
-echo ""
-echo "=========================================="
-echo "DEPLOYMENT SUMMARY"
-echo "=========================================="
-echo "Application: Albanian Legal Case Management System"
-echo "Location: $APP_DIR"
-echo "Database: PostgreSQL"
-echo "Web Server: Nginx"
-echo "Process Manager: PM2"
-echo ""
-echo "DATABASE CREDENTIALS:"
-echo "Database Name: $DB_NAME"
-echo "Database User: $DB_USER"
-echo "Database Password: $DB_PASSWORD"
-echo ""
-echo "ADMIN CREDENTIALS:"
-echo "Email: it.system@albpetrol.al"
-echo "Password: Admin2025!"
-echo ""
-echo "ACCESS URLS:"
-echo "Local: http://localhost:5000"
-echo "External: http://10.5.20.31:5000"
-echo "Domain: http://legal.albpetrol.al (if DNS configured)"
-echo ""
-echo "USEFUL COMMANDS:"
-echo "- Check app status: sudo -u appuser pm2 status"
-echo "- View app logs: sudo -u appuser pm2 logs albpetrol-legal"
-echo "- Restart app: sudo -u appuser pm2 restart albpetrol-legal"
-echo "- Check nginx: systemctl status nginx"
-echo "- Health check: /usr/local/bin/check-app-health.sh"
-echo ""
-echo "IMPORTANT FILES:"
-echo "- Application: $APP_DIR"
-echo "- Environment: $APP_DIR/.env"
-echo "- Nginx Config: /etc/nginx/sites-available/albpetrol-legal"
-echo "- PM2 Config: $APP_DIR/ecosystem.config.js"
-echo "=========================================="
-
-# Final health check
+echo "16. Final checks..."
 sleep 5
-log_info "Running final health check..."
-if /usr/local/bin/check-app-health.sh; then
-    log_info "✅ Deployment successful! Application is running."
-    log_info "🌐 You can access it at: http://10.5.20.31:5000"
-else
-    log_error "❌ Application health check failed. Check logs with: sudo -u appuser pm2 logs"
-fi
+pm2 list
+curl -s -w "%{http_code}" http://localhost:5000 && echo " - Application responding"
+
+echo ""
+echo "=========================================="
+echo "✅ Complete Replit.dev application deployed!"
+echo "🌐 Access: http://$(hostname -I | awk '{print $1}')"
+echo "👤 Admin: it.system@albpetrol.al / admin123"
+echo "🔧 Logs: pm2 logs"
+echo "⚙️  Status: pm2 status"
+echo "=========================================="
+echo "Deployment completed at: $(date)"

@@ -50,6 +50,8 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
       shumaGjykata: caseData.shumaGjykata || "",
       vendimEkzekutim: caseData.vendimEkzekutim || "",
       fazaEkzekutim: caseData.fazaEkzekutim || "",
+      ankimuar: caseData.ankimuar || "",
+      perfunduar: caseData.perfunduar || "",
       gjykataLarte: caseData.gjykataLarte || "",
     },
   });
@@ -403,6 +405,36 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
                   <FormLabel>Faza në të cilën ndodhet Ekzekutimi</FormLabel>
                   <FormControl>
                     <Input placeholder="P.Sh. Në proçes" {...field} value={field.value || ""} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Ankimuar */}
+            <FormField
+              control={form.control}
+              name="ankimuar"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Ankimuar</FormLabel>
+                  <FormControl>
+                    <Input placeholder="P.Sh. Po, në proces apeli" {...field} value={field.value || ""} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Perfunduar */}
+            <FormField
+              control={form.control}
+              name="perfunduar"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Përfunduar</FormLabel>
+                  <FormControl>
+                    <Input placeholder="P.Sh. Po, me vendim përfundimtar" {...field} value={field.value || ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -395,7 +395,7 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
             'Gjykata e Apelit', 'Faza në të cilën ndodhet procesi (Apel)', 'Zhvillimi i seances gjyqesorë data,ora (Apel)',
             'Faza në të cilën ndodhet proçesi', 'Përfaqësuesi i Albpetrol SH.A.', 'Dëmi i Pretenduar në Objekt', 
             'Shuma e Caktuar nga Gjykata me Vendim', 'Vendim me Ekzekutim të Përkohshëm', 'Faza në të cilën ndodhet Ekzekutimi', 
-            'Gjykata e Lartë', 'Krijuar nga', 'Krijuar më'
+            'Ankimuar', 'Përfunduar', 'Gjykata e Lartë', 'Krijuar nga', 'Krijuar më'
           ],
           // Data rows mapped to correct structure
           ...entries.map(entry => [
@@ -416,6 +416,8 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
             entry.shumaGjykata || '',                                                   // Shuma e Caktuar nga Gjykata me Vendim
             entry.vendimEkzekutim || '',                                               // Vendim me Ekzekutim të Përkohshëm
             entry.fazaEkzekutim || '',                                                  // Faza në të cilën ndodhet Ekzekutimi
+            entry.ankimuar || '',                                                       // Ankimuar
+            entry.perfunduar || '',                                                     // Përfunduar
             entry.gjykataLarte || '',                                                   // Gjykata e Lartë
             (entry as any).createdByName || 'Përdorues i panjohur',                    // Krijuar nga
             entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : '' // Krijuar më
@@ -443,6 +445,8 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
           { wch: 30 }, // Shuma e Caktuar nga Gjykata me Vendim
           { wch: 30 }, // Vendim me Ekzekutim të Përkohshëm
           { wch: 30 }, // Faza në të cilën ndodhet Ekzekutimi
+          { wch: 15 }, // Ankimuar
+          { wch: 15 }, // Përfunduar
           { wch: 15 }, // Gjykata e Lartë
           { wch: 12 }, // Krijuar nga
           { wch: 12 }  // Krijuar më
@@ -460,12 +464,12 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
 
         // Merge cells for the main title across all columns
         worksheet['!merges'] = [
-          { s: { c: 0, r: 0 }, e: { c: 19, r: 0 } } // Merge A1 to T1 (20 columns)
+          { s: { c: 0, r: 0 }, e: { c: 21, r: 0 } } // Merge A1 to V1 (22 columns)
         ];
 
         // Style the header row (row 3)
         const headerRowIndex = 2; // 0-indexed, so row 3
-        for (let col = 0; col < 20; col++) {
+        for (let col = 0; col < 22; col++) {
           const cellRef = XLSX.utils.encode_cell({ r: headerRowIndex, c: col });
           if (worksheet[cellRef]) {
             worksheet[cellRef].s = {
@@ -484,7 +488,7 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
 
         // Add borders to data cells
         for (let row = 3; row < worksheetData.length; row++) {
-          for (let col = 0; col < 20; col++) {
+          for (let col = 0; col < 22; col++) {
             const cellRef = XLSX.utils.encode_cell({ r: row, c: col });
             if (worksheet[cellRef]) {
               worksheet[cellRef].s = {
@@ -521,7 +525,7 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
           'Gjykata e Apelit', 'Faza në të cilën ndodhet procesi (Apel)', 'Zhvillimi i seances gjyqesorë data,ora (Apel)',
           'Faza në të cilën ndodhet proçesi', 'Përfaqësuesi i Albpetrol SH.A.', 'Dëmi i Pretenduar në Objekt',
           'Shuma e Caktuar nga Gjykata me Vendim', 'Vendim me Ekzekutim të Përkohshëm', 'Faza në të cilën ndodhet Ekzekutimi', 
-          'Gjykata e Lartë', 'Krijuar nga', 'Krijuar më'
+          'Ankimuar', 'Përfunduar', 'Gjykata e Lartë', 'Krijuar nga', 'Krijuar më'
         ];
 
         const csvRows = entries.map(entry => [
@@ -542,6 +546,8 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
           `"${entry.shumaGjykata || ''}"`,                                            // Shuma e Caktuar nga Gjykata me Vendim
           `"${entry.vendimEkzekutim || ''}"`,                                         // Vendim me Ekzekutim të Përkohshëm
           `"${entry.fazaEkzekutim || ''}"`,                                           // Faza në të cilën ndodhet Ekzekutimi
+          `"${entry.ankimuar || ''}"`,                                                // Ankimuar
+          `"${entry.perfunduar || ''}"`,                                              // Përfunduar
           `"${entry.gjykataLarte || ''}"`,                                            // Gjykata e Lartë
           `"${(entry as any).createdByName || 'Përdorues i panjohur'}"`,             // Krijuar nga
           entry.createdAt ? new Date(entry.createdAt).toLocaleDateString('sq-AL') : '' // Krijuar më

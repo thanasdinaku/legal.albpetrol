@@ -1,0 +1,215 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cat > /opt/ceshtje-ligjore/complete_replit_to_ubuntu_deployment.sh << 'EOF'
+#!/bin/bash
+
+# Complete Replit.dev to Ubuntu Server Deployment Script
+set -e
+
+echo "=== Deploying Complete Replit.dev Application to Ubuntu Server ==="
+echo "Starting deployment at: $(date)"
+
+# Configuration
+APP_DIR="/opt/ceshtje-ligjore"
+BACKUP_DIR="/opt/ceshtje-ligjore-backup-$(date +%Y%m%d_%H%M%S)"
+DB_NAME="albpetrol_legal_db" 
+DB_USER="legal_admin"
+DB_PASSWORD="SecurePass2024!"
+GITHUB_REPO="https://github.com/thanasdinaku/ceshtje_ligjore.git"
+
+echo "1. Creating backup of existing deployment..."
+if [ -d "$APP_DIR" ]; then
+    cp -r "$APP_DIR" "$BACKUP_DIR"
+    echo "Backup created at: $BACKUP_DIR"
+fi
+
+echo "2. Installing required system dependencies..."
+apt update
+apt install -y curl wget git build-essential postgresql postgresql-contrib nginx
+
+echo "3. Installing Node.js 20..."
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+apt install -y nodejs
+
+echo "4. Installing PM2 globally..."
+npm install -g pm2
+
+echo "5. Setting up PostgreSQL database..."
+EOFo "Deployment completed at: $(date)"=========""t $1}')"- Application responding"', \$1, 'admin', true)
+root@ceshtjeligjore:/opt/ceshtje-ligjore# chmod +x /opt/ceshtje-ligjore/complete_replit_to_ubuntu_deployment.sh
+./complete_replit_to_ubuntu_deployment.sh
+=== Deploying Complete Replit.dev Application to Ubuntu Server ===
+Starting deployment at: Thu Aug 21 12:39:05 PM UTC 2025
+1. Creating backup of existing deployment...
+Backup created at: /opt/ceshtje-ligjore-backup-20250821_123905
+2. Installing required system dependencies...
+Get:1 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Hit:2 http://al.archive.ubuntu.com/ubuntu noble InRelease                                              
+Get:3 http://al.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]                             
+Hit:4 https://deb.nodesource.com/node_18.x nodistro InRelease                             
+Get:5 http://security.ubuntu.com/ubuntu noble-security/main amd64 Components [21.6 kB]    
+Get:6 http://al.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB] 
+Get:7 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Components [212 B]
+Get:8 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Components [52.2 kB]
+Get:9 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Components [212 B]
+Get:10 http://al.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1,350 kB]  
+Get:11 http://al.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [268 kB]
+Get:12 http://al.archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [175 kB]
+Get:13 http://al.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Components [212 B]
+Get:14 http://al.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1,124 kB]
+Get:15 http://al.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [377 kB]
+Get:16 http://al.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]
+Get:17 http://al.archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [7,076 B]
+Get:18 http://al.archive.ubuntu.com/ubuntu noble-backports/restricted amd64 Components [216 B]
+Get:19 http://al.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [19.2 kB]
+Get:20 http://al.archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Components [212 B]
+Fetched 3,773 kB in 2s (2,102 kB/s)                                   
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+2 packages can be upgraded. Run 'apt list --upgradable' to see them.
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+curl is already the newest version (8.5.0-2ubuntu10.6).
+wget is already the newest version (1.21.4-1ubuntu4.1).
+git is already the newest version (1:2.43.0-1ubuntu7.3).
+build-essential is already the newest version (12.10ubuntu1).
+postgresql is already the newest version (16+257build1.1).
+postgresql-contrib is already the newest version (16+257build1.1).
+nginx is already the newest version (1.24.0-2ubuntu7.4).
+0 upgraded, 0 newly installed, 0 to remove and 2 not upgraded.
+3. Installing Node.js 20...
+2025-08-21 12:39:13 - Installing pre-requisites
+Hit:1 http://al.archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://al.archive.ubuntu.com/ubuntu noble-updates InRelease          
+Hit:3 https://deb.nodesource.com/node_18.x nodistro InRelease       
+Hit:4 http://al.archive.ubuntu.com/ubuntu noble-backports InRelease 
+Hit:5 http://security.ubuntu.com/ubuntu noble-security InRelease
+Reading package lists... Done
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+apt-transport-https is already the newest version (2.8.3).
+ca-certificates is already the newest version (20240203).
+curl is already the newest version (8.5.0-2ubuntu10.6).
+gnupg is already the newest version (2.4.4-2ubuntu17.3).
+0 upgraded, 0 newly installed, 0 to remove and 2 not upgraded.
+Hit:1 http://al.archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://security.ubuntu.com/ubuntu noble-security InRelease
+Hit:3 http://al.archive.ubuntu.com/ubuntu noble-updates InRelease
+Get:4 https://deb.nodesource.com/node_20.x nodistro InRelease [12.1 kB]
+Hit:5 http://al.archive.ubuntu.com/ubuntu noble-backports InRelease
+Get:6 https://deb.nodesource.com/node_20.x nodistro/main amd64 Packages [12.2 kB]
+Fetched 24.4 kB in 0s (68.3 kB/s)     
+Reading package lists... Done
+2025-08-21 12:39:16 - Repository configured successfully.
+2025-08-21 12:39:16 - To install Node.js, run: apt-get install nodejs -y
+2025-08-21 12:39:16 - You can use N|solid Runtime as a node.js alternative
+2025-08-21 12:39:16 - To install N|solid Runtime, run: apt-get install nsolid -y 
+
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+nodejs is already the newest version (20.19.4-1nodesource1).
+0 upgraded, 0 newly installed, 0 to remove and 2 not upgraded.
+4. Installing PM2 globally...
+
+changed 133 packages in 11s
+
+13 packages are looking for funding
+  run `npm fund` for details
+5. Setting up PostgreSQL database...
+Synchronizing state of postgresql.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable postgresql
+Password for user postgres: 
+psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  password authentication failed for user "postgres"
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # Stop the current script
+# Press Ctrl+C
+
+# Create a simpler deployment script
+cat > /opt/ceshtje-ligjore/deploy_simple.sh << 'EOF'
+#!/bin/bash
+set -e
+
+echo "=== Simple Deployment Script ==="
+
+# Set PostgreSQL password non-interactively
+export DEBIAN_FRONTEND=noninteractive
+
+# Update system
+apt update
+
+# Install Node.js 20
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+apt install -y nodejs
+
+# Install PM2
+npm install -g pm2
+
+# Install PostgreSQL
+apt install -y postgresql postgresql-contrib
+
+# Start PostgreSQL
+systemctl start postgresql
+systemctl enable postgresql
+
+# Setup database (non-interactive)
+sudo -u postgres psql -c "DROP DATABASE IF EXISTS albpetrol_legal_db;"
+sudo -u postgres psql -c "DROP USER IF EXISTS legal_admin;"
+sudo -u postgres psql -c "CREATE USER legal_admin WITH PASSWORD 'SecurePass2024!';"
+sudo -u postgres psql -c "CREATE DATABASE albpetrol_legal_db OWNER legal_admin;"
+./deploy_simple.shtje-ligjore/deploy_simple.sh123"t $1}')"lhost:5432/albpetrol_legal_dbadmin;"
+=== Simple Deployment Script ===
+Hit:1 http://security.ubuntu.com/ubuntu noble-security InRelease
+Hit:2 http://al.archive.ubuntu.com/ubuntu noble InRelease
+Hit:3 http://al.archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:4 https://deb.nodesource.com/node_20.x nodistro InRelease
+Hit:5 http://al.archive.ubuntu.com/ubuntu noble-backports InRelease
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+2 packages can be upgraded. Run 'apt list --upgradable' to see them.
+2025-08-21 12:41:09 - Installing pre-requisites
+Hit:1 http://security.ubuntu.com/ubuntu noble-security InRelease
+Hit:2 http://al.archive.ubuntu.com/ubuntu noble InRelease
+Hit:3 http://al.archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:4 https://deb.nodesource.com/node_20.x nodistro InRelease
+Hit:5 http://al.archive.ubuntu.com/ubuntu noble-backports InRelease
+Reading package lists... Done
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+apt-transport-https is already the newest version (2.8.3).
+ca-certificates is already the newest version (20240203).
+curl is already the newest version (8.5.0-2ubuntu10.6).
+gnupg is already the newest version (2.4.4-2ubuntu17.3).
+0 upgraded, 0 newly installed, 0 to remove and 2 not upgraded.
+Hit:1 http://security.ubuntu.com/ubuntu noble-security InRelease
+Hit:2 http://al.archive.ubuntu.com/ubuntu noble InRelease
+Hit:3 http://al.archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:4 https://deb.nodesource.com/node_20.x nodistro InRelease
+Hit:5 http://al.archive.ubuntu.com/ubuntu noble-backports InRelease
+Reading package lists... Done
+2025-08-21 12:41:12 - Repository configured successfully.
+2025-08-21 12:41:12 - To install Node.js, run: apt-get install nodejs -y
+2025-08-21 12:41:12 - You can use N|solid Runtime as a node.js alternative
+2025-08-21 12:41:12 - To install N|solid Runtime, run: apt-get install nsolid -y 
+
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+nodejs is already the newest version (20.19.4-1nodesource1).
+0 upgraded, 0 newly installed, 0 to remove and 2 not upgraded.
+
+changed 133 packages in 2s
+
+13 packages are looking for funding
+  run `npm fund` for details
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+postgresql is already the newest version (16+257build1.1).
+postgresql-contrib is already the newest version (16+257build1.1).
+0 upgraded, 0 newly installed, 0 to remove and 2 not upgraded.
+Synchronizing state of postgresql.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable postgresql
+Password for user postgres: 

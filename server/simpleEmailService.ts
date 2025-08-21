@@ -20,12 +20,20 @@ const formatDateTime = (dateTimeString: string): string => {
   }
 };
 
-// Simple console logging for email notifications
+// Microsoft 365 SMTP transporter for it.system@albpetrol.al
 const createTransporter = () => {
   return nodemailer.createTransporter({
-    streamTransport: true,
-    newline: 'unix',
-    buffer: true
+    host: 'smtp-mail.outlook.com',
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: 'it.system@albpetrol.al',
+      pass: process.env.OFFICE365_PASSWORD || process.env.OUTLOOK_PASSWORD || 'your_password_here'
+    },
+    tls: {
+      ciphers: 'SSLv3',
+      rejectUnauthorized: false
+    }
   });
 };
 
@@ -40,19 +48,35 @@ interface EmailParams {
 export async function sendEmail(params: EmailParams): Promise<boolean> {
   try {
     console.log('\n==================================================');
-    console.log('EMAIL NOTIFICATION - it.system@albpetrol.al');
+    console.log('SENDING EMAIL via Microsoft 365');
     console.log('==================================================');
     console.log(`TO: ${params.to}`);
-    console.log(`FROM: ${params.from || 'it.system@albpetrol.al'}`);
+    console.log(`FROM: it.system@albpetrol.al`);
     console.log(`SUBJECT: ${params.subject}`);
-    console.log('--------------------------------------------------');
-    console.log('MESSAGE:');
-    console.log(params.text);
-    console.log('==================================================\n');
+    console.log('==================================================');
     
+    const transporter = createTransporter();
+    
+    const mailOptions = {
+      from: '"Sistemi Ligjor Albpetrol" <it.system@albpetrol.al>',
+      to: params.to,
+      subject: params.subject,
+      text: params.text,
+      html: params.html
+    };
+    
+    const result = await transporter.sendMail(mailOptions);
+    console.log(`✓ EMAIL SENT SUCCESSFULLY to ${params.to}`);
+    console.log(`Message ID: ${result.messageId}`);
+    console.log('==================================================\n');
     return true;
   } catch (error) {
-    console.error('Email notification error:', error);
+    console.error('Microsoft 365 email error:', error);
+    console.log('FALLBACK: Logging email content');
+    console.log(`TO: ${params.to}`);
+    console.log(`SUBJECT: ${params.subject}`);
+    console.log(`MESSAGE: ${params.text}`);
+    console.log('==================================================\n');
     return false;
   }
 }
@@ -61,18 +85,31 @@ export async function sendEmail(params: EmailParams): Promise<boolean> {
 export async function testEmailConnection(): Promise<boolean> {
   try {
     console.log('\n==================================================');
-    console.log('EMAIL SYSTEM STATUS - Albpetrol Legal System');
+    console.log('TESTING Microsoft 365 CONNECTION');
     console.log('==================================================');
-    console.log('Email Service: it.system@albpetrol.al');
-    console.log('Status: OPERATIONAL');
-    console.log('Notifications: ACTIVE');
-    console.log('Court Hearing Alerts: ENABLED');
-    console.log('Case Update Alerts: ENABLED');
-    console.log('==================================================\n');
     
+    const transporter = createTransporter();
+    
+    // Verify SMTP connection
+    await transporter.verify();
+    console.log('✓ Microsoft 365 SMTP connection verified');
+    
+    // Send test email
+    const testResult = await transporter.sendMail({
+      from: '"Sistemi Ligjor Albpetrol" <it.system@albpetrol.al>',
+      to: 'thanas.dinaku@albpetrol.al',
+      subject: 'Test Email - Albpetrol Legal System',
+      text: 'This is a test email from the Albpetrol Legal Case Management System using it.system@albpetrol.al',
+      html: '<h3>Test Email</h3><p>This is a test email from the Albpetrol Legal Case Management System using <strong>it.system@albpetrol.al</strong></p><p>System is ready to send notifications.</p>'
+    });
+    
+    console.log(`✓ Test email sent successfully - Message ID: ${testResult.messageId}`);
+    console.log('Microsoft 365 email service operational');
+    console.log('==================================================\n');
     return true;
   } catch (error) {
-    console.error('Email system test failed:', error);
+    console.error('Microsoft 365 connection test failed:', error);
+    console.log('Email authentication may need to be configured');
     return false;
   }
 }

@@ -1,6 +1,6 @@
-import { MailService } from '@sendgrid/mail';
+import nodemailer from 'nodemailer';
 
-// Simple email service using SendGrid for real email delivery
+// Simple email service using Outlook SMTP for real email delivery
 const formatDateTime = (dateTimeString: string): string => {
   if (!dateTimeString) return '';
   
@@ -20,13 +20,25 @@ const formatDateTime = (dateTimeString: string): string => {
   }
 };
 
-// Initialize SendGrid mail service
-if (!process.env.SENDGRID_API_KEY) {
-  throw new Error("SENDGRID_API_KEY environment variable must be set");
-}
-
-const mailService = new MailService();
-mailService.setApiKey(process.env.SENDGRID_API_KEY);
+// Create Outlook SMTP transporter
+const createTransporter = () => {
+  const outlookEmail = process.env.OUTLOOK_EMAIL || 'it.system@albpetrol.al';
+  const outlookPassword = process.env.OUTLOOK_PASSWORD || 'temp_password';
+  
+  return nodemailer.createTransporter({
+    host: 'smtp-mail.outlook.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: outlookEmail,
+      pass: outlookPassword
+    },
+    tls: {
+      ciphers: 'SSLv3',
+      rejectUnauthorized: false
+    }
+  });
+};
 
 interface EmailParams {
   to: string;
@@ -38,25 +50,27 @@ interface EmailParams {
 
 export async function sendEmail(params: EmailParams): Promise<boolean> {
   try {
-    console.log('=== SENDING REAL EMAIL ===');
+    console.log('=== SENDING REAL EMAIL VIA OUTLOOK ===');
     console.log(`To: ${params.to}`);
     console.log(`From: ${params.from}`);
     console.log(`Subject: ${params.subject}`);
-    console.log('==========================');
+    console.log('======================================');
     
-    // Send actual email using SendGrid
-    await mailService.send({
+    const transporter = createTransporter();
+    
+    const mailOptions = {
+      from: `"Sistemi Ligjor Albpetrol" <${params.from || 'it.system@albpetrol.al'}>`,
       to: params.to,
-      from: params.from || 'it.system@albpetrol.al',
       subject: params.subject,
       text: params.text,
-      html: params.html,
-    });
+      html: params.html
+    };
     
-    console.log(`✓ Email sent successfully to ${params.to}`);
+    const result = await transporter.sendMail(mailOptions);
+    console.log(`✓ Email sent successfully to ${params.to} - Message ID: ${result.messageId}`);
     return true;
   } catch (error) {
-    console.error('SendGrid email error:', error);
+    console.error('Outlook SMTP email error:', error);
     return false;
   }
 }
@@ -64,21 +78,27 @@ export async function sendEmail(params: EmailParams): Promise<boolean> {
 // Test basic email connectivity
 export async function testEmailConnection(): Promise<boolean> {
   try {
-    console.log('=== TESTING SENDGRID CONNECTION ===');
+    console.log('=== TESTING OUTLOOK SMTP CONNECTION ===');
     
-    // Test SendGrid by sending a simple test email
-    await mailService.send({
+    const transporter = createTransporter();
+    
+    // Verify SMTP connection
+    await transporter.verify();
+    console.log('✓ Outlook SMTP connection verified successfully');
+    
+    // Send a test email
+    const testResult = await transporter.sendMail({
+      from: '"Sistemi Ligjor Albpetrol" <it.system@albpetrol.al>',
       to: 'it.system@albpetrol.al',
-      from: 'it.system@albpetrol.al',
-      subject: 'SendGrid Connection Test',
-      text: 'This is a test to verify SendGrid is working properly.',
-      html: '<p>This is a test to verify SendGrid is working properly.</p>'
+      subject: 'Outlook SMTP Connection Test',
+      text: 'This is a test to verify Outlook SMTP is working properly.',
+      html: '<p>This is a test to verify Outlook SMTP is working properly.</p>'
     });
     
-    console.log('✓ SendGrid connection verified successfully');
+    console.log(`✓ Test email sent successfully - Message ID: ${testResult.messageId}`);
     return true;
   } catch (error) {
-    console.error('SendGrid connection test failed:', error);
+    console.error('Outlook SMTP connection test failed:', error);
     return false;
   }
 }

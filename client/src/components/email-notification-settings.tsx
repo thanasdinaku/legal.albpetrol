@@ -8,7 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Loader2, Mail, Clock, Bell, Settings } from "lucide-react";
+import { Loader2, Mail, Clock, Bell, Settings, TestTube } from "lucide-react";
 
 interface EmailNotificationSettings {
   enabled: boolean;
@@ -23,6 +23,28 @@ export default function EmailNotificationSettings() {
     enabled: false,
     recipientEmail: '',
     senderEmail: 'legal-system@albpetrol.al'
+  });
+
+  // Test email mutation
+  const testEmailMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest('/api/admin/test-court-notification', 'POST', {});
+      return response.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: data.success ? "Email Test Successful" : "Email Test Failed",
+        description: data.message,
+        variant: data.success ? "default" : "destructive",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Test Failed",
+        description: error.message || "Could not test email notification system",
+        variant: "destructive",
+      });
+    },
   });
 
   // Fetch current settings
@@ -188,6 +210,27 @@ export default function EmailNotificationSettings() {
             )}
 
             <div className="flex justify-end space-x-3 pt-4 border-t">
+              {formData.enabled && (
+                <Button
+                  type="button"
+                  onClick={() => testEmailMutation.mutate()}
+                  disabled={testEmailMutation.isPending}
+                  variant="outline"
+                  data-testid="button-test-email"
+                >
+                  {testEmailMutation.isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Duke testuar...
+                    </>
+                  ) : (
+                    <>
+                      <TestTube className="w-4 h-4 mr-2" />
+                      Test Email
+                    </>
+                  )}
+                </Button>
+              )}
               <Button
                 type="submit"
                 disabled={saveMutation.isPending}

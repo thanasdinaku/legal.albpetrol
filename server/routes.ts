@@ -928,6 +928,74 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
     }
   });
 
+  // Test court hearing notification endpoint
+  app.post("/api/admin/test-court-notification", isAdmin, async (req: any, res) => {
+    try {
+      if (req.user.role !== "admin") {
+        return res.status(403).json({ message: "Access denied. Admin privileges required." });
+      }
+      
+      const { sendEmail, sendCourtHearingNotification } = await import('./emailService');
+      const settings = await storage.getEmailNotificationSettings();
+      
+      if (!settings.enabled) {
+        return res.json({ 
+          success: false, 
+          message: "Email notifications are disabled in settings" 
+        });
+      }
+
+      if (!settings.recipientEmail) {
+        return res.json({ 
+          success: false, 
+          message: "No recipient email configured" 
+        });
+      }
+
+      // Test basic SendGrid connection first
+      const basicTest = await sendEmail({
+        to: settings.recipientEmail,
+        from: settings.senderEmail || 'legal-system@albpetrol.al',
+        subject: 'Test Email from Albpetrol Legal System',
+        text: 'This is a test email to verify SendGrid configuration is working.',
+        html: '<p>This is a test email to verify SendGrid configuration is working.</p>'
+      });
+
+      if (!basicTest) {
+        return res.json({ 
+          success: false, 
+          message: "Basic SendGrid test failed. Check API key and configuration." 
+        });
+      }
+
+      // Test court hearing notification format
+      const courtTest = await sendCourtHearingNotification(
+        settings.recipientEmail,
+        settings.senderEmail || 'legal-system@albpetrol.al',
+        {
+          plaintiff: 'Test Plaintiff',
+          defendant: 'Test Defendant', 
+          hearingDateTime: new Date(Date.now() + 24*60*60*1000).toISOString(),
+          hearingType: 'first_instance',
+          caseId: 999
+        }
+      );
+
+      res.json({ 
+        success: courtTest,
+        message: courtTest 
+          ? "Both basic email and court hearing notification sent successfully" 
+          : "Court hearing notification failed to send"
+      });
+    } catch (error) {
+      console.error("Error testing court hearing notification:", error);
+      res.status(500).json({ 
+        success: false,
+        message: `Email test failed: ${error.message}` 
+      });
+    }
+  });
+
   // System backup and restore routes
   app.get('/api/system/status', isAuthenticated, async (req, res) => {
     try {

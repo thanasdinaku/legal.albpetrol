@@ -1,0 +1,539 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Stop PM2 completely
+pm2 delete all
+pm2 kill
+
+# Remove the corrupted database
+rm -f database.sqlite
+
+# Check what tables the schema should create
+cat shared/schema.ts
+
+# Force create the database with all tables
+npx drizzle-kit push --force
+
+# Verify the database was created properly
+sqlite3 database.sqlite ".tables"
+
+# Create a better startup script that handles database creation properly
+cat > start_server.cjs << 'EOF'
+const { execSync } = require('child_process');
+const fs = require('fs');
+
+console.log('Setting up database...');
+
+try {
+  // Always ensure fresh database setup
+  if (fs.existsSync('./database.sqlite')) {
+    console.log('Database exists, checking tables...');
+  } else {
+    console.log('Creating new database...');
+  }
+  
+  // Force create/update schema
+  execSync('npx drizzle-kit push --force', { stdio: 'inherit' });
+pm2 logs --lines 10ver.cjs --name albpetrol-legalit' });..');
+[PM2] Applying action deleteProcessId on app [all](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2][WARN] No process found
+[PM2] [v] All Applications Stopped
+[PM2] [v] PM2 Daemon Stopped
+import { sql } from "drizzle-orm";
+import {
+  index,
+  jsonb,
+  pgTable,
+  timestamp,
+  varchar,
+  text,
+  serial,
+  pgEnum,
+  boolean,
+} from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
+
+// Session storage table (mandatory for Replit Auth)
+export const sessions = pgTable(
+  "sessions",
+  {
+    sid: varchar("sid").primaryKey(),
+    sess: jsonb("sess").notNull(),
+    expire: timestamp("expire").notNull(),
+  },
+  (table) => [index("IDX_session_expire").on(table.expire)],
+);
+
+// User roles enum
+export const userRoleEnum = pgEnum("user_role", ["user", "admin"]);
+
+// User storage table
+export const users = pgTable("users", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: varchar("email").unique().notNull(),
+  firstName: varchar("first_name").notNull(),
+  lastName: varchar("last_name").notNull(),
+  password: varchar("password").notNull(),
+  profileImageUrl: varchar("profile_image_url"),
+  role: userRoleEnum("role").default("user").notNull(),
+  isDefaultAdmin: boolean("is_default_admin").default(false),
+  lastLogin: timestamp("last_login"),
+  twoFactorCode: varchar("two_factor_code"),
+  twoFactorCodeExpiry: timestamp("two_factor_code_expiry"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Legal cases table (Albanian court system) - Exact CSV structure
+export const dataEntries = pgTable("data_entries", {
+  id: serial("id").primaryKey(), // Nr. Rendor (auto-incrementing)
+  
+  // Basic Case Information (Required fields marked with * in CSV)
+  paditesi: varchar("paditesi", { length: 255 }).notNull(), // Paditesi (Emër e Mbiemër)*
+  iPaditur: varchar("i_paditur", { length: 255 }).notNull(), // I Paditur*
+  personITrete: varchar("person_i_trete", { length: 255 }), // Person i Tretë
+  objektiIPadise: text("objekti_i_padise"), // Objekti i Padisë
+  
+  // First Instance Court Information
+  gjykataShkalle: varchar("gjykata_shkalle", { length: 500 }), // Gjykata e Shkallës së Parë
+  fazaGjykataShkalle: varchar("faza_gjykata_shkalle", { length: 255 }), // Faza në të cilën ndodhet procesi (Shkallë I)
+  zhvillimiSeancesShkalleI: varchar("zhvillimi_seances_shkalle_i"), // Zhvillimi i seances gjyqesorë data,ora (Shkallë I)
+  
+  // Appeal Court Information
+  gjykataApelit: varchar("gjykata_apelit", { length: 500 }), // Gjykata e Apelit
+  fazaGjykataApelit: varchar("faza_gjykata_apelit", { length: 255 }), // Faza në të cilën ndodhet procesi (Apel)
+  zhvillimiSeancesApel: varchar("zhvillimi_seances_apel"), // Zhvillimi i seances gjyqesorë data,ora (Apel) - NEW FROM CSV
+  
+  // Current Status
+  fazaAktuale: varchar("faza_aktuale", { length: 255 }), // Faza në të cilën ndodhet proçesi
+  perfaqesuesi: varchar("perfaqesuesi", { length: 255 }), // Përfaqësuesi i Albpetrol SH.A.
+  
+  // Financial Information
+  demiIPretenduar: varchar("demi_i_pretenduar", { length: 255 }), // Dëmi i Pretenduar në Objekt
+  shumaGjykata: varchar("shuma_gjykata", { length: 255 }), // Shuma e Caktuar nga Gjykata me Vendim
+  vendimEkzekutim: varchar("vendim_ekzekutim", { length: 255 }), // Vendim me Ekzekutim të përkohshëm
+  fazaEkzekutim: varchar("faza_ekzekutim", { length: 255 }), // Faza në të cilën ndodhet
+  
+  // Final Status Fields from CSV
+  ankimuar: varchar("ankimuar", { length: 255 }), // Ankimuar - NEW FROM CSV
+  perfunduar: varchar("perfunduar", { length: 255 }), // Përfunduar - NEW FROM CSV
+  gjykataLarte: varchar("gjykata_larte", { length: 255 }), // Gjykata e Lartë
+  
+  // File attachments (PDF, Word documents)
+  attachments: jsonb("attachments").default('[]'),
+  
+  // System fields
+  createdById: varchar("created_by_id").notNull().references(() => users.id),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Database checkpoints table for backup/restore functionality
+export const databaseCheckpoints = pgTable("database_checkpoints", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(), // Display name for checkpoint
+  description: text("description"), // Optional description
+  filePath: varchar("file_path", { length: 500 }).notNull(), // Path to backup file
+  fileSize: varchar("file_size", { length: 50 }), // Size in readable format (e.g., "1.2 MB")
+  createdById: varchar("created_by_id").notNull().references(() => users.id),
+  createdAt: timestamp("created_at").defaultNow(),
+  isAutoBackup: boolean("is_auto_backup").default(false), // True for automated backups
+});
+
+// System settings table for storing application configuration
+export const systemSettings = pgTable("system_settings", {
+  id: serial("id").primaryKey(),
+  settingKey: varchar("setting_key", { length: 255 }).notNull().unique(),
+  settingValue: jsonb("setting_value").notNull(),
+  updatedById: varchar("updated_by_id").notNull().references(() => users.id),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Insert schemas
+export const insertUserSchema = createInsertSchema(users).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const createUserSchema = createInsertSchema(users).omit({
+  id: true,
+  isDefaultAdmin: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+});
+
+// Password validation function
+const passwordValidation = z.string()
+  .min(8, "Fjalëkalimi duhet të jetë të paktën 8 karaktere")
+  .regex(/[A-Z]/, "Fjalëkalimi duhet të përmbajë të paktën një shkronjë të madhe")
+  .regex(/[0-9]/, "Fjalëkalimi duhet të përmbajë të paktën një numër")
+  .regex(/[!@#$%^&*(),.?":{}|<>]/, "Fjalëkalimi duhet të përmbajë të paktën një karakter special");
+
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, "Fjalëkalimi aktual është i kërkuar"),
+  newPassword: passwordValidation,
+  confirmPassword: z.string().min(1, "Konfirmimi i fjalëkalimit është i kërkuar"),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: "Fjalëkalimet nuk përputhen",
+  path: ["confirmPassword"],
+});
+
+export const insertDataEntrySchema = createInsertSchema(dataEntries).omit({
+  id: true,
+  createdById: true,
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  // Ensure required fields have proper validation
+  paditesi: z.string().min(1, "Paditesi është i kërkuar"),
+  iPaditur: z.string().min(1, "I Paditur është i kërkuar"),
+  // Make sure optional fields can be empty strings or null
+  personITrete: z.string().optional(),
+  objektiIPadise: z.string().optional(),
+  gjykataShkalle: z.string().optional(),
+  fazaGjykataShkalle: z.string().optional(),
+  zhvillimiSeancesShkalleI: z.string().optional(),
+  gjykataApelit: z.string().optional(),
+  fazaGjykataApelit: z.string().optional(),
+  zhvillimiSeancesApel: z.string().optional(),
+  fazaAktuale: z.string().optional(),
+  perfaqesuesi: z.string().optional(),
+  demiIPretenduar: z.string().optional(),
+  shumaGjykata: z.string().optional(),
+  vendimEkzekutim: z.string().optional(),
+  fazaEkzekutim: z.string().optional(),
+  ankimuar: z.string().optional(),
+  perfunduar: z.string().optional(),
+  gjykataLarte: z.string().optional(),
+  attachments: z.array(z.object({
+    name: z.string(),
+    url: z.string(),
+    path: z.string()
+  })).optional().default([])
+});
+
+export const updateDataEntrySchema = createInsertSchema(dataEntries).omit({
+  id: true,
+  createdById: true,
+  createdAt: true,
+  updatedAt: true,
+}).partial();
+
+export const insertCheckpointSchema = createInsertSchema(databaseCheckpoints).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertSystemSettingsSchema = createInsertSchema(systemSettings).omit({
+  id: true,
+  updatedAt: true,
+});
+
+// Email notification schemas
+export const emailNotificationSchema = z.object({
+  enabled: z.boolean().default(true),
+  emailAddresses: z.array(z.string().email()).min(1, "Të paktën një adresë email është e kërkuar"),
+  subject: z.string().min(1, "Tema është e kërkuar").default("Hyrje e re në sistemin e menaxhimit të çështjeve ligjore"),
+  includeDetails: z.boolean().default(true),
+});
+
+// Types
+export type User = typeof users.$inferSelect;
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type CreateUser = z.infer<typeof createUserSchema>;
+export type LoginData = z.infer<typeof loginSchema>;
+export type ChangePasswordData = z.infer<typeof changePasswordSchema>;
+export type DataEntry = typeof dataEntries.$inferSelect;
+export type InsertDataEntry = z.infer<typeof insertDataEntrySchema>;
+export type UpdateDataEntry = z.infer<typeof updateDataEntrySchema>;
+export type DatabaseCheckpoint = typeof databaseCheckpoints.$inferSelect;
+export type InsertCheckpoint = z.infer<typeof insertCheckpointSchema>;
+export type SystemSettings = typeof systemSettings.$inferSelect;
+export type InsertSystemSettings = z.infer<typeof insertSystemSettingsSchema>;
+export type EmailNotificationSettings = z.infer<typeof emailNotificationSchema>;
+No config path provided, using default 'drizzle.config.ts'
+Reading config file '/opt/ceshtje-ligjore/drizzle.config.ts'
+[✓] Pulling schema from database...
+
+[i] No changes detected
+Command 'sqlite3' not found, but can be installed with:
+apt install sqlite3
+[PM2] Spawning PM2 daemon with pm2_home=/root/.pm2
+[PM2] PM2 Successfully daemonized
+[PM2] Starting /opt/ceshtje-ligjore/start_server.cjs in fork_mode (1 instance)
+[PM2] Done.
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ 1.0.0   │ fork    │ 21089    │ 0s     │ 0    │ online    │ 0%       │ 27.9mb   │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[TAILING] Tailing last 10 lines for [all] processes (change the value with --lines option)
+/root/.pm2/pm2.log last 10 lines:
+PM2        | 2025-08-21T13:07:32: PM2 log: BUS socket file      : /root/.pm2/pub.sock
+PM2        | 2025-08-21T13:07:32: PM2 log: Application log path : /root/.pm2/logs
+PM2        | 2025-08-21T13:07:32: PM2 log: Worker Interval      : 30000
+PM2        | 2025-08-21T13:07:32: PM2 log: Process dump file    : /root/.pm2/dump.pm2
+PM2        | 2025-08-21T13:07:32: PM2 log: Concurrent actions   : 2
+PM2        | 2025-08-21T13:07:32: PM2 log: SIGTERM timeout      : 1600
+PM2        | 2025-08-21T13:07:32: PM2 log: Runtime Binary       : /usr/bin/node
+PM2        | 2025-08-21T13:07:32: PM2 log: ===============================================================================
+PM2        | 2025-08-21T13:07:32: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:07:32: PM2 log: App [albpetrol-legal:0] online
+
+/root/.pm2/logs/albpetrol-legal-error.log last 10 lines:
+0|albpetro |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+0|albpetro |   status: 1,
+0|albpetro |   signal: null,
+0|albpetro |   output: [ null, null, null ],
+0|albpetro |   pid: 20933,
+0|albpetro |   stdout: null,
+0|albpetro |   stderr: null
+0|albpetro | }
+0|albpetro | 
+0|albpetro | Node.js v20.19.4
+
+/root/.pm2/logs/albpetrol-legal-out.log last 10 lines:
+0|albpetro | Ensuring database exists...
+0|albpetro | Starting server...
+0|albpetro | Ensuring database exists...
+0|albpetro | Starting server...
+0|albpetro | Ensuring database exists...
+0|albpetro | Starting server...
+0|albpetro | Ensuring database exists...
+0|albpetro | Starting server...
+0|albpetro | Setting up database...
+0|albpetro | Database exists, checking tables...
+
+0|albpetrol-legal  | No config path provided, using default 'drizzle.config.ts'
+0|albpetrol-legal  | Reading config file '/opt/ceshtje-ligjore/drizzle.config.ts'
+0|albpetrol-legal  | [⣷] Pulling schema from database...
+[✓] Pulling schema from database...
+0|albpetrol-legal  | [i] No changes detected
+0|albpetrol-legal  | Database setup complete. Starting server...
+0|albpetrol-legal  | /opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5
+0|albpetrol-legal  | 	return this[cppdb].prepare(sql, this, false);
+0|albpetrol-legal  | 	                   ^
+0|albpetrol-legal  | SqliteError: no such table: users
+0|albpetrol-legal  |     at Database.prepare (/opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5:21)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareQuery (/opt/ceshtje-ligjore/node_modules/src/better-sqlite3/session.ts:50:28)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareOneTimeQuery (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/session.ts:135:15)
+0|albpetrol-legal  |     at SQLiteSelectBase._prepare (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:865:85)
+0|albpetrol-legal  |     at SQLiteSelectBase.all (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:884:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.execute (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:896:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.then (/opt/ceshtje-ligjore/node_modules/src/query-promise.ts:31:15) {
+0|albpetrol-legal  |   code: 'SQLITE_ERROR'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+0|albpetrol-legal  | Setup failed: Error: Command failed: tsx server/index.ts
+0|albpetrol-legal  |     at genericNodeError (node:internal/errors:984:15)
+0|albpetrol-legal  |     at wrappedFn (node:internal/errors:538:14)
+0|albpetrol-legal  |     at checkExecSyncError (node:child_process:891:11)
+0|albpetrol-legal  |     at execSync (node:child_process:963:15)
+0|albpetrol-legal  |     at Object.<anonymous> (/opt/ceshtje-ligjore/start_server.cjs:18:3)
+0|albpetrol-legal  |     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+0|albpetrol-legal  |     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+0|albpetrol-legal  |     at Module.load (node:internal/modules/cjs/loader:1275:32)
+0|albpetrol-legal  |     at Module._load (node:internal/modules/cjs/loader:1096:12)
+0|albpetrol-legal  |     at cjsLoader (node:internal/modules/esm/translators:298:15) {
+0|albpetrol-legal  |   status: 1,
+0|albpetrol-legal  |   signal: null,
+0|albpetrol-legal  |   output: [ null, null, null ],
+0|albpetrol-legal  |   pid: 21145,
+0|albpetrol-legal  |   stdout: null,
+0|albpetrol-legal  |   stderr: null
+0|albpetrol-legal  | }
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | Setting up database...
+0|albpetrol-legal  | Database exists, checking tables...
+0|albpetrol-legal  | No config path provided, using default 'drizzle.config.ts'
+0|albpetrol-legal  | Reading config file '/opt/ceshtje-ligjore/drizzle.config.ts'
+0|albpetrol-legal  | [⣷] Pulling schema from database...
+[✓] Pulling schema from database...
+0|albpetrol-legal  | [i] No changes detected
+0|albpetrol-legal  | Database setup complete. Starting server...
+0|albpetrol-legal  | /opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5
+0|albpetrol-legal  | 	return this[cppdb].prepare(sql, this, false);
+0|albpetrol-legal  | 	                   ^
+0|albpetrol-legal  | SqliteError: no such table: users
+0|albpetrol-legal  |     at Database.prepare (/opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5:21)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareQuery (/opt/ceshtje-ligjore/node_modules/src/better-sqlite3/session.ts:50:28)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareOneTimeQuery (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/session.ts:135:15)
+0|albpetrol-legal  |     at SQLiteSelectBase._prepare (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:865:85)
+0|albpetrol-legal  |     at SQLiteSelectBase.all (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:884:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.execute (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:896:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.then (/opt/ceshtje-ligjore/node_modules/src/query-promise.ts:31:15) {
+0|albpetrol-legal  |   code: 'SQLITE_ERROR'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+0|albpetrol-legal  | Setup failed: Error: Command failed: tsx server/index.ts
+0|albpetrol-legal  |     at genericNodeError (node:internal/errors:984:15)
+0|albpetrol-legal  |     at wrappedFn (node:internal/errors:538:14)
+0|albpetrol-legal  |     at checkExecSyncError (node:child_process:891:11)
+0|albpetrol-legal  |     at execSync (node:child_process:963:15)
+0|albpetrol-legal  |     at Object.<anonymous> (/opt/ceshtje-ligjore/start_server.cjs:18:3)
+0|albpetrol-legal  |     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+0|albpetrol-legal  |     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+0|albpetrol-legal  |     at Module.load (node:internal/modules/cjs/loader:1275:32)
+0|albpetrol-legal  |     at Module._load (node:internal/modules/cjs/loader:1096:12)
+0|albpetrol-legal  |     at cjsLoader (node:internal/modules/esm/translators:298:15) {
+0|albpetrol-legal  |   status: 1,
+0|albpetrol-legal  |   signal: null,
+0|albpetrol-legal  |   output: [ null, null, null ],
+0|albpetrol-legal  |   pid: 21210,
+0|albpetrol-legal  |   stdout: null,
+0|albpetrol-legal  |   stderr: null
+0|albpetrol-legal  | }
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | Setting up database...
+0|albpetrol-legal  | Database exists, checking tables...
+0|albpetrol-legal  | No config path provided, using default 'drizzle.config.ts'
+0|albpetrol-legal  | Reading config file '/opt/ceshtje-ligjore/drizzle.config.ts'
+0|albpetrol-legal  | [⣷] Pulling schema from database...
+[✓] Pulling schema from database...
+0|albpetrol-legal  | [i] No changes detected
+0|albpetrol-legal  | Database setup complete. Starting server...
+0|albpetrol-legal  | /opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5
+0|albpetrol-legal  | 	return this[cppdb].prepare(sql, this, false);
+0|albpetrol-legal  | 	                   ^
+0|albpetrol-legal  | SqliteError: no such table: users
+0|albpetrol-legal  |     at Database.prepare (/opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5:21)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareQuery (/opt/ceshtje-ligjore/node_modules/src/better-sqlite3/session.ts:50:28)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareOneTimeQuery (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/session.ts:135:15)
+0|albpetrol-legal  |     at SQLiteSelectBase._prepare (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:865:85)
+0|albpetrol-legal  |     at SQLiteSelectBase.all (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:884:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.execute (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:896:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.then (/opt/ceshtje-ligjore/node_modules/src/query-promise.ts:31:15) {
+0|albpetrol-legal  |   code: 'SQLITE_ERROR'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+0|albpetrol-legal  | Setup failed: Error: Command failed: tsx server/index.ts
+0|albpetrol-legal  |     at genericNodeError (node:internal/errors:984:15)
+0|albpetrol-legal  |     at wrappedFn (node:internal/errors:538:14)
+0|albpetrol-legal  |     at checkExecSyncError (node:child_process:891:11)
+0|albpetrol-legal  |     at execSync (node:child_process:963:15)
+0|albpetrol-legal  |     at Object.<anonymous> (/opt/ceshtje-ligjore/start_server.cjs:18:3)
+0|albpetrol-legal  |     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+0|albpetrol-legal  |     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+0|albpetrol-legal  |     at Module.load (node:internal/modules/cjs/loader:1275:32)
+0|albpetrol-legal  |     at Module._load (node:internal/modules/cjs/loader:1096:12)
+0|albpetrol-legal  |     at cjsLoader (node:internal/modules/esm/translators:298:15) {
+0|albpetrol-legal  |   status: 1,
+0|albpetrol-legal  |   signal: null,
+0|albpetrol-legal  |   output: [ null, null, null ],
+0|albpetrol-legal  |   pid: 21277,
+0|albpetrol-legal  |   stdout: null,
+0|albpetrol-legal  |   stderr: null
+0|albpetrol-legal  | }
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | Setting up database...
+0|albpetrol-legal  | Database exists, checking tables...
+0|albpetrol-legal  | No config path provided, using default 'drizzle.config.ts'
+0|albpetrol-legal  | Reading config file '/opt/ceshtje-ligjore/drizzle.config.ts'
+0|albpetrol-legal  | [⣷] Pulling schema from database...
+[✓] Pulling schema from database...
+0|albpetrol-legal  | [i] No changes detected
+0|albpetrol-legal  | Database setup complete. Starting server...
+0|albpetrol-legal  | /opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5
+0|albpetrol-legal  | 	return this[cppdb].prepare(sql, this, false);
+0|albpetrol-legal  | 	                   ^
+0|albpetrol-legal  | SqliteError: no such table: users
+0|albpetrol-legal  |     at Database.prepare (/opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5:21)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareQuery (/opt/ceshtje-ligjore/node_modules/src/better-sqlite3/session.ts:50:28)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareOneTimeQuery (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/session.ts:135:15)
+0|albpetrol-legal  |     at SQLiteSelectBase._prepare (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:865:85)
+0|albpetrol-legal  |     at SQLiteSelectBase.all (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:884:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.execute (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:896:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.then (/opt/ceshtje-ligjore/node_modules/src/query-promise.ts:31:15) {
+0|albpetrol-legal  |   code: 'SQLITE_ERROR'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+0|albpetrol-legal  | Setup failed: Error: Command failed: tsx server/index.ts
+0|albpetrol-legal  |     at genericNodeError (node:internal/errors:984:15)
+0|albpetrol-legal  |     at wrappedFn (node:internal/errors:538:14)
+0|albpetrol-legal  |     at checkExecSyncError (node:child_process:891:11)
+0|albpetrol-legal  |     at execSync (node:child_process:963:15)
+0|albpetrol-legal  |     at Object.<anonymous> (/opt/ceshtje-ligjore/start_server.cjs:18:3)
+0|albpetrol-legal  |     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+0|albpetrol-legal  |     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+0|albpetrol-legal  |     at Module.load (node:internal/modules/cjs/loader:1275:32)
+0|albpetrol-legal  |     at Module._load (node:internal/modules/cjs/loader:1096:12)
+0|albpetrol-legal  |     at cjsLoader (node:internal/modules/esm/translators:298:15) {
+0|albpetrol-legal  |   status: 1,
+0|albpetrol-legal  |   signal: null,
+0|albpetrol-legal  |   output: [ null, null, null ],
+0|albpetrol-legal  |   pid: 21343,
+0|albpetrol-legal  |   stdout: null,
+0|albpetrol-legal  |   stderr: null
+0|albpetrol-legal  | }
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | Setting up database...
+0|albpetrol-legal  | Database exists, checking tables...
+0|albpetrol-legal  | No config path provided, using default 'drizzle.config.ts'
+0|albpetrol-legal  | Reading config file '/opt/ceshtje-ligjore/drizzle.config.ts'
+0|albpetrol-legal  | [⣷] Pulling schema from database...
+[✓] Pulling schema from database...
+0|albpetrol-legal  | [i] No changes detected
+0|albpetrol-legal  | Database setup complete. Starting server...
+0|albpetrol-legal  | /opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5
+0|albpetrol-legal  | 	return this[cppdb].prepare(sql, this, false);
+0|albpetrol-legal  | 	                   ^
+0|albpetrol-legal  | SqliteError: no such table: users
+0|albpetrol-legal  |     at Database.prepare (/opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5:21)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareQuery (/opt/ceshtje-ligjore/node_modules/src/better-sqlite3/session.ts:50:28)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareOneTimeQuery (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/session.ts:135:15)
+0|albpetrol-legal  |     at SQLiteSelectBase._prepare (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:865:85)
+0|albpetrol-legal  |     at SQLiteSelectBase.all (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:884:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.execute (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:896:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.then (/opt/ceshtje-ligjore/node_modules/src/query-promise.ts:31:15) {
+0|albpetrol-legal  |   code: 'SQLITE_ERROR'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+0|albpetrol-legal  | Setup failed: Error: Command failed: tsx server/index.ts
+0|albpetrol-legal  |     at genericNodeError (node:internal/errors:984:15)
+0|albpetrol-legal  |     at wrappedFn (node:internal/errors:538:14)
+0|albpetrol-legal  |     at checkExecSyncError (node:child_process:891:11)
+0|albpetrol-legal  |     at execSync (node:child_process:963:15)
+0|albpetrol-legal  |     at Object.<anonymous> (/opt/ceshtje-ligjore/start_server.cjs:18:3)
+0|albpetrol-legal  |     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+0|albpetrol-legal  |     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+0|albpetrol-legal  |     at Module.load (node:internal/modules/cjs/loader:1275:32)
+0|albpetrol-legal  |     at Module._load (node:internal/modules/cjs/loader:1096:12)
+0|albpetrol-legal  |     at cjsLoader (node:internal/modules/esm/translators:298:15) {
+0|albpetrol-legal  |   status: 1,
+0|albpetrol-legal  |   signal: null,
+0|albpetrol-legal  |   output: [ null, null, null ],
+0|albpetrol-legal  |   pid: 21409,
+0|albpetrol-legal  |   stdout: null,
+0|albpetrol-legal  |   stderr: null
+0|albpetrol-legal  | }
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | Setting up database...
+0|albpetrol-legal  | Database exists, checking tables...
+0|albpetrol-legal  | No config path provided, using default 'drizzle.config.ts'
+0|albpetrol-legal  | Reading config file '/opt/ceshtje-ligjore/drizzle.config.ts'
+0|albpetrol-legal  | [⣷] Pulling schema from database...
+[✓] Pulling schema from database...
+0|albpetrol-legal  | [i] No changes detected
+0|albpetrol-legal  | Database setup complete. Starting server...
+^C
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

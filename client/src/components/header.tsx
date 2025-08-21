@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,9 +27,20 @@ interface HeaderProps {
 export default function Header({ title, subtitle, onMenuToggle }: HeaderProps) {
   const { user } = useAuth();
   const [showProfileDialog, setShowProfileDialog] = useState(false);
+  const queryClient = useQueryClient();
 
-  const handleLogout = () => {
-    window.location.href = "/api/logout";
+  const handleLogout = async () => {
+    try {
+      // Clear the auth cache first
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+      queryClient.removeQueries({ queryKey: ["/api/auth/user"] });
+      
+      // Then redirect to logout endpoint
+      window.location.href = "/api/auth/logout";
+    } catch (error) {
+      // Fallback: just redirect
+      window.location.href = "/api/auth/logout";
+    }
   };
 
   return (

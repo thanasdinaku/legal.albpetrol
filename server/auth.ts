@@ -183,7 +183,15 @@ export function setupAuth(app: Express) {
   app.get("/api/auth/logout", (req, res, next) => {
     req.logout((err) => {
       if (err) return next(err);
-      res.redirect("/auth");
+      res.redirect("/");
+    });
+  });
+
+  // Also handle /api/logout for backward compatibility
+  app.get("/api/logout", (req, res, next) => {
+    req.logout((err) => {
+      if (err) return next(err);
+      res.redirect("/");
     });
   });
 

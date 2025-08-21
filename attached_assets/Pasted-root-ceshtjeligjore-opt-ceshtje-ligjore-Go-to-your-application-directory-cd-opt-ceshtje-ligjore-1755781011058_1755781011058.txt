@@ -1,0 +1,461 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # Go to your application directory
+cd /opt/ceshtje-ligjore
+
+# Install SQLite dependencies
+npm install better-sqlite3
+
+# Create environment file using SQLite (no authentication needed)
+cat > .env << 'EOF'
+DATABASE_URL=file:./database.sqlite
+NODE_ENV=production
+PORT=5000
+SESSION_SECRET=your_random_secret_here
+ADMIN_EMAIL=it.system@albpetrol.al
+EOF
+
+# Update application from Git
+git pull origin main
+
+# Install dependencies
+npm install
+
+# Build the application
+npm run build
+
+# Create the database schema (this will create SQLite database)
+npm run db:push
+
+# Create PM2 config
+cat > ecosystem.config.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'albpetrol-legal',
+    script: 'npm',
+    args: 'start',
+    env: { NODE_ENV: 'production', PORT: 5000 }
+echo "Application should be running at: http://$(hostname -I | awk '{print $1}')"
+
+added 27 packages, and audited 793 packages in 5s
+
+101 packages are looking for funding
+  run `npm fund` for details
+
+6 vulnerabilities (5 moderate, 1 high)
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+From https://github.com/thanasdinaku/ceshtje_ligjore
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+up to date, audited 793 packages in 1s
+
+101 packages are looking for funding
+  run `npm fund` for details
+
+6 vulnerabilities (5 moderate, 1 high)
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.19 building for production...
+✓ 2399 modules transformed.
+dist/public/index.html                                         1.09 kB │ gzip:   0.62 kB
+dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+dist/public/assets/index-DPP8Sud3.css                        156.99 kB │ gzip:  25.08 kB
+dist/public/assets/index-BQ4hcx7k.js                         815.41 kB │ gzip: 242.37 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 4.48s
+
+  dist/index.js  133.4kb
+
+⚡ Done in 7ms
+
+> rest-express@1.0.0 db:push
+> drizzle-kit push
+
+No config path provided, using default 'drizzle.config.ts'
+Reading config file '/opt/ceshtje-ligjore/drizzle.config.ts'
+Using 'pg' driver for database querying
+[⣷] Pulling schema from database...
+Error: SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string
+    at /opt/ceshtje-ligjore/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.query (/opt/ceshtje-ligjore/node_modules/drizzle-kit/bin.cjs:78355:26)
+    at async fromDatabase2 (/opt/ceshtje-ligjore/node_modules/drizzle-kit/bin.cjs:19095:25)
+[PM2] Applying action deleteProcessId on app [all](ids: [ 0 ])
+[PM2] [all](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2][WARN] Applications albpetrol-legal not running, starting...
+[PM2] App [albpetrol-legal] launched (1 instances)
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ N/A     │ fork    │ 14518    │ 0s     │ 0    │ online    │ 0%       │ 26.0mb   │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ N/A     │ fork    │ 14518    │ 0s     │ 0    │ online    │ 0%       │ 60.9mb   │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[TAILING] Tailing last 10 lines for [all] processes (change the value with --lines option)
+/root/.pm2/pm2.log last 10 lines:
+PM2        | 2025-08-21T12:55:36: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T12:55:37: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2        | 2025-08-21T12:55:37: PM2 log: Script /usr/bin/npm had too many unstable restarts (16). Stopped. "errored"
+PM2        | 2025-08-21T12:55:59: PM2 log: Stopping app:albpetrol-legal id:0
+PM2        | 2025-08-21T12:55:59: PM2 error: app=albpetrol-legal id=0 does not have a pid
+PM2        | 2025-08-21T12:55:59: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T12:55:59: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T12:56:00: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2        | 2025-08-21T12:56:00: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T12:56:00: PM2 log: App [albpetrol-legal:0] online
+
+/root/.pm2/logs/albpetrol-legal-out.log last 10 lines:
+0|albpetro | > NODE_ENV=production node dist/index.js
+0|albpetro | 
+0|albpetro | 
+0|albpetro | > rest-express@1.0.0 start
+0|albpetro | > NODE_ENV=production node dist/index.js
+0|albpetro | 
+0|albpetro | 
+0|albpetro | > rest-express@1.0.0 start
+0|albpetro | > NODE_ENV=production node dist/index.js
+0|albpetro | 
+
+/root/.pm2/logs/albpetrol-legal-error.log last 10 lines:
+0|albpetro |     at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+0|albpetro |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+0|albpetro |     at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+0|albpetro |     at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+0|albpetro |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+0|albpetro |     at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+0|albpetro |   code: 'ERR_MODULE_NOT_FOUND'
+0|albpetro | }
+0|albpetro | 
+0|albpetro | Node.js v20.19.4
+
+0|albpetrol-legal  | > rest-express@1.0.0 start
+0|albpetrol-legal  | > NODE_ENV=production node dist/index.js
+0|albpetrol-legal  | node:internal/modules/esm/resolve:873
+0|albpetrol-legal  |   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+0|albpetrol-legal  |         ^
+0|albpetrol-legal  | Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@neondatabase/serverless' imported from /opt/ceshtje-ligjore/dist/index.js
+0|albpetrol-legal  |     at packageResolve (node:internal/modules/esm/resolve:873:9)
+0|albpetrol-legal  |     at moduleResolve (node:internal/modules/esm/resolve:946:18)
+0|albpetrol-legal  |     at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+0|albpetrol-legal  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+0|albpetrol-legal  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+0|albpetrol-legal  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+0|albpetrol-legal  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+0|albpetrol-legal  |     at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+0|albpetrol-legal  |   code: 'ERR_MODULE_NOT_FOUND'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 start
+0|albpetrol-legal  | > NODE_ENV=production node dist/index.js
+0|albpetrol-legal  | node:internal/modules/esm/resolve:873
+0|albpetrol-legal  |   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+0|albpetrol-legal  |         ^
+0|albpetrol-legal  | Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@neondatabase/serverless' imported from /opt/ceshtje-ligjore/dist/index.js
+0|albpetrol-legal  |     at packageResolve (node:internal/modules/esm/resolve:873:9)
+0|albpetrol-legal  |     at moduleResolve (node:internal/modules/esm/resolve:946:18)
+0|albpetrol-legal  |     at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+0|albpetrol-legal  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+0|albpetrol-legal  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+0|albpetrol-legal  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+0|albpetrol-legal  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+0|albpetrol-legal  |     at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+0|albpetrol-legal  |   code: 'ERR_MODULE_NOT_FOUND'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 start
+0|albpetrol-legal  | > NODE_ENV=production node dist/index.js
+0|albpetrol-legal  | node:internal/modules/esm/resolve:873
+0|albpetrol-legal  |   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+0|albpetrol-legal  |         ^
+0|albpetrol-legal  | Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@neondatabase/serverless' imported from /opt/ceshtje-ligjore/dist/index.js
+0|albpetrol-legal  |     at packageResolve (node:internal/modules/esm/resolve:873:9)
+0|albpetrol-legal  |     at moduleResolve (node:internal/modules/esm/resolve:946:18)
+0|albpetrol-legal  |     at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+0|albpetrol-legal  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+0|albpetrol-legal  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+0|albpetrol-legal  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+0|albpetrol-legal  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+0|albpetrol-legal  |     at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+0|albpetrol-legal  |   code: 'ERR_MODULE_NOT_FOUND'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 start
+0|albpetrol-legal  | > NODE_ENV=production node dist/index.js
+0|albpetrol-legal  | node:internal/modules/esm/resolve:873
+0|albpetrol-legal  |   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+0|albpetrol-legal  |         ^
+0|albpetrol-legal  | Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@neondatabase/serverless' imported from /opt/ceshtje-ligjore/dist/index.js
+0|albpetrol-legal  |     at packageResolve (node:internal/modules/esm/resolve:873:9)
+0|albpetrol-legal  |     at moduleResolve (node:internal/modules/esm/resolve:946:18)
+0|albpetrol-legal  |     at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+0|albpetrol-legal  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+0|albpetrol-legal  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+0|albpetrol-legal  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+0|albpetrol-legal  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+0|albpetrol-legal  |     at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+0|albpetrol-legal  |   code: 'ERR_MODULE_NOT_FOUND'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 start
+0|albpetrol-legal  | > NODE_ENV=production node dist/index.js
+0|albpetrol-legal  | node:internal/modules/esm/resolve:873
+0|albpetrol-legal  |   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+0|albpetrol-legal  |         ^
+0|albpetrol-legal  | Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@neondatabase/serverless' imported from /opt/ceshtje-ligjore/dist/index.js
+0|albpetrol-legal  |     at packageResolve (node:internal/modules/esm/resolve:873:9)
+0|albpetrol-legal  |     at moduleResolve (node:internal/modules/esm/resolve:946:18)
+0|albpetrol-legal  |     at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+0|albpetrol-legal  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+0|albpetrol-legal  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+0|albpetrol-legal  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+0|albpetrol-legal  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+0|albpetrol-legal  |     at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+0|albpetrol-legal  |   code: 'ERR_MODULE_NOT_FOUND'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 start
+0|albpetrol-legal  | > NODE_ENV=production node dist/index.js
+0|albpetrol-legal  | node:internal/modules/esm/resolve:873
+0|albpetrol-legal  |   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+0|albpetrol-legal  |         ^
+0|albpetrol-legal  | Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@neondatabase/serverless' imported from /opt/ceshtje-ligjore/dist/index.js
+0|albpetrol-legal  |     at packageResolve (node:internal/modules/esm/resolve:873:9)
+0|albpetrol-legal  |     at moduleResolve (node:internal/modules/esm/resolve:946:18)
+0|albpetrol-legal  |     at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+0|albpetrol-legal  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+0|albpetrol-legal  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+0|albpetrol-legal  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+0|albpetrol-legal  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+0|albpetrol-legal  |     at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+0|albpetrol-legal  |   code: 'ERR_MODULE_NOT_FOUND'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 start
+0|albpetrol-legal  | > NODE_ENV=production node dist/index.js
+0|albpetrol-legal  | node:internal/modules/esm/resolve:873
+0|albpetrol-legal  |   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+0|albpetrol-legal  |         ^
+0|albpetrol-legal  | Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@neondatabase/serverless' imported from /opt/ceshtje-ligjore/dist/index.js
+0|albpetrol-legal  |     at packageResolve (node:internal/modules/esm/resolve:873:9)
+0|albpetrol-legal  |     at moduleResolve (node:internal/modules/esm/resolve:946:18)
+0|albpetrol-legal  |     at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+0|albpetrol-legal  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+0|albpetrol-legal  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+0|albpetrol-legal  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+0|albpetrol-legal  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+0|albpetrol-legal  |     at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+0|albpetrol-legal  |   code: 'ERR_MODULE_NOT_FOUND'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 start
+0|albpetrol-legal  | > NODE_ENV=production node dist/index.js
+0|albpetrol-legal  | node:internal/modules/esm/resolve:873
+0|albpetrol-legal  |   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+0|albpetrol-legal  |         ^
+0|albpetrol-legal  | Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@neondatabase/serverless' imported from /opt/ceshtje-ligjore/dist/index.js
+0|albpetrol-legal  |     at packageResolve (node:internal/modules/esm/resolve:873:9)
+0|albpetrol-legal  |     at moduleResolve (node:internal/modules/esm/resolve:946:18)
+0|albpetrol-legal  |     at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+0|albpetrol-legal  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+0|albpetrol-legal  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+0|albpetrol-legal  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+0|albpetrol-legal  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+0|albpetrol-legal  |     at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+0|albpetrol-legal  |   code: 'ERR_MODULE_NOT_FOUND'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 start
+0|albpetrol-legal  | > NODE_ENV=production node dist/index.js
+0|albpetrol-legal  | node:internal/modules/esm/resolve:873
+0|albpetrol-legal  |   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+0|albpetrol-legal  |         ^
+0|albpetrol-legal  | Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@neondatabase/serverless' imported from /opt/ceshtje-ligjore/dist/index.js
+0|albpetrol-legal  |     at packageResolve (node:internal/modules/esm/resolve:873:9)
+0|albpetrol-legal  |     at moduleResolve (node:internal/modules/esm/resolve:946:18)
+0|albpetrol-legal  |     at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+0|albpetrol-legal  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+0|albpetrol-legal  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+0|albpetrol-legal  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+0|albpetrol-legal  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+0|albpetrol-legal  |     at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+0|albpetrol-legal  |   code: 'ERR_MODULE_NOT_FOUND'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 start
+0|albpetrol-legal  | > NODE_ENV=production node dist/index.js
+0|albpetrol-legal  | node:internal/modules/esm/resolve:873
+0|albpetrol-legal  |   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+0|albpetrol-legal  |         ^
+0|albpetrol-legal  | Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@neondatabase/serverless' imported from /opt/ceshtje-ligjore/dist/index.js
+0|albpetrol-legal  |     at packageResolve (node:internal/modules/esm/resolve:873:9)
+0|albpetrol-legal  |     at moduleResolve (node:internal/modules/esm/resolve:946:18)
+0|albpetrol-legal  |     at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+0|albpetrol-legal  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+0|albpetrol-legal  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+0|albpetrol-legal  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+0|albpetrol-legal  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+0|albpetrol-legal  |     at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+0|albpetrol-legal  |   code: 'ERR_MODULE_NOT_FOUND'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 start
+0|albpetrol-legal  | > NODE_ENV=production node dist/index.js
+0|albpetrol-legal  | node:internal/modules/esm/resolve:873
+0|albpetrol-legal  |   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+0|albpetrol-legal  |         ^
+0|albpetrol-legal  | Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@neondatabase/serverless' imported from /opt/ceshtje-ligjore/dist/index.js
+0|albpetrol-legal  |     at packageResolve (node:internal/modules/esm/resolve:873:9)
+0|albpetrol-legal  |     at moduleResolve (node:internal/modules/esm/resolve:946:18)
+0|albpetrol-legal  |     at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+0|albpetrol-legal  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+0|albpetrol-legal  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+0|albpetrol-legal  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+0|albpetrol-legal  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+0|albpetrol-legal  |     at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+0|albpetrol-legal  |   code: 'ERR_MODULE_NOT_FOUND'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 start
+0|albpetrol-legal  | > NODE_ENV=production node dist/index.js
+0|albpetrol-legal  | node:internal/modules/esm/resolve:873
+0|albpetrol-legal  |   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+0|albpetrol-legal  |         ^
+0|albpetrol-legal  | Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@neondatabase/serverless' imported from /opt/ceshtje-ligjore/dist/index.js
+0|albpetrol-legal  |     at packageResolve (node:internal/modules/esm/resolve:873:9)
+0|albpetrol-legal  |     at moduleResolve (node:internal/modules/esm/resolve:946:18)
+0|albpetrol-legal  |     at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+0|albpetrol-legal  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+0|albpetrol-legal  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+0|albpetrol-legal  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+0|albpetrol-legal  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+0|albpetrol-legal  |     at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+0|albpetrol-legal  |   code: 'ERR_MODULE_NOT_FOUND'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 start
+0|albpetrol-legal  | > NODE_ENV=production node dist/index.js
+0|albpetrol-legal  | node:internal/modules/esm/resolve:873
+0|albpetrol-legal  |   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+0|albpetrol-legal  |         ^
+0|albpetrol-legal  | Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@neondatabase/serverless' imported from /opt/ceshtje-ligjore/dist/index.js
+0|albpetrol-legal  |     at packageResolve (node:internal/modules/esm/resolve:873:9)
+0|albpetrol-legal  |     at moduleResolve (node:internal/modules/esm/resolve:946:18)
+0|albpetrol-legal  |     at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+0|albpetrol-legal  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+0|albpetrol-legal  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+0|albpetrol-legal  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+0|albpetrol-legal  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+0|albpetrol-legal  |     at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+0|albpetrol-legal  |   code: 'ERR_MODULE_NOT_FOUND'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 start
+0|albpetrol-legal  | > NODE_ENV=production node dist/index.js
+0|albpetrol-legal  | node:internal/modules/esm/resolve:873
+0|albpetrol-legal  |   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+0|albpetrol-legal  |         ^
+0|albpetrol-legal  | Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@neondatabase/serverless' imported from /opt/ceshtje-ligjore/dist/index.js
+0|albpetrol-legal  |     at packageResolve (node:internal/modules/esm/resolve:873:9)
+0|albpetrol-legal  |     at moduleResolve (node:internal/modules/esm/resolve:946:18)
+0|albpetrol-legal  |     at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+0|albpetrol-legal  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+0|albpetrol-legal  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+0|albpetrol-legal  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+0|albpetrol-legal  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+0|albpetrol-legal  |     at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+0|albpetrol-legal  |   code: 'ERR_MODULE_NOT_FOUND'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 start
+0|albpetrol-legal  | > NODE_ENV=production node dist/index.js
+0|albpetrol-legal  | node:internal/modules/esm/resolve:873
+0|albpetrol-legal  |   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+0|albpetrol-legal  |         ^
+0|albpetrol-legal  | Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@neondatabase/serverless' imported from /opt/ceshtje-ligjore/dist/index.js
+0|albpetrol-legal  |     at packageResolve (node:internal/modules/esm/resolve:873:9)
+0|albpetrol-legal  |     at moduleResolve (node:internal/modules/esm/resolve:946:18)
+0|albpetrol-legal  |     at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+0|albpetrol-legal  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+0|albpetrol-legal  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+0|albpetrol-legal  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+0|albpetrol-legal  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+0|albpetrol-legal  |     at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+0|albpetrol-legal  |   code: 'ERR_MODULE_NOT_FOUND'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | Script /usr/bin/npm had too many unstable restarts (16). Stopped. "errored"
+
+^C
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Couldn't connect to server
+
+Application should be running at: http://10.5.20.31
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

@@ -1,6 +1,6 @@
 import { db } from './db';
 import { dataEntries, systemSettings } from '@shared/schema';
-import { sendCourtHearingNotification } from './emailService';
+import { sendCourtHearingNotification } from './simpleEmailService';
 import { sql } from 'drizzle-orm';
 
 interface HearingCheck {

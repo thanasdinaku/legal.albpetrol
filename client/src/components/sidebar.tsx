@@ -102,6 +102,13 @@ export default function Sidebar({ isOpen = true, onClose, className }: SidebarPr
               <i className="fas fa-cog"></i>
               <span className="text-sm sm:text-base">Cilësimet e Sistemit</span>
             </button>
+            <button
+              onClick={() => handleNavigation('/backup-restore')}
+              className={isActive('/backup-restore') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
+            >
+              <i className="fas fa-database"></i>
+              <span className="text-sm sm:text-base">Backup dhe Restaurim</span>
+            </button>
           </div>
         )}
         

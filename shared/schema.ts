@@ -9,6 +9,7 @@ import {
   serial,
   pgEnum,
   boolean,
+  integer,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -202,6 +203,24 @@ export const emailNotificationSchema = z.object({
   subject: z.string().min(1, "Tema është e kërkuar").default("Hyrje e re në sistemin e menaxhimit të çështjeve ligjore"),
   includeDetails: z.boolean().default(true),
 });
+
+// System backups table
+export const systemBackups = pgTable("system_backups", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  filename: varchar("filename").notNull(),
+  filepath: varchar("filepath").notNull(),
+  size: integer("size").notNull(),
+  type: varchar("type").notNull(), // 'full', 'data-only', 'config-only'
+  description: varchar("description"),
+  tables: jsonb("tables").notNull(), // array of table names
+  recordCount: integer("record_count").notNull(),
+  checksum: varchar("checksum").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  createdBy: varchar("created_by").references(() => users.id),
+});
+
+export type SystemBackup = typeof systemBackups.$inferSelect;
+export type InsertSystemBackup = typeof systemBackups.$inferInsert;
 
 // Types
 export type User = typeof users.$inferSelect;

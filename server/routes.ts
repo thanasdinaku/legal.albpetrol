@@ -41,6 +41,7 @@ import { sendNewEntryNotification, sendEditEntryNotification, sendDeleteEntryNot
 import { generateUserManual } from "./fixed-manual";
 import { generateSimpleManual } from "./simple-manual";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
+import { BackupService, type BackupOptions, type BackupProgress } from "./backup-service";
 import multer from "multer";
 
 // Configure multer for file uploads
@@ -71,6 +72,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Auth middleware
   setupAuth(app);
+  
+  // Initialize backup service
+  const backupService = new BackupService();
   
   // Ensure default admin exists on startup
   await storage.ensureDefaultAdmin();
@@ -895,6 +899,99 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
         success: false,
         message: "Email connection test failed" 
       });
+    }
+  });
+
+  // System backup and restore routes
+  app.get('/api/system/status', isAuthenticated, async (req, res) => {
+    try {
+      const status = await backupService.getSystemStatus();
+      res.json(status);
+    } catch (error) {
+      console.error('Error getting system status:', error);
+      res.status(500).json({ error: 'Failed to get system status' });
+    }
+  });
+
+  app.get('/api/system/backups', isAuthenticated, async (req, res) => {
+    try {
+      const backups = await backupService.getBackups();
+      res.json(backups);
+    } catch (error) {
+      console.error('Error getting backups:', error);
+      res.status(500).json({ error: 'Failed to get backups' });
+    }
+  });
+
+  app.post('/api/system/backup/create', isAuthenticated, isAdmin, async (req, res) => {
+    try {
+      const { type, description } = req.body;
+      const userId = (req as any).user?.id;
+      
+      const options: BackupOptions = {
+        type,
+        description,
+        createdBy: userId
+      };
+
+      // Set up streaming response
+      res.writeHead(200, {
+        'Content-Type': 'application/json',
+        'Transfer-Encoding': 'chunked',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive'
+      });
+
+      const backupId = await backupService.createBackup(options, (progress: BackupProgress) => {
+        res.write(JSON.stringify(progress) + '\n');
+      });
+
+      res.end(JSON.stringify({ backupId, success: true }));
+    } catch (error) {
+      console.error('Error creating backup:', error);
+      if (!res.headersSent) {
+        res.status(500).json({ error: 'Failed to create backup' });
+      } else {
+        res.end(JSON.stringify({ error: 'Failed to create backup' }));
+      }
+    }
+  });
+
+  app.post('/api/system/backup/restore/:id', isAuthenticated, isAdmin, async (req, res) => {
+    try {
+      const backupId = req.params.id;
+
+      // Set up streaming response
+      res.writeHead(200, {
+        'Content-Type': 'application/json',
+        'Transfer-Encoding': 'chunked',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive'
+      });
+
+      await backupService.restoreBackup(backupId, (progress: BackupProgress) => {
+        res.write(JSON.stringify(progress) + '\n');
+      });
+
+      res.end(JSON.stringify({ success: true }));
+    } catch (error) {
+      console.error('Error restoring backup:', error);
+      if (!res.headersSent) {
+        res.status(500).json({ error: 'Failed to restore backup' });
+      } else {
+        res.end(JSON.stringify({ error: 'Failed to restore backup' }));
+      }
+    }
+  });
+
+  app.delete('/api/system/backup/delete/:id', isAuthenticated, isAdmin, async (req, res) => {
+    try {
+      const backupId = req.params.id;
+      await backupService.deleteBackup(backupId);
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error deleting backup:', error);
+      res.status(500).json({ error: 'Failed to delete backup' });
     }
   });
 

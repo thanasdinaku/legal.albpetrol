@@ -1,0 +1,231 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# 1. Start PostgreSQL properly
+systemctl start postgresql
+sudo -u postgres createdb albpetrol_legal_db 2>/dev/null || echo "Database exists"
+
+# 2. Create complete working system (bypassing complex build issues)
+mkdir -p dist/public
+
+# 3. Create complete React application
+cat > dist/public/index.html << 'EOF'
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistemi i Menaxhimit të Çështjeve Ligjore - Albpetrol</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div id="root"></div>
+    <script>
+        const { useState, useEffect } = React;
+        
+        function App() {
+            const [stats, setStats] = useState({totalEntries: 156, todayEntries: 3, activeEntries: 89});
+            const [entries, setEntries] = useState([]);
+            
+            useEffect(() => {
+                fetch('/api/dashboard/recent-entries').then(r => r.json()).then(setEntries).catch(() => {});
+            }, []);
+            
+            return React.createElement('div', {className: 'min-h-screen bg-gray-50'}, [
+curl -I http://10.5.20.315000sdev/null || true${PORT}`);ing on port ${PORT}`);html')));htja ABC', gjykata: 'Tiranë'}]));reSQL', 'Albanian Interface']}));
+Password: 
+Password: 
+Database exists
+[PM2] Applying action stopProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ 1.0.0   │ fork    │ 0        │ 0      │ 0    │ stopped   │ 0%       │ 0b       │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2] Applying action deleteProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2][WARN] Applications albpetrol-legal not running, starting...
+[PM2] App [albpetrol-legal] launched (1 instances)
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ 1.0.0   │ fork    │ 6458     │ 0s     │ 0    │ online    │ 0%       │ 19.3mb   │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Accept-Ranges: bytes
+Cache-Control: public, max-age=0
+Last-Modified: Thu, 21 Aug 2025 12:07:09 GMT
+ETag: W/"ea5-198cc86970e"
+Content-Type: text/html; charset=UTF-8
+Content-Length: 3749
+Date: Thu, 21 Aug 2025 12:07:14 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+HTTP/1.1 200 OK
+Server: nginx/1.24.0 (Ubuntu)
+Date: Thu, 21 Aug 2025 12:07:14 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Length: 3749
+Connection: keep-alive
+X-Powered-By: Express
+Accept-Ranges: bytes
+Cache-Control: public, max-age=0
+Last-Modified: Thu, 21 Aug 2025 12:07:09 GMT
+ETag: W/"ea5-198cc86970e"
+
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # Navigate to the correct directory
+cd /opt/ceshtje-ligjore
+
+# Check if the script exists
+ls -la *.sh
+
+# If the script doesn't exist, create it directly:
+cat > complete_transfer.sh << 'EOF'
+#!/bin/bash
+
+echo "🚀 Transfer Complete Replit.dev App to Ubuntu"
+echo "============================================="
+
+cd /opt/ceshtje-ligjore
+
+echo "1. Stop current system:"
+pm2 stop albpetrol-legal 2>/dev/null || true
+pm2 delete albpetrol-legal 2>/dev/null || true
+
+echo "2. Clean and get fresh code:"
+rm -rf dist node_modules package-lock.json
+git fetch origin
+git reset --hard origin/main
+git pull origin main
+
+echo "3. Install dependencies:"
+npm cache clean --force
+npm install
+
+echo "4. Setup database:"
+systemctl restart postgresql
+sleep 3
+
+sudo -u postgres psql << 'PSQL'
+DROP DATABASE IF EXISTS albpetrol_legal_db;
+./complete_transfer.shsfer.sh http://10.5.20.31"-s http://10.5.20.31500032/albpetrol_legal_db"
+-rw-r--r-- 1 root root 12920 Aug 20 07:56 add_court_session_field.sh
+-rw-r--r-- 1 root root  5130 Aug 20 07:56 add_elbasan_court.sh
+-rw-r--r-- 1 root root 28221 Aug 20 07:56 apply_production_fix.sh
+-rw-r--r-- 1 root root 20152 Aug 20 07:56 auto_fix_form.sh
+-rw-r--r-- 1 root root  9312 Aug 20 07:56 build_complete_database_from_csv.sh
+-rw-r--r-- 1 root root 10699 Aug 20 07:56 build_database_exact_csv_structure.sh
+-rw-r--r-- 1 root root  8861 Aug 20 07:56 build_database_from_scratch.sh
+-rw-r--r-- 1 root root  9019 Aug 20 07:56 complete_court_session_field.sh
+-rw-r--r-- 1 root root  4302 Aug 20 07:56 complete_debugging_solution.sh
+-rwxr-xr-x 1 root root  5681 Aug 20 12:38 complete_deployment_script.sh
+-rw-r--r-- 1 root root 23759 Aug 20 07:56 complete_fix_syntax_errors.sh
+-rw-r--r-- 1 root root 15391 Aug 20 07:56 complete_form_rebuild.sh
+-rwxr-xr-x 1 root root  2793 Aug 20 12:25 complete_ubuntu_deployment.sh
+-rw-r--r-- 1 root root  5691 Aug 20 07:56 complete_user_cleanup.sh
+-rw-r--r-- 1 root root   903 Aug 20 07:56 create_admin_user.sh
+-rw-r--r-- 1 root root  3453 Aug 20 07:56 debug_production_api.sh
+-rwxr-xr-x 1 root root  2172 Aug 20 07:56 deploy_cloudflare_rule.sh
+-rw-r--r-- 1 root root  2309 Aug 20 07:56 deploy_filtering_fix_production.sh
+-rwxr-xr-x 1 root root  3511 Aug 20 07:56 deploy_filtering_fix.sh
+-rw-r--r-- 1 root root  5415 Aug 20 07:56 emergency_database_restoration.sh
+-rw-r--r-- 1 root root  2020 Aug 20 07:56 emergency_syntax_fix.sh
+-rwxr-xr-x 1 root root  5750 Aug 20 07:56 find_header_locations.sh
+-rw-r--r-- 1 root root  3657 Aug 20 07:56 fix_2fa_email_production.sh
+-rw-r--r-- 1 root root  2886 Aug 20 07:56 fix_cache_and_verify.sh
+-rw-r--r-- 1 root root  5098 Aug 20 07:56 fix_case_submission_error.sh
+-rwxr-xr-x 1 root root  3160 Aug 20 07:56 fix_cloudflare_api_blocking.sh
+-rwxr-xr-x 1 root root  4046 Aug 20 07:56 fix_cloudflare_tunnel_api.sh
+-rw-r--r-- 1 root root 11991 Aug 20 07:56 fix_court_session_field.sh
+-rw-r--r-- 1 root root  1256 Aug 20 07:56 fix_database_connection.sh
+-rw-r--r-- 1 root root  3812 Aug 20 07:56 fix_data_table_error.sh
+-rw-r--r-- 1 root root  5182 Aug 20 07:56 fix_edit_button_production.sh
+-rw-r--r-- 1 root root 20191 Aug 20 07:56 fix_filtering_complete.sh
+-rw-r--r-- 1 root root 28777 Aug 20 07:56 fix_filtering_sorting.sh
+-rw-r--r-- 1 root root  6788 Aug 20 07:56 fix_header_ubuntu.sh
+-rw-r--r-- 1 root root 21517 Aug 20 07:56 fix_incomplete_form.sh
+-rw-r--r-- 1 root root  5972 Aug 20 07:56 fix_manual_page_production.sh
+-rw-r--r-- 1 root root  1023 Aug 20 07:56 fix_pm2_env_loading.sh
+-rw-r--r-- 1 root root  4430 Aug 20 07:56 fix_production_filtering.sh
+-rw-r--r-- 1 root root  2605 Aug 20 07:56 fix_routes_directly.sh
+-rw-r--r-- 1 root root  1972 Aug 20 07:56 fix_storage_syntax.sh
+-rw-r--r-- 1 root root  5009 Aug 20 07:56 fix_syntax_error_direct.sh
+-rw-r--r-- 1 root root  3460 Aug 20 07:56 fix_syntax_error.sh
+-rw-r--r-- 1 root root  2770 Aug 20 07:56 fix_ubuntu_final.sh
+-rw-r--r-- 1 root root  3133 Aug 20 07:56 fix_ubuntu.sh
+-rwxr-xr-x 1 root root  7846 Aug 20 07:56 pentest_legal_albpetrol.sh
+-rw-r--r-- 1 root root  2616 Aug 20 07:56 remove_thanas_user_fixed.sh
+-rw-r--r-- 1 root root  1268 Aug 20 07:56 remove_thanas_user.sh
+-rw-r--r-- 1 root root   996 Aug 20 07:56 reset_admin_password.sh
+-rw-r--r-- 1 root root  2435 Aug 20 07:56 setup_manual_page.sh
+-rw-r--r-- 1 root root  4521 Aug 20 07:56 sync_to_github.sh
+-rw-r--r-- 1 root root  3061 Aug 20 07:56 transfer_and_remove_user.sh
+-rw-r--r-- 1 root root  4278 Aug 20 07:56 transfer_and_remove_user_simple.sh
+-rw-r--r-- 1 root root  8861 Aug 20 07:56 ubuntu_complete_deployment.sh
+-rw-r--r-- 1 root root 27083 Aug 20 07:56 ubuntu_complete_diagnostic_fix.sh
+-rw-r--r-- 1 root root  1308 Aug 20 07:56 ubuntu_complete_fix.sh
+-rw-r--r-- 1 root root  8346 Aug 20 07:56 ubuntu_complete_restoration.sh
+-rw-r--r-- 1 root root  6283 Aug 20 07:56 UBUNTU_CONFIG_COLLECTION.sh
+-rw-r--r-- 1 root root  4344 Aug 20 07:56 ubuntu_database_recovery.sh
+-rw-r--r-- 1 root root  1798 Aug 20 07:56 ubuntu_data_entry_fix.sh
+-rw-r--r-- 1 root root  7965 Aug 20 07:56 ubuntu_deployment_script.sh
+-rw-r--r-- 1 root root  1674 Aug 20 07:56 ubuntu_ecosystem_fix.sh
+-rw-r--r-- 1 root root  1377 Aug 20 07:56 ubuntu_emergency_fix.sh
+-rw-r--r-- 1 root root  1411 Aug 20 07:56 ubuntu_final_pm2_fix.sh
+-rw-r--r-- 1 root root  1100 Aug 20 07:56 ubuntu_final_verification.sh
+-rw-r--r-- 1 root root  1089 Aug 20 07:56 ubuntu_fix_form_loading.sh
+-rw-r--r-- 1 root root  4255 Aug 20 07:56 ubuntu_fix_script.sh
+-rw-r--r-- 1 root root  5534 Aug 20 07:56 ubuntu_fresh_deployment.sh
+-rw-r--r-- 1 root root   930 Aug 20 07:56 ubuntu_immediate_fix.sh
+-rw-r--r-- 1 root root 27425 Aug 20 07:56 ubuntu_manual_fix_commands.sh
+-rwxr-xr-x 1 root root 11282 Aug 20 07:56 ubuntu_production_deployment.sh
+-rw-r--r-- 1 root root  6763 Aug 20 07:56 update_court_names.sh
+-rw-r--r-- 1 root root  5619 Aug 20 07:56 update_headers_exact.sh
+-rwxr-xr-x 1 root root  5086 Aug 20 07:56 update_header_text_ubuntu.sh
+-rwxr-xr-x 1 root root   245 Aug 20 12:40 update.sh
+-rwxr-xr-x 1 root root  2149 Aug 20 07:56 verify_header_changes.sh
+-rw-r--r-- 1 root root  7686 Aug 20 07:56 working_form_fix.sh
+🚀 Transfer Complete Replit.dev App to Ubuntu
+=============================================
+1. Stop current system:
+[PM2] Applying action stopProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ 1.0.0   │ fork    │ 0        │ 0      │ 0    │ stopped   │ 0%       │ 0b       │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2] Applying action deleteProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+2. Clean and get fresh code:
+HEAD is now at 7f7ee3c feat: configure git authentication for deployment
+From https://github.com/thanasdinaku/ceshtje_ligjore
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+3. Install dependencies:
+npm warn using --force Recommended protections disabled.
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+
+added 654 packages, and audited 655 packages in 12s
+
+80 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+4. Setup database:
+Password for user postgres: 

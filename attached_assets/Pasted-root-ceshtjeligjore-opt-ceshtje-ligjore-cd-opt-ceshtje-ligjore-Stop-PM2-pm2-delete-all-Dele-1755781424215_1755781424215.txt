@@ -1,0 +1,212 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Stop PM2
+pm2 delete all
+
+# Delete the existing SQLite database to force recreation
+rm -f database.sqlite
+
+# Force recreate the database with proper schema
+npm run db:push
+
+# Create a simple server startup script that ensures database exists
+cat > start_server.js << 'EOF'
+const { execSync } = require('child_process');
+const fs = require('fs');
+
+console.log('Ensuring database exists...');
+
+// Check if database exists, if not create it
+if (!fs.existsSync('./database.sqlite')) {
+  console.log('Creating database...');
+  execSync('npm run db:push', { stdio: 'inherit' });
+}
+
+console.log('Starting server...');
+execSync('tsx server/index.ts', { stdio: 'inherit' });
+EOF
+
+# Update PM2 config to use our startup script
+cat > ecosystem.config.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'albpetrol-legal',
+    script: 'node',
+    args: 'start_server.js',
+echo "Application available at: http://$(hostname -I | awk '{print $1}')"
+[PM2] Applying action deleteProcessId on app [all](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+
+> rest-express@1.0.0 db:push
+> drizzle-kit push
+
+No config path provided, using default 'drizzle.config.ts'
+Reading config file '/opt/ceshtje-ligjore/drizzle.config.ts'
+[✓] Pulling schema from database...
+
+[i] No changes detected
+[PM2][WARN] Applications albpetrol-legal not running, starting...
+[PM2] App [albpetrol-legal] launched (1 instances)
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ N/A     │ fork    │ 19274    │ 0s     │ 0    │ online    │ 0%       │ 19.3mb   │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ N/A     │ fork    │ 19314    │ 0s     │ 3    │ online    │ 0%       │ 41.5mb   │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[TAILING] Tailing last 5 lines for [all] processes (change the value with --lines option)
+/root/.pm2/pm2.log last 5 lines:
+PM2        | 2025-08-21T13:03:10: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2        | 2025-08-21T13:03:10: PM2 error: Error caught while calling pidusage
+PM2        | 2025-08-21T13:03:10: PM2 error: Error: No matching pid found
+PM2        | 2025-08-21T13:03:10: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:03:10: PM2 log: App [albpetrol-legal:0] online
+
+/root/.pm2/logs/albpetrol-legal-out.log last 5 lines:
+0|albpetro | 
+0|albpetro | 
+0|albpetro | > rest-express@1.0.0 dev
+0|albpetro | > NODE_ENV=development tsx server/index.ts
+0|albpetro | 
+
+/root/.pm2/logs/albpetrol-legal-error.log last 5 lines:
+0|albpetro |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetro |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetro | 
+0|albpetro | Node.js v20.19.4
+
+0|albpetrol-legal  | file:///opt/ceshtje-ligjore/start_server.js:1
+0|albpetrol-legal  | const { execSync } = require('child_process');
+0|albpetrol-legal  |                      ^
+0|albpetrol-legal  | ReferenceError: require is not defined in ES module scope, you can use import instead
+0|albpetrol-legal  | This file is being treated as an ES module because it has a '.js' file extension and '/opt/ceshtje-ligjore/package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+0|albpetrol-legal  |     at file:///opt/ceshtje-ligjore/start_server.js:1:22
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | file:///opt/ceshtje-ligjore/start_server.js:1
+0|albpetrol-legal  | const { execSync } = require('child_process');
+0|albpetrol-legal  |                      ^
+0|albpetrol-legal  | ReferenceError: require is not defined in ES module scope, you can use import instead
+0|albpetrol-legal  | This file is being treated as an ES module because it has a '.js' file extension and '/opt/ceshtje-ligjore/package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+0|albpetrol-legal  |     at file:///opt/ceshtje-ligjore/start_server.js:1:22
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | file:///opt/ceshtje-ligjore/start_server.js:1
+0|albpetrol-legal  | const { execSync } = require('child_process');
+0|albpetrol-legal  |                      ^
+0|albpetrol-legal  | ReferenceError: require is not defined in ES module scope, you can use import instead
+0|albpetrol-legal  | This file is being treated as an ES module because it has a '.js' file extension and '/opt/ceshtje-ligjore/package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+0|albpetrol-legal  |     at file:///opt/ceshtje-ligjore/start_server.js:1:22
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | file:///opt/ceshtje-ligjore/start_server.js:1
+0|albpetrol-legal  | const { execSync } = require('child_process');
+0|albpetrol-legal  |                      ^
+0|albpetrol-legal  | ReferenceError: require is not defined in ES module scope, you can use import instead
+0|albpetrol-legal  | This file is being treated as an ES module because it has a '.js' file extension and '/opt/ceshtje-ligjore/package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+0|albpetrol-legal  |     at file:///opt/ceshtje-ligjore/start_server.js:1:22
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | file:///opt/ceshtje-ligjore/start_server.js:1
+0|albpetrol-legal  | const { execSync } = require('child_process');
+0|albpetrol-legal  |                      ^
+0|albpetrol-legal  | ReferenceError: require is not defined in ES module scope, you can use import instead
+0|albpetrol-legal  | This file is being treated as an ES module because it has a '.js' file extension and '/opt/ceshtje-ligjore/package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+0|albpetrol-legal  |     at file:///opt/ceshtje-ligjore/start_server.js:1:22
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | file:///opt/ceshtje-ligjore/start_server.js:1
+0|albpetrol-legal  | const { execSync } = require('child_process');
+0|albpetrol-legal  |                      ^
+0|albpetrol-legal  | ReferenceError: require is not defined in ES module scope, you can use import instead
+0|albpetrol-legal  | This file is being treated as an ES module because it has a '.js' file extension and '/opt/ceshtje-ligjore/package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+0|albpetrol-legal  |     at file:///opt/ceshtje-ligjore/start_server.js:1:22
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | file:///opt/ceshtje-ligjore/start_server.js:1
+0|albpetrol-legal  | const { execSync } = require('child_process');
+0|albpetrol-legal  |                      ^
+0|albpetrol-legal  | ReferenceError: require is not defined in ES module scope, you can use import instead
+0|albpetrol-legal  | This file is being treated as an ES module because it has a '.js' file extension and '/opt/ceshtje-ligjore/package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+0|albpetrol-legal  |     at file:///opt/ceshtje-ligjore/start_server.js:1:22
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | file:///opt/ceshtje-ligjore/start_server.js:1
+0|albpetrol-legal  | const { execSync } = require('child_process');
+0|albpetrol-legal  |                      ^
+0|albpetrol-legal  | ReferenceError: require is not defined in ES module scope, you can use import instead
+0|albpetrol-legal  | This file is being treated as an ES module because it has a '.js' file extension and '/opt/ceshtje-ligjore/package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+0|albpetrol-legal  |     at file:///opt/ceshtje-ligjore/start_server.js:1:22
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | file:///opt/ceshtje-ligjore/start_server.js:1
+0|albpetrol-legal  | const { execSync } = require('child_process');
+0|albpetrol-legal  |                      ^
+0|albpetrol-legal  | ReferenceError: require is not defined in ES module scope, you can use import instead
+0|albpetrol-legal  | This file is being treated as an ES module because it has a '.js' file extension and '/opt/ceshtje-ligjore/package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+0|albpetrol-legal  |     at file:///opt/ceshtje-ligjore/start_server.js:1:22
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | Script /usr/bin/node had too many unstable restarts (16). Stopped. "errored"
+^C
+
+
+
+
+
+
+^C
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Couldn't connect to server
+
+Application available at: http://10.5.20.31
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

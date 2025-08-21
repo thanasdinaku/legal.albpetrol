@@ -134,8 +134,9 @@ export default function EmailNotificationSettings() {
       <Alert>
         <Clock className="h-4 w-4" />
         <AlertDescription>
-          Sistemi do të dërgojë automatikisht njoftimet me email 24 orë përpara çdo seance gjyqësore të caktuar 
-          në fushat "Zhvillimi i seances gjyqesorë (Shkallë I)" ose "Zhvillimi i seances gjyqesorë (Apel)".
+          Sistemi do të dërgojë automatikisht njoftimet me email për:
+          • Seanca gjyqësore: 24 orë përpara çdo seance të caktuar
+          • Përditësimet e çështjeve: kur çështjet krijohen, përditësohen, ose fshihen
         </AlertDescription>
       </Alert>
 
@@ -183,7 +184,7 @@ export default function EmailNotificationSettings() {
                     data-testid="input-recipient-email"
                   />
                   <p className="text-sm text-gray-500">
-                    Adresa ku do të dërgohen njoftimet për seanca gjyqësore
+                    Adresa ku do të dërgohen njoftimet për seanca gjyqësore dhe përditësimet e çështjeve
                   </p>
                 </div>
 
@@ -263,11 +264,12 @@ export default function EmailNotificationSettings() {
               </div>
               <div className="space-y-2">
                 <h4 className="font-medium text-green-900">Njoftimet janë aktive</h4>
-                <p className="text-sm text-green-700">
-                  Formati i njoftimit: "Tomorrow, a court hearing will take place for [Paditesi] and [I Paditur] at [ora e seancës]"
-                </p>
+                <div className="space-y-2 text-sm text-green-700">
+                  <p><strong>Njoftimet për seanca:</strong> "Tomorrow, a court hearing will take place for [Paditesi] and [I Paditur] at [ora e seancës]"</p>
+                  <p><strong>Njoftimet për përditësime:</strong> "Përditësim çështjeje: [Paditesi] kundrejt [I Paditur] [u krijua/u përditësua/u fshi]"</p>
+                </div>
                 <p className="text-xs text-green-600">
-                  Sistemi kontrollon çdo orë për seanca që do të zhvillohen brenda 24 orëve të ardhshme.
+                  Sistemi kontrollon çdo orë për seanca dhe dërgon njoftimet menjëherë për përditësimet e çështjeve.
                 </p>
               </div>
             </div>

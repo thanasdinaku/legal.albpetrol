@@ -38,6 +38,7 @@ import { db } from "./db";
 import { sql } from "drizzle-orm";
 import { sessions } from "@shared/schema";
 import { sendNewEntryNotification, sendEditEntryNotification, sendDeleteEntryNotification, testEmailConnection } from "./email";
+import { sendCaseUpdateNotification } from "./emailService";
 import { generateUserManual } from "./fixed-manual";
 import { generateSimpleManual } from "./simple-manual";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
@@ -141,12 +142,30 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
       // Send email notification
       try {
         const emailSettings = await storage.getEmailNotificationSettings();
-        if (emailSettings.enabled && emailSettings.emailAddresses.length > 0) {
+        if (emailSettings.enabled) {
           const creator = await storage.getUser(userId);
           if (creator) {
-            // Get the correct Nr. Rendor by counting total entries
-            const totalEntries = await storage.getDataEntriesCount();
-            await sendNewEntryNotification(entry, creator, emailSettings, totalEntries);
+            // Send legacy notification (existing functionality)
+            if (emailSettings.emailAddresses.length > 0) {
+              const totalEntries = await storage.getDataEntriesCount();
+              await sendNewEntryNotification(entry, creator, emailSettings, totalEntries);
+            }
+            
+            // Send new case update notification
+            if (emailSettings.recipientEmail) {
+              await sendCaseUpdateNotification(
+                emailSettings.recipientEmail,
+                emailSettings.senderEmail || 'legal-system@albpetrol.al',
+                {
+                  caseId: entry.id,
+                  paditesi: entry.paditesi || 'N/A',
+                  iPaditur: entry.iPaditur || 'N/A',
+                  updateType: 'created',
+                  updatedBy: creator.email || creator.firstName || 'System User',
+                  timestamp: new Date().toISOString()
+                }
+              );
+            }
           }
         }
       } catch (emailError) {
@@ -261,14 +280,51 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
       // Send email notification for edit
       try {
         const emailSettings = await storage.getEmailNotificationSettings();
-        if (emailSettings.enabled && emailSettings.emailAddresses.length > 0) {
+        if (emailSettings.enabled) {
           const editor = await storage.getUser(userId);
           if (editor) {
-            // Calculate correct Nr. Rendor using same logic as in storage
-            const allEntries = await storage.getDataEntriesForExport();
-            const entryIndex = allEntries.findIndex(e => e.id === entry.id);
-            const nrRendor = entryIndex >= 0 ? allEntries.length - entryIndex : undefined;
-            await sendEditEntryNotification(existingEntry, entry, editor, emailSettings, nrRendor);
+            // Send legacy notification (existing functionality)
+            if (emailSettings.emailAddresses.length > 0) {
+              const allEntries = await storage.getDataEntriesForExport();
+              const entryIndex = allEntries.findIndex(e => e.id === entry.id);
+              const nrRendor = entryIndex >= 0 ? allEntries.length - entryIndex : undefined;
+              await sendEditEntryNotification(existingEntry, entry, editor, emailSettings, nrRendor);
+            }
+            
+            // Send new case update notification with change tracking
+            if (emailSettings.recipientEmail) {
+              // Track changes between old and new data
+              const changes: Record<string, { old: any; new: any }> = {};
+              const fieldsToCheck = [
+                'paditesi', 'iPaditur', 'personITrete', 'objektiIPadise', 
+                'gjykataShkalle', 'fazaGjykataShkalle', 'zhvillimiSeancesShkalleI',
+                'gjykataApelit', 'fazaGjykataApelit', 'zhvillimiSeancesApel',
+                'fazaAktuale', 'perfaqesuesi', 'demiIPretenduar', 'shumaGjykata',
+                'vendimEkzekutim', 'fazaEkzekutim', 'ankimuar', 'perfunduar', 'gjykataLarte'
+              ];
+              
+              fieldsToCheck.forEach(field => {
+                const oldValue = (existingEntry as any)[field];
+                const newValue = (entry as any)[field];
+                if (oldValue !== newValue) {
+                  changes[field] = { old: oldValue, new: newValue };
+                }
+              });
+
+              await sendCaseUpdateNotification(
+                emailSettings.recipientEmail,
+                emailSettings.senderEmail || 'legal-system@albpetrol.al',
+                {
+                  caseId: entry.id,
+                  paditesi: entry.paditesi || 'N/A',
+                  iPaditur: entry.iPaditur || 'N/A',
+                  updateType: 'updated',
+                  updatedBy: editor.email || editor.firstName || 'System User',
+                  timestamp: new Date().toISOString(),
+                  changes: Object.keys(changes).length > 0 ? changes : undefined
+                }
+              );
+            }
           }
         }
       } catch (emailError) {
@@ -313,14 +369,32 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
       // Send email notification before deletion
       try {
         const emailSettings = await storage.getEmailNotificationSettings();
-        if (emailSettings.enabled && emailSettings.emailAddresses.length > 0) {
+        if (emailSettings.enabled) {
           const deleter = await storage.getUser(userId);
           if (deleter) {
-            // Calculate correct Nr. Rendor using same logic as in storage
-            const allEntries = await storage.getDataEntriesForExport();
-            const entryIndex = allEntries.findIndex(e => e.id === existingEntry.id);
-            const nrRendor = entryIndex >= 0 ? allEntries.length - entryIndex : undefined;
-            await sendDeleteEntryNotification(existingEntry, deleter, emailSettings, nrRendor);
+            // Send legacy notification (existing functionality)
+            if (emailSettings.emailAddresses.length > 0) {
+              const allEntries = await storage.getDataEntriesForExport();
+              const entryIndex = allEntries.findIndex(e => e.id === existingEntry.id);
+              const nrRendor = entryIndex >= 0 ? allEntries.length - entryIndex : undefined;
+              await sendDeleteEntryNotification(existingEntry, deleter, emailSettings, nrRendor);
+            }
+            
+            // Send new case update notification for deletion
+            if (emailSettings.recipientEmail) {
+              await sendCaseUpdateNotification(
+                emailSettings.recipientEmail,
+                emailSettings.senderEmail || 'legal-system@albpetrol.al',
+                {
+                  caseId: existingEntry.id,
+                  paditesi: existingEntry.paditesi || 'N/A',
+                  iPaditur: existingEntry.iPaditur || 'N/A',
+                  updateType: 'deleted',
+                  updatedBy: deleter.email || deleter.firstName || 'System User',
+                  timestamp: new Date().toISOString()
+                }
+              );
+            }
           }
         }
       } catch (emailError) {
@@ -981,11 +1055,27 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
         }
       );
 
+      // Test case update notification
+      const caseUpdateTest = await sendCaseUpdateNotification(
+        settings.recipientEmail,
+        settings.senderEmail || 'legal-system@albpetrol.al',
+        {
+          caseId: 998,
+          paditesi: 'Test Case Plaintiff',
+          iPaditur: 'Test Case Defendant',
+          updateType: 'updated',
+          updatedBy: 'System Test',
+          timestamp: new Date().toISOString(),
+          changes: {
+            'fazaAktuale': { old: 'Faza e parë', new: 'Faza e dytë' },
+            'perfaqesuesi': { old: 'Avocat A', new: 'Avocat B' }
+          }
+        }
+      );
+
       res.json({ 
-        success: courtTest,
-        message: courtTest 
-          ? "Both basic email and court hearing notification sent successfully" 
-          : "Court hearing notification failed to send"
+        success: basicTest && courtTest && caseUpdateTest,
+        message: `Tests completed: Basic email: ${basicTest ? 'success' : 'failed'}, Court hearing: ${courtTest ? 'success' : 'failed'}, Case update: ${caseUpdateTest ? 'success' : 'failed'}`
       });
     } catch (error) {
       console.error("Error testing court hearing notification:", error);

@@ -381,6 +381,26 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
       }
 
       const timestamp = new Date().toISOString().slice(0, 10);
+      
+      // Helper function to format datetime fields from "2025-10-31T17:05" to "31-10-2025 17:05"
+      const formatDateTime = (dateTimeString: string | null | undefined): string => {
+        if (!dateTimeString) return '';
+        try {
+          // Handle both ISO format and datetime-local format
+          const date = new Date(dateTimeString);
+          if (isNaN(date.getTime())) return dateTimeString; // Return original if invalid
+          
+          const day = date.getDate().toString().padStart(2, '0');
+          const month = (date.getMonth() + 1).toString().padStart(2, '0');
+          const year = date.getFullYear();
+          const hours = date.getHours().toString().padStart(2, '0');
+          const minutes = date.getMinutes().toString().padStart(2, '0');
+          
+          return `${day}-${month}-${year} ${hours}:${minutes}`;
+        } catch (error) {
+          return dateTimeString; // Return original if error
+        }
+      };
 
       if (format === 'excel') {
         // Excel export with professional formatting
@@ -406,10 +426,10 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
             entry.objektiIPadise || '',                                                 // Objekti i Padisë
             entry.gjykataShkalle || '',                                                 // Gjykata e Shkallës së Parë
             entry.fazaGjykataShkalle || '',                                            // Faza në të cilën ndodhet procesi (Shkallë I)
-            entry.zhvillimiSeancesShkalleI || '',                                       // Zhvillimi i seances gjyqesorë data,ora (Shkallë I)
+            formatDateTime(entry.zhvillimiSeancesShkalleI),                             // Zhvillimi i seances gjyqesorë data,ora (Shkallë I)
             entry.gjykataApelit || '',                                                  // Gjykata e Apelit
             entry.fazaGjykataApelit || '',                                             // Faza në të cilën ndodhet procesi (Apel)
-            entry.zhvillimiSeancesApel || '',                                          // Zhvillimi i seances gjyqesorë data,ora (Apel)
+            formatDateTime(entry.zhvillimiSeancesApel),                                // Zhvillimi i seances gjyqesorë data,ora (Apel)
             entry.fazaAktuale || '',                                                    // Faza në të cilën ndodhet proçesi
             entry.perfaqesuesi || '',                                                   // Përfaqësuesi i Albpetrol SH.A.
             entry.demiIPretenduar || '',                                               // Dëmi i Pretenduar në Objekt
@@ -536,10 +556,10 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
           `"${entry.objektiIPadise || ''}"`,                                          // Objekti i Padisë
           `"${entry.gjykataShkalle || ''}"`,                                          // Gjykata e Shkallës së Parë
           `"${entry.fazaGjykataShkalle || ''}"`,                                      // Faza në të cilën ndodhet procesi (Shkallë I)
-          `"${entry.zhvillimiSeancesShkalleI || ''}"`,                               // Zhvillimi i seances gjyqesorë data,ora (Shkallë I)
+          `"${formatDateTime(entry.zhvillimiSeancesShkalleI)}"`,                     // Zhvillimi i seances gjyqesorë data,ora (Shkallë I)
           `"${entry.gjykataApelit || ''}"`,                                           // Gjykata e Apelit
           `"${entry.fazaGjykataApelit || ''}"`,                                       // Faza në të cilën ndodhet procesi (Apel)
-          `"${entry.zhvillimiSeancesApel || ''}"`,                                   // Zhvillimi i seances gjyqesorë data,ora (Apel)
+          `"${formatDateTime(entry.zhvillimiSeancesApel)}"`,                         // Zhvillimi i seances gjyqesorë data,ora (Apel)
           `"${entry.fazaAktuale || ''}"`,                                             // Faza në të cilën ndodhet proçesi
           `"${entry.perfaqesuesi || ''}"`,                                            // Përfaqësuesi i Albpetrol SH.A.
           `"${entry.demiIPretenduar || ''}"`,                                         // Dëmi i Pretenduar në Objekt

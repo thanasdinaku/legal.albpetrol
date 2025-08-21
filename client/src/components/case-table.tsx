@@ -19,6 +19,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { CaseEditForm } from "@/components/case-edit-form";
+import { formatDateTime, formatDate } from "@/lib/dateUtils";
 import type { DataEntry } from "@shared/schema";
 
 // Custom hook for debounced search
@@ -396,10 +397,10 @@ export default function CaseTable() {
                           </TableCell>
                           <TableCell className="max-w-[150px] truncate">{caseItem.gjykataShkalle || "-"}</TableCell>
                           <TableCell className="max-w-[180px] truncate">{caseItem.fazaGjykataShkalle || "-"}</TableCell>
-                          <TableCell className="max-w-[180px] truncate">{caseItem.zhvillimiSeancesShkalleI || "-"}</TableCell>
+                          <TableCell className="max-w-[180px] truncate">{formatDateTime(caseItem.zhvillimiSeancesShkalleI) || "-"}</TableCell>
                           <TableCell className="max-w-[150px] truncate">{caseItem.gjykataApelit || "-"}</TableCell>
                           <TableCell className="max-w-[180px] truncate">{caseItem.fazaGjykataApelit || "-"}</TableCell>
-                          <TableCell className="max-w-[180px] truncate">{caseItem.zhvillimiSeancesApel || "-"}</TableCell>
+                          <TableCell className="max-w-[180px] truncate">{formatDateTime(caseItem.zhvillimiSeancesApel) || "-"}</TableCell>
                           <TableCell className="max-w-[150px] truncate">{caseItem.fazaAktuale || "-"}</TableCell>
                           <TableCell className="max-w-[150px] truncate">{caseItem.perfaqesuesi || "-"}</TableCell>
                           <TableCell className="max-w-[150px] truncate">{caseItem.demiIPretenduar || "-"}</TableCell>
@@ -517,7 +518,7 @@ export default function CaseTable() {
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">Zhvillimi i seances gjyqesorë (Shkallë I)</label>
-                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.zhvillimiSeancesShkalleI || "-"}</p>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{formatDateTime(viewingCase.zhvillimiSeancesShkalleI) || "-"}</p>
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">Gjykata Apelit</label>
@@ -529,7 +530,7 @@ export default function CaseTable() {
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">Zhvillimi i seances gjyqesorë (Apel)</label>
-                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.zhvillimiSeancesApel || "-"}</p>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{formatDateTime(viewingCase.zhvillimiSeancesApel) || "-"}</p>
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">Faza Aktuale</label>

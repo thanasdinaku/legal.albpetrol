@@ -1,0 +1,425 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Stop the background process
+pkill -f "npm run dev"
+
+# Create a production PM2 configuration that uses the fixed server
+cat > ecosystem.config.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'albpetrol-legal',
+    script: 'npm',
+    args: 'run dev',
+    cwd: '/opt/ceshtje-ligjore',
+    env: { NODE_ENV: 'development', PORT: 5000 },
+    restart_delay: 3000,
+    max_restarts: 10
+  }]
+};
+EOF
+
+# Start with PM2 for permanent running
+pm2 start ecosystem.config.cjs
+
+# Save PM2 configuration
+pm2 save
+pm2 startup
+
+echo "✅ Complete Albanian Legal Case Management System is now running at:"
+echo "🌐 http://10.5.20.31:5000"
+echo "👤 Admin login: it.system@albpetrol.al / admin123"
+echo "📊 All features available: backup/restore wizard, data management, user auth, Albanian interface"
+[PM2][WARN] Applications albpetrol-legal not running, starting...
+[PM2] App [albpetrol-legal] launched (1 instances)
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ N/A     │ fork    │ 27913    │ 0s     │ 0    │ online    │ 0%       │ 13.3mb   │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2] Saving current process list...
+[PM2] Successfully saved in /root/.pm2/dump.pm2
+[PM2] Init System found: systemd
+Platform systemd
+Template
+[Unit]
+Description=PM2 process manager
+Documentation=https://pm2.keymetrics.io/
+After=network.target
+
+[Service]
+Type=forking
+User=root
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+Environment=PM2_HOME=/root/.pm2
+PIDFile=/root/.pm2/pm2.pid
+Restart=on-failure
+
+ExecStart=/usr/lib/node_modules/pm2/bin/pm2 resurrect
+ExecReload=/usr/lib/node_modules/pm2/bin/pm2 reload all
+ExecStop=/usr/lib/node_modules/pm2/bin/pm2 kill
+
+[Install]
+WantedBy=multi-user.target
+
+Target path
+/etc/systemd/system/pm2-root.service
+Command list
+[ 'systemctl enable pm2-root' ]
+[PM2] Writing init configuration in /etc/systemd/system/pm2-root.service
+[PM2] Making script booting at startup...
+[PM2] [-] Executing: systemctl enable pm2-root...
+[PM2] [v] Command successfully executed.
++---------------------------------------+
+[PM2] Freeze a process list on reboot via:
+$ pm2 save
+
+[PM2] Remove init script via:
+$ pm2 unstartup systemd
+✅ Complete Albanian Legal Case Management System is now running at:
+🌐 http://10.5.20.31:5000
+👤 Admin login: it.system@albpetrol.al / admin123
+📊 All features available: backup/restore wizard, data management, user auth, Albanian interface
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Check if Nginx is running and configured
+systemctl status nginx
+
+# Check current Nginx configuration
+cat /etc/nginx/sites-available/default
+
+# Create a proper Nginx configuration for your application
+cat > /etc/nginx/sites-available/albpetrol-legal << 'EOF'
+server {
+    listen 80;
+    server_name 10.5.20.31;
+
+    location / {
+        proxy_pass http://127.0.0.1:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 86400;
+    }
+}
+EOF
+
+# Enable the site and disable the default
+ln -sf /etc/nginx/sites-available/albpetrol-legal /etc/nginx/sites-enabled/
+rm -f /etc/nginx/sites-enabled/default
+
+# Test Nginx configuration
+echo "Application should now work at http://10.5.20.31 (port 80)"
+● nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; preset: enabled)
+     Active: active (running) since Thu 2025-08-21 11:49:17 UTC; 1h 31min ago
+       Docs: man:nginx(8)
+   Main PID: 1514 (nginx)
+      Tasks: 3 (limit: 9428)
+     Memory: 4.1M (peak: 5.9M)
+        CPU: 29ms
+     CGroup: /system.slice/nginx.service
+             ├─1514 "nginx: master process /usr/sbin/nginx -g daemon on; master_process on;"
+             ├─5230 "nginx: worker process"
+             └─5231 "nginx: worker process"
+
+Aug 21 11:49:16 ceshtjeligjore systemd[1]: Starting nginx.service - A high performance web server and a reverse proxy server...
+Aug 21 11:49:17 ceshtjeligjore systemd[1]: Started nginx.service - A high performance web server and a reverse proxy server.
+Aug 21 11:56:03 ceshtjeligjore systemd[1]: Reloading nginx.service - A high performance web server and a reverse proxy server...
+Aug 21 11:56:03 ceshtjeligjore nginx[5228]: 2025/08/21 11:56:03 [notice] 5228#5228: signal process started
+Aug 21 11:56:03 ceshtjeligjore systemd[1]: Reloaded nginx.service - A high performance web server and a reverse proxy server.
+##
+# You should look at the following URL's in order to grasp a solid understanding
+# of Nginx configuration files in order to fully unleash the power of Nginx.
+# https://www.nginx.com/resources/wiki/start/
+# https://www.nginx.com/resources/wiki/start/topics/tutorials/config_pitfalls/
+# https://wiki.debian.org/Nginx/DirectoryStructure
+#
+# In most cases, administrators will remove this file from sites-enabled/ and
+# leave it as reference inside of sites-available where it will continue to be
+# updated by the nginx packaging team.
+#
+# This file will automatically load configuration files provided by other
+# applications, such as Drupal or Wordpress. These applications will be made
+# available underneath a path with that package name, such as /drupal8.
+#
+# Please see /usr/share/doc/nginx-doc/examples/ for more detailed examples.
+##
+
+# Default server configuration
+#
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+
+	# SSL configuration
+	#
+	# listen 443 ssl default_server;
+	# listen [::]:443 ssl default_server;
+	#
+	# Note: You should disable gzip for SSL traffic.
+	# See: https://bugs.debian.org/773332
+	#
+	# Read up on ssl_ciphers to ensure a secure configuration.
+	# See: https://bugs.debian.org/765782
+	#
+	# Self signed certs generated by the ssl-cert package
+	# Don't use them in a production server!
+	#
+	# include snippets/snakeoil.conf;
+
+	root /var/www/html;
+
+	# Add index.php to the list if you are using PHP
+	index index.html index.htm index.nginx-debian.html;
+
+	server_name _;
+
+	location / {
+		# First attempt to serve request as file, then
+		# as directory, then fall back to displaying a 404.
+		try_files $uri $uri/ =404;
+	}
+
+	# pass PHP scripts to FastCGI server
+	#
+	#location ~ \.php$ {
+	#	include snippets/fastcgi-php.conf;
+	#
+	#	# With php-fpm (or other unix sockets):
+	#	fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+	#	# With php-cgi (or other tcp sockets):
+	#	fastcgi_pass 127.0.0.1:9000;
+	#}
+
+	# deny access to .htaccess files, if Apache's document root
+	# concurs with nginx's one
+	#
+	#location ~ /\.ht {
+	#	deny all;
+	#}
+}
+
+
+# Virtual Host configuration for example.com
+#
+# You can move that to a different file under sites-available/ and symlink that
+# to sites-enabled/ to enable it.
+#
+#server {
+#	listen 80;
+#	listen [::]:80;
+#
+#	server_name example.com;
+#
+#	root /var/www/example.com;
+#	index index.html;
+#
+#	location / {
+#		try_files $uri $uri/ =404;
+#	}
+#}
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+HTTP/1.1 200 OK
+Server: nginx/1.24.0 (Ubuntu)
+Date: Thu, 21 Aug 2025 13:20:37 GMT
+Content-Type: text/html; charset=utf-8
+Connection: keep-alive
+X-Powered-By: Express
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none';
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: strict-origin-when-cross-origin
+Vary: Origin
+
+Application should now work at http://10.5.20.31 (port 80)
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Check the browser console logs - look for JavaScript errors
+# First let's see what the page is actually serving
+curl -s http://10.5.20.31 > page_output.html
+cat page_output.html
+
+# Check if the main.tsx file is being found
+ls -la client/src/main.tsx
+
+# Check PM2 logs for any frontend errors
+pm2 logs --lines 20
+
+# The issue might be that the React dev server isn't starting properly
+# Let's check if Vite is serving the frontend correctly
+curl -s http://localhost:3000 || echo "Vite dev server not running"
+
+# Check what's actually being served on port 5000
+curl -s http://localhost:5000/src/main.tsx
+
+# Build the frontend properly first
+npm run build
+
+# Restart the application
+pm2 restart albpetrol-legal
+
+# Check if the static files are being served correctly
+ls -la dist/public/
+
+# Test again
+curl -I http://10.5.20.31
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh";
+injectIntoGlobalHook(window);
+window.$RefreshReg$ = () => {};
+window.$RefreshSig$ = () => (type) => type;</script>
+
+    <script type="module" src="/@vite/client"></script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Sistemi i Menaxhimit të Rasteve Ligjore</title>
+    <meta name="description" content="Sistem profesional i menaxhimit të rasteve ligjore me kontroll të aksesit të bazuar në role për operacione efikase në bazën e të dhënave.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx?v=F2sarfl0LHEoShOMrz7xE"></script>
+    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
+    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
+  </body>
+</html>
+-rw-r--r-- 1 root root 236 Aug 21 13:15 client/src/main.tsx
+[TAILING] Tailing last 20 lines for [all] processes (change the value with --lines option)
+/root/.pm2/pm2.log last 20 lines:
+PM2        | 2025-08-21T13:13:35: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:13:35: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T13:13:35: PM2 log: Stopping app:albpetrol-legal id:0
+PM2        | 2025-08-21T13:13:35: PM2 log: App [albpetrol-legal:0] exited with code [0] via signal [SIGINT]
+PM2        | 2025-08-21T13:13:36: PM2 log: pid=27394 msg=process killed
+PM2        | 2025-08-21T13:18:49: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:18:49: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T13:19:35: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2        | 2025-08-21T13:19:38: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:19:38: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T13:20:37: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2        | 2025-08-21T13:20:40: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:20:40: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T13:20:44: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2        | 2025-08-21T13:20:47: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:20:47: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T13:21:06: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2        | 2025-08-21T13:21:09: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:21:09: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T13:22:31: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+
+/root/.pm2/logs/albpetrol-legal-out.log last 20 lines:
+0|albpetro | > rest-express@1.0.0 dev
+0|albpetro | > NODE_ENV=development tsx server/index.ts
+0|albpetro | 
+0|albpetro | 1:19:40 PM [express] serving on port 5000
+0|albpetro | 
+0|albpetro | > rest-express@1.0.0 dev
+0|albpetro | > NODE_ENV=development tsx server/index.ts
+0|albpetro | 
+0|albpetro | 1:20:41 PM [express] serving on port 5000
+0|albpetro | 
+0|albpetro | > rest-express@1.0.0 dev
+0|albpetro | > NODE_ENV=development tsx server/index.ts
+0|albpetro | 
+0|albpetro | 1:20:49 PM [express] serving on port 5000
+0|albpetro | 
+0|albpetro | > rest-express@1.0.0 dev
+0|albpetro | > NODE_ENV=development tsx server/index.ts
+0|albpetro | 
+0|albpetro | 1:21:11 PM [express] serving on port 5000
+0|albpetro | 1:22:31 PM [vite] page reload page_output.html
+
+/root/.pm2/logs/albpetrol-legal-error.log last 20 lines:
+0|albpetro |     at checkExecSyncError (node:child_process:891:11)
+0|albpetro |     at execSync (node:child_process:963:15)
+0|albpetro |     at Object.<anonymous> (/opt/ceshtje-ligjore/start_server.cjs:18:3)
+0|albpetro |     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+0|albpetro |     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+0|albpetro |     at Module.load (node:internal/modules/cjs/loader:1275:32)
+0|albpetro |     at Module._load (node:internal/modules/cjs/loader:1096:12)
+0|albpetro |     at cjsLoader (node:internal/modules/esm/translators:298:15) {
+0|albpetro |   status: 1,
+0|albpetro |   signal: null,
+0|albpetro |   output: [ null, null, null ],
+0|albpetro |   pid: 27287,
+0|albpetro |   stdout: null,
+0|albpetro |   stderr: null
+0|albpetro | }
+0|albpetro | 1:19:35 PM [vite] Pre-transform error: Failed to load url /src/main.tsx?v=1FzmkTknGglm4ytl2g_nW (resolved id: /src/main.tsx?v=1FzmkTknGglm4ytl2g_nW). Does the file exist?
+0|albpetro | 1:20:37 PM [vite] Pre-transform error: Failed to load url /src/main.tsx?v=df5Mz4Tz9uhTDS6dinLjr (resolved id: /src/main.tsx?v=df5Mz4Tz9uhTDS6dinLjr). Does the file exist?
+0|albpetro | 1:20:44 PM [vite] Pre-transform error: Failed to load url /src/main.tsx?v=2hrjFHIGTDKJcMQr7EdGx (resolved id: /src/main.tsx?v=2hrjFHIGTDKJcMQr7EdGx). Does the file exist?
+0|albpetro | 1:21:06 PM [vite] Pre-transform error: Failed to load url /src/main.tsx?v=TxH1lP2PBVmL11Xu2pRn5 (resolved id: /src/main.tsx?v=TxH1lP2PBVmL11Xu2pRn5). Does the file exist?
+0|albpetro | 1:22:31 PM [vite] Pre-transform error: Failed to load url /src/main.tsx?v=F2sarfl0LHEoShOMrz7xE (resolved id: /src/main.tsx?v=F2sarfl0LHEoShOMrz7xE). Does the file exist?
+
+PM2      | App [albpetrol-legal:0] starting in -fork mode-
+PM2      | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | 1:22:35 PM [express] serving on port 5000
+^C
+Vite dev server not running
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh";
+injectIntoGlobalHook(window);
+window.$RefreshReg$ = () => {};
+window.$RefreshSig$ = () => (type) => type;</script>
+
+    <script type="module" src="/@vite/client"></script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Sistemi i Menaxhimit të Rasteve Ligjore</title>
+    <meta name="description" content="Sistem profesional i menaxhimit të rasteve ligjore me kontroll të aksesit të bazuar në role për operacione efikase në bazën e të dhënave.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx?v=GEoNTHOYuy5CdTCIGN5kX"></script>
+    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
+    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
+  </body>
+</html>
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+NODE_ENV=production is not supported in the .env file. Only NODE_ENV=development is supported to create a development build of your project. If you need to set process.env.NODE_ENV, you can set it in the Vite config instead.
+vite v5.4.19 building for production...
+✓ 0 modules transformed.
+x Build failed in 8ms
+error during build:
+Could not resolve entry module "index.html".
+    at getRollupError (file:///opt/ceshtje-ligjore/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///opt/ceshtje-ligjore/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at ModuleLoader.loadEntryModule (file:///opt/ceshtje-ligjore/node_modules/rollup/dist/es/shared/node-entry.js:21508:20)
+    at async Promise.all (index 0)
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2][ERROR] Process 0 not found
+ls: cannot access 'dist/public/': No such file or directory
+HTTP/1.1 502 Bad Gateway
+Server: nginx/1.24.0 (Ubuntu)
+Date: Thu, 21 Aug 2025 13:22:55 GMT
+Content-Type: text/html
+Content-Length: 166
+Connection: keep-alive
+
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

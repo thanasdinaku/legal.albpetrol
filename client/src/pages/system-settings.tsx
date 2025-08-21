@@ -15,7 +15,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { AlertCircle, Plus, X, TestTube, Mail, Download, BookOpen } from "lucide-react";
+import { AlertCircle, Plus, X, TestTube, Mail, Download, BookOpen, Bell } from "lucide-react";
+import EmailNotificationSettings from "@/components/email-notification-settings";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function SystemSettings() {
@@ -201,8 +202,9 @@ export default function SystemSettings() {
         
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-4 sm:p-6">
           <Tabs defaultValue="general" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-3 text-xs sm:text-sm">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 text-xs sm:text-sm">
               <TabsTrigger value="general">Të Përgjithshme</TabsTrigger>
+              <TabsTrigger value="email">Njoftimet Email</TabsTrigger>
               <TabsTrigger value="database">Baza e të Dhënave</TabsTrigger>
               <TabsTrigger value="security">Siguria</TabsTrigger>
             </TabsList>
@@ -502,6 +504,10 @@ export default function SystemSettings() {
                   </CardContent>
                 </Card>
               </div>
+            </TabsContent>
+
+            <TabsContent value="email" className="space-y-6">
+              <EmailNotificationSettings />
             </TabsContent>
 
             <TabsContent value="security" className="space-y-6">

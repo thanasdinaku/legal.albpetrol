@@ -1,0 +1,240 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Stop PM2
+pm2 delete all
+
+# Fix the schema for SQLite
+cat > shared/schema.ts << 'EOF'
+import { sql } from "drizzle-orm";
+import {
+  index,
+  text,
+  sqliteTable,
+  integer,
+  blob,
+} from "drizzle-orm/sqlite-core";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
+
+// Session storage table (mandatory for Replit Auth)
+export const sessions = sqliteTable(
+  "sessions",
+  {
+    sid: text("sid").primaryKey(),
+    sess: text("sess").notNull(),
+    expire: integer("expire").notNull(),
+  },
+  (table) => [index("IDX_session_expire").on(table.expire)],
+);
+
+// User storage table
+export const users = sqliteTable("users", {
+  id: text("id").primaryKey().default(sql`(lower(hex(randomblob(16))))`),
+  email: text("email").unique().notNull(),
+  firstName: text("first_name").notNull(),
+  lastName: text("last_name").notNull(),
+echo "Application should be running at: http://10.5.20.31:5000"ema>;.omit({e),se),
+[PM2] Applying action deleteProcessId on app [all](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+No config path provided, using default 'drizzle.config.ts'
+Reading config file '/opt/ceshtje-ligjore/drizzle.config.ts'
+[✓] Pulling schema from database...
+[✓] Changes applied
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Suggested packages:
+  sqlite3-doc
+The following NEW packages will be installed:
+  sqlite3
+0 upgraded, 1 newly installed, 0 to remove and 2 not upgraded.
+Need to get 144 kB of archives.
+After this operation, 584 kB of additional disk space will be used.
+Get:1 http://al.archive.ubuntu.com/ubuntu noble-updates/main amd64 sqlite3 amd64 3.45.1-1ubuntu2.4 [144 kB]
+Fetched 144 kB in 0s (455 kB/s)  
+Selecting previously unselected package sqlite3.
+(Reading database ... 238516 files and directories currently installed.)
+Preparing to unpack .../sqlite3_3.45.1-1ubuntu2.4_amd64.deb ...
+Unpacking sqlite3 (3.45.1-1ubuntu2.4) ...
+Setting up sqlite3 (3.45.1-1ubuntu2.4) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+Scanning processes...                                                                                                                                                                   
+Scanning linux images...                                                                                                                                                                
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+data_entries          sessions              users               
+database_checkpoints  system_settings     
+[PM2] Starting /opt/ceshtje-ligjore/start_server.cjs in fork_mode (1 instance)
+[PM2] Done.
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ 1.0.0   │ fork    │ 24226    │ 0s     │ 0    │ online    │ 0%       │ 19.3mb   │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[TAILING] Tailing last 10 lines for [all] processes (change the value with --lines option)
+/root/.pm2/pm2.log last 10 lines:
+PM2        | 2025-08-21T13:09:29: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T13:09:31: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2        | 2025-08-21T13:09:31: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:09:31: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T13:09:32: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2        | 2025-08-21T13:09:32: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:09:32: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T13:09:34: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2        | 2025-08-21T13:09:34: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:09:34: PM2 log: App [albpetrol-legal:0] online
+
+/root/.pm2/logs/albpetrol-legal-error.log last 10 lines:
+0|albpetro |     at Module.load (node:internal/modules/cjs/loader:1275:32)
+0|albpetro |     at Module._load (node:internal/modules/cjs/loader:1096:12)
+0|albpetro |     at cjsLoader (node:internal/modules/esm/translators:298:15) {
+0|albpetro |   status: 1,
+0|albpetro |   signal: null,
+0|albpetro |   output: [ null, null, null ],
+0|albpetro |   pid: 24603,
+0|albpetro |   stdout: null,
+0|albpetro |   stderr: null
+0|albpetro | }
+
+/root/.pm2/logs/albpetrol-legal-out.log last 10 lines:
+0|albpetro | Database setup complete. Starting server...
+0|albpetro | Setting up database...
+0|albpetro | Database exists, checking tables...
+0|albpetro | No config path provided, using default 'drizzle.config.ts'
+0|albpetro | Reading config file '/opt/ceshtje-ligjore/drizzle.config.ts'
+0|albpetro | [⣷] Pulling schema from database...
+[✓] Pulling schema from database...
+0|albpetro | 
+0|albpetro | [i] No changes detected
+0|albpetro | Database setup complete. Starting server...
+
+0|albpetrol-legal  | /opt/ceshtje-ligjore/server/routes.ts:34
+0|albpetrol-legal  | import { insertDataEntrySchema, updateDataEntrySchema, emailNotificationSchema } from "@shared/schema";
+0|albpetrol-legal  |                                                        ^
+0|albpetrol-legal  | SyntaxError: The requested module '@shared/schema' does not provide an export named 'emailNotificationSchema'
+0|albpetrol-legal  |     at ModuleJob._instantiate (node:internal/modules/esm/module_job:175:21)
+0|albpetrol-legal  |     at async ModuleJob.run (node:internal/modules/esm/module_job:258:5)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+0|albpetrol-legal  | Setup failed: Error: Command failed: tsx server/index.ts
+0|albpetrol-legal  |     at genericNodeError (node:internal/errors:984:15)
+0|albpetrol-legal  |     at wrappedFn (node:internal/errors:538:14)
+0|albpetrol-legal  |     at checkExecSyncError (node:child_process:891:11)
+0|albpetrol-legal  |     at execSync (node:child_process:963:15)
+0|albpetrol-legal  |     at Object.<anonymous> (/opt/ceshtje-ligjore/start_server.cjs:18:3)
+0|albpetrol-legal  |     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+0|albpetrol-legal  |     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+0|albpetrol-legal  |     at Module.load (node:internal/modules/cjs/loader:1275:32)
+0|albpetrol-legal  |     at Module._load (node:internal/modules/cjs/loader:1096:12)
+0|albpetrol-legal  |     at cjsLoader (node:internal/modules/esm/translators:298:15) {
+0|albpetrol-legal  |   status: 1,
+0|albpetrol-legal  |   signal: null,
+0|albpetrol-legal  |   output: [ null, null, null ],
+0|albpetrol-legal  |   pid: 24668,
+0|albpetrol-legal  |   stdout: null,
+0|albpetrol-legal  |   stderr: null
+0|albpetrol-legal  | }
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | Setting up database...
+0|albpetrol-legal  | Database exists, checking tables...
+0|albpetrol-legal  | No config path provided, using default 'drizzle.config.ts'
+0|albpetrol-legal  | Reading config file '/opt/ceshtje-ligjore/drizzle.config.ts'
+0|albpetrol-legal  | [⣷] Pulling schema from database...
+[✓] Pulling schema from database...
+0|albpetrol-legal  | [i] No changes detected
+0|albpetrol-legal  | Database setup complete. Starting server...
+0|albpetrol-legal  | /opt/ceshtje-ligjore/server/routes.ts:34
+0|albpetrol-legal  | import { insertDataEntrySchema, updateDataEntrySchema, emailNotificationSchema } from "@shared/schema";
+0|albpetrol-legal  |                                                        ^
+0|albpetrol-legal  | SyntaxError: The requested module '@shared/schema' does not provide an export named 'emailNotificationSchema'
+0|albpetrol-legal  |     at ModuleJob._instantiate (node:internal/modules/esm/module_job:175:21)
+0|albpetrol-legal  |     at async ModuleJob.run (node:internal/modules/esm/module_job:258:5)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+0|albpetrol-legal  | Setup failed: Error: Command failed: tsx server/index.ts
+0|albpetrol-legal  |     at genericNodeError (node:internal/errors:984:15)
+0|albpetrol-legal  |     at wrappedFn (node:internal/errors:538:14)
+0|albpetrol-legal  |     at checkExecSyncError (node:child_process:891:11)
+0|albpetrol-legal  |     at execSync (node:child_process:963:15)
+0|albpetrol-legal  |     at Object.<anonymous> (/opt/ceshtje-ligjore/start_server.cjs:18:3)
+0|albpetrol-legal  |     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+0|albpetrol-legal  |     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+0|albpetrol-legal  |     at Module.load (node:internal/modules/cjs/loader:1275:32)
+0|albpetrol-legal  |     at Module._load (node:internal/modules/cjs/loader:1096:12)
+0|albpetrol-legal  |     at cjsLoader (node:internal/modules/esm/translators:298:15) {
+0|albpetrol-legal  |   status: 1,
+0|albpetrol-legal  |   signal: null,
+0|albpetrol-legal  |   output: [ null, null, null ],
+0|albpetrol-legal  |   pid: 24744,
+0|albpetrol-legal  |   stdout: null,
+0|albpetrol-legal  |   stderr: null
+0|albpetrol-legal  | }
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | Setting up database...
+0|albpetrol-legal  | Database exists, checking tables...
+0|albpetrol-legal  | No config path provided, using default 'drizzle.config.ts'
+0|albpetrol-legal  | Reading config file '/opt/ceshtje-ligjore/drizzle.config.ts'
+0|albpetrol-legal  | [⣷] Pulling schema from database...
+[✓] Pulling schema from database...
+0|albpetrol-legal  | [i] No changes detected
+0|albpetrol-legal  | Database setup complete. Starting server...
+0|albpetrol-legal  | /opt/ceshtje-ligjore/server/routes.ts:34
+0|albpetrol-legal  | import { insertDataEntrySchema, updateDataEntrySchema, emailNotificationSchema } from "@shared/schema";
+0|albpetrol-legal  |                                                        ^
+0|albpetrol-legal  | SyntaxError: The requested module '@shared/schema' does not provide an export named 'emailNotificationSchema'
+0|albpetrol-legal  |     at ModuleJob._instantiate (node:internal/modules/esm/module_job:175:21)
+0|albpetrol-legal  |     at async ModuleJob.run (node:internal/modules/esm/module_job:258:5)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+0|albpetrol-legal  | Setup failed: Error: Command failed: tsx server/index.ts
+0|albpetrol-legal  |     at genericNodeError (node:internal/errors:984:15)
+0|albpetrol-legal  |     at wrappedFn (node:internal/errors:538:14)
+0|albpetrol-legal  |     at checkExecSyncError (node:child_process:891:11)
+0|albpetrol-legal  |     at execSync (node:child_process:963:15)
+0|albpetrol-legal  |     at Object.<anonymous> (/opt/ceshtje-ligjore/start_server.cjs:18:3)
+0|albpetrol-legal  |     at Module._compile (node:internal/modules/cjs/loader:1529:14)
+0|albpetrol-legal  |     at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+0|albpetrol-legal  |     at Module.load (node:internal/modules/cjs/loader:1275:32)
+0|albpetrol-legal  |     at Module._load (node:internal/modules/cjs/loader:1096:12)
+0|albpetrol-legal  |     at cjsLoader (node:internal/modules/esm/translators:298:15) {
+0|albpetrol-legal  |   status: 1,
+0|albpetrol-legal  |   signal: null,
+0|albpetrol-legal  |   output: [ null, null, null ],
+0|albpetrol-legal  |   pid: 24809,
+0|albpetrol-legal  |   stdout: null,
+0|albpetrol-legal  |   stderr: null
+0|albpetrol-legal  | }
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | Setting up database...
+0|albpetrol-legal  | Database exists, checking tables...
+0|albpetrol-legal  | No config path provided, using default 'drizzle.config.ts'
+0|albpetrol-legal  | Reading config file '/opt/ceshtje-ligjore/drizzle.config.ts'
+0|albpetrol-legal  | [⣷] Pulling schema from database...
+[✓] Pulling schema from database...
+0|albpetrol-legal  | [i] No changes detected
+0|albpetrol-legal  | Database setup complete. Starting server...
+^C
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Couldn't connect to server
+
+Application should be running at: http://10.5.20.31:5000
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

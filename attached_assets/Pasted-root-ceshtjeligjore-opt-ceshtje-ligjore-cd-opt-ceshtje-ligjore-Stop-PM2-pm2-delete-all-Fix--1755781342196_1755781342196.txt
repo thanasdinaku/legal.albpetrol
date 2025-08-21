@@ -1,0 +1,224 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Stop PM2
+pm2 delete all
+
+# Fix the vite.config.ts file for ES modules
+cat > vite.config.ts << 'EOF'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './client/src'),
+      '@shared': path.resolve(__dirname, './shared'),
+      '@assets': path.resolve(__dirname, './attached_assets'),
+    },
+  },
+  build: {
+    outDir: 'dist/public',
+  },
+  server: {
+    port: 3000,
+  },
+});
+EOF
+
+# Now start the application
+curl -I http://localhost:5000s
+[PM2] Applying action deleteProcessId on app [all](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2][WARN] Applications albpetrol-legal not running, starting...
+[PM2] App [albpetrol-legal] launched (1 instances)
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ N/A     │ fork    │ 17657    │ 0s     │ 0    │ online    │ 0%       │ 18.3mb   │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[TAILING] Tailing last 10 lines for [all] processes (change the value with --lines option)
+/root/.pm2/pm2.log last 10 lines:
+PM2        | 2025-08-21T13:01:49: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:01:49: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T13:01:51: PM2 log: App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2        | 2025-08-21T13:01:51: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:01:51: PM2 log: App [albpetrol-legal:0] online
+PM2        | 2025-08-21T13:01:51: PM2 log: Stopping app:albpetrol-legal id:0
+PM2        | 2025-08-21T13:01:51: PM2 log: App [albpetrol-legal:0] exited with code [0] via signal [SIGINT]
+PM2        | 2025-08-21T13:01:51: PM2 log: pid=17603 msg=process killed
+PM2        | 2025-08-21T13:01:51: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:01:51: PM2 log: App [albpetrol-legal:0] online
+
+/root/.pm2/logs/albpetrol-legal-error.log last 10 lines:
+0|albpetro |                         ^
+0|albpetro | 
+0|albpetro | 
+0|albpetro | ReferenceError: __dirname is not defined in ES module scope
+0|albpetro |     at <anonymous> (/opt/ceshtje-ligjore/vite.config.ts:13:25)
+0|albpetro |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetro |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetro | 
+0|albpetro | Node.js v20.19.4
+
+/root/.pm2/logs/albpetrol-legal-out.log last 10 lines:
+0|albpetro | > NODE_ENV=development tsx server/index.ts
+0|albpetro | 
+0|albpetro | 
+0|albpetro | > rest-express@1.0.0 dev
+0|albpetro | > NODE_ENV=development tsx server/index.ts
+0|albpetro | 
+0|albpetro | 
+0|albpetro | > rest-express@1.0.0 dev
+0|albpetro | > NODE_ENV=development tsx server/index.ts
+0|albpetro | 
+
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5
+0|albpetrol-legal  | 	return this[cppdb].prepare(sql, this, false);
+0|albpetrol-legal  | 	                   ^
+0|albpetrol-legal  | SqliteError: no such table: users
+0|albpetrol-legal  |     at Database.prepare (/opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5:21)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareQuery (/opt/ceshtje-ligjore/node_modules/src/better-sqlite3/session.ts:50:28)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareOneTimeQuery (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/session.ts:135:15)
+0|albpetrol-legal  |     at SQLiteSelectBase._prepare (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:865:85)
+0|albpetrol-legal  |     at SQLiteSelectBase.all (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:884:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.execute (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:896:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.then (/opt/ceshtje-ligjore/node_modules/src/query-promise.ts:31:15) {
+0|albpetrol-legal  |   code: 'SQLITE_ERROR'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5
+0|albpetrol-legal  | 	return this[cppdb].prepare(sql, this, false);
+0|albpetrol-legal  | 	                   ^
+0|albpetrol-legal  | SqliteError: no such table: users
+0|albpetrol-legal  |     at Database.prepare (/opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5:21)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareQuery (/opt/ceshtje-ligjore/node_modules/src/better-sqlite3/session.ts:50:28)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareOneTimeQuery (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/session.ts:135:15)
+0|albpetrol-legal  |     at SQLiteSelectBase._prepare (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:865:85)
+0|albpetrol-legal  |     at SQLiteSelectBase.all (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:884:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.execute (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:896:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.then (/opt/ceshtje-ligjore/node_modules/src/query-promise.ts:31:15) {
+0|albpetrol-legal  |   code: 'SQLITE_ERROR'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5
+0|albpetrol-legal  | 	return this[cppdb].prepare(sql, this, false);
+0|albpetrol-legal  | 	                   ^
+0|albpetrol-legal  | SqliteError: no such table: users
+0|albpetrol-legal  |     at Database.prepare (/opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5:21)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareQuery (/opt/ceshtje-ligjore/node_modules/src/better-sqlite3/session.ts:50:28)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareOneTimeQuery (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/session.ts:135:15)
+0|albpetrol-legal  |     at SQLiteSelectBase._prepare (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:865:85)
+0|albpetrol-legal  |     at SQLiteSelectBase.all (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:884:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.execute (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:896:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.then (/opt/ceshtje-ligjore/node_modules/src/query-promise.ts:31:15) {
+0|albpetrol-legal  |   code: 'SQLITE_ERROR'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5
+0|albpetrol-legal  | 	return this[cppdb].prepare(sql, this, false);
+0|albpetrol-legal  | 	                   ^
+0|albpetrol-legal  | SqliteError: no such table: users
+0|albpetrol-legal  |     at Database.prepare (/opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5:21)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareQuery (/opt/ceshtje-ligjore/node_modules/src/better-sqlite3/session.ts:50:28)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareOneTimeQuery (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/session.ts:135:15)
+0|albpetrol-legal  |     at SQLiteSelectBase._prepare (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:865:85)
+0|albpetrol-legal  |     at SQLiteSelectBase.all (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:884:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.execute (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:896:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.then (/opt/ceshtje-ligjore/node_modules/src/query-promise.ts:31:15) {
+0|albpetrol-legal  |   code: 'SQLITE_ERROR'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+^X0|albpetrol-legal  | /opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5
+0|albpetrol-legal  | 	return this[cppdb].prepare(sql, this, false);
+0|albpetrol-legal  | 	                   ^
+0|albpetrol-legal  | SqliteError: no such table: users
+0|albpetrol-legal  |     at Database.prepare (/opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5:21)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareQuery (/opt/ceshtje-ligjore/node_modules/src/better-sqlite3/session.ts:50:28)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareOneTimeQuery (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/session.ts:135:15)
+0|albpetrol-legal  |     at SQLiteSelectBase._prepare (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:865:85)
+0|albpetrol-legal  |     at SQLiteSelectBase.all (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:884:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.execute (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:896:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.then (/opt/ceshtje-ligjore/node_modules/src/query-promise.ts:31:15) {
+0|albpetrol-legal  |   code: 'SQLITE_ERROR'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5
+0|albpetrol-legal  | 	return this[cppdb].prepare(sql, this, false);
+0|albpetrol-legal  | 	                   ^
+0|albpetrol-legal  | SqliteError: no such table: users
+0|albpetrol-legal  |     at Database.prepare (/opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5:21)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareQuery (/opt/ceshtje-ligjore/node_modules/src/better-sqlite3/session.ts:50:28)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareOneTimeQuery (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/session.ts:135:15)
+0|albpetrol-legal  |     at SQLiteSelectBase._prepare (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:865:85)
+0|albpetrol-legal  |     at SQLiteSelectBase.all (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:884:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.execute (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:896:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.then (/opt/ceshtje-ligjore/node_modules/src/query-promise.ts:31:15) {
+0|albpetrol-legal  |   code: 'SQLITE_ERROR'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5
+0|albpetrol-legal  | 	return this[cppdb].prepare(sql, this, false);
+0|albpetrol-legal  | 	                   ^
+0|albpetrol-legal  | SqliteError: no such table: users
+0|albpetrol-legal  |     at Database.prepare (/opt/ceshtje-ligjore/node_modules/better-sqlite3/lib/methods/wrappers.js:5:21)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareQuery (/opt/ceshtje-ligjore/node_modules/src/better-sqlite3/session.ts:50:28)
+0|albpetrol-legal  |     at BetterSQLiteSession.prepareOneTimeQuery (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/session.ts:135:15)
+0|albpetrol-legal  |     at SQLiteSelectBase._prepare (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:865:85)
+0|albpetrol-legal  |     at SQLiteSelectBase.all (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:884:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.execute (/opt/ceshtje-ligjore/node_modules/src/sqlite-core/query-builders/select.ts:896:15)
+0|albpetrol-legal  |     at SQLiteSelectBase.then (/opt/ceshtje-ligjore/node_modules/src/query-promise.ts:31:15) {
+0|albpetrol-legal  |   code: 'SQLITE_ERROR'
+0|albpetrol-legal  | }
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+^C
+
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Couldn't connect to server
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

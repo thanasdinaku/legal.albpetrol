@@ -1,0 +1,307 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Install tsx globally
+npm install -g tsx
+
+# Create a simple working PM2 config that uses npm start
+cat > ecosystem.config.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'albpetrol-legal',
+    script: 'npm',
+    args: 'run dev',
+    cwd: '/opt/ceshtje-ligjore',
+    env: { NODE_ENV: 'production', PORT: 5000 }
+  }]
+};
+EOF
+
+# Start the application
+pm2 start ecosystem.config.cjs
+
+# Check if it's working
+pm2 list
+pm2 logs --lines 5
+
+# Test the application
+curl -I http://localhost:5000
+
+added 5 packages in 3s
+
+2 packages are looking for funding
+  run `npm fund` for details
+[PM2][WARN] Applications albpetrol-legal not running, starting...
+[PM2] App [albpetrol-legal] launched (1 instances)
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ N/A     │ fork    │ 15225    │ 0s     │ 0    │ online    │ 0%       │ 22.5mb   │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ N/A     │ fork    │ 15225    │ 0s     │ 0    │ online    │ 0%       │ 60.2mb   │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[TAILING] Tailing last 5 lines for [all] processes (change the value with --lines option)
+/root/.pm2/pm2.log last 5 lines:
+PM2        | 2025-08-21T12:56:02: PM2 log: Script /usr/bin/npm had too many unstable restarts (16). Stopped. "errored"
+PM2        | 2025-08-21T12:58:33: PM2 log: Stopping app:albpetrol-legal id:0
+PM2        | 2025-08-21T12:58:33: PM2 error: app=albpetrol-legal id=0 does not have a pid
+PM2        | 2025-08-21T13:00:02: PM2 log: App [albpetrol-legal:0] starting in -fork mode-
+PM2        | 2025-08-21T13:00:02: PM2 log: App [albpetrol-legal:0] online
+
+/root/.pm2/logs/albpetrol-legal-error.log last 5 lines:
+0|albpetro |     at ModuleJob._link (node:internal/modules/esm/module_job:130:49) {
+0|albpetro |   code: 'ERR_MODULE_NOT_FOUND'
+0|albpetro | }
+0|albpetro | 
+0|albpetro | Node.js v20.19.4
+
+/root/.pm2/logs/albpetrol-legal-out.log last 5 lines:
+0|albpetro | 
+0|albpetro | 
+0|albpetro | > rest-express@1.0.0 dev
+0|albpetro | > NODE_ENV=development tsx server/index.ts
+0|albpetro | 
+
+0|albpetrol-legal  | /opt/ceshtje-ligjore/vite.config.ts:13
+0|albpetrol-legal  |       '@': path.resolve(__dirname, './client/src'),
+0|albpetrol-legal  |                         ^
+0|albpetrol-legal  | ReferenceError: __dirname is not defined in ES module scope
+0|albpetrol-legal  |     at <anonymous> (/opt/ceshtje-ligjore/vite.config.ts:13:25)
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/vite.config.ts:13
+0|albpetrol-legal  |       '@': path.resolve(__dirname, './client/src'),
+0|albpetrol-legal  |                         ^
+0|albpetrol-legal  | ReferenceError: __dirname is not defined in ES module scope
+0|albpetrol-legal  |     at <anonymous> (/opt/ceshtje-ligjore/vite.config.ts:13:25)
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/vite.config.ts:13
+0|albpetrol-legal  |       '@': path.resolve(__dirname, './client/src'),
+0|albpetrol-legal  |                         ^
+0|albpetrol-legal  | ReferenceError: __dirname is not defined in ES module scope
+0|albpetrol-legal  |     at <anonymous> (/opt/ceshtje-ligjore/vite.config.ts:13:25)
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/vite.config.ts:13
+0|albpetrol-legal  |       '@': path.resolve(__dirname, './client/src'),
+0|albpetrol-legal  |                         ^
+0|albpetrol-legal  | ReferenceError: __dirname is not defined in ES module scope
+0|albpetrol-legal  |     at <anonymous> (/opt/ceshtje-ligjore/vite.config.ts:13:25)
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/vite.config.ts:13
+0|albpetrol-legal  |       '@': path.resolve(__dirname, './client/src'),
+0|albpetrol-legal  |                         ^
+0|albpetrol-legal  | ReferenceError: __dirname is not defined in ES module scope
+0|albpetrol-legal  |     at <anonymous> (/opt/ceshtje-ligjore/vite.config.ts:13:25)
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/vite.config.ts:13
+0|albpetrol-legal  |       '@': path.resolve(__dirname, './client/src'),
+0|albpetrol-legal  |                         ^
+0|albpetrol-legal  | ReferenceError: __dirname is not defined in ES module scope
+0|albpetrol-legal  |     at <anonymous> (/opt/ceshtje-ligjore/vite.config.ts:13:25)
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/vite.config.ts:13
+0|albpetrol-legal  |       '@': path.resolve(__dirname, './client/src'),
+0|albpetrol-legal  |                         ^
+0|albpetrol-legal  | ReferenceError: __dirname is not defined in ES module scope
+0|albpetrol-legal  |     at <anonymous> (/opt/ceshtje-ligjore/vite.config.ts:13:25)
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/vite.config.ts:13
+0|albpetrol-legal  |       '@': path.resolve(__dirname, './client/src'),
+0|albpetrol-legal  |                         ^
+0|albpetrol-legal  | ReferenceError: __dirname is not defined in ES module scope
+0|albpetrol-legal  |     at <anonymous> (/opt/ceshtje-ligjore/vite.config.ts:13:25)
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/vite.config.ts:13
+0|albpetrol-legal  |       '@': path.resolve(__dirname, './client/src'),
+0|albpetrol-legal  |                         ^
+0|albpetrol-legal  | ReferenceError: __dirname is not defined in ES module scope
+0|albpetrol-legal  |     at <anonymous> (/opt/ceshtje-ligjore/vite.config.ts:13:25)
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/vite.config.ts:13
+0|albpetrol-legal  |       '@': path.resolve(__dirname, './client/src'),
+0|albpetrol-legal  |                         ^
+0|albpetrol-legal  | ReferenceError: __dirname is not defined in ES module scope
+0|albpetrol-legal  |     at <anonymous> (/opt/ceshtje-ligjore/vite.config.ts:13:25)
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/vite.config.ts:13
+0|albpetrol-legal  |       '@': path.resolve(__dirname, './client/src'),
+0|albpetrol-legal  |                         ^
+0|albpetrol-legal  | ReferenceError: __dirname is not defined in ES module scope
+0|albpetrol-legal  |     at <anonymous> (/opt/ceshtje-ligjore/vite.config.ts:13:25)
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/vite.config.ts:13
+0|albpetrol-legal  |       '@': path.resolve(__dirname, './client/src'),
+0|albpetrol-legal  |                         ^
+0|albpetrol-legal  | ReferenceError: __dirname is not defined in ES module scope
+0|albpetrol-legal  |     at <anonymous> (/opt/ceshtje-ligjore/vite.config.ts:13:25)
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/vite.config.ts:13
+0|albpetrol-legal  |       '@': path.resolve(__dirname, './client/src'),
+0|albpetrol-legal  |                         ^
+0|albpetrol-legal  | ReferenceError: __dirname is not defined in ES module scope
+0|albpetrol-legal  |     at <anonymous> (/opt/ceshtje-ligjore/vite.config.ts:13:25)
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/vite.config.ts:13
+0|albpetrol-legal  |       '@': path.resolve(__dirname, './client/src'),
+0|albpetrol-legal  |                         ^
+0|albpetrol-legal  | ReferenceError: __dirname is not defined in ES module scope
+0|albpetrol-legal  |     at <anonymous> (/opt/ceshtje-ligjore/vite.config.ts:13:25)
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/vite.config.ts:13
+0|albpetrol-legal  |       '@': path.resolve(__dirname, './client/src'),
+0|albpetrol-legal  |                         ^
+0|albpetrol-legal  | ReferenceError: __dirname is not defined in ES module scope
+0|albpetrol-legal  |     at <anonymous> (/opt/ceshtje-ligjore/vite.config.ts:13:25)
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+^X0|albpetrol-legal  | /opt/ceshtje-ligjore/vite.config.ts:13
+0|albpetrol-legal  |       '@': path.resolve(__dirname, './client/src'),
+0|albpetrol-legal  |                         ^
+0|albpetrol-legal  | ReferenceError: __dirname is not defined in ES module scope
+0|albpetrol-legal  |     at <anonymous> (/opt/ceshtje-ligjore/vite.config.ts:13:25)
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+0|albpetrol-legal  | /opt/ceshtje-ligjore/vite.config.ts:13
+0|albpetrol-legal  |       '@': path.resolve(__dirname, './client/src'),
+0|albpetrol-legal  |                         ^
+0|albpetrol-legal  | ReferenceError: __dirname is not defined in ES module scope
+0|albpetrol-legal  |     at <anonymous> (/opt/ceshtje-ligjore/vite.config.ts:13:25)
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|albpetrol-legal  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|albpetrol-legal  | Node.js v20.19.4
+PM2                | App [albpetrol-legal:0] exited with code [1] via signal [SIGINT]
+PM2                | App [albpetrol-legal:0] starting in -fork mode-
+PM2                | App [albpetrol-legal:0] online
+0|albpetrol-legal  | > rest-express@1.0.0 dev
+0|albpetrol-legal  | > NODE_ENV=development tsx server/index.ts
+^C
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Couldn't connect to server
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

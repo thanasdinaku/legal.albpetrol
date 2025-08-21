@@ -1,0 +1,45 @@
+root@ceshtjeligjore:/opt/ceshtje-ligjore# # Stop the current script with Ctrl+C if it's still running
+
+# First, set the postgres user password directly
+sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres123';"
+
+# Now run this fixed deployment script
+cat > /opt/ceshtje-ligjore/deploy_fixed.sh << 'EOF'
+#!/bin/bash
+set -e
+
+echo "=== Fixed Deployment Script ==="
+
+# Ensure PostgreSQL is running
+systemctl start postgresql
+systemctl enable postgresql
+
+# Set postgres password if not set
+sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres123';" 2>/dev/null || true
+
+# Setup database with proper authentication
+PGPASSWORD=postgres123 sudo -u postgres psql -c "DROP DATABASE IF EXISTS albpetrol_legal_db;"
+PGPASSWORD=postgres123 sudo -u postgres psql -c "DROP USER IF EXISTS legal_admin;"
+PGPASSWORD=postgres123 sudo -u postgres psql -c "CREATE USER legal_admin WITH PASSWORD 'SecurePass2024!';"
+PGPASSWORD=postgres123 sudo -u postgres psql -c "CREATE DATABASE albpetrol_legal_db OWNER legal_admin;"
+PGPASSWORD=postgres123 sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE albpetrol_legal_db TO legal_admin;"
+PGPASSWORD=postgres123 sudo -u postgres psql -c "ALTER USER legal_admin CREATEDB;"
+
+echo "Database setup completed!"
+
+# Go to application directory
+cd /opt/ceshtje-ligjore
+
+# Clone/update application
+if [ -d ".git" ]; then
+    git pull origin main
+./deploy_fixed.shhtje-ligjore/deploy_fixed.sh===""t $1}')"lhost:5432/albpetrol_legal_db
+Password for user postgres: 
+psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  password authentication failed for user "postgres"
+=== Fixed Deployment Script ===
+Synchronizing state of postgresql.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable postgresql
+Password for user postgres: 
+Password for user postgres: 
+psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  password authentication failed for user "postgres"
+root@ceshtjeligjore:/opt/ceshtje-ligjore# 

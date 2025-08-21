@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-// Simple email service using Outlook SMTP for real email delivery
+// Email service using Gmail SMTP with app-specific password
 const formatDateTime = (dateTimeString: string): string => {
   if (!dateTimeString) return '';
   
@@ -20,13 +20,17 @@ const formatDateTime = (dateTimeString: string): string => {
   }
 };
 
-// Create a simple test transporter that logs emails (for demonstration)
-// In production, this would connect to your actual email server
+// Create Gmail SMTP transporter for real email sending
 const createTransporter = () => {
   return nodemailer.createTransporter({
-    streamTransport: true,
-    newline: 'unix',
-    buffer: true
+    service: 'gmail',
+    auth: {
+      user: 'albpetrollegal@gmail.com',
+      pass: 'wqrv kxby uzbm pdfp' // App-specific password for Gmail
+    },
+    tls: {
+      rejectUnauthorized: false
+    }
   });
 };
 
@@ -41,26 +45,37 @@ interface EmailParams {
 export async function sendEmail(params: EmailParams): Promise<boolean> {
   try {
     console.log('========================================');
-    console.log('📧 EMAIL NOTIFICATION FROM it.system@albpetrol.al');
+    console.log('SENDING REAL EMAIL via Gmail SMTP');
     console.log('========================================');
-    console.log(`📨 To: ${params.to}`);
-    console.log(`📤 From: ${params.from || 'it.system@albpetrol.al'}`);
-    console.log(`📝 Subject: ${params.subject}`);
-    console.log('📄 Content:');
-    console.log(params.text);
-    if (params.html) {
-      console.log('🔗 HTML Version Available');
-    }
-    console.log('========================================');
-    console.log('✅ Email notification processed successfully');
-    console.log('📧 Using it.system@albpetrol.al email system');
+    console.log(`To: ${params.to}`);
+    console.log(`From: ${params.from || 'albpetrollegal@gmail.com'}`);
+    console.log(`Subject: ${params.subject}`);
     console.log('========================================');
     
-    // In production, this would connect to your actual email server
-    // For now, comprehensive logging shows the email content
+    const transporter = createTransporter();
+    
+    const mailOptions = {
+      from: `"Sistemi Ligjor Albpetrol" <albpetrollegal@gmail.com>`,
+      to: params.to,
+      subject: params.subject,
+      text: params.text,
+      html: params.html,
+      replyTo: 'it.system@albpetrol.al'
+    };
+    
+    const result = await transporter.sendMail(mailOptions);
+    console.log(`EMAIL SENT SUCCESSFULLY to ${params.to}`);
+    console.log(`Message ID: ${result.messageId}`);
+    console.log('========================================');
     return true;
   } catch (error) {
-    console.error('Email processing error:', error);
+    console.error('Gmail SMTP email error:', error);
+    console.log('========================================');
+    console.log('EMAIL LOGGING (Fallback):');
+    console.log(`To: ${params.to}`);
+    console.log(`Subject: ${params.subject}`);
+    console.log(`Content: ${params.text}`);
+    console.log('========================================');
     return false;
   }
 }
@@ -69,19 +84,31 @@ export async function sendEmail(params: EmailParams): Promise<boolean> {
 export async function testEmailConnection(): Promise<boolean> {
   try {
     console.log('========================================');
-    console.log('🔧 TESTING EMAIL SYSTEM CONNECTION');
-    console.log('📧 Using: it.system@albpetrol.al');
-    console.log('⚙️  System: Albpetrol Legal Management');
-    console.log('========================================');
-    console.log('✅ Email system ready and operational');
-    console.log('📨 All notifications will be processed');
-    console.log('🔔 Court hearing reminders: Active');
-    console.log('📝 Case update notifications: Active');
+    console.log('TESTING GMAIL SMTP CONNECTION');
     console.log('========================================');
     
+    const transporter = createTransporter();
+    
+    // Verify SMTP connection
+    await transporter.verify();
+    console.log('Gmail SMTP connection verified successfully');
+    
+    // Send a real test email
+    const testResult = await transporter.sendMail({
+      from: '"Sistemi Ligjor Albpetrol" <albpetrollegal@gmail.com>',
+      to: 'thanas.dinaku@albpetrol.al',
+      subject: 'Email System Test - Albpetrol Legal',
+      text: 'This is a test email to verify the Albpetrol Legal Case Management system can send real emails.',
+      html: '<h3>Email System Test</h3><p>This is a test email to verify the Albpetrol Legal Case Management system can send real emails.</p><p>System is operational and ready to send notifications.</p>',
+      replyTo: 'it.system@albpetrol.al'
+    });
+    
+    console.log(`Test email sent successfully - Message ID: ${testResult.messageId}`);
+    console.log('Real emails will now be delivered to recipients');
+    console.log('========================================');
     return true;
   } catch (error) {
-    console.error('Email system test failed:', error);
+    console.error('Gmail SMTP connection test failed:', error);
     return false;
   }
 }

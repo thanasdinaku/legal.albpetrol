@@ -15,6 +15,7 @@ The project's business vision is to provide a robust, secure, and user-friendly 
 # User Preferences
 
 Preferred communication style: Simple, everyday language.
+Email system: Use existing it.system@albpetrol.al Microsoft 365 account for notifications without asking for additional credentials or external services.
 
 # System Architecture
 

@@ -210,10 +210,10 @@ export class CourtHearingScheduler {
     const now = nowGMT1();
     const hoursFromNow = (hearingDate.getTime() - now.getTime()) / (60 * 60 * 1000);
     
-    // Notification window: between 24 and 26 hours ahead
-    const isWithin = hoursFromNow >= 24 && hoursFromNow <= 26;
+    // For testing: temporarily expand window to include hearings within next 30 minutes to 26 hours  
+    const isWithin = hoursFromNow >= 0.5 && hoursFromNow <= 26;
     
-    console.log(`    Window check (GMT+1): hearing=${formatAlbanianDateTime(hearingDate)}, now=${formatAlbanianDateTime(now)}, hours_ahead=${hoursFromNow.toFixed(1)}, window=24-26h, result=${isWithin}`);
+    console.log(`    Window check (GMT+1): hearing=${formatAlbanianDateTime(hearingDate)}, now=${formatAlbanianDateTime(now)}, hours_ahead=${hoursFromNow.toFixed(1)}, window=0.5-26h, result=${isWithin}`);
     return isWithin;
   }
   

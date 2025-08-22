@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import type { DataEntry, User } from '@shared/schema';
-import { formatAlbanianDateTime, parseISOToGMT2 } from './timezone';
+import { formatAlbanianDateTime, parseISOToGMT1 } from './timezone';
 
 // Configure real SMTP transporter for actual email delivery
 const transporter = nodemailer.createTransport({
@@ -557,11 +557,11 @@ export async function sendCourtHearingNotification(
   notification: any
 ): Promise<boolean> {
   try {
-    // Parse the hearing date and format it for Albanian display in GMT+2
-    const hearingDate = parseISOToGMT2(notification.hearingDateTime);
+    // Parse the hearing date and format it for Albanian display in GMT+1
+    const hearingDate = parseISOToGMT1(notification.hearingDateTime);
     const formattedDateTime = formatAlbanianDateTime(hearingDate);
     
-    const message = `Nesër, një seancë gjyqësore do të zhvillohet për ${notification.plaintiff} dhe ${notification.defendant} në ${formattedDateTime} (GMT+2)`;
+    const message = `Nesër, një seancë gjyqësore do të zhvillohet për ${notification.plaintiff} dhe ${notification.defendant} në ${formattedDateTime} (GMT+1 Albania Time)`;
     
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
@@ -584,7 +584,7 @@ export async function sendCourtHearingNotification(
               <li><strong>Paditesi:</strong> ${notification.plaintiff}</li>
               <li><strong>I Paditur:</strong> ${notification.defendant}</li>
               <li><strong>Data dhe Ora:</strong> <span style="color: #dc2626; font-weight: bold;">${formattedDateTime}</span></li>
-              <li><strong>Zonë Kohore:</strong> GMT+2 (Koha e Evropës Qendrore)</li>
+              <li><strong>Zonë Kohore:</strong> GMT+1 (Koha e Shqipërisë)</li>
               <li><strong>Nr. Çështjës:</strong> ${notification.caseId}</li>
               <li><strong>Lloji i Seancës:</strong> ${notification.hearingType === 'first_instance' ? 'Shkalla e Parë' : 'Apel'}</li>
             </ul>

@@ -2,7 +2,7 @@ import { db } from './db';
 import { dataEntries, systemSettings } from '@shared/schema';
 import { sendCourtHearingNotification } from './email';
 import { sql } from 'drizzle-orm';
-import { nowGMT2, toGMT2, formatAlbanianDateTime, logTimezoneInfo } from './timezone';
+import { nowGMT1, toGMT1, formatAlbanianDateTime, logTimezoneInfo } from './timezone';
 
 interface HearingCheck {
   id: number;
@@ -62,11 +62,11 @@ export class CourtHearingScheduler {
         return;
       }
       
-      // Get current time and 26-hour window (to catch "tomorrow" hearings) in GMT+2
-      const now = nowGMT2();
+      // Get current time and 26-hour window (to catch "tomorrow" hearings) in GMT+1
+      const now = nowGMT1();
       const twentySixHoursFromNow = new Date(now.getTime() + (26 * 60 * 60 * 1000));
       
-      console.log(`Checking hearings between NOW (${formatAlbanianDateTime(now)}) and 26 HOURS FROM NOW (${formatAlbanianDateTime(twentySixHoursFromNow)}) [GMT+2]`);
+      console.log(`Checking hearings between NOW (${formatAlbanianDateTime(now)}) and 26 HOURS FROM NOW (${formatAlbanianDateTime(twentySixHoursFromNow)}) [GMT+1 Albania Time]`);
       
       // Get all entries with hearings in the next 23-24 hours
       const entries = await db.select().from(dataEntries);
@@ -81,17 +81,17 @@ export class CourtHearingScheduler {
           console.log(`Parsed hearing date:`, hearingDate);
           
           if (hearingDate) {
-            const hearingGMT2 = toGMT2(hearingDate);
-            const hoursFromNow = Math.round((hearingGMT2.getTime() - now.getTime()) / (60 * 60 * 1000));
-            const isWithinWindow = this.isWithinNotificationWindow(hearingGMT2, now, twentySixHoursFromNow);
-            console.log(`Is within notification window: ${isWithinWindow} (hearing at ${formatAlbanianDateTime(hearingGMT2)} is ${hoursFromNow} hours from now)`);
+            const hearingGMT1 = toGMT1(hearingDate);
+            const hoursFromNow = Math.round((hearingGMT1.getTime() - now.getTime()) / (60 * 60 * 1000));
+            const isWithinWindow = this.isWithinNotificationWindow(hearingGMT1, now, twentySixHoursFromNow);
+            console.log(`Is within notification window: ${isWithinWindow} (hearing at ${formatAlbanianDateTime(hearingGMT1)} is ${hoursFromNow} hours from now)`);
             
             if (isWithinWindow) {
               upcomingHearings.push({
                 id: entry.id,
                 paditesi: entry.paditesi,
                 iPaditur: entry.iPaditur,
-                hearingDateTime: hearingGMT2.toISOString(),
+                hearingDateTime: hearingGMT1.toISOString(),
                 hearingType: 'first_instance'
               });
               console.log(`Added hearing for case ${entry.id} to notification queue`);
@@ -106,17 +106,17 @@ export class CourtHearingScheduler {
           console.log(`Parsed appeal hearing date:`, hearingDate);
           
           if (hearingDate) {
-            const hearingGMT2 = toGMT2(hearingDate);
-            const hoursFromNow = Math.round((hearingGMT2.getTime() - now.getTime()) / (60 * 60 * 1000));
-            const isWithinWindow = this.isWithinNotificationWindow(hearingGMT2, now, twentySixHoursFromNow);
-            console.log(`Appeal hearing is within notification window: ${isWithinWindow} (hearing at ${formatAlbanianDateTime(hearingGMT2)} is ${hoursFromNow} hours from now)`);
+            const hearingGMT1 = toGMT1(hearingDate);
+            const hoursFromNow = Math.round((hearingGMT1.getTime() - now.getTime()) / (60 * 60 * 1000));
+            const isWithinWindow = this.isWithinNotificationWindow(hearingGMT1, now, twentySixHoursFromNow);
+            console.log(`Appeal hearing is within notification window: ${isWithinWindow} (hearing at ${formatAlbanianDateTime(hearingGMT1)} is ${hoursFromNow} hours from now)`);
             
             if (isWithinWindow) {
               upcomingHearings.push({
                 id: entry.id,
                 paditesi: entry.paditesi,
                 iPaditur: entry.iPaditur,
-                hearingDateTime: hearingGMT2.toISOString(),
+                hearingDateTime: hearingGMT1.toISOString(),
                 hearingType: 'appeal'
               });
               console.log(`Added appeal hearing for case ${entry.id} to notification queue`);
@@ -206,7 +206,7 @@ export class CourtHearingScheduler {
   
   private isWithinNotificationWindow(hearingDate: Date, windowStart: Date, windowEnd: Date): boolean {
     const isWithin = hearingDate >= windowStart && hearingDate <= windowEnd;
-    console.log(`    Window check (GMT+2): hearing=${formatAlbanianDateTime(hearingDate)}, start=${formatAlbanianDateTime(windowStart)}, end=${formatAlbanianDateTime(windowEnd)}, result=${isWithin}`);
+    console.log(`    Window check (GMT+1): hearing=${formatAlbanianDateTime(hearingDate)}, start=${formatAlbanianDateTime(windowStart)}, end=${formatAlbanianDateTime(windowEnd)}, result=${isWithin}`);
     return isWithin;
   }
   

@@ -33,6 +33,19 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
     (caseData.attachments as Array<{ name: string; url: string; path: string }>) || []
   );
   
+  // Helper function to convert ISO date to datetime-local format for Albania timezone
+  const formatDateTimeLocal = (isoString: string | null) => {
+    if (!isoString) return "";
+    try {
+      const date = new Date(isoString);
+      // Convert to Albania timezone (GMT+1) for display
+      const albaniaTime = new Date(date.getTime() + (1 * 60 * 60 * 1000));
+      return albaniaTime.toISOString().slice(0, 16);
+    } catch {
+      return "";
+    }
+  };
+
   const form = useForm<UpdateDataEntry>({
     resolver: zodResolver(updateDataEntrySchema),
     defaultValues: {
@@ -44,6 +57,8 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
       fazaGjykataShkalle: caseData.fazaGjykataShkalle || "",
       gjykataApelit: caseData.gjykataApelit || "",
       fazaGjykataApelit: caseData.fazaGjykataApelit || "",
+      zhvillimiSeancesShkalleI: formatDateTimeLocal(caseData.zhvillimiSeancesShkalleI),
+      zhvillimiSeancesApel: formatDateTimeLocal(caseData.zhvillimiSeancesApel),
       fazaAktuale: caseData.fazaAktuale || "",
       perfaqesuesi: caseData.perfaqesuesi || "",
       demiIPretenduar: caseData.demiIPretenduar || "",
@@ -78,7 +93,26 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
   });
 
   const onSubmit = (data: UpdateDataEntry) => {
-    updateMutation.mutate(data);
+    // Convert datetime-local values from Albania time to UTC for storage
+    const convertToUTC = (datetimeLocal: string) => {
+      if (!datetimeLocal) return null;
+      try {
+        // datetime-local is treated as Albania time, convert to UTC
+        const albaniaTime = new Date(datetimeLocal);
+        const utcTime = new Date(albaniaTime.getTime() - (1 * 60 * 60 * 1000));
+        return utcTime.toISOString();
+      } catch {
+        return null;
+      }
+    };
+
+    const processedData = {
+      ...data,
+      zhvillimiSeancesShkalleI: convertToUTC(data.zhvillimiSeancesShkalleI || ""),
+      zhvillimiSeancesApel: convertToUTC(data.zhvillimiSeancesApel || ""),
+    };
+
+    updateMutation.mutate(processedData);
   };
 
   // Document upload handlers

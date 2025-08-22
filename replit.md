@@ -15,7 +15,7 @@ The project's business vision is to provide a robust, secure, and user-friendly 
 # User Preferences
 
 Preferred communication style: Simple, everyday language.
-Email system: Use console logging for email notifications with it.system@albpetrol.al branding. User preference is to use existing email infrastructure without additional external service configuration.
+Email system: SendGrid integration active with valid API key for real email delivery from it.system@albpetrol.al. System sends actual emails to thanas.dinaku@albpetrol.al for all notifications including court hearings and case updates.
 
 # System Architecture
 

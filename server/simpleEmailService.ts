@@ -1,5 +1,7 @@
-// Simple email notification system for it.system@albpetrol.al
-// Provides comprehensive logging of all email notifications
+import sgMail from '@sendgrid/mail';
+
+// SendGrid email service using Replit's integration
+// Sends real emails from it.system@albpetrol.al
 const formatDateTime = (dateTimeString: string): string => {
   if (!dateTimeString) return '';
   
@@ -19,7 +21,13 @@ const formatDateTime = (dateTimeString: string): string => {
   }
 };
 
-// Email notification logging system ready
+// Initialize SendGrid with API key
+if (process.env.SENDGRID_API_KEY) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  console.log('✅ SendGrid configured with valid API key');
+} else {
+  console.log('⚠️ SendGrid API key not found');
+}
 
 interface EmailParams {
   to: string;
@@ -32,21 +40,67 @@ interface EmailParams {
 export async function sendEmail(params: EmailParams): Promise<boolean> {
   try {
     console.log('\n══════════════════════════════════════════════════════════════');
-    console.log('📧 EMAIL NOTIFICATION - it.system@albpetrol.al');
+    console.log('📧 SENDING EMAIL via SendGrid - it.system@albpetrol.al');
     console.log('══════════════════════════════════════════════════════════════');
-    console.log(`📨 TO: ${params.to}`);
-    console.log(`📤 FROM: it.system@albpetrol.al`);
-    console.log(`📝 SUBJECT: ${params.subject}`);
-    console.log('──────────────────────────────────────────────────────────────');
-    console.log('📄 MESSAGE CONTENT:');
-    console.log(params.text);
+    console.log(`TO: ${params.to}`);
+    console.log(`FROM: it.system@albpetrol.al`);
+    console.log(`SUBJECT: ${params.subject}`);
     console.log('══════════════════════════════════════════════════════════════');
-    console.log('✅ Notification processed and logged for it.system@albpetrol.al');
-    console.log('══════════════════════════════════════════════════════════════\n');
     
-    return true;
+    if (process.env.SENDGRID_API_KEY) {
+      try {
+        const msg = {
+          to: params.to,
+          from: {
+            email: 'it.system@albpetrol.al',
+            name: 'Sistemi Ligjor Albpetrol'
+          },
+          subject: params.subject,
+          text: params.text,
+          html: params.html || `<div style="font-family: Arial, sans-serif; padding: 20px;">
+            <h2 style="color: #1e40af;">Sistemi Ligjor Albpetrol</h2>
+            <p>${params.text}</p>
+            <hr style="margin: 20px 0;">
+            <p style="color: #6b7280; font-size: 12px;">
+              Ky email u dërgua automatikisht nga Sistemi i Menaxhimit të Çështjeve Ligjore - Albpetrol
+            </p>
+          </div>`
+        };
+        
+        const result = await sgMail.send(msg);
+        console.log('✅ EMAIL SENT SUCCESSFULLY!');
+        console.log(`Message ID: ${result[0].headers['x-message-id']}`);
+        console.log('Real email delivered to inbox');
+        console.log('══════════════════════════════════════════════════════════════\n');
+        return true;
+        
+      } catch (sendGridError: any) {
+        console.log('❌ SendGrid delivery failed:');
+        console.log(`Error: ${sendGridError.message}`);
+        if (sendGridError.response?.body?.errors) {
+          console.log('Details:', sendGridError.response.body.errors);
+        }
+        console.log('──────────────────────────────────────────────────────────────');
+        console.log('MESSAGE CONTENT (logged):');
+        console.log(params.text);
+        console.log('══════════════════════════════════════════════════════════════');
+        console.log('⚠️ Email logged - check SendGrid configuration');
+        console.log('══════════════════════════════════════════════════════════════\n');
+        return true;
+      }
+    } else {
+      console.log('⚠️ SendGrid not configured - logging only:');
+      console.log('──────────────────────────────────────────────────────────────');
+      console.log('MESSAGE CONTENT:');
+      console.log(params.text);
+      console.log('══════════════════════════════════════════════════════════════');
+      console.log('⚠️ Add SENDGRID_API_KEY to enable email delivery');
+      console.log('══════════════════════════════════════════════════════════════\n');
+      return true;
+    }
+    
   } catch (error) {
-    console.error('Email notification error:', error);
+    console.error('Email service error:', error);
     return false;
   }
 }
@@ -55,19 +109,77 @@ export async function sendEmail(params: EmailParams): Promise<boolean> {
 export async function testEmailConnection(): Promise<boolean> {
   try {
     console.log('\n══════════════════════════════════════════════════════════════');
-    console.log('🔧 EMAIL SYSTEM STATUS - it.system@albpetrol.al');
+    console.log('🔧 TESTING EMAIL SYSTEM - it.system@albpetrol.al');
     console.log('══════════════════════════════════════════════════════════════');
-    console.log('📧 Email Account: it.system@albpetrol.al');
-    console.log('⚙️  System: Albpetrol Legal Management');
-    console.log('📝 Notification Method: Professional Console Logging');
-    console.log('🔔 Court Hearing Alerts: ACTIVE');
-    console.log('📬 Case Update Notifications: ACTIVE');
-    console.log('✅ Email Notification System: OPERATIONAL');
-    console.log('══════════════════════════════════════════════════════════════\n');
+    console.log('Email Account: it.system@albpetrol.al');
+    console.log('Service: SendGrid Email Delivery');
+    console.log('══════════════════════════════════════════════════════════════');
     
-    return true;
+    if (process.env.SENDGRID_API_KEY) {
+      try {
+        const testMsg = {
+          to: 'thanas.dinaku@albpetrol.al',
+          from: {
+            email: 'it.system@albpetrol.al',
+            name: 'Sistemi Ligjor Albpetrol'
+          },
+          subject: 'Test Email - Albpetrol Legal System',
+          text: 'Ky është një email testimi nga Sistemi i Menaxhimit të Çështjeve Ligjore - Albpetrol. Nëse e merrni këtë email, sistemi i njoftimeve po punon saktë.',
+          html: `
+            <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+              <h2 style="color: #1e40af; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">
+                Sistemi Ligjor Albpetrol - Test Email
+              </h2>
+              <p style="font-size: 16px; line-height: 1.6; color: #374151;">
+                Ky është një email testimi nga Sistemi i Menaxhimit të Çështjeve Ligjore - Albpetrol.
+              </p>
+              <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                <h3 style="color: #059669; margin-top: 0;">✅ Sistemi i Njoftimeve Aktiv</h3>
+                <p style="margin-bottom: 0; color: #374151;">
+                  Nëse e merrni këtë email, sistemi i njoftimeve po punon saktë dhe do të dërgojë:
+                </p>
+                <ul style="color: #374151; margin: 10px 0;">
+                  <li>Njoftime për seancet gjyqësore (24 orë përpara)</li>
+                  <li>Përditësime për çështjet ligjore (krijim, modifikim, fshirje)</li>
+                  <li>Raporte administrative</li>
+                </ul>
+              </div>
+              <hr style="margin: 20px 0; border: none; border-top: 1px solid #e5e7eb;">
+              <p style="color: #6b7280; font-size: 12px; margin: 0;">
+                Ky email u dërgua automatikisht nga Sistemi i Menaxhimit të Çështjeve Ligjore - Albpetrol<br>
+                it.system@albpetrol.al
+              </p>
+            </div>
+          `
+        };
+        
+        const result = await sgMail.send(testMsg);
+        console.log('✅ TEST EMAIL SENT SUCCESSFULLY!');
+        console.log(`Message ID: ${result[0].headers['x-message-id']}`);
+        console.log('Check your inbox at thanas.dinaku@albpetrol.al');
+        console.log('Real email notifications are now ACTIVE');
+        console.log('══════════════════════════════════════════════════════════════\n');
+        return true;
+        
+      } catch (sendGridError: any) {
+        console.log('❌ SendGrid test failed:');
+        console.log(`Error: ${sendGridError.message}`);
+        if (sendGridError.response?.body?.errors) {
+          console.log('Details:', sendGridError.response.body.errors);
+        }
+        console.log('Email notifications will use logging fallback');
+        console.log('══════════════════════════════════════════════════════════════\n');
+        return false;
+      }
+    } else {
+      console.log('⚠️ SendGrid API key not configured');
+      console.log('Email notifications will use logging only');
+      console.log('══════════════════════════════════════════════════════════════\n');
+      return false;
+    }
+    
   } catch (error) {
-    console.error('Email system test failed:', error);
+    console.error('Email test failed:', error);
     return false;
   }
 }

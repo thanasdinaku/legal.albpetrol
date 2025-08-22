@@ -39,11 +39,23 @@ import { sql } from "drizzle-orm";
 import { sessions } from "@shared/schema";
 import { sendNewEntryNotification, sendEditEntryNotification, sendDeleteEntryNotification } from "./email";
 import { sendCourtHearingNotification, sendCaseUpdateNotification, testEmailConnection } from "./email";
+import nodemailer from 'nodemailer';
 import { generateUserManual } from "./fixed-manual";
 import { generateSimpleManual } from "./simple-manual";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 import { BackupService, type BackupOptions, type BackupProgress } from "./backup-service";
 import multer from "multer";
+
+// Create SMTP transporter for testing
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: parseInt(process.env.SMTP_PORT || '587'),
+  secure: process.env.SMTP_PORT === '465',
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
 
 // Configure multer for file uploads
 const upload = multer({
@@ -1031,16 +1043,19 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
       // Test basic email connection
       const basicTest = await testEmailConnection();
       
-      // Test basic email sending with console logging
-      console.log('\n══════════════════════════════════════════════════════════════');
-      console.log('📧 BASIC EMAIL TEST - it.system@albpetrol.al');
-      console.log('══════════════════════════════════════════════════════════════');
-      console.log(`TO: ${settings.recipientEmail}`);
-      console.log(`FROM: ${settings.senderEmail || 'legal-system@albpetrol.al'}`);
-      console.log(`SUBJECT: Test Email from Albpetrol Legal System`);
-      console.log('CONTENT: This is a test email to verify email configuration is working.');
-      console.log('✅ Basic email test completed successfully');
-      console.log('══════════════════════════════════════════════════════════════\n');
+      // Test basic email sending with real SMTP
+      try {
+        await transporter.sendMail({
+          from: settings.senderEmail || 'it.system@albpetrol.al',
+          to: settings.recipientEmail,
+          subject: 'Test Email from Albpetrol Legal System',
+          text: 'This is a test email to verify email configuration is working.',
+          html: '<p>This is a test email to verify email configuration is working.</p>'
+        });
+        console.log('✅ Basic email test - REAL EMAIL SENT successfully');
+      } catch (error) {
+        console.log('❌ Basic email test failed:', error);
+      }
 
       // Test court hearing notification format
       const courtTest = await sendCourtHearingNotification(

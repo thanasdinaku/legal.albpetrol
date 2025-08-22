@@ -1,21 +1,43 @@
-// Using console logging for email notifications as requested
+import nodemailer from 'nodemailer';
 import type { DataEntry, User } from '@shared/schema';
 
-// Configure transporter using environment variables
-// Using console logging for email notifications per user preference
-const logEmail = (to: string, from: string, subject: string, content: string) => {
+// Configure real SMTP transporter for actual email delivery
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: parseInt(process.env.SMTP_PORT || '587'),
+  secure: process.env.SMTP_PORT === '465',
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
+
+// Helper function for email delivery with logging
+const sendActualEmail = async (to: string, from: string, subject: string, text: string, html?: string) => {
   console.log('\n══════════════════════════════════════════════════════════════');
-  console.log('📧 EMAIL NOTIFICATION - it.system@albpetrol.al');
+  console.log('📧 SENDING REAL EMAIL - it.system@albpetrol.al');
   console.log('══════════════════════════════════════════════════════════════');
   console.log(`TO: ${to}`);
   console.log(`FROM: ${from}`);
   console.log(`SUBJECT: ${subject}`);
   console.log('──────────────────────────────────────────────────────────────');
-  console.log('MESSAGE CONTENT:');
-  console.log(content);
-  console.log('══════════════════════════════════════════════════════════════');
-  console.log('✅ Notification logged for it.system@albpetrol.al');
-  console.log('══════════════════════════════════════════════════════════════\n');
+  
+  try {
+    await transporter.sendMail({
+      from,
+      to,
+      subject,
+      text,
+      html
+    });
+    console.log('✅ EMAIL DELIVERED SUCCESSFULLY');
+    console.log('══════════════════════════════════════════════════════════════\n');
+    return true;
+  } catch (error) {
+    console.log('❌ EMAIL DELIVERY FAILED:', error);
+    console.log('══════════════════════════════════════════════════════════════\n');
+    throw error;
+  }
 };
 
 export interface EmailNotificationData {
@@ -72,12 +94,17 @@ export async function sendTwoFactorCode(
   // Email configuration for console logging
 
   try {
-    console.log(`Sending 2FA code to: ${user.email}`);
-    logEmail(user.email, 'it.system@albpetrol.al', 'Kodi i Verifikimit - Albpetrol SH.A.', `Kodi juaj i verifikimit: ${code}`);
-    console.log(`✅ Two-factor code logged for: ${user.email}`);
+    await sendActualEmail(
+      user.email,
+      'it.system@albpetrol.al',
+      'Kodi i Verifikimit - Albpetrol SH.A.',
+      `Kodi juaj i verifikimit: ${code}`,
+      htmlContent
+    );
+    console.log(`✅ Two-factor code sent to: ${user.email}`);
   } catch (error: any) {
-    console.error('❌ Failed to log two-factor code:', error);
-    throw new Error(`Email logging failed: ${error?.message || 'Unknown error'}`);
+    console.error('❌ Failed to send two-factor code:', error);
+    throw new Error(`Email delivery failed: ${error?.message || 'Unknown error'}`);
   }
 }
 
@@ -176,13 +203,14 @@ Ju lutemi mos u përgjigjeni në këtë adresë email.
   `;
 
   try {
-    console.log(`Email notification sent to: ${notificationSettings.emailAddresses.join(', ')}`);
-    logEmail(
+    await sendActualEmail(
       notificationSettings.emailAddresses.join(', '),
       'it.system@albpetrol.al',
       notificationSettings.subject,
-      plainTextContent
+      plainTextContent,
+      htmlContent
     );
+    console.log(`✅ New entry notification delivered to: ${notificationSettings.emailAddresses.join(', ')}`);
   } catch (error) {
     console.error('Failed to send email notification:', error);
     throw error;
@@ -376,13 +404,14 @@ Ju lutemi mos u përgjigjeni në këtë adresë email.
   `;
 
   try {
-    console.log(`Edit notification email sent to: ${notificationSettings.emailAddresses.join(', ')}`);
-    logEmail(
+    await sendActualEmail(
       notificationSettings.emailAddresses.join(', '),
       'it.system@albpetrol.al',
       `Ndryshim në çështjen: ${updatedEntry.paditesi}`,
-      plainTextContent
+      plainTextContent,
+      htmlContent
     );
+    console.log(`✅ Edit notification delivered to: ${notificationSettings.emailAddresses.join(', ')}`);
   } catch (error) {
     console.error('Failed to send edit notification email:', error);
     throw error;
@@ -484,13 +513,14 @@ Ju lutemi mos u përgjigjeni në këtë adresë email.
   `;
 
   try {
-    console.log(`Delete notification email sent to: ${notificationSettings.emailAddresses.join(', ')}`);
-    logEmail(
+    await sendActualEmail(
       notificationSettings.emailAddresses.join(', '),
       'it.system@albpetrol.al',
       `Fshirje e çështjes: ${deletedEntry.paditesi}`,
-      plainTextContent
+      plainTextContent,
+      htmlContent
     );
+    console.log(`✅ Delete notification delivered to: ${notificationSettings.emailAddresses.join(', ')}`);
   } catch (error) {
     console.error('Failed to send delete notification email:', error);
     throw error;
@@ -500,18 +530,22 @@ Ju lutemi mos u përgjigjeni në këtë adresë email.
 export async function testEmailConnection(): Promise<boolean> {
   try {
     console.log('\n══════════════════════════════════════════════════════════════');
-    console.log('🔧 EMAIL SYSTEM STATUS - it.system@albpetrol.al');
+    console.log('🔧 TESTING REAL EMAIL CONNECTION - it.system@albpetrol.al');
     console.log('══════════════════════════════════════════════════════════════');
+    
+    await transporter.verify();
+    
     console.log('📧 Email Account: it.system@albpetrol.al');
     console.log('⚙️ System: Albpetrol Legal Management');
-    console.log('📝 Notification Method: Professional Console Logging');
+    console.log('📝 Delivery Method: Real SMTP Email Delivery');
     console.log('🔔 Court Hearing Alerts: ACTIVE');
     console.log('📬 Case Update Notifications: ACTIVE');
-    console.log('✅ Email Notification System: OPERATIONAL');
+    console.log('✅ SMTP CONNECTION VERIFIED - READY FOR REAL EMAIL DELIVERY');
     console.log('══════════════════════════════════════════════════════════════\n');
     return true;
   } catch (error) {
-    console.error('Email system test failed:', error);
+    console.error('❌ SMTP connection test failed:', error);
+    console.log('══════════════════════════════════════════════════════════════\n');
     return false;
   }
 }
@@ -524,16 +558,16 @@ export async function sendCourtHearingNotification(
   try {
     const message = `Tomorrow, a court hearing will take place for ${notification.plaintiff} and ${notification.defendant} at ${notification.hearingDateTime}`;
     
-    console.log('Court hearing notification email sent to:', recipientEmail);
-    logEmail(
+    await sendActualEmail(
       recipientEmail,
       fromEmail,
       'Court Hearing Notification - Albpetrol Legal System',
       message
     );
+    console.log('✅ Court hearing notification delivered to:', recipientEmail);
     return true;
   } catch (error) {
-    console.error('Failed to send court hearing notification:', error);
+    console.error('❌ Failed to send court hearing notification:', error);
     return false;
   }
 }
@@ -546,16 +580,16 @@ export async function sendCaseUpdateNotification(
   try {
     const message = `Përditësim çështjeje: ${notification.paditesi} kundrejt ${notification.iPaditur} u ${notification.updateType === 'created' ? 'krijua' : notification.updateType === 'updated' ? 'përditësua' : 'fshi'}`;
     
-    console.log('Case update notification email sent to:', recipientEmail);
-    logEmail(
+    await sendActualEmail(
       recipientEmail,
       fromEmail,
       `Përditësim çështjeje: ${notification.paditesi} kundrejt ${notification.iPaditur} u ${notification.updateType === 'created' ? 'krijua' : notification.updateType === 'updated' ? 'përditësua' : 'fshi'}`,
       message
     );
+    console.log('✅ Case update notification delivered to:', recipientEmail);
     return true;
   } catch (error) {
-    console.error('Failed to send case update notification:', error);
+    console.error('❌ Failed to send case update notification:', error);
     return false;
   }
 }

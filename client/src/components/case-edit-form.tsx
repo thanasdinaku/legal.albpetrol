@@ -33,18 +33,13 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
     (caseData.attachments as Array<{ name: string; url: string; path: string }>) || []
   );
   
-  // Helper function to convert UTC date to datetime-local format for Albania timezone
+  // Helper function to convert UTC date to datetime-local format for display
   const formatDateTimeLocal = (isoString: string | null) => {
     if (!isoString) return "";
     try {
-      const utcDate = new Date(isoString);
-      // Add 1 hour to convert from UTC to Albania time (GMT+1) for display
-      const year = utcDate.getUTCFullYear();
-      const month = String(utcDate.getUTCMonth() + 1).padStart(2, '0');
-      const day = String(utcDate.getUTCDate()).padStart(2, '0');
-      const hour = String(utcDate.getUTCHours() + 1).padStart(2, '0'); // Add 1 hour for Albania time
-      const minute = String(utcDate.getUTCMinutes()).padStart(2, '0');
-      return `${year}-${month}-${day}T${hour}:${minute}`;
+      // Simply extract the datetime part from the ISO string
+      // "2025-08-23T03:47:00.000Z" -> "2025-08-23T03:47"
+      return isoString.slice(0, 16);
     } catch {
       return "";
     }
@@ -103,17 +98,12 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
     const convertToUTC = (datetimeLocal: string) => {
       if (!datetimeLocal) return null;
       try {
-        // datetime-local gives us a string like "2025-08-23T16:45"
-        // Parse this explicitly as Albania time and convert to UTC
-        const [date, time] = datetimeLocal.split('T');
-        const [year, month, day] = date.split('-').map(Number);
-        const [hour, minute] = time.split(':').map(Number);
-        
-        // Create date in Albania timezone (GMT+1)
-        // We manually construct the UTC equivalent by subtracting 1 hour
-        const utcDate = new Date(Date.UTC(year, month - 1, day, hour - 1, minute));
-        console.log(`Converting ${datetimeLocal} (Albania time) -> ${utcDate.toISOString()} (UTC)`);
-        return utcDate.toISOString();
+        // datetime-local gives us a string like "2025-08-23T04:47"
+        // We want to store this EXACT time as-is in UTC (no conversion)
+        // The user enters Albania time, but we'll store it directly as UTC
+        const isoString = datetimeLocal + ':00.000Z';
+        console.log(`Storing ${datetimeLocal} (user input) -> ${isoString} (direct UTC storage)`);
+        return isoString;
       } catch (error) {
         console.error('Date conversion error:', error);
         return null;

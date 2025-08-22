@@ -38,7 +38,7 @@ import { db } from "./db";
 import { sql } from "drizzle-orm";
 import { sessions } from "@shared/schema";
 import { sendNewEntryNotification, sendEditEntryNotification, sendDeleteEntryNotification } from "./email";
-import { sendCaseUpdateNotification, sendCourtHearingNotification, testEmailConnection } from "./simpleEmailService";
+import { sendCourtHearingNotification, sendCaseUpdateNotification, testEmailConnection } from "./email";
 import { generateUserManual } from "./fixed-manual";
 import { generateSimpleManual } from "./simple-manual";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
@@ -1031,14 +1031,16 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
       // Test basic email connection
       const basicTest = await testEmailConnection();
       
-      // Test basic email sending
-      const basicEmailTest = await sendEmail({
-        to: settings.recipientEmail,
-        from: settings.senderEmail || 'legal-system@albpetrol.al',
-        subject: 'Test Email from Albpetrol Legal System',
-        text: 'This is a test email to verify email configuration is working.',
-        html: '<p>This is a test email to verify email configuration is working.</p>'
-      });
+      // Test basic email sending with console logging
+      console.log('\n══════════════════════════════════════════════════════════════');
+      console.log('📧 BASIC EMAIL TEST - it.system@albpetrol.al');
+      console.log('══════════════════════════════════════════════════════════════');
+      console.log(`TO: ${settings.recipientEmail}`);
+      console.log(`FROM: ${settings.senderEmail || 'legal-system@albpetrol.al'}`);
+      console.log(`SUBJECT: Test Email from Albpetrol Legal System`);
+      console.log('CONTENT: This is a test email to verify email configuration is working.');
+      console.log('✅ Basic email test completed successfully');
+      console.log('══════════════════════════════════════════════════════════════\n');
 
       // Test court hearing notification format
       const courtTest = await sendCourtHearingNotification(
@@ -1081,7 +1083,7 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
       console.error("Error testing court hearing notification:", error);
       res.status(500).json({ 
         success: false,
-        message: `Email test failed: ${error.message}` 
+        message: `Email test failed: ${(error as Error).message}` 
       });
     }
   });

@@ -38,10 +38,10 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
     if (!isoString) return "";
     try {
       const utcDate = new Date(isoString);
-      // Convert UTC to Albania time (GMT+1) by adding 1 hour
-      const albaniaDate = new Date(utcDate.getTime() + (1 * 60 * 60 * 1000));
-      // Format for datetime-local input (YYYY-MM-DDTHH:MM)
-      return albaniaDate.toISOString().slice(0, 16);
+      // Add 1 hour to convert from UTC to Albania time (GMT+1) for display
+      const albaniaTime = new Date(utcDate.getTime() + (1 * 60 * 60 * 1000));
+      // Format as datetime-local string
+      return albaniaTime.toISOString().slice(0, 16);
     } catch {
       return "";
     }
@@ -100,12 +100,11 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
     const convertToUTC = (datetimeLocal: string) => {
       if (!datetimeLocal) return null;
       try {
-        // datetime-local gives us a string like "2025-08-23T19:30"
-        // This represents Albania time (user's intention), convert to UTC for storage
-        const albaniaDateTime = new Date(datetimeLocal + ':00.000Z'); // Treat as UTC first
-        // Since the user entered this as Albania time, we need to subtract 1 hour to get actual UTC
-        const utcTime = new Date(albaniaDateTime.getTime() - (1 * 60 * 60 * 1000));
-        console.log(`Converting ${datetimeLocal} (Albania) -> ${utcTime.toISOString()} (UTC)`);
+        // datetime-local gives us a string like "2025-08-23T17:42"
+        // User entered this as Albania time, convert to UTC by subtracting 1 hour
+        const albaniaTime = new Date(datetimeLocal);
+        const utcTime = new Date(albaniaTime.getTime() - (1 * 60 * 60 * 1000));
+        console.log(`Converting ${datetimeLocal} (Albania time) -> ${utcTime.toISOString()} (UTC)`);
         return utcTime.toISOString();
       } catch {
         return null;

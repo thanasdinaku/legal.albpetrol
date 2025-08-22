@@ -62,13 +62,13 @@ export class CourtHearingScheduler {
         return;
       }
       
-      // Get current time and 26-hour window (to catch "tomorrow" hearings) in GMT+1
+      // Get current time and 24-hour window for exact 24-hour notifications in GMT+1
       const now = nowGMT1();
-      const twentySixHoursFromNow = new Date(now.getTime() + (26 * 60 * 60 * 1000));
+      const twentyFourHoursFromNow = new Date(now.getTime() + (24 * 60 * 60 * 1000));
       
-      console.log(`Checking hearings between NOW (${formatAlbanianDateTime(now)}) and 26 HOURS FROM NOW (${formatAlbanianDateTime(twentySixHoursFromNow)}) [GMT+1 Albania Time]`);
+      console.log(`Checking hearings between NOW (${formatAlbanianDateTime(now)}) and 24 HOURS FROM NOW (${formatAlbanianDateTime(twentyFourHoursFromNow)}) [GMT+1 Albania Time]`);
       
-      // Get all entries with hearings in the next 23-24 hours
+      // Get all entries with hearings in the next 24 hours
       const entries = await db.select().from(dataEntries);
       
       const upcomingHearings: HearingCheck[] = [];
@@ -83,7 +83,7 @@ export class CourtHearingScheduler {
           if (hearingDate) {
             const hearingGMT1 = toGMT1(hearingDate);
             const hoursFromNow = Math.round((hearingGMT1.getTime() - now.getTime()) / (60 * 60 * 1000));
-            const isWithinWindow = this.isWithinNotificationWindow(hearingGMT1, now, twentySixHoursFromNow);
+            const isWithinWindow = this.isWithinNotificationWindow(hearingGMT1, now, twentyFourHoursFromNow);
             console.log(`Is within notification window: ${isWithinWindow} (hearing at ${formatAlbanianDateTime(hearingGMT1)} is ${hoursFromNow} hours from now)`);
             
             if (isWithinWindow) {
@@ -108,7 +108,7 @@ export class CourtHearingScheduler {
           if (hearingDate) {
             const hearingGMT1 = toGMT1(hearingDate);
             const hoursFromNow = Math.round((hearingGMT1.getTime() - now.getTime()) / (60 * 60 * 1000));
-            const isWithinWindow = this.isWithinNotificationWindow(hearingGMT1, now, twentySixHoursFromNow);
+            const isWithinWindow = this.isWithinNotificationWindow(hearingGMT1, now, twentyFourHoursFromNow);
             console.log(`Appeal hearing is within notification window: ${isWithinWindow} (hearing at ${formatAlbanianDateTime(hearingGMT1)} is ${hoursFromNow} hours from now)`);
             
             if (isWithinWindow) {

@@ -64,7 +64,7 @@ export function getGMT1Offset(): number {
 export function isWithinNotificationWindow(
   hearingDate: Date, 
   windowStartHours: number = 0, 
-  windowEndHours: number = 26
+  windowEndHours: number = 24
 ): boolean {
   const now = nowGMT1();
   const windowStart = new Date(now.getTime() + (windowStartHours * 60 * 60 * 1000));

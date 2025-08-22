@@ -15,7 +15,7 @@ The project's business vision is to provide a robust, secure, and user-friendly 
 # User Preferences
 
 Preferred communication style: Simple, everyday language.
-Email system: Use console logging for email notifications with it.system@albpetrol.al branding. Do not attempt SMTP connections or ask for credentials. All notifications should be clearly logged to console for monitoring.
+Email system: Use existing Replit SendGrid integration with SENDGRID_API_KEY for actual email delivery from it.system@albpetrol.al. Fall back to console logging if SendGrid is not available.
 
 # System Architecture
 

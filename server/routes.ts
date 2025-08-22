@@ -1021,7 +1021,7 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
         return res.status(403).json({ message: "Access denied. Admin privileges required." });
       }
       
-      const { sendEmail } = await import('./simpleEmailService');
+      // Use the proper email service
       const settings = await storage.getEmailNotificationSettings();
       
       if (!settings.enabled) {
@@ -1100,6 +1100,19 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
         success: false,
         message: `Email test failed: ${(error as Error).message}` 
       });
+    }
+  });
+
+  // Manual trigger for court hearing check
+  app.post('/api/admin/trigger-court-check', async (req, res) => {
+    try {
+      console.log('Manually triggering court hearing check...');
+      const { courtHearingScheduler } = await import('./courtHearingScheduler');
+      await courtHearingScheduler.checkUpcomingHearings();
+      res.json({ success: true, message: 'Court hearing check triggered successfully' });
+    } catch (error) {
+      console.error('Error triggering court hearing check:', error);
+      res.status(500).json({ success: false, message: (error as Error).message });
     }
   });
 

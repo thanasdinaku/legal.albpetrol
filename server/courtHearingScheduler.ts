@@ -1,6 +1,6 @@
 import { db } from './db';
 import { dataEntries, systemSettings } from '@shared/schema';
-import { sendCourtHearingNotification } from './simpleEmailService';
+import { sendCourtHearingNotification } from './email';
 import { sql } from 'drizzle-orm';
 
 interface HearingCheck {
@@ -25,10 +25,10 @@ export class CourtHearingScheduler {
     console.log('Starting court hearing notification scheduler...');
     this.isRunning = true;
     
-    // Check every hour
+    // Check every 10 minutes for more responsive testing
     this.intervalId = setInterval(() => {
       this.checkUpcomingHearings();
-    }, 60 * 60 * 1000); // 1 hour
+    }, 10 * 60 * 1000); // 10 minutes
     
     // Also check immediately on start
     setTimeout(() => {
@@ -48,7 +48,7 @@ export class CourtHearingScheduler {
     }
   }
   
-  private async checkUpcomingHearings() {
+  public async checkUpcomingHearings() {
     try {
       console.log('Checking for upcoming court hearings...');
       
@@ -59,12 +59,11 @@ export class CourtHearingScheduler {
         return;
       }
       
-      // Get current time and 24-hour window
+      // Get current time and 26-hour window (to catch "tomorrow" hearings)
       const now = new Date();
-      const twentyFourHoursFromNow = new Date(now.getTime() + (24 * 60 * 60 * 1000));
-      const twentyThreeHoursFromNow = new Date(now.getTime() + (23 * 60 * 60 * 1000));
+      const twentySixHoursFromNow = new Date(now.getTime() + (26 * 60 * 60 * 1000));
       
-      console.log(`Checking hearings between ${twentyThreeHoursFromNow.toISOString()} and ${twentyFourHoursFromNow.toISOString()}`);
+      console.log(`Checking hearings between NOW (${now.toISOString()}) and 26 HOURS FROM NOW (${twentySixHoursFromNow.toISOString()})`);
       
       // Get all entries with hearings in the next 23-24 hours
       const entries = await db.select().from(dataEntries);
@@ -74,29 +73,47 @@ export class CourtHearingScheduler {
       for (const entry of entries) {
         // Check first instance hearing
         if (entry.zhvillimiSeancesShkalleI) {
+          console.log(`Checking entry ${entry.id} - hearing field: "${entry.zhvillimiSeancesShkalleI}"`);
           const hearingDate = this.parseHearingDateTime(entry.zhvillimiSeancesShkalleI);
-          if (hearingDate && this.isWithinNotificationWindow(hearingDate, twentyThreeHoursFromNow, twentyFourHoursFromNow)) {
-            upcomingHearings.push({
-              id: entry.id,
-              paditesi: entry.paditesi,
-              iPaditur: entry.iPaditur,
-              hearingDateTime: hearingDate.toISOString(),
-              hearingType: 'first_instance'
-            });
+          console.log(`Parsed hearing date:`, hearingDate);
+          
+          if (hearingDate) {
+            const isWithinWindow = this.isWithinNotificationWindow(hearingDate, now, twentySixHoursFromNow);
+            console.log(`Is within notification window: ${isWithinWindow} (hearing is ${Math.round((hearingDate.getTime() - now.getTime()) / (60 * 60 * 1000))} hours from now)`);
+            
+            if (isWithinWindow) {
+              upcomingHearings.push({
+                id: entry.id,
+                paditesi: entry.paditesi,
+                iPaditur: entry.iPaditur,
+                hearingDateTime: hearingDate.toISOString(),
+                hearingType: 'first_instance'
+              });
+              console.log(`Added hearing for case ${entry.id} to notification queue`);
+            }
           }
         }
         
         // Check appeal hearing
         if (entry.zhvillimiSeancesApel) {
+          console.log(`Checking entry ${entry.id} appeal - hearing field: "${entry.zhvillimiSeancesApel}"`);
           const hearingDate = this.parseHearingDateTime(entry.zhvillimiSeancesApel);
-          if (hearingDate && this.isWithinNotificationWindow(hearingDate, twentyThreeHoursFromNow, twentyFourHoursFromNow)) {
-            upcomingHearings.push({
-              id: entry.id,
-              paditesi: entry.paditesi,
-              iPaditur: entry.iPaditur,
-              hearingDateTime: hearingDate.toISOString(),
-              hearingType: 'appeal'
-            });
+          console.log(`Parsed appeal hearing date:`, hearingDate);
+          
+          if (hearingDate) {
+            const isWithinWindow = this.isWithinNotificationWindow(hearingDate, now, twentySixHoursFromNow);
+            console.log(`Appeal hearing is within notification window: ${isWithinWindow} (hearing is ${Math.round((hearingDate.getTime() - now.getTime()) / (60 * 60 * 1000))} hours from now)`);
+            
+            if (isWithinWindow) {
+              upcomingHearings.push({
+                id: entry.id,
+                paditesi: entry.paditesi,
+                iPaditur: entry.iPaditur,
+                hearingDateTime: hearingDate.toISOString(),
+                hearingType: 'appeal'
+              });
+              console.log(`Added appeal hearing for case ${entry.id} to notification queue`);
+            }
           }
         }
       }
@@ -141,20 +158,38 @@ export class CourtHearingScheduler {
   private parseHearingDateTime(dateTimeString: string): Date | null {
     try {
       // Handle various date formats that might be in the database
-      // Expected format: "2025-01-22T14:30" or "22-01-2025 14:30"
+      // Expected formats: "2025-01-22T14:30", "22-01-2025 14:30", "22/01/2025 14:30", ISO strings
+      
+      if (!dateTimeString || typeof dateTimeString !== 'string') {
+        console.log('Invalid dateTimeString:', dateTimeString);
+        return null;
+      }
       
       let normalizedString = dateTimeString.trim();
+      console.log('Parsing date string:', normalizedString);
       
-      // Convert DD-MM-YYYY HH:MM to ISO format
+      // Handle ISO format strings (from datetime-local inputs)
+      if (normalizedString.includes('T') && normalizedString.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/)) {
+        const date = new Date(normalizedString);
+        console.log('Parsed as ISO date:', date);
+        return isNaN(date.getTime()) ? null : date;
+      }
+      
+      // Convert DD-MM-YYYY HH:MM or DD/MM/YYYY HH:MM to ISO format
       if (normalizedString.includes(' ') && !normalizedString.includes('T')) {
         const [datePart, timePart] = normalizedString.split(' ');
-        if (datePart.includes('-') && datePart.split('-').length === 3) {
-          const [day, month, year] = datePart.split('-');
+        
+        // Handle DD-MM-YYYY or DD/MM/YYYY format
+        if ((datePart.includes('-') || datePart.includes('/')) && datePart.split(/[-\/]/).length === 3) {
+          const separator = datePart.includes('-') ? '-' : '/';
+          const [day, month, year] = datePart.split(separator);
           normalizedString = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${timePart}`;
+          console.log('Converted to ISO format:', normalizedString);
         }
       }
       
       const date = new Date(normalizedString);
+      console.log('Final parsed date:', date, 'isValid:', !isNaN(date.getTime()));
       return isNaN(date.getTime()) ? null : date;
     } catch (error) {
       console.error(`Error parsing date: ${dateTimeString}`, error);
@@ -163,7 +198,9 @@ export class CourtHearingScheduler {
   }
   
   private isWithinNotificationWindow(hearingDate: Date, windowStart: Date, windowEnd: Date): boolean {
-    return hearingDate >= windowStart && hearingDate <= windowEnd;
+    const isWithin = hearingDate >= windowStart && hearingDate <= windowEnd;
+    console.log(`    Window check: hearing=${hearingDate.toISOString()}, start=${windowStart.toISOString()}, end=${windowEnd.toISOString()}, result=${isWithin}`);
+    return isWithin;
   }
   
   private async getEmailNotificationSettings() {
@@ -224,7 +261,7 @@ export class CourtHearingScheduler {
           hearingType: hearingType,
           hearingDateTime: hearingDateTime
         },
-        updatedById: 'system' as any // System user for automated notifications
+        updatedById: null // System automated notifications
       });
     } catch (error) {
       console.error('Error recording notification:', error);

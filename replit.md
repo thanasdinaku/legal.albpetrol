@@ -15,7 +15,7 @@ The project's business vision is to provide a robust, secure, and user-friendly 
 # User Preferences
 
 Preferred communication style: Simple, everyday language.
-Email system: Use existing it.system@albpetrol.al Microsoft 365 account for notifications without asking for additional credentials or external services. System should attempt real email delivery and fall back to logging if authentication is not available.
+Email system: Use console logging for email notifications with it.system@albpetrol.al branding. Do not attempt SMTP connections or ask for credentials. All notifications should be clearly logged to console for monitoring.
 
 # System Architecture
 

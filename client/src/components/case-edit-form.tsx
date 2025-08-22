@@ -37,10 +37,11 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
   const formatDateTimeLocal = (isoString: string | null) => {
     if (!isoString) return "";
     try {
-      const date = new Date(isoString);
-      // Convert UTC to Albania timezone (GMT+1) for display in form
-      const albaniaTime = new Date(date.getTime() + (1 * 60 * 60 * 1000));
-      return albaniaTime.toISOString().slice(0, 16);
+      const utcDate = new Date(isoString);
+      // Convert UTC to Albania time (GMT+1) by adding 1 hour
+      const albaniaDate = new Date(utcDate.getTime() + (1 * 60 * 60 * 1000));
+      // Format for datetime-local input (YYYY-MM-DDTHH:MM)
+      return albaniaDate.toISOString().slice(0, 16);
     } catch {
       return "";
     }
@@ -93,14 +94,18 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
   });
 
   const onSubmit = (data: UpdateDataEntry) => {
-    // Convert datetime-local values from Albania time to UTC for storage
+    console.log("Form submission data:", data);
+    
+    // Convert datetime-local values to UTC for storage
     const convertToUTC = (datetimeLocal: string) => {
       if (!datetimeLocal) return null;
       try {
-        // datetime-local input is in Albania time (GMT+1), convert to UTC for database storage
-        const localTime = new Date(datetimeLocal);
-        // Subtract 1 hour to convert from Albania time (GMT+1) to UTC
-        const utcTime = new Date(localTime.getTime() - (1 * 60 * 60 * 1000));
+        // datetime-local gives us a string like "2025-08-23T19:30"
+        // This represents Albania time (user's intention), convert to UTC for storage
+        const albaniaDateTime = new Date(datetimeLocal + ':00.000Z'); // Treat as UTC first
+        // Since the user entered this as Albania time, we need to subtract 1 hour to get actual UTC
+        const utcTime = new Date(albaniaDateTime.getTime() - (1 * 60 * 60 * 1000));
+        console.log(`Converting ${datetimeLocal} (Albania) -> ${utcTime.toISOString()} (UTC)`);
         return utcTime.toISOString();
       } catch {
         return null;
@@ -113,6 +118,7 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
       zhvillimiSeancesApel: convertToUTC(data.zhvillimiSeancesApel || ""),
     };
 
+    console.log("Submitting case data:", processedData);
     updateMutation.mutate(processedData);
   };
 

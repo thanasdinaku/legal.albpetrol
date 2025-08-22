@@ -5,7 +5,9 @@ export const SYSTEM_TIMEZONE = 'Europe/Tirane'; // GMT+1 (Albania Time)
 
 // Convert UTC date to GMT+1 (Albania Time)
 export function toGMT1(date: Date): Date {
-  return new Date(date.toLocaleString("en-US", { timeZone: SYSTEM_TIMEZONE }));
+  // For display purposes, just return the original date
+  // The formatting functions will handle timezone conversion
+  return date;
 }
 
 // Get current time in GMT+1 (Albania Time)

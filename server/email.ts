@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import type { DataEntry, User } from '@shared/schema';
+import { formatAlbanianDateTime, parseISOToGMT2 } from './timezone';
 
 // Configure real SMTP transporter for actual email delivery
 const transporter = nodemailer.createTransport({
@@ -556,13 +557,63 @@ export async function sendCourtHearingNotification(
   notification: any
 ): Promise<boolean> {
   try {
-    const message = `Tomorrow, a court hearing will take place for ${notification.plaintiff} and ${notification.defendant} at ${notification.hearingDateTime}`;
+    // Parse the hearing date and format it for Albanian display in GMT+2
+    const hearingDate = parseISOToGMT2(notification.hearingDateTime);
+    const formattedDateTime = formatAlbanianDateTime(hearingDate);
+    
+    const message = `Nesër, një seancë gjyqësore do të zhvillohet për ${notification.plaintiff} dhe ${notification.defendant} në ${formattedDateTime} (GMT+2)`;
+    
+    const htmlContent = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
+        <div style="background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #1e40af; margin: 0; font-size: 24px;">Albpetrol SH.A.</h1>
+            <p style="color: #6b7280; margin: 5px 0 0 0; font-size: 14px;">Sistemi i Menaxhimit të Çështjeve Ligjore</p>
+          </div>
+          
+          <div style="background-color: #fef3c7; padding: 20px; border-radius: 6px; border-left: 4px solid #f59e0b; margin-bottom: 20px;">
+            <h2 style="color: #92400e; margin: 0 0 10px 0; font-size: 18px;">🏛️ Njoftim për Seancë Gjyqësore</h2>
+            <p style="margin: 0; color: #374151; font-size: 16px; font-weight: bold;">
+              Nesër do të zhvillohet një seancë gjyqësore
+            </p>
+          </div>
+          
+          <div style="background-color: #eff6ff; padding: 20px; border-radius: 6px; margin-bottom: 20px;">
+            <h3 style="color: #1e40af; margin: 0 0 15px 0; font-size: 16px;">Detajet e Seancës:</h3>
+            <ul style="margin: 0; padding-left: 20px; line-height: 1.8; color: #374151;">
+              <li><strong>Paditesi:</strong> ${notification.plaintiff}</li>
+              <li><strong>I Paditur:</strong> ${notification.defendant}</li>
+              <li><strong>Data dhe Ora:</strong> <span style="color: #dc2626; font-weight: bold;">${formattedDateTime}</span></li>
+              <li><strong>Zonë Kohore:</strong> GMT+2 (Koha e Evropës Qendrore)</li>
+              <li><strong>Nr. Çështjës:</strong> ${notification.caseId}</li>
+              <li><strong>Lloji i Seancës:</strong> ${notification.hearingType === 'first_instance' ? 'Shkalla e Parë' : 'Apel'}</li>
+            </ul>
+          </div>
+          
+          <div style="background-color: #dcfce7; padding: 15px; border-radius: 6px; border-left: 4px solid #16a34a;">
+            <p style="margin: 0; color: #166534; font-size: 14px;">
+              <strong>⏰ Kujtesë:</strong> Kjo seancë gjyqësore do të zhvillohet nesër. Ju lutemi sigurohuni që të jeni të gatshëm për datën dhe orën e caktuar.
+            </p>
+          </div>
+          
+          <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; text-align: center;">
+            <p style="color: #6b7280; margin: 0; font-size: 12px;">
+              Ky është një email automatik nga sistemi i menaxhimit të çështjeve ligjore të Albpetrol SH.A.
+            </p>
+            <p style="color: #6b7280; margin: 5px 0 0 0; font-size: 12px;">
+              Ju lutemi mos u përgjigjeni në këtë adresë email.
+            </p>
+          </div>
+        </div>
+      </div>
+    `;
     
     await sendActualEmail(
       recipientEmail,
       fromEmail,
-      'Court Hearing Notification - Albpetrol Legal System',
-      message
+      'Njoftim për Seancë Gjyqësore - Albpetrol SH.A.',
+      message,
+      htmlContent
     );
     console.log('✅ Court hearing notification delivered to:', recipientEmail);
     return true;

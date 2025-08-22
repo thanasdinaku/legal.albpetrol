@@ -39,9 +39,12 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
     try {
       const utcDate = new Date(isoString);
       // Add 1 hour to convert from UTC to Albania time (GMT+1) for display
-      const albaniaTime = new Date(utcDate.getTime() + (1 * 60 * 60 * 1000));
-      // Format as datetime-local string
-      return albaniaTime.toISOString().slice(0, 16);
+      const year = utcDate.getUTCFullYear();
+      const month = String(utcDate.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(utcDate.getUTCDate()).padStart(2, '0');
+      const hour = String(utcDate.getUTCHours() + 1).padStart(2, '0'); // Add 1 hour for Albania time
+      const minute = String(utcDate.getUTCMinutes()).padStart(2, '0');
+      return `${year}-${month}-${day}T${hour}:${minute}`;
     } catch {
       return "";
     }
@@ -100,13 +103,19 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
     const convertToUTC = (datetimeLocal: string) => {
       if (!datetimeLocal) return null;
       try {
-        // datetime-local gives us a string like "2025-08-23T17:42"
-        // User entered this as Albania time, convert to UTC by subtracting 1 hour
-        const albaniaTime = new Date(datetimeLocal);
-        const utcTime = new Date(albaniaTime.getTime() - (1 * 60 * 60 * 1000));
-        console.log(`Converting ${datetimeLocal} (Albania time) -> ${utcTime.toISOString()} (UTC)`);
-        return utcTime.toISOString();
-      } catch {
+        // datetime-local gives us a string like "2025-08-23T16:45"
+        // Parse this explicitly as Albania time and convert to UTC
+        const [date, time] = datetimeLocal.split('T');
+        const [year, month, day] = date.split('-').map(Number);
+        const [hour, minute] = time.split(':').map(Number);
+        
+        // Create date in Albania timezone (GMT+1)
+        // We manually construct the UTC equivalent by subtracting 1 hour
+        const utcDate = new Date(Date.UTC(year, month - 1, day, hour - 1, minute));
+        console.log(`Converting ${datetimeLocal} (Albania time) -> ${utcDate.toISOString()} (UTC)`);
+        return utcDate.toISOString();
+      } catch (error) {
+        console.error('Date conversion error:', error);
         return null;
       }
     };

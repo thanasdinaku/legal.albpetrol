@@ -24,7 +24,7 @@ const formatDateTime = (dateTimeString: string): string => {
 // Microsoft 365 SMTP configuration for it.system@albpetrol.al
 const createTransporter = () => {
   // Try to use Microsoft 365 SMTP with existing account
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     host: 'smtp-mail.outlook.com',
     port: 587,
     secure: false,
@@ -36,12 +36,6 @@ const createTransporter = () => {
     tls: {
       ciphers: 'SSLv3',
       rejectUnauthorized: false
-    },
-    // Fallback to local SMTP if available
-    fallback: {
-      streamTransport: true,
-      newline: 'unix',
-      buffer: true
     }
   });
 };
@@ -82,7 +76,7 @@ export async function sendEmail(params: EmailParams): Promise<boolean> {
       console.log('========================================\n');
       return true;
       
-    } catch (smtpError) {
+    } catch (smtpError: any) {
       console.log('SMTP delivery failed, logging notification:');
       console.log(`Error: ${smtpError.message}`);
       console.log('----------------------------------------');
@@ -132,7 +126,7 @@ export async function testEmailConnection(): Promise<boolean> {
       console.log('========================================\n');
       return true;
       
-    } catch (smtpError) {
+    } catch (smtpError: any) {
       console.log('⚠️  SMTP connection failed:');
       console.log(`Error: ${smtpError.message}`);
       console.log('Email notifications will be logged instead');

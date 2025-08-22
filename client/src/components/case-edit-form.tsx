@@ -38,8 +38,10 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
     if (!isoString) return "";
     try {
       // Simply extract the datetime part from the ISO string
-      // "2025-08-23T03:47:00.000Z" -> "2025-08-23T03:47"
-      return isoString.slice(0, 16);
+      // "2025-08-23T06:47:00.000Z" -> "2025-08-23T06:47"
+      const result = isoString.slice(0, 16);
+      console.log(`Displaying: ${isoString} -> ${result}`);
+      return result;
     } catch {
       return "";
     }

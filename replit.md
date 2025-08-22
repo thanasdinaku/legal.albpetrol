@@ -15,7 +15,7 @@ The project's business vision is to provide a robust, secure, and user-friendly 
 # User Preferences
 
 Preferred communication style: Simple, everyday language.
-Email system: Use existing Replit SendGrid integration with SENDGRID_API_KEY for actual email delivery from it.system@albpetrol.al. Fall back to console logging if SendGrid is not available.
+Email system: Use console logging for email notifications with it.system@albpetrol.al branding. User preference is to use existing email infrastructure without additional external service configuration.
 
 # System Architecture
 

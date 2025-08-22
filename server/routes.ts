@@ -1116,6 +1116,43 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
     }
   });
 
+  // Admin: Send test email to verify email delivery
+  app.post('/api/admin/test-email', async (req, res) => {
+    try {
+      console.log('Sending test email...');
+      const { sendCaseUpdateNotification } = await import('./email.js');
+      
+      const result = await sendCaseUpdateNotification(
+        'thanas.dinaku@albpetrol.al',
+        'it.system@albpetrol.al',
+        {
+          caseId: 999,
+          paditesi: 'TEST EMAIL DELIVERY',
+          iPaditur: 'EMAIL VERIFICATION TEST',
+          updateType: 'test',
+          updatedBy: 'System Admin',
+          timestamp: new Date().toISOString(),
+          changes: {
+            'test_field': { old: 'old_value', new: 'new_value' }
+          }
+        }
+      );
+      
+      res.json({ 
+        success: true, 
+        message: 'Test email sent successfully',
+        emailDelivered: result 
+      });
+    } catch (error) {
+      console.error('Error sending test email:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: 'Failed to send test email',
+        error: (error as Error).message 
+      });
+    }
+  });
+
   // System backup and restore routes
   app.get('/api/system/status', isAuthenticated, async (req, res) => {
     try {

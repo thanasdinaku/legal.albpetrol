@@ -53,7 +53,7 @@ export class CourtHearingScheduler {
   
   public async checkUpcomingHearings() {
     try {
-      console.log('Checking for upcoming court hearings...');
+      console.log(`[${new Date().toISOString()}] === COURT HEARING CHECK STARTED ===`);
       
       // Get email notification settings
       const emailSettings = await this.getEmailNotificationSettings();
@@ -67,6 +67,7 @@ export class CourtHearingScheduler {
       const twentyFourHoursFromNow = new Date(now.getTime() + (24 * 60 * 60 * 1000));
       const twentySixHoursFromNow = new Date(now.getTime() + (26 * 60 * 60 * 1000));
       
+      console.log(`Current time (GMT+1): ${formatAlbanianDateTime(now)}`);
       console.log(`Checking hearings within 24-26 hours: ${formatAlbanianDateTime(twentyFourHoursFromNow)} to ${formatAlbanianDateTime(twentySixHoursFromNow)} [GMT+1 Albania Time]`);
       
       // Get all entries with hearings in the next 24 hours
@@ -206,14 +207,14 @@ export class CourtHearingScheduler {
   }
   
   private isWithinNotificationWindow(hearingDate: Date, windowStart: Date, windowEnd: Date): boolean {
-    // Improved logic: Check if hearing is within 24-26 hours from now
+    // Proper logic: Check if hearing is within 24-26 hours from now
     const now = nowGMT1();
     const hoursFromNow = (hearingDate.getTime() - now.getTime()) / (60 * 60 * 1000);
     
-    // For testing: temporarily expand window to include hearings within next 30 minutes to 26 hours  
-    const isWithin = hoursFromNow >= 0.5 && hoursFromNow <= 26;
+    // Standard 24-26 hour notification window
+    const isWithin = hoursFromNow >= 24 && hoursFromNow <= 26;
     
-    console.log(`    Window check (GMT+1): hearing=${formatAlbanianDateTime(hearingDate)}, now=${formatAlbanianDateTime(now)}, hours_ahead=${hoursFromNow.toFixed(1)}, window=0.5-26h, result=${isWithin}`);
+    console.log(`    Window check (GMT+1): hearing=${formatAlbanianDateTime(hearingDate)}, now=${formatAlbanianDateTime(now)}, hours_ahead=${hoursFromNow.toFixed(1)}, window=24-26h, result=${isWithin}`);
     return isWithin;
   }
   
@@ -277,8 +278,11 @@ export class CourtHearingScheduler {
         },
         updatedById: 'a76a70a9-b09e-470c-bc77-14769a20acb6' // Use admin user ID for system notifications
       });
-    } catch (error) {
-      console.error('Error recording notification:', error);
+    } catch (error: any) {
+      // Ignore duplicate key errors (notification already recorded)
+      if (error?.code !== '23505') {
+        console.error('Error recording notification:', error);
+      }
     }
   }
 }

@@ -557,17 +557,32 @@ export async function sendCourtHearingNotification(
   notification: any
 ): Promise<boolean> {
   try {
-    // Parse the hearing date - treat the stored time as already in Albania time
-    const hearingDate = new Date(notification.hearingDateTime);
-    // Format without timezone conversion since input is already in local time
-    const formattedDateTime = hearingDate.toLocaleString('sq-AL', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
-    });
+    // Parse the hearing date and extract components manually to avoid timezone conversion
+    const hearingDateISO = notification.hearingDateTime;
+    console.log('📧 Original hearing date from notification:', hearingDateISO);
+    
+    // Extract date and time components directly from the ISO string
+    let displayDateTime;
+    if (hearingDateISO.includes('T')) {
+      // Format: "2025-08-24T21:31:00.000Z" or "2025-08-24T21:31"
+      const [datePart, timePart] = hearingDateISO.split('T');
+      const [year, month, day] = datePart.split('-');
+      const timeOnly = timePart.split(':').slice(0, 2).join(':'); // Get HH:MM only
+      displayDateTime = `${day}.${month}.${year}, ${timeOnly}`;
+      console.log('📧 Formatted display time:', displayDateTime);
+    } else {
+      // Fallback to original formatting if not ISO format
+      const hearingDate = new Date(hearingDateISO);
+      displayDateTime = hearingDate.toLocaleString('sq-AL', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      });
+    }
+    const formattedDateTime = displayDateTime;
     
     const message = `Nesër, një seancë gjyqësore do të zhvillohet për ${notification.plaintiff} dhe ${notification.defendant} në ${formattedDateTime} (Koha e Shqipërisë)`;
     

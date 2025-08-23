@@ -176,10 +176,17 @@ export class CourtHearingScheduler {
       let normalizedString = dateTimeString.trim();
       console.log('Parsing date string:', normalizedString);
       
-      // Handle ISO format strings (from datetime-local inputs)
+      // Handle ISO format strings (from datetime-local inputs)  
       if (normalizedString.includes('T') && normalizedString.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/)) {
-        const date = new Date(normalizedString);
-        console.log('Parsed as ISO date:', date);
+        // For datetime-local input, treat as Albania local time, not UTC
+        // Parse components manually to avoid timezone conversion
+        const [datePart, timePart] = normalizedString.split('T');
+        const [year, month, day] = datePart.split('-').map(Number);
+        const [hours, minutes] = timePart.split(':').map(Number);
+        
+        // Create date in Albania timezone (GMT+1/GMT+2)
+        const date = new Date(year, month - 1, day, hours, minutes);
+        console.log('Parsed as Albania local time:', date, 'from input:', normalizedString);
         return isNaN(date.getTime()) ? null : date;
       }
       
@@ -210,7 +217,7 @@ export class CourtHearingScheduler {
     const now = nowGMT1();
     const hoursFromNow = (hearingDate.getTime() - now.getTime()) / (60 * 60 * 1000);
     
-    // New logic: notify for hearings ≤24 hours away (but not in the past)
+    // Notify for hearings ≤24 hours away (but not in the past)
     const isWithin = hoursFromNow > 0 && hoursFromNow <= 24;
     
     console.log(`    Window check (GMT+1): hearing=${formatAlbanianDateTime(hearingDate)}, now=${formatAlbanianDateTime(now)}, hours_ahead=${hoursFromNow.toFixed(1)}, window=≤24h, result=${isWithin}`);

@@ -153,14 +153,26 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
       
       // Send email notification
       try {
+        console.log('🔔 Checking email notification settings...');
         const emailSettings = await storage.getEmailNotificationSettings();
+        console.log('📧 Email settings:', { 
+          enabled: emailSettings.enabled, 
+          emailAddresses: emailSettings.emailAddresses, 
+          subject: emailSettings.subject 
+        });
+        
         if (emailSettings.enabled) {
           const creator = await storage.getUser(userId);
+          console.log('👤 Creator found:', creator ? `${creator.firstName} ${creator.lastName}` : 'Not found');
+          
           if (creator) {
             // Send legacy notification (existing functionality)
             if (emailSettings.emailAddresses.length > 0) {
+              console.log('📬 Sending immediate new entry notification...');
               const totalEntries = await storage.getDataEntriesCount();
               await sendNewEntryNotification(entry, creator, emailSettings, totalEntries);
+            } else {
+              console.log('❌ No email addresses configured for notifications');
             }
             
             // Send new case update notification
@@ -178,10 +190,14 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
                 }
               );
             }
+          } else {
+            console.log('❌ Creator not found for email notification');
           }
+        } else {
+          console.log('❌ Email notifications disabled');
         }
       } catch (emailError) {
-        console.error('Failed to send email notification:', emailError);
+        console.error('❌ Error sending email notification:', emailError);
         // Don't fail the request if email fails
       }
       

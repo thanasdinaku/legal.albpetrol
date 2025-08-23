@@ -557,11 +557,19 @@ export async function sendCourtHearingNotification(
   notification: any
 ): Promise<boolean> {
   try {
-    // Parse the hearing date and format it for Albanian display in GMT+1
-    const hearingDate = parseISOToGMT1(notification.hearingDateTime);
-    const formattedDateTime = formatAlbanianDateTime(hearingDate);
+    // Parse the hearing date - treat the stored time as already in Albania time
+    const hearingDate = new Date(notification.hearingDateTime);
+    // Format without timezone conversion since input is already in local time
+    const formattedDateTime = hearingDate.toLocaleString('sq-AL', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
     
-    const message = `Nesër, një seancë gjyqësore do të zhvillohet për ${notification.plaintiff} dhe ${notification.defendant} në ${formattedDateTime} (GMT+1 Albania Time)`;
+    const message = `Nesër, një seancë gjyqësore do të zhvillohet për ${notification.plaintiff} dhe ${notification.defendant} në ${formattedDateTime} (Koha e Shqipërisë)`;
     
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">

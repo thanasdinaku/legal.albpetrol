@@ -4,17 +4,32 @@ const formatDateTime = (dateTimeString: string): string => {
   if (!dateTimeString) return '';
   
   try {
-    const date = new Date(dateTimeString);
-    if (isNaN(date.getTime())) return '';
+    console.log('🔧 TIMEZONE FIX: Input dateTimeString:', dateTimeString);
     
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const year = date.getFullYear();
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    
-    return `${day}-${month}-${year} ${hours}:${minutes}`;
+    // Extract date and time components directly from the ISO string to avoid timezone conversion
+    if (dateTimeString.includes('T')) {
+      // Format: "2025-08-24T21:31:00.000Z" or "2025-08-24T21:31"
+      const [datePart, timePart] = dateTimeString.split('T');
+      const [year, month, day] = datePart.split('-');
+      const timeOnly = timePart.split(':').slice(0, 2).join(':'); // Get HH:MM only
+      const result = `${day}-${month}-${year} ${timeOnly}`;
+      console.log('🔧 TIMEZONE FIX: Formatted output:', result);
+      return result;
+    } else {
+      // Fallback to original method if not ISO format
+      const date = new Date(dateTimeString);
+      if (isNaN(date.getTime())) return '';
+      
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      
+      return `${day}-${month}-${year} ${hours}:${minutes}`;
+    }
   } catch (error) {
+    console.error('🔧 TIMEZONE FIX: Error formatting dateTime:', error);
     return '';
   }
 };

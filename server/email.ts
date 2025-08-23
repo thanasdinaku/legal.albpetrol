@@ -557,6 +557,7 @@ export async function sendCourtHearingNotification(
   notification: any
 ): Promise<boolean> {
   try {
+    console.log('\n🔍 === DEBUGGING EMAIL NOTIFICATION TIME FORMATTING ===');
     // Parse the hearing date and extract components manually to avoid timezone conversion
     const hearingDateISO = notification.hearingDateTime;
     console.log('📧 Original hearing date from notification:', hearingDateISO);

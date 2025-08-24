@@ -171,7 +171,7 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
     "Gjykata e Shkallës së Parë e Rrethit Gjyqësor Fier",
     "Gjykata e Shkallës së Parë Administrative Lushnjë",
     "Gjykata e Shkallës së Parë Administrative Tiranë",
-    "Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm Tiranë"
+    "Gjykata e Shkallēs së Parë e Juridiksionit të Përgjithshëm Tiranë"
   ];
 
   const appellateCourtOptions = [

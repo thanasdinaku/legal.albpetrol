@@ -186,15 +186,16 @@ export class CourtHearingScheduler {
       
       // Handle ISO format strings (from datetime-local inputs)  
       if (normalizedString.includes('T') && normalizedString.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/)) {
-        // For datetime-local input, treat as Albania local time, not UTC
-        // Parse components manually to avoid timezone conversion
+        // For datetime-local input, treat as Albania local time (GMT+1)
+        // Parse components manually and adjust for Albania timezone
         const [datePart, timePart] = normalizedString.split('T');
         const [year, month, day] = datePart.split('-').map(Number);
         const [hours, minutes] = timePart.split(':').map(Number);
         
-        // Create date in Albania timezone (GMT+1/GMT+2)
-        const date = new Date(year, month - 1, day, hours, minutes);
-        console.log('Parsed as Albania local time:', date, 'from input:', normalizedString);
+        // Create date as UTC then subtract 1 hour to represent Albania input as UTC
+        // This ensures that when toGMT1() is called, it shows the correct Albania time
+        const date = new Date(Date.UTC(year, month - 1, day, hours - 1, minutes));
+        console.log(`Parsed as Albania local time: ${date.toISOString()} from input: ${normalizedString}`);
         return isNaN(date.getTime()) ? null : date;
       }
       
@@ -221,14 +222,14 @@ export class CourtHearingScheduler {
   }
   
   private isWithinNotificationWindow(hearingDate: Date, windowEnd: Date): boolean {
-    // Check if hearing is within ≤24 hours from now
+    // Check if hearing is within ≤25 hours from now (slightly generous to catch edge cases)
     const now = nowGMT1();
     const hoursFromNow = (hearingDate.getTime() - now.getTime()) / (60 * 60 * 1000);
     
-    // Notify for hearings ≤24 hours away (but not in the past)
-    const isWithin = hoursFromNow > 0 && hoursFromNow <= 24;
+    // Notify for hearings ≤25 hours away (but not in the past) - covers edge cases near 24h
+    const isWithin = hoursFromNow > 0 && hoursFromNow <= 25;
     
-    console.log(`    Window check (GMT+1): hearing=${formatAlbanianDateTime(hearingDate)}, now=${formatAlbanianDateTime(now)}, hours_ahead=${hoursFromNow.toFixed(1)}, window=≤24h, result=${isWithin}`);
+    console.log(`    Window check (GMT+1): hearing=${formatAlbanianDateTime(hearingDate)}, now=${formatAlbanianDateTime(now)}, hours_ahead=${hoursFromNow.toFixed(1)}, window=≤25h, result=${isWithin}`);
     return isWithin;
   }
   

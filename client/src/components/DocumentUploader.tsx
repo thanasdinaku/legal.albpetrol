@@ -12,10 +12,6 @@ import { FileText, Upload } from "lucide-react";
 interface DocumentUploaderProps {
   maxNumberOfFiles?: number;
   maxFileSize?: number;
-  onGetUploadParameters: () => Promise<{
-    method: "PUT";
-    url: string;
-  }>;
   onComplete?: (
     result: UploadResult<Record<string, unknown>, Record<string, unknown>>
   ) => void;
@@ -43,7 +39,6 @@ interface DocumentUploaderProps {
 export function DocumentUploader({
   maxNumberOfFiles = 5,
   maxFileSize = 10485760, // 10MB default
-  onGetUploadParameters,
   onComplete,
   buttonClassName,
   children,

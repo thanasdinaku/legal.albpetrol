@@ -113,12 +113,6 @@ export default function CaseEntryForm() {
     await createMutation.mutateAsync(data);
   };
 
-  // Document upload handlers
-  const handleGetUploadParameters = async () => {
-    const response = await apiRequest("/api/documents/upload", "POST");
-    const data = await response.json();
-    return { method: "PUT" as const, url: data.uploadURL };
-  };
 
   const handleUploadComplete = (result: UploadResult<Record<string, unknown>, Record<string, unknown>>) => {
     console.log("Upload complete result:", result);
@@ -526,7 +520,6 @@ export default function CaseEntryForm() {
                     <DocumentUploader
                       maxNumberOfFiles={5}
                       maxFileSize={10485760} // 10MB
-                      onGetUploadParameters={handleGetUploadParameters}
                       onComplete={handleUploadComplete}
                     />
                   </div>

@@ -103,15 +103,21 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
   const onSubmit = (data: UpdateDataEntry) => {
     console.log("Form submission data:", data);
     
-    // Convert datetime-local values to UTC for storage
+    // Convert datetime-local values to UTC for storage (Albania timezone GMT+1)
     const convertToUTC = (datetimeLocal: string) => {
       if (!datetimeLocal) return null;
       try {
-        // datetime-local input provides time in user's local timezone
-        // Convert it properly to UTC for storage
-        const localDate = new Date(datetimeLocal);
-        const utcString = localDate.toISOString();
-        console.log(`Converting ${datetimeLocal} (local time) -> ${utcString} (UTC storage)`);
+        // datetime-local input is always in Albania time (GMT+1)
+        // We need to manually convert this to UTC by subtracting 1 hour
+        const [dateStr, timeStr] = datetimeLocal.split('T');
+        const [year, month, day] = dateStr.split('-').map(Number);
+        const [hour, minute] = timeStr.split(':').map(Number);
+        
+        // Create date in Albania timezone (GMT+1) and convert to UTC
+        const albaniaDate = new Date(year, month - 1, day, hour, minute);
+        const utcDate = new Date(albaniaDate.getTime() - (1 * 60 * 60 * 1000)); // Subtract 1 hour for GMT+1
+        const utcString = utcDate.toISOString();
+        console.log(`Converting ${datetimeLocal} (Albania GMT+1) -> ${utcString} (UTC storage)`);
         return utcString;
       } catch (error) {
         console.error('Date conversion error:', error);

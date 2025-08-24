@@ -166,12 +166,13 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
   };
 
   const courtOptions = [
-    "Gjykata e Shkallës së Parë e Rrethit Gjyqësor Vlorë",
-    "Gjykata e Shkallës së Parë e Rrethit Gjyqësor Berat",
-    "Gjykata e Shkallës së Parë e Rrethit Gjyqësor Fier",
-    "Gjykata e Shkallës së Parë Administrative Lushnjë",
-    "Gjykata e Shkallës së Parë Administrative Tiranë",
-    "Gjykata e Shkallēs së Parë e Juridiksionit të Përgjithshëm Tiranë"
+    "Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm Berat",
+    "Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm VIorë",
+    "Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm Elbasan",
+    "Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm Fier",
+    "Gjykata e Shkallës së Parë e Juridiksionit të Pergjithshëm Tiranë",
+    "Gjykata Administrative e Shkallës së Parë Lushnje",
+    "Gjykata Administrative e Shkallës së Parë Tiranë"
   ];
 
   const appellateCourtOptions = [

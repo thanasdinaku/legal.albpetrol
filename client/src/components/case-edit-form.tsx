@@ -254,7 +254,7 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
               name="gjykataShkalle"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Gjykata Shkallë së Parë e</FormLabel>
+                  <FormLabel>Gjykata Shkallë së Parë</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value || ""}>
                     <FormControl>
                       <SelectTrigger>

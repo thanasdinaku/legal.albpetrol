@@ -534,18 +534,17 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
               <div className="space-y-6">
                 <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Dokumente të Bashkangjitura</h3>
                 <div className="space-y-4">
-                  <DocumentUploader
-                    maxNumberOfFiles={10}
-                    maxFileSize={52428800}
-                    onGetUploadParameters={handleGetUploadParameters}
-                    onComplete={handleUploadComplete}
-                    buttonClassName="w-full"
-                  >
-                    <div className="flex items-center justify-center space-x-2">
-                      <FileText className="h-5 w-5" />
-                      <span>Ngarko Dokumente</span>
-                    </div>
-                  </DocumentUploader>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-gray-600">
+                      Mund të bashkangjitnit dokumente PDF ose Word që lidhen me çështjen ligjore
+                    </p>
+                    <DocumentUploader
+                      maxNumberOfFiles={5}
+                      maxFileSize={10485760} // 10MB
+                      onGetUploadParameters={handleGetUploadParameters}
+                      onComplete={handleUploadComplete}
+                    />
+                  </div>
 
                   {attachments.length > 0 && (
                     <div className="space-y-2">

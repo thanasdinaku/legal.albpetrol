@@ -3,7 +3,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Form,
@@ -13,7 +15,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { updateDataEntrySchema, type DataEntry, type UpdateDataEntry } from "@shared/schema";
@@ -124,7 +125,6 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
       zhvillimiSeancesApel: convertToUTC(data.zhvillimiSeancesApel || ""),
     };
 
-    console.log("Submitting case data:", processedData);
     updateMutation.mutate(processedData);
   };
 
@@ -165,7 +165,8 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
     setAttachments(prev => prev.filter((_, i) => i !== index));
   };
 
-  const courtOptions = [
+  // Court options exactly from CSV
+  const firstInstanceCourts = [
     "Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm Berat",
     "Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm VIorë",
     "Gjykata e Shkallës së Parë e Juridiksionit të Përgjithshëm Elbasan",
@@ -175,418 +176,440 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
     "Gjykata Administrative e Shkallës së Parë Tiranë"
   ];
 
-  const appellateCourtOptions = [
-    "Gjykata e Apelit Administrative Tiranë",
-    "Gjykata e Apelit e Juridiksionit të Përgjithshëm Tiranë"
-  ];
-
-  const supremeCourtOptions = [
-    "Gjykata e Lartë e Republikës së Shqipërisë"
+  const appealCourts = [
+    "Gjykata e Apelit e Juridiksionit të Përgjithshëm Tiranë",
+    "Gjykata Administrative e Apelit Tiranë"
   ];
 
   return (
-    <div className="space-y-6">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Paditesi */}
-            <FormField
-              control={form.control}
-              name="paditesi"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Paditesi (Emër e Mbiemër) *</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Emri i plotë i paditesit" {...field} value={field.value || ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+    <div className="container mx-auto p-6 max-w-6xl">
+      <Card className="shadow-lg border border-gray-200">
+        <CardHeader className="border-b border-gray-100 bg-gradient-to-r from-blue-50 to-white">
+          <CardTitle className="text-2xl font-bold text-gray-800 flex items-center">
+            <span className="text-blue-600 mr-2">✏️</span>
+            Përditëso Çështjen Ligjore
+          </CardTitle>
+          <CardDescription className="text-gray-600">
+            Përditësoni informacionin e çështjes ligjore në sistem
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-8">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              
+              {/* Basic Case Information */}
+              <div className="space-y-6">
+                <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Informacion Bazë i Çështjes</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="paditesi"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-red-600">Paditesi (Emër e Mbiemër) *</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Emri dhe mbiemri i paditsit" 
+                            {...field} 
+                            value={field.value || ""} 
+                            required
+                            className={field.value && field.value.trim() === "" ? "border-red-500" : ""}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="iPaditur"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-red-600">I Paditur *</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="p.sh. Albpetrol SH.A." 
+                            {...field} 
+                            value={field.value || ""} 
+                            required
+                            className={field.value && field.value.trim() === "" ? "border-red-500" : ""}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="personITrete"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Person i Tretë</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Opsionale" {...field} value={field.value || ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="perfaqesuesi"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Përfaqësuesi i Albpetrol SH.A.</FormLabel>
+                        <FormControl>
+                          <Input placeholder="p.sh. Advokatët partnere" {...field} value={field.value || ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
-            {/* I Paditur */}
-            <FormField
-              control={form.control}
-              name="iPaditur"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>I Paditur *</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Emri i plotë i të paditurit" {...field} value={field.value || ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Person I Trete */}
-            <FormField
-              control={form.control}
-              name="personITrete"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Person i Tretë</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Nëse ka person të tretë të përfshirë" {...field} value={field.value || ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Objekti I Padise */}
-            <FormField
-              control={form.control}
-              name="objektiIPadise"
-              render={({ field }) => (
-                <FormItem className="md:col-span-2">
-                  <FormLabel>Objekti i Padisë</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Përshkrimi i objektit të padisë..." {...field} value={field.value || ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Gjykata Shkalle */}
-            <FormField
-              control={form.control}
-              name="gjykataShkalle"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Gjykata Shkallë së Parë</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value || ""}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Zgjidhni gjykatën e shkallës së parë" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {courtOptions.map((court) => (
-                        <SelectItem key={court} value={court}>
-                          {court}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Faza Gjykata Shkalle */}
-            <FormField
-              control={form.control}
-              name="fazaGjykataShkalle"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Faza Shkallë I</FormLabel>
-                  <FormControl>
-                    <Input placeholder="P.Sh. Në gjykim" {...field} value={field.value || ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Gjykata Apelit */}
-            <FormField
-              control={form.control}
-              name="gjykataApelit"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Gjykata Apelit</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value || ""}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Zgjidhni gjykatën e apelit" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {appellateCourtOptions.map((court) => (
-                        <SelectItem key={court} value={court}>
-                          {court}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Faza Gjykata Apelit */}
-            <FormField
-              control={form.control}
-              name="fazaGjykataApelit"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Faza Apelit</FormLabel>
-                  <FormControl>
-                    <Input placeholder="P.Sh. Në shqyrtim" {...field} value={field.value || ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Zhvillimi Seances Shkalle I */}
-            <FormField
-              control={form.control}
-              name="zhvillimiSeancesShkalleI"
-              render={({ field }) => (
-                <FormItem className="space-y-3">
-                  <FormLabel>Zhvillimi i seances gjyqesorë data,ora (Shkallë I)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="datetime-local"
-                      {...field}
-                      value={field.value || ""}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Zhvillimi Seances Apel */}
-            <FormField
-              control={form.control}
-              name="zhvillimiSeancesApel"
-              render={({ field }) => (
-                <FormItem className="space-y-3">
-                  <FormLabel>Zhvillimi i seances gjyqesorë data,ora (Apel)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="datetime-local"
-                      {...field}
-                      value={field.value || ""}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Faza Aktuale */}
-            <FormField
-              control={form.control}
-              name="fazaAktuale"
-              render={({ field }) => (
-                <FormItem className="md:col-span-2">
-                  <FormLabel>Faza në të cilën ndodhet proçesi</FormLabel>
-                  <FormControl>
-                    <Input placeholder="P.Sh. Në gjykim pranë shkallës së parë" {...field} value={field.value || ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Perfaqesuesi */}
-            <FormField
-              control={form.control}
-              name="perfaqesuesi"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Përfaqësuesi I Albpetrol SH.A.</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Emri i përfaqësuesit ligjor" {...field} value={field.value || ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Demi I Pretenduar */}
-            <FormField
-              control={form.control}
-              name="demiIPretenduar"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Dëmi i Pretenduar në Objekt</FormLabel>
-                  <FormControl>
-                    <Input placeholder="P.Sh. 50,000 LEKË" {...field} value={field.value || ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Shuma Gjykata */}
-            <FormField
-              control={form.control}
-              name="shumaGjykata"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Shuma e Caktuar nga Gjykata me Vendim</FormLabel>
-                  <FormControl>
-                    <Input placeholder="P.Sh. 30,000 LEKË" {...field} value={field.value || ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Vendim Ekzekutim */}
-            <FormField
-              control={form.control}
-              name="vendimEkzekutim"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Vendim me Ekzekutim të Përkohshëm</FormLabel>
-                  <FormControl>
-                    <Input placeholder="P.Sh. Po, vendim nr. 123/2024" {...field} value={field.value || ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Faza Ekzekutim */}
-            <FormField
-              control={form.control}
-              name="fazaEkzekutim"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Faza në të cilën ndodhet Ekzekutimi</FormLabel>
-                  <FormControl>
-                    <Input placeholder="P.Sh. Në proçes" {...field} value={field.value || ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Ankimuar */}
-            <FormField
-              control={form.control}
-              name="ankimuar"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Ankimuar</FormLabel>
-                  <FormControl>
-                    <Input placeholder="P.Sh. Po, në proces apeli" {...field} value={field.value || ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Perfunduar */}
-            <FormField
-              control={form.control}
-              name="perfunduar"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Përfunduar</FormLabel>
-                  <FormControl>
-                    <Input placeholder="P.Sh. Po, me vendim përfundimtar" {...field} value={field.value || ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Gjykata Larte */}
-            <FormField
-              control={form.control}
-              name="gjykataLarte"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Gjykata e Lartë</FormLabel>
-                  <FormControl>
-                    <Input placeholder="P.Sh. Po, në proces" {...field} value={field.value || ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          {/* Document Attachments */}
-          <div className="space-y-4 pt-6 border-t border-gray-200">
-            <h4 className="text-md font-semibold text-gray-800">Dokumente të Bashkangjitura</h4>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-gray-600">
-                  Mund të bashkangjitnit dokumente PDF ose Word që lidhen me çështjen ligjore
-                </p>
-                <DocumentUploader
-                  maxNumberOfFiles={5}
-                  maxFileSize={10485760} // 10MB
-                  onGetUploadParameters={handleGetUploadParameters}
-                  onComplete={handleUploadComplete}
+                <FormField
+                  control={form.control}
+                  name="objektiIPadise"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Objekti i Padisë</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="Përshkrimi i detajuar i objektit të padisë..."
+                          className="min-h-[100px]"
+                          {...field} 
+                          value={field.value || ""} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </div>
-              
-              {/* Display uploaded attachments */}
-              {attachments.length > 0 && (
-                <div className="space-y-3">
-                  <h5 className="text-sm font-medium text-gray-700">
-                    Dokumente të Ngarkuara ({attachments.length})
-                  </h5>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {attachments.map((attachment, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border"
-                      >
-                        <div className="flex items-center space-x-2 min-w-0">
-                          <FileText className="h-4 w-4 text-blue-600 flex-shrink-0" />
-                          <span className="text-sm text-gray-700 truncate" title={attachment.name}>
-                            {attachment.name}
-                          </span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => window.open(attachment.path, '_blank')}
-                            className="h-8 w-8 p-0"
-                            data-testid={`download-attachment-${index}`}
-                          >
-                            <Download className="h-3 w-3" />
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => removeAttachment(index)}
-                            className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
-                            data-testid={`remove-attachment-${index}`}
-                          >
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
 
-          <div className="flex justify-end space-x-4 pt-6">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onCancel}
-              disabled={updateMutation.isPending}
-            >
-              Anulo
-            </Button>
-            <Button
-              type="submit"
-              disabled={updateMutation.isPending}
-            >
-              {updateMutation.isPending ? "Duke ruajtur..." : "Ruaj Ndryshimet"}
-            </Button>
-          </div>
-        </form>
-      </Form>
+              {/* First Instance Court */}
+              <div className="space-y-6">
+                <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Gjykata e Shkallës së Parë</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="gjykataShkalle"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Gjykata e Shkallës së Parë</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value || ""}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Zgjidhni gjykatën" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {firstInstanceCourts.map((court) => (
+                              <SelectItem key={court} value={court}>{court}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="fazaGjykataShkalle"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Faza në të cilën ndodhet procesi (Shkallë I)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="p.sh. Në shqyrtim, Në vendimmarrje" {...field} value={field.value || ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="zhvillimiSeancesShkalleI"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel>Zhvillimi i seances gjyqesorë data,ora (Shkallë I)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="datetime-local"
+                          {...field}
+                          value={field.value || ""}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Appeal Court */}
+              <div className="space-y-6">
+                <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Gjykata e Apelit</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="gjykataApelit"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Gjykata e Apelit</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value || ""}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Zgjidhni gjykatën e apelit" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {appealCourts.map((court) => (
+                              <SelectItem key={court} value={court}>{court}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="fazaGjykataApelit"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Faza në të cilën ndodhet procesi (Apel)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="p.sh. Në pritje të vendimit" {...field} value={field.value || ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="zhvillimiSeancesApel"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel>Zhvillimi i seances gjyqesorë data,ora (Apel)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="datetime-local"
+                          {...field}
+                          value={field.value || ""}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Current Status and Financial Information */}
+              <div className="space-y-6">
+                <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Statusi Aktual dhe Informacion Financiar</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="fazaAktuale"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Faza në të cilën ndodhet procesi</FormLabel>
+                        <FormControl>
+                          <Input placeholder="p.sh. Në shqyrtim, Përfunduar" {...field} value={field.value || ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="demiIPretenduar"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Dëmi i Pretenduar në Objekt</FormLabel>
+                        <FormControl>
+                          <Input placeholder="p.sh. 1,000,000 ALL" {...field} value={field.value || ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="shumaGjykata"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Shuma e vendosur nga Gjykata</FormLabel>
+                        <FormControl>
+                          <Input placeholder="p.sh. 500,000 ALL" {...field} value={field.value || ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="vendimEkzekutim"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Vendim ekzekutim</FormLabel>
+                        <FormControl>
+                          <Input placeholder="p.sh. Po, Jo" {...field} value={field.value || ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="fazaEkzekutim"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Faza në të cilën ndodhet procesi (Ekzekutim)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="p.sh. Në proces" {...field} value={field.value || ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="ankimuar"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Ankimuar</FormLabel>
+                        <FormControl>
+                          <Input placeholder="p.sh. Po, Jo" {...field} value={field.value || ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="perfunduar"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Përfunduar</FormLabel>
+                        <FormControl>
+                          <Input placeholder="p.sh. Po, Jo" {...field} value={field.value || ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="gjykataLarte"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Gjykata e Lartë</FormLabel>
+                        <FormControl>
+                          <Input placeholder="p.sh. Në pritje vendimi" {...field} value={field.value || ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              {/* Document Attachments */}
+              <div className="space-y-6">
+                <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Dokumente të Bashkangjitura</h3>
+                <div className="space-y-4">
+                  <DocumentUploader
+                    maxNumberOfFiles={10}
+                    maxFileSize={52428800}
+                    onGetUploadParameters={handleGetUploadParameters}
+                    onComplete={handleUploadComplete}
+                    buttonClassName="w-full"
+                  >
+                    <div className="flex items-center justify-center space-x-2">
+                      <FileText className="h-5 w-5" />
+                      <span>Ngarko Dokumente</span>
+                    </div>
+                  </DocumentUploader>
+
+                  {attachments.length > 0 && (
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium text-gray-700">Dokumente të ngarkuara:</p>
+                      <div className="space-y-2">
+                        {attachments.map((attachment, index) => (
+                          <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-md">
+                            <div className="flex items-center space-x-2">
+                              <FileText className="h-4 w-4 text-blue-600" />
+                              <span className="text-sm text-gray-700">{attachment.name}</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  // Download/view document
+                                  window.open(attachment.url, '_blank');
+                                }}
+                                className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                                data-testid={`view-attachment-${index}`}
+                              >
+                                <Download className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => removeAttachment(index)}
+                                className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                data-testid={`remove-attachment-${index}`}
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-4 pt-6">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onCancel}
+                  disabled={updateMutation.isPending}
+                >
+                  Anulo
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={updateMutation.isPending}
+                >
+                  {updateMutation.isPending ? "Duke ruajtur..." : "Ruaj Ndryshimet"}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

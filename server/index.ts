@@ -70,6 +70,8 @@ app.use((req, res, next) => {
   
   // Start court hearing scheduler for automated email notifications
   console.log('Initializing court hearing notification scheduler...');
+  courtHearingScheduler.startScheduler(); // Explicitly start the scheduler
+  console.log('Scheduler instance created, starting automatic notifications...');
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;

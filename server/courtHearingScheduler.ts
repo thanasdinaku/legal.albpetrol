@@ -17,26 +17,34 @@ export class CourtHearingScheduler {
   private intervalId: NodeJS.Timeout | null = null;
   
   constructor() {
+    console.log('🚀 CourtHearingScheduler constructor called');
     // Log timezone configuration on startup
     logTimezoneInfo();
     this.startScheduler();
   }
   
   public startScheduler() {
-    if (this.isRunning) return;
+    if (this.isRunning) {
+      console.log('⚠️ Scheduler already running, skipping duplicate start');
+      return;
+    }
     
-    console.log('Starting court hearing notification scheduler...');
+    console.log('🟢 Starting court hearing notification scheduler...');
     this.isRunning = true;
     
     // Check every 10 minutes for more responsive testing
     this.intervalId = setInterval(() => {
+      console.log(`[${new Date().toISOString()}] 🕐 AUTOMATIC CHECK TRIGGERED (every 10 minutes)`);
       this.checkUpcomingHearings();
     }, 10 * 60 * 1000); // 10 minutes
     
     // Also check immediately on start
     setTimeout(() => {
+      console.log(`[${new Date().toISOString()}] 🚀 STARTUP CHECK TRIGGERED (5 seconds after start)`);
       this.checkUpcomingHearings();
     }, 5000); // 5 seconds after start
+    
+    console.log(`✅ Scheduler configured: checking every 10 minutes, startup check in 5 seconds`);
   }
   
   public stopScheduler() {

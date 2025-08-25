@@ -55,20 +55,11 @@ export default function CaseEntryForm() {
     },
   });
 
-  // Convert datetime-local values to UTC for storage (Albania timezone GMT+1)
+  // Store datetime exactly as entered (no timezone conversion)
   const convertToUTC = (datetimeLocal: string) => {
     if (!datetimeLocal) return "";
-    try {
-      // Simply append timezone offset for Albania (GMT+1) and convert to UTC
-      const albaniaDateTime = datetimeLocal + '+01:00'; // Add GMT+1 timezone
-      const utcDate = new Date(albaniaDateTime);
-      const utcString = utcDate.toISOString();
-      console.log(`Converting ${datetimeLocal} (Albania GMT+1) -> ${utcString} (UTC storage)`);
-      return utcString;
-    } catch (error) {
-      console.error('Date conversion error:', error);
-      return "";
-    }
+    console.log(`Storing time exactly as entered: ${datetimeLocal}`);
+    return datetimeLocal; // Store exactly as entered
   };
 
   const createMutation = useMutation({

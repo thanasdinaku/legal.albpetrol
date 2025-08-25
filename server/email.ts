@@ -238,14 +238,18 @@ export async function sendEditEntryNotification(
     { key: 'objektiIPadise', label: 'Objekti i Padisë' },
     { key: 'gjykataShkalle', label: 'Gjykata e Shkallës së Parë' },
     { key: 'fazaGjykataShkalle', label: 'Faza në Gjykatën e Shkallës së Parë' },
+    { key: 'zhvillimiSeancesShkalleI', label: 'Zhvillimi i seances gjyqesorë data,ora (Shkallë I)' },
     { key: 'gjykataApelit', label: 'Gjykata e Apelit' },
     { key: 'fazaGjykataApelit', label: 'Faza në Gjykatën e Apelit' },
+    { key: 'zhvillimiSeancesApel', label: 'Zhvillimi i seances gjyqesorë data,ora (Apel)' },
     { key: 'fazaAktuale', label: 'Faza Aktuale' },
     { key: 'perfaqesuesi', label: 'Përfaqësuesi i Albpetrol SH.A.' },
     { key: 'demiIPretenduar', label: 'Dëmi i Pretenduar' },
     { key: 'shumaGjykata', label: 'Shuma e Caktuar nga Gjykata' },
     { key: 'vendimEkzekutim', label: 'Vendim me Ekzekutim të Përkohshëm' },
     { key: 'fazaEkzekutim', label: 'Faza e Ekzekutimit' },
+    { key: 'ankimuar', label: 'Ankimuar' },
+    { key: 'perfunduar', label: 'Përfunduar' },
     { key: 'gjykataLarte', label: 'Gjykata e Lartë' }
   ];
 
@@ -284,14 +288,18 @@ export async function sendEditEntryNotification(
     <li><strong>Objekti i Padisë:</strong> ${getFieldValue(originalEntry, 'objektiIPadise', false)}</li>
     <li><strong>Gjykata e Shkallës së Parë:</strong> ${getFieldValue(originalEntry, 'gjykataShkalle', false)}</li>
     <li><strong>Faza në Gjykatën e Shkallës së Parë:</strong> ${getFieldValue(originalEntry, 'fazaGjykataShkalle', false)}</li>
+    <li><strong>Zhvillimi i seances gjyqesorë data,ora (Shkallë I):</strong> ${getFieldValue(originalEntry, 'zhvillimiSeancesShkalleI', false)}</li>
     <li><strong>Gjykata e Apelit:</strong> ${getFieldValue(originalEntry, 'gjykataApelit', false)}</li>
     <li><strong>Faza në Gjykatën e Apelit:</strong> ${getFieldValue(originalEntry, 'fazaGjykataApelit', false)}</li>
+    <li><strong>Zhvillimi i seances gjyqesorë data,ora (Apel):</strong> ${getFieldValue(originalEntry, 'zhvillimiSeancesApel', false)}</li>
     <li><strong>Faza Aktuale:</strong> ${getFieldValue(originalEntry, 'fazaAktuale', false)}</li>
     <li><strong>Përfaqësuesi i Albpetrol SH.A.:</strong> ${getFieldValue(originalEntry, 'perfaqesuesi', false)}</li>
     <li><strong>Dëmi i Pretenduar:</strong> ${getFieldValue(originalEntry, 'demiIPretenduar', false)}</li>
     <li><strong>Shuma e Caktuar nga Gjykata:</strong> ${getFieldValue(originalEntry, 'shumaGjykata', false)}</li>
     <li><strong>Vendim me Ekzekutim të Përkohshëm:</strong> ${getFieldValue(originalEntry, 'vendimEkzekutim', false)}</li>
     <li><strong>Faza e Ekzekutimit:</strong> ${getFieldValue(originalEntry, 'fazaEkzekutim', false)}</li>
+    <li><strong>Ankimuar:</strong> ${getFieldValue(originalEntry, 'ankimuar', false)}</li>
+    <li><strong>Përfunduar:</strong> ${getFieldValue(originalEntry, 'perfunduar', false)}</li>
     <li><strong>Gjykata e Lartë:</strong> ${getFieldValue(originalEntry, 'gjykataLarte', false)}</li>
   </ul>
 </div>
@@ -306,14 +314,18 @@ export async function sendEditEntryNotification(
     <li><strong>Objekti i Padisë:</strong> ${getFieldValue(updatedEntry, 'objektiIPadise', true)}</li>
     <li><strong>Gjykata e Shkallës së Parë:</strong> ${getFieldValue(updatedEntry, 'gjykataShkalle', true)}</li>
     <li><strong>Faza në Gjykatën e Shkallës së Parë:</strong> ${getFieldValue(updatedEntry, 'fazaGjykataShkalle', true)}</li>
+    <li><strong>Zhvillimi i seances gjyqesorë data,ora (Shkallë I):</strong> ${getFieldValue(updatedEntry, 'zhvillimiSeancesShkalleI', true)}</li>
     <li><strong>Gjykata e Apelit:</strong> ${getFieldValue(updatedEntry, 'gjykataApelit', true)}</li>
     <li><strong>Faza në Gjykatën e Apelit:</strong> ${getFieldValue(updatedEntry, 'fazaGjykataApelit', true)}</li>
+    <li><strong>Zhvillimi i seances gjyqesorë data,ora (Apel):</strong> ${getFieldValue(updatedEntry, 'zhvillimiSeancesApel', true)}</li>
     <li><strong>Faza Aktuale:</strong> ${getFieldValue(updatedEntry, 'fazaAktuale', true)}</li>
     <li><strong>Përfaqësuesi i Albpetrol SH.A.:</strong> ${getFieldValue(updatedEntry, 'perfaqesuesi', true)}</li>
     <li><strong>Dëmi i Pretenduar:</strong> ${getFieldValue(updatedEntry, 'demiIPretenduar', true)}</li>
     <li><strong>Shuma e Caktuar nga Gjykata:</strong> ${getFieldValue(updatedEntry, 'shumaGjykata', true)}</li>
     <li><strong>Vendim me Ekzekutim të Përkohshëm:</strong> ${getFieldValue(updatedEntry, 'vendimEkzekutim', true)}</li>
     <li><strong>Faza e Ekzekutimit:</strong> ${getFieldValue(updatedEntry, 'fazaEkzekutim', true)}</li>
+    <li><strong>Ankimuar:</strong> ${getFieldValue(updatedEntry, 'ankimuar', true)}</li>
+    <li><strong>Përfunduar:</strong> ${getFieldValue(updatedEntry, 'perfunduar', true)}</li>
     <li><strong>Gjykata e Lartë:</strong> ${getFieldValue(updatedEntry, 'gjykataLarte', true)}</li>
   </ul>
 </div>
@@ -367,14 +379,18 @@ ISHTE:
 - Objekti i Padisë: ${originalEntry.objektiIPadise || 'N/A'}
 - Gjykata e Shkallës së Parë: ${originalEntry.gjykataShkalle || 'N/A'}
 - Faza në Gjykatën e Shkallës së Parë: ${originalEntry.fazaGjykataShkalle || 'N/A'}
+- Zhvillimi i seances gjyqesorë data,ora (Shkallë I): ${originalEntry.zhvillimiSeancesShkalleI || 'N/A'}
 - Gjykata e Apelit: ${originalEntry.gjykataApelit || 'N/A'}
 - Faza në Gjykatën e Apelit: ${originalEntry.fazaGjykataApelit || 'N/A'}
+- Zhvillimi i seances gjyqesorë data,ora (Apel): ${originalEntry.zhvillimiSeancesApel || 'N/A'}
 - Faza Aktuale: ${originalEntry.fazaAktuale || 'N/A'}
 - Përfaqësuesi i Albpetrol SH.A.: ${originalEntry.perfaqesuesi || 'N/A'}
 - Dëmi i Pretenduar: ${originalEntry.demiIPretenduar || 'N/A'}
 - Shuma e Caktuar nga Gjykata: ${originalEntry.shumaGjykata || 'N/A'}
 - Vendim me Ekzekutim të Përkohshëm: ${originalEntry.vendimEkzekutim || 'N/A'}
 - Faza e Ekzekutimit: ${originalEntry.fazaEkzekutim || 'N/A'}
+- Ankimuar: ${originalEntry.ankimuar || 'N/A'}
+- Përfunduar: ${originalEntry.perfunduar || 'N/A'}
 - Gjykata e Lartë: ${originalEntry.gjykataLarte || 'N/A'}
 
 U BË:
@@ -385,14 +401,18 @@ U BË:
 - Objekti i Padisë: ${updatedEntry.objektiIPadise || 'N/A'}
 - Gjykata e Shkallës së Parë: ${updatedEntry.gjykataShkalle || 'N/A'}
 - Faza në Gjykatën e Shkallës së Parë: ${updatedEntry.fazaGjykataShkalle || 'N/A'}
+- Zhvillimi i seances gjyqesorë data,ora (Shkallë I): ${updatedEntry.zhvillimiSeancesShkalleI || 'N/A'}
 - Gjykata e Apelit: ${updatedEntry.gjykataApelit || 'N/A'}
 - Faza në Gjykatën e Apelit: ${updatedEntry.fazaGjykataApelit || 'N/A'}
+- Zhvillimi i seances gjyqesorë data,ora (Apel): ${updatedEntry.zhvillimiSeancesApel || 'N/A'}
 - Faza Aktuale: ${updatedEntry.fazaAktuale || 'N/A'}
 - Përfaqësuesi i Albpetrol SH.A.: ${updatedEntry.perfaqesuesi || 'N/A'}
 - Dëmi i Pretenduar: ${updatedEntry.demiIPretenduar || 'N/A'}
 - Shuma e Caktuar nga Gjykata: ${updatedEntry.shumaGjykata || 'N/A'}
 - Vendim me Ekzekutim të Përkohshëm: ${updatedEntry.vendimEkzekutim || 'N/A'}
 - Faza e Ekzekutimit: ${updatedEntry.fazaEkzekutim || 'N/A'}
+- Ankimuar: ${updatedEntry.ankimuar || 'N/A'}
+- Përfunduar: ${updatedEntry.perfunduar || 'N/A'}
 - Gjykata e Lartë: ${updatedEntry.gjykataLarte || 'N/A'}
 
 Ndryshuar nga: ${editor.firstName} ${editor.lastName} (${editor.email})

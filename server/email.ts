@@ -130,14 +130,18 @@ export async function sendNewEntryNotification(
   <li><strong>Objekti i Padisë:</strong> ${entry.objektiIPadise || 'N/A'}</li>
   <li><strong>Gjykata e Shkallës së Parë:</strong> ${entry.gjykataShkalle || 'N/A'}</li>
   <li><strong>Faza në Gjykatën e Shkallës së Parë:</strong> ${entry.fazaGjykataShkalle || 'N/A'}</li>
+  <li><strong>Zhvillimi i seances gjyqesorë data,ora (Shkallë I):</strong> ${entry.zhvillimiSeancesShkalleI || 'N/A'}</li>
   <li><strong>Gjykata e Apelit:</strong> ${entry.gjykataApelit || 'N/A'}</li>
   <li><strong>Faza në Gjykatën e Apelit:</strong> ${entry.fazaGjykataApelit || 'N/A'}</li>
+  <li><strong>Zhvillimi i seances gjyqesorë data,ora (Apel):</strong> ${entry.zhvillimiSeancesApel || 'N/A'}</li>
   <li><strong>Faza Aktuale:</strong> ${entry.fazaAktuale || 'N/A'}</li>
   <li><strong>Përfaqësuesi i Albpetrol SH.A.:</strong> ${entry.perfaqesuesi || 'N/A'}</li>
   <li><strong>Dëmi i Pretenduar:</strong> ${entry.demiIPretenduar || 'N/A'}</li>
   <li><strong>Shuma e Caktuar nga Gjykata:</strong> ${entry.shumaGjykata || 'N/A'}</li>
   <li><strong>Vendim me Ekzekutim të Përkohshëm:</strong> ${entry.vendimEkzekutim || 'N/A'}</li>
   <li><strong>Faza e Ekzekutimit:</strong> ${entry.fazaEkzekutim || 'N/A'}</li>
+  <li><strong>Ankimuar:</strong> ${entry.ankimuar || 'N/A'}</li>
+  <li><strong>Përfunduar:</strong> ${entry.perfunduar || 'N/A'}</li>
   <li><strong>Gjykata e Lartë:</strong> ${entry.gjykataLarte || 'N/A'}</li>
   <li><strong>Krijuar nga:</strong> ${creator.firstName} ${creator.lastName} (${creator.email})</li>
   <li><strong>Data e Krijimit:</strong> ${entry.createdAt?.toLocaleString('sq-AL')}</li>
@@ -185,14 +189,18 @@ Detajet e çështjes:
 - Objekti i Padisë: ${entry.objektiIPadise || 'N/A'}
 - Gjykata e Shkallës së Parë: ${entry.gjykataShkalle || 'N/A'}
 - Faza në Gjykatën e Shkallës së Parë: ${entry.fazaGjykataShkalle || 'N/A'}
+- Zhvillimi i seances gjyqesorë data,ora (Shkallë I): ${entry.zhvillimiSeancesShkalleI || 'N/A'}
 - Gjykata e Apelit: ${entry.gjykataApelit || 'N/A'}
 - Faza në Gjykatën e Apelit: ${entry.fazaGjykataApelit || 'N/A'}
+- Zhvillimi i seances gjyqesorë data,ora (Apel): ${entry.zhvillimiSeancesApel || 'N/A'}
 - Faza Aktuale: ${entry.fazaAktuale || 'N/A'}
 - Përfaqësuesi i Albpetrol SH.A.: ${entry.perfaqesuesi || 'N/A'}
 - Dëmi i Pretenduar: ${entry.demiIPretenduar || 'N/A'}
 - Shuma e Caktuar nga Gjykata: ${entry.shumaGjykata || 'N/A'}
 - Vendim me Ekzekutim të Përkohshëm: ${entry.vendimEkzekutim || 'N/A'}
 - Faza e Ekzekutimit: ${entry.fazaEkzekutim || 'N/A'}
+- Ankimuar: ${entry.ankimuar || 'N/A'}
+- Përfunduar: ${entry.perfunduar || 'N/A'}
 - Gjykata e Lartë: ${entry.gjykataLarte || 'N/A'}
 - Krijuar nga: ${creator.firstName} ${creator.lastName} (${creator.email})
 - Data e Krijimit: ${entry.createdAt?.toLocaleString('sq-AL')}

@@ -71,7 +71,7 @@ export class CourtHearingScheduler {
       }
       
       // Get current time and calculate notification window in GMT+1
-      const now = nowGMT1();
+      const now = new Date();
       const twentyFourHoursFromNow = new Date(now.getTime() + (24 * 60 * 60 * 1000));
       
       console.log(`Current time (GMT+1): ${formatAlbanianDateTime(now)}`);
@@ -90,17 +90,16 @@ export class CourtHearingScheduler {
           console.log(`Parsed hearing date:`, hearingDate);
           
           if (hearingDate) {
-            const hearingGMT1 = toGMT1(hearingDate);
-            const hoursFromNow = Math.round((hearingGMT1.getTime() - now.getTime()) / (60 * 60 * 1000));
-            const isWithinWindow = this.isWithinNotificationWindow(hearingGMT1, twentyFourHoursFromNow);
-            console.log(`Is within notification window: ${isWithinWindow} (hearing at ${formatAlbanianDateTime(hearingGMT1)} is ${hoursFromNow} hours from now)`);
+            const hoursFromNow = Math.round((hearingDate.getTime() - now.getTime()) / (60 * 60 * 1000));
+            const isWithinWindow = this.isWithinNotificationWindow(hearingDate, twentyFourHoursFromNow);
+            console.log(`Is within notification window: ${isWithinWindow} (hearing at ${hearingDate.toISOString()} is ${hoursFromNow} hours from now)`);
             
             if (isWithinWindow) {
               upcomingHearings.push({
                 id: entry.id,
                 paditesi: entry.paditesi,
                 iPaditur: entry.iPaditur,
-                hearingDateTime: hearingGMT1.toISOString(),
+                hearingDateTime: hearingDate.toISOString(),
                 hearingType: 'first_instance'
               });
               console.log(`Added hearing for case ${entry.id} to notification queue`);
@@ -115,17 +114,16 @@ export class CourtHearingScheduler {
           console.log(`Parsed appeal hearing date:`, hearingDate);
           
           if (hearingDate) {
-            const hearingGMT1 = toGMT1(hearingDate);
-            const hoursFromNow = Math.round((hearingGMT1.getTime() - now.getTime()) / (60 * 60 * 1000));
-            const isWithinWindow = this.isWithinNotificationWindow(hearingGMT1, twentyFourHoursFromNow);
-            console.log(`Appeal hearing is within notification window: ${isWithinWindow} (hearing at ${formatAlbanianDateTime(hearingGMT1)} is ${hoursFromNow} hours from now)`);
+            const hoursFromNow = Math.round((hearingDate.getTime() - now.getTime()) / (60 * 60 * 1000));
+            const isWithinWindow = this.isWithinNotificationWindow(hearingDate, twentyFourHoursFromNow);
+            console.log(`Appeal hearing is within notification window: ${isWithinWindow} (hearing at ${hearingDate.toISOString()} is ${hoursFromNow} hours from now)`);
             
             if (isWithinWindow) {
               upcomingHearings.push({
                 id: entry.id,
                 paditesi: entry.paditesi,
                 iPaditur: entry.iPaditur,
-                hearingDateTime: hearingGMT1.toISOString(),
+                hearingDateTime: hearingDate.toISOString(),
                 hearingType: 'appeal'
               });
               console.log(`Added appeal hearing for case ${entry.id} to notification queue`);
@@ -222,13 +220,13 @@ export class CourtHearingScheduler {
   
   private isWithinNotificationWindow(hearingDate: Date, windowEnd: Date): boolean {
     // Check if hearing is within ≤25 hours from now (slightly generous to catch edge cases)
-    const now = nowGMT1();
+    const now = new Date();
     const hoursFromNow = (hearingDate.getTime() - now.getTime()) / (60 * 60 * 1000);
     
     // Notify for hearings ≤25 hours away (but not in the past) - covers edge cases near 24h
     const isWithin = hoursFromNow > 0 && hoursFromNow <= 25;
     
-    console.log(`    Window check (GMT+1): hearing=${formatAlbanianDateTime(hearingDate)}, now=${formatAlbanianDateTime(now)}, hours_ahead=${hoursFromNow.toFixed(1)}, window=≤25h, result=${isWithin}`);
+    console.log(`    Window check: hearing=${hearingDate.toISOString()}, now=${now.toISOString()}, hours_ahead=${hoursFromNow.toFixed(1)}, window=≤25h, result=${isWithin}`);
     return isWithin;
   }
   

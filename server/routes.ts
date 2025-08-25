@@ -44,6 +44,7 @@ import { generateUserManual } from "./fixed-manual";
 import { generateSimpleManual } from "./simple-manual";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 import { BackupService, type BackupOptions, type BackupProgress } from "./backup-service";
+import { courtHearingScheduler } from "./courtHearingScheduler";
 import multer from "multer";
 
 // Create SMTP transporter for testing
@@ -1375,5 +1376,17 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
   });
 
   const httpServer = createServer(app);
+  // Manual notification trigger (for testing)
+  app.post('/api/force-notifications', isAuthenticated, async (req, res) => {
+    try {
+      console.log('🔥 Manual notification check triggered by user');
+      await courtHearingScheduler.forceNotificationCheck();
+      res.json({ success: true, message: 'Notification check triggered' });
+    } catch (error) {
+      console.error('Error triggering notifications:', error);
+      res.status(500).json({ error: 'Failed to trigger notifications' });
+    }
+  });
+
   return httpServer;
 }

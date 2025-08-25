@@ -46,6 +46,12 @@ export class CourtHearingScheduler {
     
     console.log(`✅ Scheduler configured: checking every 10 minutes, startup check in 5 seconds`);
   }
+
+  // Force immediate notification check (for manual testing)
+  public async forceNotificationCheck(): Promise<void> {
+    console.log('🔥 FORCING IMMEDIATE NOTIFICATION CHECK');
+    await this.checkUpcomingHearings();
+  }
   
   public stopScheduler() {
     if (!this.isRunning) return;

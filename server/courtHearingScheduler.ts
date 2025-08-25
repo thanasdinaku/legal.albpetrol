@@ -192,10 +192,9 @@ export class CourtHearingScheduler {
         const [year, month, day] = datePart.split('-').map(Number);
         const [hours, minutes] = timePart.split(':').map(Number);
         
-        // Create date as UTC then subtract 1 hour to represent Albania input as UTC
-        // This ensures that when toGMT1() is called, it shows the correct Albania time
-        const date = new Date(Date.UTC(year, month - 1, day, hours - 1, minutes));
-        console.log(`Parsed as Albania local time: ${date.toISOString()} from input: ${normalizedString}`);
+        // Create date exactly as stored (no timezone conversion)
+        const date = new Date(year, month - 1, day, hours, minutes);
+        console.log(`Parsed exactly as stored: ${date.toISOString()} from input: ${normalizedString}`);
         return isNaN(date.getTime()) ? null : date;
       }
       

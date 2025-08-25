@@ -15,10 +15,9 @@ export function nowGMT1(): Date {
   return toGMT1(new Date());
 }
 
-// Format date for Albanian display in GMT+1
+// Format date for Albanian display (no timezone conversion)
 export function formatAlbanianDateTime(date: Date): string {
   return date.toLocaleString('sq-AL', {
-    timeZone: SYSTEM_TIMEZONE,
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -28,20 +27,18 @@ export function formatAlbanianDateTime(date: Date): string {
   });
 }
 
-// Format date for Albanian display with custom format
+// Format date for Albanian display with custom format (no timezone conversion)
 export function formatAlbanianDate(date: Date): string {
   return date.toLocaleDateString('sq-AL', {
-    timeZone: SYSTEM_TIMEZONE,
     day: '2-digit',
     month: '2-digit',
     year: 'numeric'
   });
 }
 
-// Format time for Albanian display
+// Format time for Albanian display (no timezone conversion)
 export function formatAlbanianTime(date: Date): string {
   return date.toLocaleTimeString('sq-AL', {
-    timeZone: SYSTEM_TIMEZONE,
     hour: '2-digit',
     minute: '2-digit',
     hour12: false

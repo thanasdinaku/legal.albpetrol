@@ -75,7 +75,7 @@ export class CourtHearingScheduler {
       const twentyFourHoursFromNow = new Date(now.getTime() + (24 * 60 * 60 * 1000));
       
       console.log(`Current time (GMT+1): ${formatAlbanianDateTime(now)}`);
-      console.log(`Checking hearings within ≤24 hours: up to ${formatAlbanianDateTime(twentyFourHoursFromNow)} [GMT+1 Albania Time]`);
+      console.log(`Checking hearings within ≤26 hours: up to ${formatAlbanianDateTime(twentyFourHoursFromNow)} [Albania Time]`);
       
       // Get all entries with hearings in the next 24 hours
       const entries = await db.select().from(dataEntries);
@@ -223,10 +223,10 @@ export class CourtHearingScheduler {
     const now = new Date();
     const hoursFromNow = (hearingDate.getTime() - now.getTime()) / (60 * 60 * 1000);
     
-    // Notify for hearings ≤25 hours away (but not in the past) - covers edge cases near 24h
-    const isWithin = hoursFromNow > 0 && hoursFromNow <= 25;
+    // Notify for hearings ≤26 hours away (but not in the past) - covers edge cases near 24h
+    const isWithin = hoursFromNow > 0 && hoursFromNow <= 26;
     
-    console.log(`    Window check: hearing=${hearingDate.toISOString()}, now=${now.toISOString()}, hours_ahead=${hoursFromNow.toFixed(1)}, window=≤25h, result=${isWithin}`);
+    console.log(`    Window check: hearing=${hearingDate.toISOString()}, now=${now.toISOString()}, hours_ahead=${hoursFromNow.toFixed(1)}, window=≤26h, result=${isWithin}`);
     return isWithin;
   }
   

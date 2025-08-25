@@ -59,15 +59,9 @@ export default function CaseEntryForm() {
   const convertToUTC = (datetimeLocal: string) => {
     if (!datetimeLocal) return "";
     try {
-      // datetime-local input is always in Albania time (GMT+1)
-      // We need to manually convert this to UTC by subtracting 1 hour
-      const [dateStr, timeStr] = datetimeLocal.split('T');
-      const [year, month, day] = dateStr.split('-').map(Number);
-      const [hour, minute] = timeStr.split(':').map(Number);
-      
-      // Create date in Albania timezone (GMT+1) and convert to UTC
-      const albaniaDate = new Date(year, month - 1, day, hour, minute);
-      const utcDate = new Date(albaniaDate.getTime() - (1 * 60 * 60 * 1000)); // Subtract 1 hour for GMT+1
+      // Simply append timezone offset for Albania (GMT+1) and convert to UTC
+      const albaniaDateTime = datetimeLocal + '+01:00'; // Add GMT+1 timezone
+      const utcDate = new Date(albaniaDateTime);
       const utcString = utcDate.toISOString();
       console.log(`Converting ${datetimeLocal} (Albania GMT+1) -> ${utcString} (UTC storage)`);
       return utcString;

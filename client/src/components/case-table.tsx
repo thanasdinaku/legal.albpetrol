@@ -20,6 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { CaseEditForm } from "@/components/case-edit-form";
 import { formatDateTime, formatDate } from "@/lib/dateUtils";
+import { ScrollHintContainer } from "@/components/ui/scroll-hint-container";
 import type { DataEntry } from "@shared/schema";
 
 // Custom hook for debounced search
@@ -357,7 +358,11 @@ export default function CaseTable() {
               </div>
             ) : (
               <>
-                <div className="overflow-x-auto border rounded-lg">
+                <ScrollHintContainer 
+                  direction="horizontal" 
+                  className="border rounded-lg" 
+                  data-testid="table-scroll-container"
+                >
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -448,7 +453,7 @@ export default function CaseTable() {
                       ))}
                     </TableBody>
                   </Table>
-                </div>
+                </ScrollHintContainer>
 
                 {/* Pagination */}
                 {response.pagination && response.pagination.totalPages > 1 && (

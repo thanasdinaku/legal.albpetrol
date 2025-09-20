@@ -19,6 +19,7 @@ import { CalendarIcon, Clock, FileText, Download, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { DocumentUploader } from "@/components/DocumentUploader";
+import { ScrollHintContainer } from "@/components/ui/scroll-hint-container";
 import type { UploadResult } from "@uppy/core";
 
 const formSchema = insertDataEntrySchema;
@@ -180,8 +181,14 @@ export default function CaseEntryForm() {
           </CardDescription>
         </CardHeader>
         <CardContent className="p-8">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <ScrollHintContainer 
+            direction="vertical" 
+            maxHeight="70vh" 
+            className="pr-4" 
+            data-testid="form-scroll-container"
+          >
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               
               {/* Basic Case Information */}
               <div className="space-y-6">
@@ -601,6 +608,7 @@ export default function CaseEntryForm() {
               </div>
             </form>
           </Form>
+          </ScrollHintContainer>
         </CardContent>
       </Card>
     </div>

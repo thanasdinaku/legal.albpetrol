@@ -7,6 +7,7 @@ import Sidebar from "@/components/sidebar";
 import Header from "@/components/header";
 import DashboardStats from "@/components/dashboard-stats";
 import RecentActivity from "@/components/recent-activity";
+import { ScrollHintContainer } from "@/components/ui/scroll-hint-container";
 
 export default function Home() {
   const { toast } = useToast();
@@ -53,8 +54,14 @@ export default function Home() {
           subtitle="Mirë se erdhët! Këtu është përmbledhja e të dhënave tuaja." 
           onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
         />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
-          <div className="space-y-6">
+        <main className="flex-1 overflow-hidden p-4 sm:p-6">
+          <ScrollHintContainer
+            direction="vertical"
+            maxHeight="100%"
+            data-testid="dashboard-scroll-container"
+            className="h-full"
+          >
+            <div className="space-y-6">
             <DashboardStats />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <RecentActivity />
@@ -94,7 +101,8 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          </div>
+            </div>
+          </ScrollHintContainer>
         </main>
       </div>
     </div>

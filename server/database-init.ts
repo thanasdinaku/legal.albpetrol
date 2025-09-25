@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import { db } from "./db";
+import { hashPassword } from "./auth";
 
 /**
  * Initialize database with essential data
@@ -9,9 +10,13 @@ export async function initializeDatabase() {
   try {
     console.log("🔧 Initializing database...");
     
+    // Generate correct password hash using scrypt (same as auth system)
+    const correctPasswordHash = await hashPassword("Admin2025!");
+    console.log("🔑 Generated scrypt password hash for admin user");
+    
     // Check if admin user exists
     const adminUser = await db.execute(sql`
-      SELECT id, email FROM users WHERE email = 'it.system@albpetrol.al'
+      SELECT id, email, password FROM users WHERE email = 'it.system@albpetrol.al'
     `);
     
     if (adminUser.rows.length === 0) {
@@ -36,26 +41,34 @@ export async function initializeDatabase() {
           'System',
           'admin',
           true,
-          '$2b$10$vp1qyF1Ly6qZ1Vq8iX1pMeH5Dw6ZK9LnB8WmTc7Qr2F5Ng4sM6xPO',
+          ${correctPasswordHash},
           NOW(),
           NOW()
         ) ON CONFLICT (email) DO UPDATE SET
           role = 'admin',
           is_default_admin = true,
+          password = ${correctPasswordHash},
           updated_at = NOW()
       `);
       
       console.log("✅ Admin user created successfully");
     } else {
       console.log("✅ Admin user already exists");
+      
+      // Check if password format is correct (scrypt format: hash.salt)
+      const existingPassword = adminUser.rows[0].password as string;
+      if (!existingPassword || !existingPassword.includes('.') || existingPassword.startsWith('$2b$')) {
+        console.log("🔧 Updating admin password to correct scrypt format");
+        await db.execute(sql`
+          UPDATE users 
+          SET password = ${correctPasswordHash}, updated_at = NOW()
+          WHERE email = 'it.system@albpetrol.al'
+        `);
+        console.log("✅ Admin password updated to scrypt format");
+      } else {
+        console.log("✅ Admin password already in correct scrypt format");
+      }
     }
-    
-    // Ensure admin user has correct password hash for 'Admin2025!'
-    await db.execute(sql`
-      UPDATE users 
-      SET password = '$2b$10$vp1qyF1Ly6qZ1Vq8iX1pMeH5Dw6ZK9LnB8WmTc7Qr2F5Ng4sM6xPO'
-      WHERE email = 'it.system@albpetrol.al' AND (password IS NULL OR password = '')
-    `);
     
     console.log("✅ Database initialization completed");
     
@@ -72,6 +85,9 @@ export async function initializeDatabase() {
 export async function createAdminUser() {
   try {
     console.log("🔧 Manually creating admin user...");
+    
+    // Generate correct password hash using scrypt (same as auth system)
+    const correctPasswordHash = await hashPassword("Admin2025!");
     
     await db.execute(sql`
       INSERT INTO users (
@@ -91,13 +107,13 @@ export async function createAdminUser() {
         'System',
         'admin',
         true,
-        '$2b$10$vp1qyF1Ly6qZ1Vq8iX1pMeH5Dw6ZK9LnB8WmTc7Qr2F5Ng4sM6xPO',
+        ${correctPasswordHash},
         NOW(),
         NOW()
       ) ON CONFLICT (email) DO UPDATE SET
         role = 'admin',
         is_default_admin = true,
-        password = '$2b$10$vp1qyF1Ly6qZ1Vq8iX1pMeH5Dw6ZK9LnB8WmTc7Qr2F5Ng4sM6xPO',
+        password = ${correctPasswordHash},
         updated_at = NOW()
     `);
     

@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { courtHearingScheduler } from "./courtHearingScheduler";
+import { initializeDatabase } from "./database-init";
 
 const app = express();
 
@@ -67,6 +68,9 @@ app.use((req, res, next) => {
 
 (async () => {
   const server = await registerRoutes(app);
+  
+  // Initialize database with admin user
+  await initializeDatabase();
   
   // Start court hearing scheduler for automated email notifications
   console.log('Initializing court hearing notification scheduler...');

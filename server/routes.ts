@@ -742,6 +742,26 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
     }
   });
 
+  app.post("/api/admin/initialize-database", strictLimiter, isAdmin, async (req: any, res) => {
+    try {
+      if (req.user.role !== "admin") {
+        return res.status(403).json({ message: "Access denied. Admin privileges required." });
+      }
+      
+      // Import and run database initialization
+      const { initializeDatabase } = await import("./database-init");
+      await initializeDatabase();
+      
+      res.json({ 
+        message: "Database initialization completed successfully",
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Error initializing database:", error);
+      res.status(500).json({ message: "Failed to initialize database" });
+    }
+  });
+
   app.put("/api/admin/users/:userId/role", strictLimiter, isAdmin, async (req: any, res) => {
     try {
       if (req.user.role !== "admin") { // Admin access required

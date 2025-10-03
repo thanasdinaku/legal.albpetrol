@@ -1,0 +1,109 @@
+root@admuser:/opt/ceshtje-ligjore# sleep 5
+curl http://localhost:5000
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Connection refused
+root@admuser:/opt/ceshtje-ligjore# pm2 logs albpetrol-legal --lines 50
+[TAILING] Tailing last 50 lines for [albpetrol-legal] process (change the value with --lines option)
+/opt/ceshtje-ligjore/logs/out-0.log last 50 lines:
+0|albpetro | 2025-10-03T21:55:32: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T21:55:32: 🌍 Configured Timezone: Europe/Tirane (GMT+1 - Albania Time)
+0|albpetro | 2025-10-03T21:55:32: ⏰ Current UTC Time: 2025-10-03T21:55:32.302Z
+0|albpetro | 2025-10-03T21:55:32: 🇦🇱 Current Albania Time (GMT+1): 03.10.2025, 23:55
+0|albpetro | 2025-10-03T21:55:32: 📅 Albanian Date Format: 03.10.2025
+0|albpetro | 2025-10-03T21:55:32: 🕒 Albanian Time Format: 23:55
+0|albpetro | 2025-10-03T21:55:32: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T21:55:32: 
+0|albpetro | 2025-10-03T21:55:32: 🟢 Starting court hearing notification scheduler...
+0|albpetro | 2025-10-03T21:55:32: ✅ Scheduler configured: checking every 10 minutes, startup check in 5 seconds
+0|albpetro | 2025-10-03T21:55:37: [2025-10-03T21:55:37.313Z] 🚀 STARTUP CHECK TRIGGERED (5 seconds after start)
+0|albpetro | 2025-10-03T21:55:37: [2025-10-03T21:55:37.313Z] === COURT HEARING CHECK STARTED ===
+0|albpetro | 2025-10-03T21:55:37: Email notifications not configured, skipping checks
+0|albpetro | 2025-10-03T22:00:01: 🚀 CourtHearingScheduler constructor called
+0|albpetro | 2025-10-03T22:00:01: 
+0|albpetro | 2025-10-03T22:00:01: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T22:00:01: 🕐 SYSTEM TIMEZONE CONFIGURATION - GMT+1 (ALBANIA TIME)
+0|albpetro | 2025-10-03T22:00:01: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T22:00:01: 🌍 Configured Timezone: Europe/Tirane (GMT+1 - Albania Time)
+0|albpetro | 2025-10-03T22:00:01: ⏰ Current UTC Time: 2025-10-03T22:00:01.439Z
+0|albpetro | 2025-10-03T22:00:01: 🇦🇱 Current Albania Time (GMT+1): 04.10.2025, 24:00
+0|albpetro | 2025-10-03T22:00:01: 📅 Albanian Date Format: 04.10.2025
+0|albpetro | 2025-10-03T22:00:01: 🕒 Albanian Time Format: 24:00
+0|albpetro | 2025-10-03T22:00:01: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T22:00:01: 
+0|albpetro | 2025-10-03T22:00:01: 🟢 Starting court hearing notification scheduler...
+0|albpetro | 2025-10-03T22:00:01: ✅ Scheduler configured: checking every 10 minutes, startup check in 5 seconds
+0|albpetro | 2025-10-03T22:00:06: [2025-10-03T22:00:06.451Z] 🚀 STARTUP CHECK TRIGGERED (5 seconds after start)
+0|albpetro | 2025-10-03T22:00:06: [2025-10-03T22:00:06.451Z] === COURT HEARING CHECK STARTED ===
+0|albpetro | 2025-10-03T22:00:06: Email notifications not configured, skipping checks
+0|albpetro | 2025-10-03T22:10:01: [2025-10-03T22:10:01.451Z] 🕐 AUTOMATIC CHECK TRIGGERED (every 10 minutes)
+0|albpetro | 2025-10-03T22:10:01: [2025-10-03T22:10:01.452Z] === COURT HEARING CHECK STARTED ===
+0|albpetro | 2025-10-03T22:10:01: Email notifications not configured, skipping checks
+0|albpetro | 2025-10-03T22:18:43: 🚀 CourtHearingScheduler constructor called
+0|albpetro | 2025-10-03T22:18:43: 
+0|albpetro | 2025-10-03T22:18:43: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T22:18:43: 🕐 SYSTEM TIMEZONE CONFIGURATION - GMT+1 (ALBANIA TIME)
+0|albpetro | 2025-10-03T22:18:43: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T22:18:43: 🌍 Configured Timezone: Europe/Tirane (GMT+1 - Albania Time)
+0|albpetro | 2025-10-03T22:18:43: ⏰ Current UTC Time: 2025-10-03T22:18:43.677Z
+0|albpetro | 2025-10-03T22:18:43: 🇦🇱 Current Albania Time (GMT+1): 04.10.2025, 24:18
+0|albpetro | 2025-10-03T22:18:43: 📅 Albanian Date Format: 04.10.2025
+0|albpetro | 2025-10-03T22:18:43: 🕒 Albanian Time Format: 24:18
+0|albpetro | 2025-10-03T22:18:43: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T22:18:43: 
+0|albpetro | 2025-10-03T22:18:43: 🟢 Starting court hearing notification scheduler...
+0|albpetro | 2025-10-03T22:18:43: ✅ Scheduler configured: checking every 10 minutes, startup check in 5 seconds
+0|albpetro | 2025-10-03T22:18:48: [2025-10-03T22:18:48.689Z] 🚀 STARTUP CHECK TRIGGERED (5 seconds after start)
+0|albpetro | 2025-10-03T22:18:48: [2025-10-03T22:18:48.689Z] === COURT HEARING CHECK STARTED ===
+0|albpetro | 2025-10-03T22:18:48: Email notifications not configured, skipping checks
+
+/opt/ceshtje-ligjore/logs/err-0.log last 50 lines:
+0|albpetro | 2025-10-03T22:18:43:     syscall: 'connect',
+0|albpetro | 2025-10-03T22:18:43:     address: '127.0.0.1',
+0|albpetro | 2025-10-03T22:18:43:     port: 443
+0|albpetro | 2025-10-03T22:18:43:   },
+0|albpetro | 2025-10-03T22:18:43:   [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443'
+0|albpetro | 2025-10-03T22:18:43: }
+0|albpetro | 2025-10-03T22:18:48: Error getting email notification settings: ErrorEvent {
+0|albpetro | 2025-10-03T22:18:48:   [Symbol(kTarget)]: WebSocket {
+0|albpetro | 2025-10-03T22:18:48:     _events: [Object: null prototype] {
+0|albpetro | 2025-10-03T22:18:48:       error: [Function],
+0|albpetro | 2025-10-03T22:18:48:       message: [Function],
+0|albpetro | 2025-10-03T22:18:48:       close: [Function],
+0|albpetro | 2025-10-03T22:18:48:       open: [Function]
+0|albpetro | 2025-10-03T22:18:48:     },
+0|albpetro | 2025-10-03T22:18:48:     _eventsCount: 4,
+0|albpetro | 2025-10-03T22:18:48:     _maxListeners: undefined,
+0|albpetro | 2025-10-03T22:18:48:     _binaryType: 'arraybuffer',
+0|albpetro | 2025-10-03T22:18:48:     _closeCode: 1006,
+0|albpetro | 2025-10-03T22:18:48:     _closeFrameReceived: false,
+0|albpetro | 2025-10-03T22:18:48:     _closeFrameSent: false,
+0|albpetro | 2025-10-03T22:18:48:     _closeMessage: <Buffer >,
+0|albpetro | 2025-10-03T22:18:48:     _closeTimer: null,
+0|albpetro | 2025-10-03T22:18:48:     _errorEmitted: true,
+0|albpetro | 2025-10-03T22:18:48:     _extensions: {},
+0|albpetro | 2025-10-03T22:18:48:     _paused: false,
+0|albpetro | 2025-10-03T22:18:48:     _protocol: '',
+0|albpetro | 2025-10-03T22:18:48:     _readyState: 3,
+0|albpetro | 2025-10-03T22:18:48:     _receiver: null,
+0|albpetro | 2025-10-03T22:18:48:     _sender: null,
+0|albpetro | 2025-10-03T22:18:48:     _socket: null,
+0|albpetro | 2025-10-03T22:18:48:     _bufferedAmount: 0,
+0|albpetro | 2025-10-03T22:18:48:     _isServer: false,
+0|albpetro | 2025-10-03T22:18:48:     _redirects: 0,
+0|albpetro | 2025-10-03T22:18:48:     _autoPong: true,
+0|albpetro | 2025-10-03T22:18:48:     _url: 'wss://localhost/v2',
+0|albpetro | 2025-10-03T22:18:48:     _req: null,
+0|albpetro | 2025-10-03T22:18:48:     [Symbol(shapeMode)]: false,
+0|albpetro | 2025-10-03T22:18:48:     [Symbol(kCapture)]: false
+0|albpetro | 2025-10-03T22:18:48:   },
+0|albpetro | 2025-10-03T22:18:48:   [Symbol(kType)]: 'error',
+0|albpetro | 2025-10-03T22:18:48:   [Symbol(kError)]: Error: connect ECONNREFUSED 127.0.0.1:443
+0|albpetro | 2025-10-03T22:18:48:       at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|albpetro | 2025-10-03T22:18:48:     errno: -111,
+0|albpetro | 2025-10-03T22:18:48:     code: 'ECONNREFUSED',
+0|albpetro | 2025-10-03T22:18:48:     syscall: 'connect',
+0|albpetro | 2025-10-03T22:18:48:     address: '127.0.0.1',
+0|albpetro | 2025-10-03T22:18:48:     port: 443
+0|albpetro | 2025-10-03T22:18:48:   },
+0|albpetro | 2025-10-03T22:18:48:   [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443'
+0|albpetro | 2025-10-03T22:18:48: }
+

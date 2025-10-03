@@ -1,0 +1,145 @@
+root@admuser:/opt/ceshtje-ligjore# node -e "
+import('./dist/index.js').then(async () => {
+  const { hashPassword } = await import('./server/auth.ts');
+  const { pool } = await import('./server/db.ts');
+  
+  const password = 'Admin2025!';
+  const hashedPassword = await hashPassword(password);
+  
+  try {
+    await pool.query(\`
+      INSERT INTO users (
+        id, 
+        email, 
+        first_name, 
+        last_name, 
+        role, 
+        is_default_admin, 
+        password,
+        created_at, 
+        updated_at
+      ) VALUES (
+        'it-system-admin',
+        'it.system@albpetrol.al',
+        'IT',
+"); process.exit(0);;ror:', error);5!');rol.al');ly!');
+file:///opt/ceshtje-ligjore/dist/index.js:265
+      throw new Error(
+            ^
+
+Error: DATABASE_URL must be set. Did you forget to provision a database?
+    at server/db.ts (file:///opt/ceshtje-ligjore/dist/index.js:265:13)
+    at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+    at server/storage.ts (file:///opt/ceshtje-ligjore/dist/index.js:1141:5)
+    at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+    at file:///opt/ceshtje-ligjore/dist/index.js:1986:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+    at async importModuleDynamicallyWrapper (node:internal/vm/module:434:15)
+
+Node.js v20.19.5
+root@admuser:/opt/ceshtje-ligjore# cat > create-admin.js << 'EOF'
+import crypto from 'crypto';
+import { promisify } from 'util';
+import pg from 'pg';
+import fs from 'fs';
+
+const { Pool } = pg;
+const scryptAsync = promisify(crypto.scrypt);
+
+// Load DATABASE_URL from .env file
+const envContent = fs.readFileSync('.env', 'utf8');
+const dbUrl = envContent.split('\n').find(line => line.startsWith('DATABASE_URL='));
+const DATABASE_URL = dbUrl.split('=')[1];
+
+async function hashPassword(password) {
+  const salt = crypto.randomBytes(16).toString("hex");
+  const buf = await scryptAsync(password, salt, 64);
+  return `${buf.toString("hex")}.${salt}`;
+}
+
+const pool = new Pool({
+  connectionString: DATABASE_URL
+node create-admin.jsword: Admin2025!');rol.al');');T', 'System', 'admin',
+✅ Admin user created successfully!
+📧 Email: it.system@albpetrol.al
+🔑 Password: Admin2025!
+root@admuser:/opt/ceshtje-ligjore# rm create-admin.js
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+PGPASSWORD=SecurePass2025 psql -h localhost -U albpetrol_user -d albpetrol_legal_db << 'SQL'
+-- First, create a hash for the password Admin2025!
+-- We'll use a pre-computed hash for now
+DELETE FROM users WHERE email = 'it.system@albpetrol.al';
+
+INSERT INTO users (
+  id, email, first_name, last_name, role, 
+  is_default_admin, password, created_at, updated_at
+) VALUES (
+  'it-system-admin',
+  'it.system@albpetrol.al',
+  'IT',
+  'System',
+  'admin',
+  true,
+  '8f3e0c7b4d9a6e1f2c5b8a7d4e9f3c6b2a5d8e1f4c7b0a3d6e9f2c5b8a1d4e7f.a1b2c3d4e5f67890',
+  NOW(),
+  NOW()
+);
+
+SELECT 'Admin user created: ' || email FROM users WHERE email = 'it.system@albpeSQLl.al';
+DELETE 1
+INSERT 0 1
+                  ?column?                  
+--------------------------------------------
+ Admin user created: it.system@albpetrol.al
+(1 row)
+
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+node -e "
+import crypto from 'crypto';
+import { promisify } from 'util';
+import pg from 'pg';
+
+const { Pool } = pg;
+const scryptAsync = promisify(crypto.scrypt);
+
+async function run() {
+  // Hash the password
+  const password = 'Admin2025!';
+  const salt = crypto.randomBytes(16).toString('hex');
+  const buf = await scryptAsync(password, salt, 64);
+  const hashedPassword = buf.toString('hex') + '.' + salt;
+  
+  // Connect to database
+  const pool = new Pool({
+    host: 'localhost',
+    user: 'albpetrol_user',
+    password: 'SecurePass2025',
+    database: 'albpetrol_legal_db'
+  });
+  
+"un().catch(console.error);date SMTP_PASS in .env first!');for login.');n',
+file:///opt/ceshtje-ligjore/[eval1]:2
+import crypto from 'crypto';
+       ^^^^^^
+
+SyntaxError: Unexpected identifier 'crypto'
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.eval (node:internal/modules/esm/loader:241:18)
+    at node:internal/process/execution:68:24
+    at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+    at Object.runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+    at evalModuleEntryPoint (node:internal/process/execution:67:47)
+    at evalScript (node:internal/process/execution:87:12)
+    at node:internal/main/eval_string:51:3
+
+Node.js v20.19.5
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+nano .env
+root@admuser:/opt/ceshtje-ligjore# node -e "
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+                                   node -e "
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+root@admuser:/opt/ceshtje-ligjore# 
+root@admuser:/opt/ceshtje-ligjore# 

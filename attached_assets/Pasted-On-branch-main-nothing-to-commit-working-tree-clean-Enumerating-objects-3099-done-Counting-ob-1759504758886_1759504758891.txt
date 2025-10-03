@@ -1,0 +1,38 @@
+On branch main
+nothing to commit, working tree clean
+Enumerating objects: 3099, done.
+Counting objects: 100% (3099/3099), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (3070/3070), done.
+Writing objects:  25% (775/3099), 4.34 MiB | 8.64 MiBWriting objects:  25% (796/3099), 7.45 MiB | 7.42 MiBWriting objects:  26% (806/3099), 7.45 MiB | 7.42 MiBWriting objects:  27% (840/3099), 7.45 MiB | 7.42 MiBWriting objects:  28% (868/3099), 7.45 MiB | 7.42 MiBWriting objects:  29% (899/3099), 7.45 MiB | 7.42 MiBWriting objects:  30% (930/3099), 7.45 MiB | 7.42 MiBWriting objects:  31% (961/3099), 7.45 MiB | 7.42 MiBWriting objects:  32% (992/3099), 7.45 MiB | 7.42 MiBWriting objects:  33% (1023/3099), 7.45 MiB | 7.42 MiWriting objects:  34% (1054/3099), 7.45 MiB | 7.42 MiWriting objects:  35% (1085/3099), 7.45 MiB | 7.42 MiWriting objects:  36% (1116/3099), 7.45 MiB | 7.42 MiWriting objects:  37% (1147/3099), 7.45 MiB | 7.42 MiWriting objects:  38% (1178/3099), 7.45 MiB | 7.42 MiWriting objects:  39% (1209/3099), 7.45 MiB | 7.42 MiWriting objects:  40% (1240/3099), 7.45 MiB | 7.42 MiWriting objects:  41% (1271/3099), 7.45 MiB | 7.42 MiWriting objects:  42% (1302/3099), 7.45 MiB | 7.42 MiWriting objects:  43% (1333/3099), 7.45 MiB | 7.42 MiWriting objects:  44% (1364/3099), 7.45 MiB | 7.42 MiWriting objects:  45% (1395/3099), 7.45 MiB | 7.42 MiWriting objects:  46% (1426/3099), 7.45 MiB | 7.42 MiWriting objects:  47% (1457/3099), 7.45 MiB | 7.42 MiWriting objects:  48% (1488/3099), 7.45 MiB | 7.42 MiWriting objects:  49% (1519/3099), 7.45 MiB | 7.42 MiWriting objects:  50% (1550/3099), 7.45 MiB | 7.42 MiWriting objects:  51% (1581/3099), 7.45 MiB | 7.42 MiWriting objects:  52% (1612/3099), 7.45 MiB | 7.42 MiWriting objects:  53% (1643/3099), 7.45 MiB | 7.42 MiWriting objects:  54% (1674/3099), 7.45 MiB | 7.42 MiWriting objects:  55% (1705/3099), 7.45 MiB | 7.42 MiWriting objects:  56% (1736/3099), 7.45 MiB | 7.42 MiWriting objects:  57% (1767/3099), 7.45 MiB | 7.42 MiWriting objects:  58% (1798/3099), 7.45 MiB | 7.42 MiWriting objects:  59% (1829/3099), 7.45 MiB | 7.42 MiWriting objects:  60% (1860/3099), 7.45 MiB | 7.42 MiWriting objects:  61% (1891/3099), 7.45 MiB | 7.42 MiWriting objects:  62% (1922/3099), 7.45 MiB | 7.42 MiWriting objects:  63% (1953/3099), 7.45 MiB | 7.42 MiWriting objects:  64% (1984/3099), 7.45 MiB | 7.42 MiWriting objects:  65% (2015/3099), 7.45 MiB | 7.42 MiWriting objects:  66% (2046/3099), 7.45 MiB | 7.42 MiWriting objects:  67% (2077/3099), 7.45 MiB | 7.42 MiWriting objects:  68% (2108/3099), 7.45 MiB | 7.42 MiWriting objects:  69% (2139/3099), 7.45 MiB | 7.42 MiWriting objects:  70% (2170/3099), 7.45 MiB | 7.42 MiWriting objects:  71% (2201/3099), 7.45 MiB | 7.42 MiWriting objects:  72% (2232/3099), 7.45 MiB | 7.42 MiWriting objects:  73% (2263/3099), 7.45 MiB | 7.42 MiWriting objects:  74% (2294/3099), 7.45 MiB | 7.42 MiWriting objects:  75% (2325/3099), 7.45 MiB | 7.42 MiWriting objects:  76% (2356/3099), 7.45 MiB | 7.42 MiWriting objects:  77% (2387/3099), 7.45 MiB | 7.42 MiWriting objects:  78% (2418/3099), 7.45 MiB | 7.42 MiWriting objects:  79% (2449/3099), 7.45 MiB | 7.42 MiWriting objects:  80% (2480/3099), 7.45 MiB | 7.42 MiWriting objects:  81% (2511/3099), 7.45 MiB | 7.42 MiWriting objects:  82% (2542/3099), 7.45 MiB | 7.42 MiWriting objects:  83% (2573/3099), 7.45 MiB | 7.42 MiWriting objects:  84% (2604/3099), 7.45 MiB | 7.42 MiWriting objects:  85% (2635/3099), 7.45 MiB | 7.42 MiWriting objects:  86% (2666/3099), 7.45 MiB | 7.42 MiWriting objects:  87% (2697/3099), 7.45 MiB | 7.42 MiWriting objects:  88% (2728/3099), 7.45 MiB | 7.42 MiWriting objects:  89% (2759/3099), 7.45 MiB | 7.42 MiWriting objects:  90% (2790/3099), 7.45 MiB | 7.42 MiWriting objects:  91% (2822/3099), 7.45 MiB | 7.42 MiWriting objects:  92% (2852/3099), 7.45 MiB | 7.42 MiWriting objects:  93% (2883/3099), 7.45 MiB | 7.42 MiWriting objects:  94% (2914/3099), 7.45 MiB | 7.42 MiWriting objects:  95% (2945/3099), 7.45 MiB | 7.42 MiWriting objects:  96% (2976/3099), 7.45 MiB | 7.42 MiWriting objects:  97% (3007/3099), 7.45 MiB | 7.42 MiWriting objects:  98% (3038/3099), 7.45 MiB | 7.42 MiWriting objects:  99% (3069/3099), 7.45 MiB | 7.42 MiWriting objects: 100% (3099/3099), 7.45 MiB | 7.42 MiWriting objects: 100% (3099/3099), 9.81 MiB | 6.85 MiB/s, done.
+Total 3099 (delta 2130), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (2130/2130), done.
+remote: error: GH013: Repository rule violations found for refs/heads/main.
+remote: 
+remote: - GITHUB PUSH PROTECTION
+remote:   —————————————————————————————————————————
+remote:     Resolve the following violations before pushing again
+remote: 
+remote:     - Push cannot contain secrets
+remote: 
+remote:     
+remote:      (?) Learn how to resolve a blocked push
+remote:      https://docs.github.com/code-security/secret-scanning/working-with-secret-scanning-and-push-protection/working-with-push-protection-from-the-command-line#resolving-a-blocked-push
+remote:     
+remote:     
+remote:       —— GitHub Personal Access Token ——————————————————————
+remote:        locations:
+remote:          - commit: 9646b055f6c215483d42d6d0aba8c5b1ce719f56
+remote:            path: attached_assets/Pasted-root-ceshtjeligjore-opt-ceshtje-ligjore-Correct-URL-format-you-were-missing-github-com-git-re-1755692512426_1755692512426.txt:2
+remote:          - commit: c521fe5340ca351964ec5b06634cea6e012f628f
+remote:            path: fix_git_url.sh:9
+remote:     
+remote:        (?) To push, remove secret from commit(s) or follow this URL to allow the secret.
+remote:        https://github.com/thanasdinaku/legal.albpetrol/security/secret-scanning/unblock-secret/33Yr2VYU6QRDTITQsbnV98vV3kQ
+remote:     
+remote: 
+remote: 
+To https://github.com/thanasdinaku/legal.albpetrol.git
+ ! [remote rejected] main -> main (push declined due to repository rule violations)
+error: failed to push some refs to 'https://github.com/thanasdinaku/legal.albpetrol.git'
+~/workspace$ 

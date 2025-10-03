@@ -1,0 +1,113 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+pm2 stop albpetrol-legal
+npm run build
+[PM2] Applying action stopProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 1    │ stopped   │ 0%       │ 0b       │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+✓ 2408 modules transformed.
+../dist/public/index.html                                         1.09 kB │ gzip:   0.62 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-B1XUz3Bf.css                        158.68 kB │ gzip:  25.30 kB
+../dist/public/assets/index-DcBoWt1d.js                         860.03 kB │ gzip: 252.86 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 4.11s
+
+  dist/index.js  189.1kb
+
+⚡ Done in 7ms
+root@admuser:/opt/ceshtje-ligjore# pm2 start ecosystem.config.cjs
+pm2 logs albpetrol-legal --lines 30
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 1    │ online    │ 0%       │ 25.6mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[TAILING] Tailing last 30 lines for [albpetrol-legal] process (change the value with --lines option)
+/opt/ceshtje-ligjore/logs/out-0.log last 30 lines:
+0|albpetro | 2025-10-03T23:04:11:   errno: -111,
+0|albpetro | 2025-10-03T23:04:11:   code: 'ESOCKET',
+0|albpetro | 2025-10-03T23:04:11:   syscall: 'connect',
+0|albpetro | 2025-10-03T23:04:11:   address: '127.0.0.1',
+0|albpetro | 2025-10-03T23:04:11:   port: 587,
+0|albpetro | 2025-10-03T23:04:11:   command: 'CONN'
+0|albpetro | 2025-10-03T23:04:11: }
+0|albpetro | 2025-10-03T23:04:11: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T23:04:11: 
+0|albpetro | 2025-10-03T23:04:11: 1:04:11 AM [express] POST /api/login 500 in 47ms :: {"message":"Failed to send verification code. Pl…
+0|albpetro | 2025-10-03T23:04:14: 
+0|albpetro | 2025-10-03T23:04:14: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T23:04:14: 📧 SENDING REAL EMAIL - it.system@albpetrol.al
+0|albpetro | 2025-10-03T23:04:14: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T23:04:14: TO: it.system@albpetrol.al
+0|albpetro | 2025-10-03T23:04:14: FROM: it.system@albpetrol.al
+0|albpetro | 2025-10-03T23:04:14: SUBJECT: Kodi i Verifikimit - Albpetrol SH.A.
+0|albpetro | 2025-10-03T23:04:14: ──────────────────────────────────────────────────────────────
+0|albpetro | 2025-10-03T23:04:14: ❌ EMAIL DELIVERY FAILED: Error: connect ECONNREFUSED 127.0.0.1:587
+0|albpetro | 2025-10-03T23:04:14:     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|albpetro | 2025-10-03T23:04:14:   errno: -111,
+0|albpetro | 2025-10-03T23:04:14:   code: 'ESOCKET',
+0|albpetro | 2025-10-03T23:04:14:   syscall: 'connect',
+0|albpetro | 2025-10-03T23:04:14:   address: '127.0.0.1',
+0|albpetro | 2025-10-03T23:04:14:   port: 587,
+0|albpetro | 2025-10-03T23:04:14:   command: 'CONN'
+0|albpetro | 2025-10-03T23:04:14: }
+0|albpetro | 2025-10-03T23:04:14: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T23:04:14: 
+0|albpetro | 2025-10-03T23:04:14: 1:04:14 AM [express] POST /api/login 500 in 42ms :: {"message":"Failed to send verification code. Pl…
+
+/opt/ceshtje-ligjore/logs/err-0.log last 30 lines:
+0|albpetro | 2025-10-03T23:04:11:     at async file:///opt/ceshtje-ligjore/dist/index.js:1010:9
+0|albpetro | 2025-10-03T23:04:14: ❌ Failed to send two-factor code: Error: connect ECONNREFUSED 127.0.0.1:587
+0|albpetro | 2025-10-03T23:04:14:     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|albpetro | 2025-10-03T23:04:14:   errno: -111,
+0|albpetro | 2025-10-03T23:04:14:   code: 'ESOCKET',
+0|albpetro | 2025-10-03T23:04:14:   syscall: 'connect',
+0|albpetro | 2025-10-03T23:04:14:   address: '127.0.0.1',
+0|albpetro | 2025-10-03T23:04:14:   port: 587,
+0|albpetro | 2025-10-03T23:04:14:   command: 'CONN'
+0|albpetro | 2025-10-03T23:04:14: }
+0|albpetro | 2025-10-03T23:04:14: Failed to send two-factor code: Error: Email delivery failed: connect ECONNREFUSED 127.0.0.1:587
+0|albpetro | 2025-10-03T23:04:14:     at sendTwoFactorCode (file:///opt/ceshtje-ligjore/dist/index.js:342:11)
+0|albpetro | 2025-10-03T23:04:14:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|albpetro | 2025-10-03T23:04:14:     at async file:///opt/ceshtje-ligjore/dist/index.js:1010:9
+0|albpetro | 2025-10-04T01:24:30: Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|albpetro | 2025-10-04T01:24:30:     at server/db.ts (file:///opt/ceshtje-ligjore/dist/index.js:265:13)
+0|albpetro | 2025-10-04T01:24:30:     at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+0|albpetro | 2025-10-04T01:24:30:     at server/storage.ts (file:///opt/ceshtje-ligjore/dist/index.js:1141:5)
+0|albpetro | 2025-10-04T01:24:30:     at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+0|albpetro | 2025-10-04T01:24:30:     at file:///opt/ceshtje-ligjore/dist/index.js:1986:1
+0|albpetro | 2025-10-04T01:24:30:     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro | 2025-10-04T01:24:30:     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+0|albpetro | 2025-10-04T01:29:44: Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|albpetro | 2025-10-04T01:29:44:     at server/db.ts (file:///opt/ceshtje-ligjore/dist/index.js:265:13)
+0|albpetro | 2025-10-04T01:29:44:     at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+0|albpetro | 2025-10-04T01:29:44:     at server/storage.ts (file:///opt/ceshtje-ligjore/dist/index.js:1141:5)
+0|albpetro | 2025-10-04T01:29:44:     at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+0|albpetro | 2025-10-04T01:29:44:     at file:///opt/ceshtje-ligjore/dist/index.js:1986:1
+0|albpetro | 2025-10-04T01:29:44:     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro | 2025-10-04T01:29:44:     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+
+0|albpetrol-legal  | 2025-10-04T01:33:23: Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|albpetrol-legal  | 2025-10-04T01:33:23:     at server/db.ts (file:///opt/ceshtje-ligjore/dist/index.js:265:13)
+0|albpetrol-legal  | 2025-10-04T01:33:23:     at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+0|albpetrol-legal  | 2025-10-04T01:33:23:     at server/storage.ts (file:///opt/ceshtje-ligjore/dist/index.js:1141:5)
+0|albpetrol-legal  | 2025-10-04T01:33:23:     at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+0|albpetrol-legal  | 2025-10-04T01:33:23:     at file:///opt/ceshtje-ligjore/dist/index.js:1986:1
+0|albpetrol-legal  | 2025-10-04T01:33:23:     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetrol-legal  | 2025-10-04T01:33:23:     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+

@@ -1,0 +1,36 @@
+root@admuser:/opt/ceshtje-ligjore# pm2 logs albpetrol-legal
+[TAILING] Tailing last 15 lines for [albpetrol-legal] process (change the value with --lines option)
+/opt/ceshtje-ligjore/logs/out-0.log last 15 lines:
+0|albpetro | 2025-10-03T22:00:01: 🌍 Configured Timezone: Europe/Tirane (GMT+1 - Albania Time)
+0|albpetro | 2025-10-03T22:00:01: ⏰ Current UTC Time: 2025-10-03T22:00:01.439Z
+0|albpetro | 2025-10-03T22:00:01: 🇦🇱 Current Albania Time (GMT+1): 04.10.2025, 24:00
+0|albpetro | 2025-10-03T22:00:01: 📅 Albanian Date Format: 04.10.2025
+0|albpetro | 2025-10-03T22:00:01: 🕒 Albanian Time Format: 24:00
+0|albpetro | 2025-10-03T22:00:01: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T22:00:01: 
+0|albpetro | 2025-10-03T22:00:01: 🟢 Starting court hearing notification scheduler...
+0|albpetro | 2025-10-03T22:00:01: ✅ Scheduler configured: checking every 10 minutes, startup check in 5 seconds
+0|albpetro | 2025-10-03T22:00:06: [2025-10-03T22:00:06.451Z] 🚀 STARTUP CHECK TRIGGERED (5 seconds after start)
+0|albpetro | 2025-10-03T22:00:06: [2025-10-03T22:00:06.451Z] === COURT HEARING CHECK STARTED ===
+0|albpetro | 2025-10-03T22:00:06: Email notifications not configured, skipping checks
+0|albpetro | 2025-10-03T22:10:01: [2025-10-03T22:10:01.451Z] 🕐 AUTOMATIC CHECK TRIGGERED (every 10 minutes)
+0|albpetro | 2025-10-03T22:10:01: [2025-10-03T22:10:01.452Z] === COURT HEARING CHECK STARTED ===
+0|albpetro | 2025-10-03T22:10:01: Email notifications not configured, skipping checks
+
+/opt/ceshtje-ligjore/logs/err-0.log last 15 lines:
+0|albpetro | 2025-10-03T22:10:01:     _req: null,
+0|albpetro | 2025-10-03T22:10:01:     [Symbol(shapeMode)]: false,
+0|albpetro | 2025-10-03T22:10:01:     [Symbol(kCapture)]: false
+0|albpetro | 2025-10-03T22:10:01:   },
+0|albpetro | 2025-10-03T22:10:01:   [Symbol(kType)]: 'error',
+0|albpetro | 2025-10-03T22:10:01:   [Symbol(kError)]: Error: connect ECONNREFUSED 127.0.0.1:443
+0|albpetro | 2025-10-03T22:10:01:       at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|albpetro | 2025-10-03T22:10:01:     errno: -111,
+0|albpetro | 2025-10-03T22:10:01:     code: 'ECONNREFUSED',
+0|albpetro | 2025-10-03T22:10:01:     syscall: 'connect',
+0|albpetro | 2025-10-03T22:10:01:     address: '127.0.0.1',
+0|albpetro | 2025-10-03T22:10:01:     port: 443
+0|albpetro | 2025-10-03T22:10:01:   },
+0|albpetro | 2025-10-03T22:10:01:   [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443'
+0|albpetro | 2025-10-03T22:10:01: }
+

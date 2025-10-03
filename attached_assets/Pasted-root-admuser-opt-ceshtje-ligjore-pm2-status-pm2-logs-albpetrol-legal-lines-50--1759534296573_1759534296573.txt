@@ -1,0 +1,113 @@
+root@admuser:/opt/ceshtje-ligjore# pm2 status
+pm2 logs albpetrol-legal --lines 50
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 1    │ online    │ 0%       │ 109.0mb  │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[TAILING] Tailing last 50 lines for [albpetrol-legal] process (change the value with --lines option)
+/opt/ceshtje-ligjore/logs/out-0.log last 50 lines:
+0|albpetro | 2025-10-03T23:02:37:   code: 'ESOCKET',
+0|albpetro | 2025-10-03T23:02:37:   syscall: 'connect',
+0|albpetro | 2025-10-03T23:02:37:   address: '127.0.0.1',
+0|albpetro | 2025-10-03T23:02:37:   port: 587,
+0|albpetro | 2025-10-03T23:02:37:   command: 'CONN'
+0|albpetro | 2025-10-03T23:02:37: }
+0|albpetro | 2025-10-03T23:02:37: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T23:02:37: 
+0|albpetro | 2025-10-03T23:02:37: 1:02:37 AM [express] POST /api/login 500 in 44ms :: {"message":"Failed to send verification code. Pl…
+0|albpetro | 2025-10-03T23:03:45: 1:03:44 AM [express] GET /api/auth/user 401 in 1ms
+0|albpetro | 2025-10-03T23:04:11: 
+0|albpetro | 2025-10-03T23:04:11: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T23:04:11: 📧 SENDING REAL EMAIL - it.system@albpetrol.al
+0|albpetro | 2025-10-03T23:04:11: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T23:04:11: TO: it.system@albpetrol.al
+0|albpetro | 2025-10-03T23:04:11: FROM: it.system@albpetrol.al
+0|albpetro | 2025-10-03T23:04:11: SUBJECT: Kodi i Verifikimit - Albpetrol SH.A.
+0|albpetro | 2025-10-03T23:04:11: ──────────────────────────────────────────────────────────────
+0|albpetro | 2025-10-03T23:04:11: ❌ EMAIL DELIVERY FAILED: Error: connect ECONNREFUSED 127.0.0.1:587
+0|albpetro | 2025-10-03T23:04:11:     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|albpetro | 2025-10-03T23:04:11:   errno: -111,
+0|albpetro | 2025-10-03T23:04:11:   code: 'ESOCKET',
+0|albpetro | 2025-10-03T23:04:11:   syscall: 'connect',
+0|albpetro | 2025-10-03T23:04:11:   address: '127.0.0.1',
+0|albpetro | 2025-10-03T23:04:11:   port: 587,
+0|albpetro | 2025-10-03T23:04:11:   command: 'CONN'
+0|albpetro | 2025-10-03T23:04:11: }
+0|albpetro | 2025-10-03T23:04:11: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T23:04:11: 
+0|albpetro | 2025-10-03T23:04:11: 1:04:11 AM [express] POST /api/login 500 in 47ms :: {"message":"Failed to send verification code. Pl…
+0|albpetro | 2025-10-03T23:04:14: 
+0|albpetro | 2025-10-03T23:04:14: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T23:04:14: 📧 SENDING REAL EMAIL - it.system@albpetrol.al
+0|albpetro | 2025-10-03T23:04:14: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T23:04:14: TO: it.system@albpetrol.al
+0|albpetro | 2025-10-03T23:04:14: FROM: it.system@albpetrol.al
+0|albpetro | 2025-10-03T23:04:14: SUBJECT: Kodi i Verifikimit - Albpetrol SH.A.
+0|albpetro | 2025-10-03T23:04:14: ──────────────────────────────────────────────────────────────
+0|albpetro | 2025-10-03T23:04:14: ❌ EMAIL DELIVERY FAILED: Error: connect ECONNREFUSED 127.0.0.1:587
+0|albpetro | 2025-10-03T23:04:14:     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|albpetro | 2025-10-03T23:04:14:   errno: -111,
+0|albpetro | 2025-10-03T23:04:14:   code: 'ESOCKET',
+0|albpetro | 2025-10-03T23:04:14:   syscall: 'connect',
+0|albpetro | 2025-10-03T23:04:14:   address: '127.0.0.1',
+0|albpetro | 2025-10-03T23:04:14:   port: 587,
+0|albpetro | 2025-10-03T23:04:14:   command: 'CONN'
+0|albpetro | 2025-10-03T23:04:14: }
+0|albpetro | 2025-10-03T23:04:14: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-03T23:04:14: 
+0|albpetro | 2025-10-03T23:04:14: 1:04:14 AM [express] POST /api/login 500 in 42ms :: {"message":"Failed to send verification code. Pl…
+
+/opt/ceshtje-ligjore/logs/err-0.log last 50 lines:
+0|albpetro | 2025-10-03T23:02:37:   address: '127.0.0.1',
+0|albpetro | 2025-10-03T23:02:37:   port: 587,
+0|albpetro | 2025-10-03T23:02:37:   command: 'CONN'
+0|albpetro | 2025-10-03T23:02:37: }
+0|albpetro | 2025-10-03T23:02:37: Failed to send two-factor code: Error: Email delivery failed: connect ECONNREFUSED 127.0.0.1:587
+0|albpetro | 2025-10-03T23:02:37:     at sendTwoFactorCode (file:///opt/ceshtje-ligjore/dist/index.js:342:11)
+0|albpetro | 2025-10-03T23:02:37:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|albpetro | 2025-10-03T23:02:37:     at async file:///opt/ceshtje-ligjore/dist/index.js:1010:9
+0|albpetro | 2025-10-03T23:04:11: ❌ Failed to send two-factor code: Error: connect ECONNREFUSED 127.0.0.1:587
+0|albpetro | 2025-10-03T23:04:11:     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|albpetro | 2025-10-03T23:04:11:   errno: -111,
+0|albpetro | 2025-10-03T23:04:11:   code: 'ESOCKET',
+0|albpetro | 2025-10-03T23:04:11:   syscall: 'connect',
+0|albpetro | 2025-10-03T23:04:11:   address: '127.0.0.1',
+0|albpetro | 2025-10-03T23:04:11:   port: 587,
+0|albpetro | 2025-10-03T23:04:11:   command: 'CONN'
+0|albpetro | 2025-10-03T23:04:11: }
+0|albpetro | 2025-10-03T23:04:11: Failed to send two-factor code: Error: Email delivery failed: connect ECONNREFUSED 127.0.0.1:587
+0|albpetro | 2025-10-03T23:04:11:     at sendTwoFactorCode (file:///opt/ceshtje-ligjore/dist/index.js:342:11)
+0|albpetro | 2025-10-03T23:04:11:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|albpetro | 2025-10-03T23:04:11:     at async file:///opt/ceshtje-ligjore/dist/index.js:1010:9
+0|albpetro | 2025-10-03T23:04:14: ❌ Failed to send two-factor code: Error: connect ECONNREFUSED 127.0.0.1:587
+0|albpetro | 2025-10-03T23:04:14:     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|albpetro | 2025-10-03T23:04:14:   errno: -111,
+0|albpetro | 2025-10-03T23:04:14:   code: 'ESOCKET',
+0|albpetro | 2025-10-03T23:04:14:   syscall: 'connect',
+0|albpetro | 2025-10-03T23:04:14:   address: '127.0.0.1',
+0|albpetro | 2025-10-03T23:04:14:   port: 587,
+0|albpetro | 2025-10-03T23:04:14:   command: 'CONN'
+0|albpetro | 2025-10-03T23:04:14: }
+0|albpetro | 2025-10-03T23:04:14: Failed to send two-factor code: Error: Email delivery failed: connect ECONNREFUSED 127.0.0.1:587
+0|albpetro | 2025-10-03T23:04:14:     at sendTwoFactorCode (file:///opt/ceshtje-ligjore/dist/index.js:342:11)
+0|albpetro | 2025-10-03T23:04:14:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|albpetro | 2025-10-03T23:04:14:     at async file:///opt/ceshtje-ligjore/dist/index.js:1010:9
+0|albpetro | 2025-10-04T01:24:30: Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|albpetro | 2025-10-04T01:24:30:     at server/db.ts (file:///opt/ceshtje-ligjore/dist/index.js:265:13)
+0|albpetro | 2025-10-04T01:24:30:     at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+0|albpetro | 2025-10-04T01:24:30:     at server/storage.ts (file:///opt/ceshtje-ligjore/dist/index.js:1141:5)
+0|albpetro | 2025-10-04T01:24:30:     at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+0|albpetro | 2025-10-04T01:24:30:     at file:///opt/ceshtje-ligjore/dist/index.js:1986:1
+0|albpetro | 2025-10-04T01:24:30:     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro | 2025-10-04T01:24:30:     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+0|albpetro | 2025-10-04T01:29:44: Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|albpetro | 2025-10-04T01:29:44:     at server/db.ts (file:///opt/ceshtje-ligjore/dist/index.js:265:13)
+0|albpetro | 2025-10-04T01:29:44:     at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+0|albpetro | 2025-10-04T01:29:44:     at server/storage.ts (file:///opt/ceshtje-ligjore/dist/index.js:1141:5)
+0|albpetro | 2025-10-04T01:29:44:     at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+0|albpetro | 2025-10-04T01:29:44:     at file:///opt/ceshtje-ligjore/dist/index.js:1986:1
+0|albpetro | 2025-10-04T01:29:44:     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro | 2025-10-04T01:29:44:     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+
+

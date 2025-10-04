@@ -1,0 +1,70 @@
+root@admuser:~/.cloudflared#
+root@admuser:~/.cloudflared#
+root@admuser:~/.cloudflared# cloudflared tunnel route dns albpetrol-legal legal.albpetrol.al
+2025-10-04T20:08:02Z INF Added CNAME legal.albpetrol.al which will route to this tunnel tunnelID=3f017006-090f-4196-9d28-1dc777c480e7
+root@admuser:~/.cloudflared# cloudflared tunnel run albpetrol-legal
+2025-10-04T20:08:24Z INF Starting tunnel tunnelID=3f017006-090f-4196-9d28-1dc777c480e7
+2025-10-04T20:08:24Z INF Version 2025.9.1 (Checksum 3dc1dc4252eae3c691861f926e2b8640063a2ce534b07b7a3f4ec2de439ecfe3)
+2025-10-04T20:08:24Z INF GOOS: linux, GOVersion: go1.24.4, GoArch: amd64
+2025-10-04T20:08:24Z INF Settings: map[cred-file:/root/.cloudflared/3f017006-090f-4196-9d28-1dc777c480e7.json credentials-file:/root/.cloudflared/3f017006-090f-4196-9d28-1dc777c480e7.json]
+2025-10-04T20:08:24Z INF cloudflared will not automatically update if installed by a package manager.
+2025-10-04T20:08:24Z INF Generated Connector ID: 1ee6b6c1-67ef-4dda-b51c-ba7df5a03b86
+2025-10-04T20:08:24Z INF Initial protocol quic
+2025-10-04T20:08:24Z INF ICMP proxy will use 10.5.20.29 as source for IPv4
+2025-10-04T20:08:24Z INF ICMP proxy will use fe80::250:56ff:fe9f:19f1 in zone ens33 as source for IPv6
+2025-10-04T20:08:24Z INF ICMP proxy will use 10.5.20.29 as source for IPv4
+2025-10-04T20:08:24Z INF ICMP proxy will use fe80::250:56ff:fe9f:19f1 in zone ens33 as source for IPv6
+2025-10-04T20:08:24Z INF Starting metrics server on 127.0.0.1:20241/metrics
+2025-10-04T20:08:24Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.233
+2025-10-04T20:08:26Z INF Registered tunnel connection connIndex=0 connection=3225d9a3-49e6-41c4-8b11-52d99f26e168 event=0 ip=198.41.200.233 location=sof01 protocol=quic
+2025-10-04T20:08:26Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=1 event=0 ip=198.41.192.167
+2025-10-04T20:08:26Z INF Registered tunnel connection connIndex=1 connection=61b68e39-1384-43ce-b131-48ec5ced30e3 event=0 ip=198.41.192.167 location=bud01 protocol=quic
+2025-10-04T20:08:27Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=2 event=0 ip=198.41.192.27
+2025-10-04T20:08:27Z INF Registered tunnel connection connIndex=2 connection=f26b37ac-7c4c-4e83-a2af-a015c5038b95 event=0 ip=198.41.192.27 location=bud01 protocol=quic
+2025-10-04T20:08:28Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=3 event=0 ip=198.41.200.23
+2025-10-04T20:08:28Z INF Registered tunnel connection connIndex=3 connection=7e3f8f10-cbcd-49cc-b0ec-af57c0b3d4f5 event=0 ip=198.41.200.23 location=sof01 protocol=quic
+^C2025-10-04T20:08:33Z INF Initiating graceful shutdown due to signal interrupt ...
+2025-10-04T20:08:33Z ERR failed to run the datagram handler error="context canceled" connIndex=2 event=0 ip=198.41.192.27
+2025-10-04T20:08:33Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=2 event=0 ip=198.41.192.27
+2025-10-04T20:08:33Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=2 event=0 ip=198.41.192.27
+2025-10-04T20:08:33Z ERR failed to run the datagram handler error="context canceled" connIndex=1 event=0 ip=198.41.192.167
+2025-10-04T20:08:33Z INF Retrying connection in up to 1s connIndex=2 event=0 ip=198.41.192.27
+2025-10-04T20:08:33Z ERR Connection terminated connIndex=2
+2025-10-04T20:08:33Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=1 event=0 ip=198.41.192.167
+2025-10-04T20:08:33Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=1 event=0 ip=198.41.192.167
+2025-10-04T20:08:33Z INF Retrying connection in up to 1s connIndex=1 event=0 ip=198.41.192.167
+2025-10-04T20:08:33Z ERR Connection terminated connIndex=1
+2025-10-04T20:08:33Z ERR failed to run the datagram handler error="Application error 0x0 (remote)" connIndex=3 event=0 ip=198.41.200.23
+2025-10-04T20:08:33Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=3 event=0 ip=198.41.200.23
+2025-10-04T20:08:33Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=3 event=0 ip=198.41.200.23
+2025-10-04T20:08:33Z INF Retrying connection in up to 1s connIndex=3 event=0 ip=198.41.200.23
+2025-10-04T20:08:33Z ERR Connection terminated connIndex=3
+2025-10-04T20:08:33Z ERR failed to run the datagram handler error="Application error 0x0 (remote)" connIndex=0 event=0 ip=198.41.200.233
+2025-10-04T20:08:33Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.200.233
+2025-10-04T20:08:33Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.200.233
+2025-10-04T20:08:33Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.200.233
+2025-10-04T20:08:33Z ERR Connection terminated connIndex=0
+2025-10-04T20:08:33Z ERR no more connections active and exiting
+2025-10-04T20:08:33Z INF Tunnel server stopped
+2025-10-04T20:08:33Z ERR icmp router terminated error="context canceled"
+2025-10-04T20:08:33Z INF Metrics server stopped
+root@admuser:~/.cloudflared# # Move config to system location
+sudo mkdir -p /etc/cloudflared
+sudo cp ~/.cloudflared/config.yml /etc/cloudflared/
+sudo cp ~/.cloudflared/*.json /etc/cloudflared/
+
+# Update config to use system paths
+sudo sed -i "s|/root/.cloudflared/|/etc/cloudflared/|g" /etc/cloudflared/config.yml
+
+# Install and start service
+sudo cloudflared service install
+sudo systemctl start cloudflared
+sudo systemctl enable cloudflared
+
+# Check status
+sudo systemctl status cloudflared
+Possible conflicting configuration in /root/.cloudflared/config.yml and /etc/cloudflared/config.yml. Either remove /etc/cloudflared/config.yml or run `cloudflared --config /etc/cloudflared/config.yml service install`
+Failed to start cloudflared.service: Unit cloudflared.service not found.
+Failed to enable unit: Unit file cloudflared.service does not exist.
+Unit cloudflared.service could not be found.
+root@admuser:~/.cloudflared#

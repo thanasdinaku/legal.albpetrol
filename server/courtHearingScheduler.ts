@@ -1,7 +1,7 @@
 import { db } from './db';
-import { dataEntries, systemSettings } from '@shared/schema';
+import { dataEntries, systemSettings, users } from '@shared/schema';
 import { sendCourtHearingNotification } from './email';
-import { sql } from 'drizzle-orm';
+import { sql, eq } from 'drizzle-orm';
 import { nowGMT1, toGMT1, formatAlbanianDateTime, logTimezoneInfo } from './timezone';
 
 interface HearingCheck {
@@ -286,6 +286,18 @@ export class CourtHearingScheduler {
     try {
       const notificationKey = `hearing_notification_${caseId}_${hearingType}_${hearingDateTime}`;
       
+      // Get the actual admin user ID from the database
+      const [adminUser] = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, 'it.system@albpetrol.al'))
+        .limit(1);
+      
+      if (!adminUser) {
+        console.error('⚠️ Admin user not found, cannot record notification');
+        return;
+      }
+      
       await db.insert(systemSettings).values({
         settingKey: notificationKey,
         settingValue: {
@@ -294,8 +306,10 @@ export class CourtHearingScheduler {
           hearingType: hearingType,
           hearingDateTime: hearingDateTime
         },
-        updatedById: 'a76a70a9-b09e-470c-bc77-14769a20acb6' // Use admin user ID for system notifications
+        updatedById: adminUser.id // Use actual admin user ID from database
       });
+      
+      console.log(`✅ Notification tracking recorded for case ${caseId}`);
     } catch (error: any) {
       // Ignore duplicate key errors (notification already recorded)
       if (error?.code !== '23505') {

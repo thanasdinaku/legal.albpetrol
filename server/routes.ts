@@ -42,7 +42,7 @@ import { sendCourtHearingNotification, sendCaseUpdateNotification, testEmailConn
 import nodemailer from 'nodemailer';
 import { generateUserManual } from "./fixed-manual";
 import { generateSimpleManual } from "./simple-manual";
-import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
+import { LocalFileStorageService, ObjectNotFoundError } from "./localFileStorage";
 import { BackupService, type BackupOptions, type BackupProgress } from "./backup-service";
 import { courtHearingScheduler } from "./courtHearingScheduler";
 import multer from "multer";
@@ -1332,8 +1332,8 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
   // Document upload routes
   app.post("/api/documents/upload", isAuthenticated, async (req, res) => {
     try {
-      const objectStorageService = new ObjectStorageService();
-      const uploadURL = await objectStorageService.getDocumentUploadURL();
+      const localFileStorage = new LocalFileStorageService();
+      const uploadURL = await localFileStorage.getDocumentUploadURL();
       res.json({ uploadURL });
     } catch (error) {
       console.error("Error generating document upload URL:", error);
@@ -1354,10 +1354,10 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
         mimetype: req.file.mimetype
       });
 
-      const objectStorageService = new ObjectStorageService();
+      const localFileStorage = new LocalFileStorageService();
       
-      // Upload file to object storage using server-side method
-      const documentPath = await objectStorageService.uploadDocumentBuffer(
+      // Upload file to local storage using server-side method
+      const documentPath = await localFileStorage.uploadDocumentBuffer(
         req.file.buffer,
         req.file.originalname,
         req.file.mimetype
@@ -1383,9 +1383,9 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
   // Document download route
   app.get("/documents/:documentPath(*)", isAuthenticated, async (req, res) => {
     try {
-      const objectStorageService = new ObjectStorageService();
-      const documentFile = await objectStorageService.getDocumentFile(req.path);
-      objectStorageService.downloadObject(documentFile, res);
+      const localFileStorage = new LocalFileStorageService();
+      const filePath = await localFileStorage.getDocumentFile(req.path);
+      localFileStorage.downloadObject(filePath, res);
     } catch (error) {
       console.error("Error downloading document:", error);
       if (error instanceof ObjectNotFoundError) {

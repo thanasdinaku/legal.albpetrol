@@ -1,0 +1,191 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Restore clean backup files
+cp server/email.ts.backup server/email.ts
+cp server/courtHearingScheduler.ts.backup server/courtHearingScheduler.ts
+
+# Fix courtHearingScheduler.ts - Update imports
+sed -i '2s/systemSettings/systemSettings, users/' server/courtHearingScheduler.ts
+sed -i '4s/sql/sql, eq/' server/courtHearingScheduler.ts
+
+# Fix courtHearingScheduler.ts - Replace the hardcoded UUID with database lookup
+cat > /tmp/fix_record_notification.txt << 'ENDFIX'
+  private async recordNotificationSent(
+    caseId: number,
+    hearingType: string,
+    hearingDateTime: string
+  ): Promise<void> {
+    try {
+      const notificationKey = `hearing_notification_${caseId}_${hearingType}_${hearingDateTime}`;
+
+      // Get the actual admin user ID from the database
+pm2 logs albpetrol-legal --lines 50s:'"'"', hearingDateUTC.toISOString());' serv
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+✓ 2408 modules transformed.
+../dist/public/index.html                                         1.09 kB │ gzip:   0.62 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-B1XUz3Bf.css                        158.68 kB │ gzip:  25.30 kB
+../dist/public/assets/index-DcBoWt1d.js                         860.03 kB │ gzip: 252.86 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.97s
+
+  dist/index.js  186.0kb
+
+⚡ Done in 8ms
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 3    │ online    │ 0%       │ 17.0mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[TAILING] Tailing last 50 lines for [albpetrol-legal] process (change the value with --lines option)
+/opt/ceshtje-ligjore/logs/err-0.log last 50 lines:
+0|albpetro | 2025-10-04T22:32:15:   file: 'ri_triggers.c',
+0|albpetro | 2025-10-04T22:32:15:   line: '2528',
+0|albpetro | 2025-10-04T22:32:15:   routine: 'ri_ReportViolation'
+0|albpetro | 2025-10-04T22:32:15: }
+0|albpetro | 2025-10-04T22:42:15: Error recording notification: error: insert or update on table "system_settings" violates foreign key constraint "system_settings_updated_by_id_users_id_fk"
+0|albpetro | 2025-10-04T22:42:15:     at /opt/ceshtje-ligjore/node_modules/pg-pool/index.js:45:11
+0|albpetro | 2025-10-04T22:42:15:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|albpetro | 2025-10-04T22:42:15:     at async CourtHearingScheduler.recordNotificationSent (file:///opt/ceshtje-ligjore/dist/index.js:1849:11)
+0|albpetro | 2025-10-04T22:42:15:     at async CourtHearingScheduler.checkUpcomingHearings (file:///opt/ceshtje-ligjore/dist/index.js:1771:17) {
+0|albpetro | 2025-10-04T22:42:15:   length: 349,
+0|albpetro | 2025-10-04T22:42:15:   severity: 'ERROR',
+0|albpetro | 2025-10-04T22:42:15:   code: '23503',
+0|albpetro | 2025-10-04T22:42:15:   detail: 'Key (updated_by_id)=(a76a70a9-b09e-470c-bc77-14769a20acb6) is not present in table "users".',
+0|albpetro | 2025-10-04T22:42:15:   hint: undefined,
+0|albpetro | 2025-10-04T22:42:15:   position: undefined,
+0|albpetro | 2025-10-04T22:42:15:   internalPosition: undefined,
+0|albpetro | 2025-10-04T22:42:15:   internalQuery: undefined,
+0|albpetro | 2025-10-04T22:42:15:   where: undefined,
+0|albpetro | 2025-10-04T22:42:15:   schema: 'public',
+0|albpetro | 2025-10-04T22:42:15:   table: 'system_settings',
+0|albpetro | 2025-10-04T22:42:15:   column: undefined,
+0|albpetro | 2025-10-04T22:42:15:   dataType: undefined,
+0|albpetro | 2025-10-04T22:42:15:   constraint: 'system_settings_updated_by_id_users_id_fk',
+0|albpetro | 2025-10-04T22:42:15:   file: 'ri_triggers.c',
+0|albpetro | 2025-10-04T22:42:15:   line: '2528',
+0|albpetro | 2025-10-04T22:42:15:   routine: 'ri_ReportViolation'
+0|albpetro | 2025-10-04T22:42:15: }
+0|albpetro | 2025-10-04T22:52:15: Error recording notification: error: insert or update on table "system_settings" violates foreign key constraint "system_settings_updated_by_id_users_id_fk"
+0|albpetro | 2025-10-04T22:52:15:     at /opt/ceshtje-ligjore/node_modules/pg-pool/index.js:45:11
+0|albpetro | 2025-10-04T22:52:15:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|albpetro | 2025-10-04T22:52:15:     at async CourtHearingScheduler.recordNotificationSent (file:///opt/ceshtje-ligjore/dist/index.js:1849:11)
+0|albpetro | 2025-10-04T22:52:15:     at async CourtHearingScheduler.checkUpcomingHearings (file:///opt/ceshtje-ligjore/dist/index.js:1771:17) {
+0|albpetro | 2025-10-04T22:52:15:   length: 349,
+0|albpetro | 2025-10-04T22:52:15:   severity: 'ERROR',
+0|albpetro | 2025-10-04T22:52:15:   code: '23503',
+0|albpetro | 2025-10-04T22:52:15:   detail: 'Key (updated_by_id)=(a76a70a9-b09e-470c-bc77-14769a20acb6) is not present in table "users".',
+0|albpetro | 2025-10-04T22:52:15:   hint: undefined,
+0|albpetro | 2025-10-04T22:52:15:   position: undefined,
+0|albpetro | 2025-10-04T22:52:15:   internalPosition: undefined,
+0|albpetro | 2025-10-04T22:52:15:   internalQuery: undefined,
+0|albpetro | 2025-10-04T22:52:15:   where: undefined,
+0|albpetro | 2025-10-04T22:52:15:   schema: 'public',
+0|albpetro | 2025-10-04T22:52:15:   table: 'system_settings',
+0|albpetro | 2025-10-04T22:52:15:   column: undefined,
+0|albpetro | 2025-10-04T22:52:15:   dataType: undefined,
+0|albpetro | 2025-10-04T22:52:15:   constraint: 'system_settings_updated_by_id_users_id_fk',
+0|albpetro | 2025-10-04T22:52:15:   file: 'ri_triggers.c',
+0|albpetro | 2025-10-04T22:52:15:   line: '2528',
+0|albpetro | 2025-10-04T22:52:15:   routine: 'ri_ReportViolation'
+0|albpetro | 2025-10-04T22:52:15: }
+
+/opt/ceshtje-ligjore/logs/out-0.log last 50 lines:
+0|albpetro | 2025-10-04T22:52:43: 10:52:43 PM [express] serving on port 5000
+0|albpetro | 2025-10-04T22:52:48: [2025-10-04T20:52:48.665Z] 🚀 STARTUP CHECK TRIGGERED (5 seconds after start)
+0|albpetro | 2025-10-04T22:52:48: [2025-10-04T20:52:48.666Z] === COURT HEARING CHECK STARTED ===
+0|albpetro | 2025-10-04T22:52:48: Current time (GMT+1): 04.10.2025, 22:52
+0|albpetro | 2025-10-04T22:52:48: Checking hearings within ≤26 hours: up to 05.10.2025, 22:52 [Albania Time]
+0|albpetro | 2025-10-04T22:52:48: Checking entry 1 - hearing field: "2025-10-05T01:55"
+0|albpetro | 2025-10-04T22:52:48: Parsing date string: 2025-10-05T01:55
+0|albpetro | 2025-10-04T22:52:48: Parsed exactly as stored: 2025-10-04T23:55:00.000Z from input: 2025-10-05T01:55
+0|albpetro | 2025-10-04T22:52:48: Parsed hearing date: 2025-10-04T23:55:00.000Z
+0|albpetro | 2025-10-04T22:52:48:     Window check: hearing=2025-10-04T23:55:00.000Z, now=2025-10-04T20:52:48.671Z, hours_ahead=3.0, window=≤26h, result=true
+0|albpetro | 2025-10-04T22:52:48: Is within notification window: true (hearing at 2025-10-04T23:55:00.000Z is 3 hours from now)
+0|albpetro | 2025-10-04T22:52:48: Added hearing for case 1 to notification queue
+0|albpetro | 2025-10-04T22:52:48: Found 1 upcoming hearings
+0|albpetro | 2025-10-04T22:52:48: Sending notification for case 1 - first_instance
+0|albpetro | 2025-10-04T22:52:48:
+0|albpetro | 2025-10-04T22:52:48: 🔍 === DEBUGGING EMAIL NOTIFICATION TIME FORMATTING ===
+0|albpetro | 2025-10-04T22:52:48: 📧 Original hearing date from notification: 2025-10-04T23:55:00.000Z
+0|albpetro | 2025-10-04T22:52:48: 📧 Formatted display time (Albania Time): 05.10.2025 01:55
+0|albpetro | 2025-10-04T22:52:48: 📧 UTC time was: 2025-10-04T23:55:00.000Z
+0|albpetro | 2025-10-04T22:52:48:
+0|albpetro | 2025-10-04T22:52:48: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-04T22:52:48: 📧 SENDING REAL EMAIL - it.system@albpetrol.al
+0|albpetro | 2025-10-04T22:52:48: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-04T22:52:48: TO: thanas.dinaku@albpetrol.al
+0|albpetro | 2025-10-04T22:52:48: FROM: it.system@albpetrol.al
+0|albpetro | 2025-10-04T22:52:48: SUBJECT: Njoftim për Seancë Gjyqësore - Albpetrol SH.A.
+0|albpetro | 2025-10-04T22:52:48: ──────────────────────────────────────────────────────────────
+0|albpetro | 2025-10-04T22:52:50: ✅ EMAIL DELIVERED SUCCESSFULLY
+0|albpetro | 2025-10-04T22:52:50: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-04T22:52:50:
+0|albpetro | 2025-10-04T22:52:50: ✅ Court hearing notification delivered to: thanas.dinaku@albpetrol.al
+0|albpetro | 2025-10-04T22:52:50: ✅ Notification tracking recorded for case 1
+0|albpetro | 2025-10-04T22:52:50: Notification sent successfully for case 1
+0|albpetro | 2025-10-04T22:54:45: 10:54:45 PM [express] GET /api/auth/user 304 in 7ms :: {"id":"it-system-admin","email":"it.system@alb…
+0|albpetro | 2025-10-04T22:54:45: 10:54:45 PM [express] GET /api/data-entries 304 in 11ms :: {"entries":[{"id":1,"paditesi":"kasem Treb…
+0|albpetro | 2025-10-04T22:54:46: 10:54:46 PM [express] GET /api/auth/user 304 in 3ms :: {"id":"it-system-admin","email":"it.system@alb…
+0|albpetro | 2025-10-04T22:54:46: 10:54:46 PM [express] GET /api/data-entries 304 in 5ms :: {"entries":[{"id":1,"paditesi":"kasem Trebe…
+0|albpetro | 2025-10-04T23:02:43: [2025-10-04T21:02:43.665Z] 🕐 AUTOMATIC CHECK TRIGGERED (every 10 minutes)
+0|albpetro | 2025-10-04T23:02:43: [2025-10-04T21:02:43.665Z] === COURT HEARING CHECK STARTED ===
+0|albpetro | 2025-10-04T23:02:43: Current time (GMT+1): 04.10.2025, 23:02
+0|albpetro | 2025-10-04T23:02:43: Checking hearings within ≤26 hours: up to 05.10.2025, 23:02 [Albania Time]
+0|albpetro | 2025-10-04T23:02:43: Checking entry 1 - hearing field: "2025-10-05T01:55"
+0|albpetro | 2025-10-04T23:02:43: Parsing date string: 2025-10-05T01:55
+0|albpetro | 2025-10-04T23:02:43: Parsed exactly as stored: 2025-10-04T23:55:00.000Z from input: 2025-10-05T01:55
+0|albpetro | 2025-10-04T23:02:43: Parsed hearing date: 2025-10-04T23:55:00.000Z
+0|albpetro | 2025-10-04T23:02:43:     Window check: hearing=2025-10-04T23:55:00.000Z, now=2025-10-04T21:02:43.675Z, hours_ahead=2.9, window=≤26h, result=true
+0|albpetro | 2025-10-04T23:02:43: Is within notification window: true (hearing at 2025-10-04T23:55:00.000Z is 3 hours from now)
+0|albpetro | 2025-10-04T23:02:43: Added hearing for case 1 to notification queue
+0|albpetro | 2025-10-04T23:02:43: Found 1 upcoming hearings
+0|albpetro | 2025-10-04T23:02:43: Notification already sent for case 1 - first_instance
+
+0|albpetrol-legal  | 2025-10-04T23:03:11: 🚀 CourtHearingScheduler constructor called
+0|albpetrol-legal  | 2025-10-04T23:03:11:
+0|albpetrol-legal  | 2025-10-04T23:03:11: ══════════════════════════════════════════════════════════════
+0|albpetrol-legal  | 2025-10-04T23:03:11: 🕐 SYSTEM TIMEZONE CONFIGURATION - GMT+1 (ALBANIA TIME)
+0|albpetrol-legal  | 2025-10-04T23:03:11: ══════════════════════════════════════════════════════════════
+0|albpetrol-legal  | 2025-10-04T23:03:11: 🌍 Configured Timezone: Europe/Tirane (GMT+1 - Albania Time)
+0|albpetrol-legal  | 2025-10-04T23:03:11: ⏰ Current UTC Time: 2025-10-04T21:03:11.555Z
+0|albpetrol-legal  | 2025-10-04T23:03:11: 🇦🇱 Current Albania Time (GMT+1): 04.10.2025, 23:03
+0|albpetrol-legal  | 2025-10-04T23:03:11: 📅 Albanian Date Format: 04.10.2025
+0|albpetrol-legal  | 2025-10-04T23:03:11: 🕒 Albanian Time Format: 23:03
+0|albpetrol-legal  | 2025-10-04T23:03:11: ══════════════════════════════════════════════════════════════
+0|albpetrol-legal  | 2025-10-04T23:03:11:
+0|albpetrol-legal  | 2025-10-04T23:03:11: 🟢 Starting court hearing notification scheduler...
+0|albpetrol-legal  | 2025-10-04T23:03:11: ✅ Scheduler configured: checking every 10 minutes, startup check in 5 seconds
+0|albpetrol-legal  | 2025-10-04T23:03:11: 🔧 Initializing database...
+0|albpetrol-legal  | 2025-10-04T23:03:11: 🔑 Generated scrypt password hash for admin user
+0|albpetrol-legal  | 2025-10-04T23:03:11: ✅ Admin user already exists
+0|albpetrol-legal  | 2025-10-04T23:03:11: ✅ Admin password already in correct scrypt format
+0|albpetrol-legal  | 2025-10-04T23:03:11: ✅ Database initialization completed
+0|albpetrol-legal  | 2025-10-04T23:03:11: Initializing court hearing notification scheduler...
+0|albpetrol-legal  | 2025-10-04T23:03:11: ⚠️ Scheduler already running, skipping duplicate start
+0|albpetrol-legal  | 2025-10-04T23:03:11: Scheduler instance created, starting automatic notifications...
+0|albpetrol-legal  | 2025-10-04T23:03:11: 11:03:11 PM [express] serving on port 5000
+0|albpetrol-legal  | 2025-10-04T23:03:16: [2025-10-04T21:03:16.567Z] 🚀 STARTUP CHECK TRIGGERED (5 seconds after start)
+0|albpetrol-legal  | 2025-10-04T23:03:16: [2025-10-04T21:03:16.568Z] === COURT HEARING CHECK STARTED ===
+0|albpetrol-legal  | 2025-10-04T23:03:16: Current time (GMT+1): 04.10.2025, 23:03
+0|albpetrol-legal  | 2025-10-04T23:03:16: Checking hearings within ≤26 hours: up to 05.10.2025, 23:03 [Albania Time]
+0|albpetrol-legal  | 2025-10-04T23:03:16: Checking entry 1 - hearing field: "2025-10-05T01:55"
+0|albpetrol-legal  | 2025-10-04T23:03:16: Parsing date string: 2025-10-05T01:55
+0|albpetrol-legal  | 2025-10-04T23:03:16: Parsed exactly as stored: 2025-10-04T23:55:00.000Z from input: 2025-10-05T01:55
+0|albpetrol-legal  | 2025-10-04T23:03:16: Parsed hearing date: 2025-10-04T23:55:00.000Z
+0|albpetrol-legal  | 2025-10-04T23:03:16:     Window check: hearing=2025-10-04T23:55:00.000Z, now=2025-10-04T21:03:16.573Z, hours_ahead=2.9, window=≤26h, result=true
+0|albpetrol-legal  | 2025-10-04T23:03:16: Is within notification window: true (hearing at 2025-10-04T23:55:00.000Z is 3 hours from now)
+0|albpetrol-legal  | 2025-10-04T23:03:16: Added hearing for case 1 to notification queue
+0|albpetrol-legal  | 2025-10-04T23:03:16: Found 1 upcoming hearings
+0|albpetrol-legal  | 2025-10-04T23:03:16: Notification already sent for case 1 - first_instance

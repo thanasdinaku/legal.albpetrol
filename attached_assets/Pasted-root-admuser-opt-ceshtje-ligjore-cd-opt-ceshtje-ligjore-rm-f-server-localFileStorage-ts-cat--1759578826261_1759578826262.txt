@@ -1,0 +1,212 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+rm -f server/localFileStorage.ts
+
+cat > server/localFileStorage.ts << 'ENDOFFILE'
+import { Response } from "express";
+import { randomUUID } from "crypto";
+import fs from "fs/promises";
+import path from "path";
+import { createReadStream } from "fs";
+
+const UPLOADS_DIR = path.join(process.cwd(), 'uploads');
+const DOCUMENTS_DIR = path.join(UPLOADS_DIR, 'documents');
+
+export class ObjectNotFoundError extends Error {
+  constructor() {
+    super("Object not found");
+    this.name = "ObjectNotFoundError";
+    Object.setPrototypeOf(this, ObjectNotFoundError.prototype);
+  }
+}
+
+export class LocalFileStorageService {
+  constructor() {
+    this.ensureDirectories();
+  }
+
+  private async ensureDirectories() {
+    try {
+      await fs.mkdir(UPLOADS_DIR, { recursive: true });
+      await fs.mkdir(DOCUMENTS_DIR, { recursive: true });
+    } catch (error) {
+      console.error('Error creating upload directories:', error);
+    }
+  }
+
+  async downloadObject(filePath: string, res: Response) {
+    try {
+      const fullPath = path.join(DOCUMENTS_DIR, path.basename(filePath));
+
+      const stats = await fs.stat(fullPath);
+      const ext = path.extname(filePath).toLowerCase();
+      let contentType = 'application/octet-stream';
+
+      if (ext === '.pdf') contentType = 'application/pdf';
+      else if (ext === '.doc') contentType = 'application/msword';
+      else if (ext === '.docx') contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+
+      res.set({
+        "Content-Type": contentType,
+        "Content-Length": stats.size,
+        "Cache-Control": `private, max-age=3600`,
+        "Content-Disposition": `attachment; filename="${path.basename(filePath)}"`,
+      });
+
+      const stream = createReadStream(fullPath);
+      stream.on("error", (err) => {
+        console.error("Stream error:", err);
+        if (!res.headersSent) {
+          res.status(500).json({ error: "Error streaming file" });
+        }
+      });
+
+pm2 logs albpetrol-legal --lines 20age/g' server/routes.tsroutes.tsg' server/routes.ts;/import { LocalFileStorageService, ObjectNotFoundError } from ".\/localFileStorage";/g' server/routes.ts
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+✓ 2408 modules transformed.
+../dist/public/index.html                                         1.09 kB │ gzip:   0.62 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-B1XUz3Bf.css                        158.68 kB │ gzip:  25.30 kB
+../dist/public/assets/index-DcBoWt1d.js                         860.03 kB │ gzip: 252.86 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.80s
+
+  dist/index.js  185.9kb
+
+⚡ Done in 7ms
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name               │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ default     │ 1.0.0   │ fork    │ 24038    │ 0s     │ 1    │ online    │ 0%       │ 22.6mb   │ root     │ disabled │
+└────┴────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[TAILING] Tailing last 20 lines for [albpetrol-legal] process (change the value with --lines option)
+/opt/ceshtje-ligjore/logs/out-0.log last 20 lines:
+0|albpetro | 2025-10-04T13:47:01: Added hearing for case 1 to notification queue
+0|albpetro | 2025-10-04T13:47:01: Found 1 upcoming hearings
+0|albpetro | 2025-10-04T13:47:01: Sending notification for case 1 - first_instance
+0|albpetro | 2025-10-04T13:47:01:
+0|albpetro | 2025-10-04T13:47:01: 🔍 === DEBUGGING EMAIL NOTIFICATION TIME FORMATTING ===
+0|albpetro | 2025-10-04T13:47:01: 📧 Original hearing date from notification: 2025-10-04T23:55:00.000Z
+0|albpetro | 2025-10-04T13:47:01: 📧 Formatted display time: 04.10.2025, 23:55
+0|albpetro | 2025-10-04T13:47:01:
+0|albpetro | 2025-10-04T13:47:01: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-04T13:47:01: 📧 SENDING REAL EMAIL - it.system@albpetrol.al
+0|albpetro | 2025-10-04T13:47:01: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-04T13:47:01: TO: thanas.dinaku@albpetrol.al
+0|albpetro | 2025-10-04T13:47:01: FROM: it.system@albpetrol.al
+0|albpetro | 2025-10-04T13:47:01: SUBJECT: Njoftim për Seancë Gjyqësore - Albpetrol SH.A.
+0|albpetro | 2025-10-04T13:47:01: ──────────────────────────────────────────────────────────────
+0|albpetro | 2025-10-04T13:47:02: ✅ EMAIL DELIVERED SUCCESSFULLY
+0|albpetro | 2025-10-04T13:47:02: ══════════════════════════════════════════════════════════════
+0|albpetro | 2025-10-04T13:47:02:
+0|albpetro | 2025-10-04T13:47:02: ✅ Court hearing notification delivered to: thanas.dinaku@albpetrol.al
+0|albpetro | 2025-10-04T13:47:02: Notification sent successfully for case 1
+
+/opt/ceshtje-ligjore/logs/err-0.log last 20 lines:
+0|albpetro | 2025-10-04T13:47:02:     at async CourtHearingScheduler.recordNotificationSent (file:///opt/ceshtje-ligjore/dist/index.js:1849:11)
+0|albpetro | 2025-10-04T13:47:02:     at async CourtHearingScheduler.checkUpcomingHearings (file:///opt/ceshtje-ligjore/dist/index.js:1771:17) {
+0|albpetro | 2025-10-04T13:47:02:   length: 349,
+0|albpetro | 2025-10-04T13:47:02:   severity: 'ERROR',
+0|albpetro | 2025-10-04T13:47:02:   code: '23503',
+0|albpetro | 2025-10-04T13:47:02:   detail: 'Key (updated_by_id)=(a76a70a9-b09e-470c-bc77-14769a20acb6) is not present in table "users".',
+0|albpetro | 2025-10-04T13:47:02:   hint: undefined,
+0|albpetro | 2025-10-04T13:47:02:   position: undefined,
+0|albpetro | 2025-10-04T13:47:02:   internalPosition: undefined,
+0|albpetro | 2025-10-04T13:47:02:   internalQuery: undefined,
+0|albpetro | 2025-10-04T13:47:02:   where: undefined,
+0|albpetro | 2025-10-04T13:47:02:   schema: 'public',
+0|albpetro | 2025-10-04T13:47:02:   table: 'system_settings',
+0|albpetro | 2025-10-04T13:47:02:   column: undefined,
+0|albpetro | 2025-10-04T13:47:02:   dataType: undefined,
+0|albpetro | 2025-10-04T13:47:02:   constraint: 'system_settings_updated_by_id_users_id_fk',
+0|albpetro | 2025-10-04T13:47:02:   file: 'ri_triggers.c',
+0|albpetro | 2025-10-04T13:47:02:   line: '2528',
+0|albpetro | 2025-10-04T13:47:02:   routine: 'ri_ReportViolation'
+0|albpetro | 2025-10-04T13:47:02: }
+
+0|albpetrol-legal  | 2025-10-04T13:52:13: 🚀 CourtHearingScheduler constructor called
+0|albpetrol-legal  | 2025-10-04T13:52:13:
+0|albpetrol-legal  | 2025-10-04T13:52:13: ══════════════════════════════════════════════════════════════
+0|albpetrol-legal  | 2025-10-04T13:52:13: 🕐 SYSTEM TIMEZONE CONFIGURATION - GMT+1 (ALBANIA TIME)
+0|albpetrol-legal  | 2025-10-04T13:52:13: ══════════════════════════════════════════════════════════════
+0|albpetrol-legal  | 2025-10-04T13:52:13: 🌍 Configured Timezone: Europe/Tirane (GMT+1 - Albania Time)
+0|albpetrol-legal  | 2025-10-04T13:52:13: ⏰ Current UTC Time: 2025-10-04T11:52:13.911Z
+0|albpetrol-legal  | 2025-10-04T13:52:13: 🇦🇱 Current Albania Time (GMT+1): 04.10.2025, 13:52
+0|albpetrol-legal  | 2025-10-04T13:52:13: 📅 Albanian Date Format: 04.10.2025
+0|albpetrol-legal  | 2025-10-04T13:52:13: 🕒 Albanian Time Format: 13:52
+0|albpetrol-legal  | 2025-10-04T13:52:13: ══════════════════════════════════════════════════════════════
+0|albpetrol-legal  | 2025-10-04T13:52:13:
+0|albpetrol-legal  | 2025-10-04T13:52:13: 🟢 Starting court hearing notification scheduler...
+0|albpetrol-legal  | 2025-10-04T13:52:13: ✅ Scheduler configured: checking every 10 minutes, startup check in 5 seconds
+0|albpetrol-legal  | 2025-10-04T13:52:13: 🔧 Initializing database...
+0|albpetrol-legal  | 2025-10-04T13:52:13: 🔑 Generated scrypt password hash for admin user
+0|albpetrol-legal  | 2025-10-04T13:52:13: ✅ Admin user already exists
+0|albpetrol-legal  | 2025-10-04T13:52:13: ✅ Admin password already in correct scrypt format
+0|albpetrol-legal  | 2025-10-04T13:52:13: ✅ Database initialization completed
+0|albpetrol-legal  | 2025-10-04T13:52:13: Initializing court hearing notification scheduler...
+0|albpetrol-legal  | 2025-10-04T13:52:13: ⚠️ Scheduler already running, skipping duplicate start
+0|albpetrol-legal  | 2025-10-04T13:52:13: Scheduler instance created, starting automatic notifications...
+0|albpetrol-legal  | 2025-10-04T13:52:13: 1:52:13 PM [express] serving on port 5000
+0|albpetrol-legal  | 2025-10-04T13:52:18: [2025-10-04T11:52:18.923Z] 🚀 STARTUP CHECK TRIGGERED (5 seconds after start)
+0|albpetrol-legal  | 2025-10-04T13:52:18: [2025-10-04T11:52:18.925Z] === COURT HEARING CHECK STARTED ===
+0|albpetrol-legal  | 2025-10-04T13:52:18: Current time (GMT+1): 04.10.2025, 13:52
+0|albpetrol-legal  | 2025-10-04T13:52:18: Checking hearings within ≤26 hours: up to 05.10.2025, 13:52 [Albania Time]
+0|albpetrol-legal  | 2025-10-04T13:52:18: Checking entry 1 - hearing field: "2025-10-05T01:55"
+0|albpetrol-legal  | 2025-10-04T13:52:18: Parsing date string: 2025-10-05T01:55
+0|albpetrol-legal  | 2025-10-04T13:52:18: Parsed exactly as stored: 2025-10-04T23:55:00.000Z from input: 2025-10-05T01:55
+0|albpetrol-legal  | 2025-10-04T13:52:18: Parsed hearing date: 2025-10-04T23:55:00.000Z
+0|albpetrol-legal  | 2025-10-04T13:52:18:     Window check: hearing=2025-10-04T23:55:00.000Z, now=2025-10-04T11:52:18.930Z, hours_ahead=12.0, window=≤26h, result=true
+0|albpetrol-legal  | 2025-10-04T13:52:18: Is within notification window: true (hearing at 2025-10-04T23:55:00.000Z is 12 hours from now)
+0|albpetrol-legal  | 2025-10-04T13:52:18: Added hearing for case 1 to notification queue
+0|albpetrol-legal  | 2025-10-04T13:52:18: Found 1 upcoming hearings
+0|albpetrol-legal  | 2025-10-04T13:52:18: Sending notification for case 1 - first_instance
+0|albpetrol-legal  | 2025-10-04T13:52:18:
+0|albpetrol-legal  | 2025-10-04T13:52:18: 🔍 === DEBUGGING EMAIL NOTIFICATION TIME FORMATTING ===
+0|albpetrol-legal  | 2025-10-04T13:52:18: 📧 Original hearing date from notification: 2025-10-04T23:55:00.000Z
+0|albpetrol-legal  | 2025-10-04T13:52:18: 📧 Formatted display time: 04.10.2025, 23:55
+0|albpetrol-legal  | 2025-10-04T13:52:18:
+0|albpetrol-legal  | 2025-10-04T13:52:18: ══════════════════════════════════════════════════════════════
+0|albpetrol-legal  | 2025-10-04T13:52:18: 📧 SENDING REAL EMAIL - it.system@albpetrol.al
+0|albpetrol-legal  | 2025-10-04T13:52:18: ══════════════════════════════════════════════════════════════
+0|albpetrol-legal  | 2025-10-04T13:52:18: TO: thanas.dinaku@albpetrol.al
+0|albpetrol-legal  | 2025-10-04T13:52:18: FROM: it.system@albpetrol.al
+0|albpetrol-legal  | 2025-10-04T13:52:18: SUBJECT: Njoftim për Seancë Gjyqësore - Albpetrol SH.A.
+0|albpetrol-legal  | 2025-10-04T13:52:18: ──────────────────────────────────────────────────────────────
+0|albpetrol-legal  | 2025-10-04T13:52:20: ✅ EMAIL DELIVERED SUCCESSFULLY
+0|albpetrol-legal  | 2025-10-04T13:52:20: ══════════════════════════════════════════════════════════════
+0|albpetrol-legal  | 2025-10-04T13:52:20:
+0|albpetrol-legal  | 2025-10-04T13:52:20: ✅ Court hearing notification delivered to: thanas.dinaku@albpetrol.al
+0|albpetrol-legal  | 2025-10-04T13:52:20: Error recording notification: error: insert or update on table "system_settings" violates foreign key constraint "system_settings_updated_by_id_users_id_fk"
+0|albpetrol-legal  | 2025-10-04T13:52:20:     at /opt/ceshtje-ligjore/node_modules/pg-pool/index.js:45:11
+0|albpetrol-legal  | 2025-10-04T13:52:20:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|albpetrol-legal  | 2025-10-04T13:52:20:     at async CourtHearingScheduler.recordNotificationSent (file:///opt/ceshtje-ligjore/dist/index.js:1849:11)
+0|albpetrol-legal  | 2025-10-04T13:52:20:     at async CourtHearingScheduler.checkUpcomingHearings (file:///opt/ceshtje-ligjore/dist/index.js:1771:17) {
+0|albpetrol-legal  | 2025-10-04T13:52:20:   length: 349,
+0|albpetrol-legal  | 2025-10-04T13:52:20:   severity: 'ERROR',
+0|albpetrol-legal  | 2025-10-04T13:52:20:   code: '23503',
+0|albpetrol-legal  | 2025-10-04T13:52:20:   detail: 'Key (updated_by_id)=(a76a70a9-b09e-470c-bc77-14769a20acb6) is not present in table "users".',
+0|albpetrol-legal  | 2025-10-04T13:52:20:   hint: undefined,
+0|albpetrol-legal  | 2025-10-04T13:52:20:   position: undefined,
+0|albpetrol-legal  | 2025-10-04T13:52:20:   internalPosition: undefined,
+0|albpetrol-legal  | 2025-10-04T13:52:20:   internalQuery: undefined,
+0|albpetrol-legal  | 2025-10-04T13:52:20:   where: undefined,
+0|albpetrol-legal  | 2025-10-04T13:52:20:   schema: 'public',
+0|albpetrol-legal  | 2025-10-04T13:52:20:   table: 'system_settings',
+0|albpetrol-legal  | 2025-10-04T13:52:20:   column: undefined,
+0|albpetrol-legal  | 2025-10-04T13:52:20:   dataType: undefined,
+0|albpetrol-legal  | 2025-10-04T13:52:20:   constraint: 'system_settings_updated_by_id_users_id_fk',
+0|albpetrol-legal  | 2025-10-04T13:52:20:   file: 'ri_triggers.c',
+0|albpetrol-legal  | 2025-10-04T13:52:20:   line: '2528',
+0|albpetrol-legal  | 2025-10-04T13:52:20:   routine: 'ri_ReportViolation'
+0|albpetrol-legal  | 2025-10-04T13:52:20: }
+0|albpetrol-legal  | 2025-10-04T13:52:20: Notification sent successfully for case 1

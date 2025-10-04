@@ -1,0 +1,44 @@
+root@admuser:~/.cloudflared# # Install service with the correct config path
+sudo cloudflared --config /etc/cloudflared/config.yml service install
+
+# Start and enable the service
+sudo systemctl start cloudflared
+sudo systemctl enable cloudflared
+
+# Check status
+sudo systemctl status cloudflared
+2025-10-04T20:11:25Z INF Using Systemd
+2025-10-04T20:11:27Z INF Linux service for cloudflared installed successfully
+● cloudflared.service - cloudflared
+     Loaded: loaded (/etc/systemd/system/cloudflared.service; enabled; vendor p>
+     Active: active (running) since Sat 2025-10-04 22:11:27 CEST; 229ms ago
+   Main PID: 26706 (cloudflared)
+      Tasks: 10 (limit: 9381)
+     Memory: 17.2M
+        CPU: 78ms
+     CGroup: /system.slice/cloudflared.service
+             └─26706 /usr/bin/cloudflared --no-autoupdate --config /etc/cloudfl>
+
+Oct 04 22:11:25 admuser cloudflared[26706]: 2025-10-04T20:11:25Z INF Initial pr>
+Oct 04 22:11:25 admuser cloudflared[26706]: 2025-10-04T20:11:25Z INF ICMP proxy>
+Oct 04 22:11:25 admuser cloudflared[26706]: 2025-10-04T20:11:25Z INF ICMP proxy>
+Oct 04 22:11:25 admuser cloudflared[26706]: 2025-10-04T20:11:25Z INF ICMP proxy>
+Oct 04 22:11:25 admuser cloudflared[26706]: 2025-10-04T20:11:25Z INF ICMP proxy>
+Oct 04 22:11:25 admuser cloudflared[26706]: 2025-10-04T20:11:25Z INF Starting m>
+Oct 04 22:11:25 admuser cloudflared[26706]: 2025-10-04T20:11:25Z INF Tunnel con>
+Oct 04 22:11:27 admuser cloudflared[26706]: 2025-10-04T20:11:27Z INF Registered>
+Oct 04 22:11:27 admuser cloudflared[26706]: 2025-10-04T20:11:27Z INF Tunnel con>
+Oct 04 22:11:27 admuser systemd[1]: Started cloudflared.
+root@admuser:~/.cloudflared# # View live logs
+sudo journalctl -u cloudflared -f
+Oct 04 22:11:25 admuser cloudflared[26706]: 2025-10-04T20:11:25Z INF Starting metrics server on 127.0.0.1:20241/metrics
+Oct 04 22:11:25 admuser cloudflared[26706]: 2025-10-04T20:11:25Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.27
+Oct 04 22:11:27 admuser cloudflared[26706]: 2025-10-04T20:11:27Z INF Registered tunnel connection connIndex=0 connection=13dbe6a4-497e-440b-bb3d-c75defb38c53 event=0 ip=198.41.192.27 location=bud01 protocol=quic
+Oct 04 22:11:27 admuser cloudflared[26706]: 2025-10-04T20:11:27Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=1 event=0 ip=198.41.200.73
+Oct 04 22:11:27 admuser systemd[1]: Started cloudflared.
+Oct 04 22:11:27 admuser cloudflared[26706]: 2025-10-04T20:11:27Z INF Registered tunnel connection connIndex=1 connection=2e14c75e-2c54-4cfe-a586-608cb5665bbb event=0 ip=198.41.200.73 location=sof01 protocol=quic
+Oct 04 22:11:28 admuser cloudflared[26706]: 2025-10-04T20:11:28Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=2 event=0 ip=198.41.200.193
+Oct 04 22:11:29 admuser cloudflared[26706]: 2025-10-04T20:11:29Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=3 event=0 ip=198.41.192.227
+Oct 04 22:11:30 admuser cloudflared[26706]: 2025-10-04T20:11:30Z INF Registered tunnel connection connIndex=2 connection=5a1df04f-3a70-4132-9294-1dd5850aeee2 event=0 ip=198.41.200.193 location=sof01 protocol=quic
+Oct 04 22:11:31 admuser cloudflared[26706]: 2025-10-04T20:11:31Z INF Registered tunnel connection connIndex=3 connection=c80078d4-a2ba-4212-a421-4727b9ad9713 event=0 ip=198.41.192.227 location=bud01 protocol=quic
+^C

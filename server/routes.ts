@@ -1408,6 +1408,25 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
     }
   });
 
+  // Get all users for dropdowns (Admin only)
+  app.get('/api/users', isAuthenticated, isAdmin, async (req, res) => {
+    try {
+      const users = await storage.getAllUsers();
+      // Return only necessary fields for dropdowns
+      const userList = users.map(user => ({
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role
+      }));
+      res.json(userList);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      res.status(500).json({ error: 'Failed to fetch users' });
+    }
+  });
+
   // Transfer case ownership from one user to another (Admin only)
   app.post('/api/transfer-cases', isAuthenticated, isAdmin, async (req, res) => {
     try {

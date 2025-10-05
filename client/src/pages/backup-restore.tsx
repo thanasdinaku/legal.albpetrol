@@ -84,7 +84,7 @@ export default function BackupRestorePage() {
         }
       }
 
-      return response.json();
+      return { success: true };
     },
     onSuccess: () => {
       toast({
@@ -136,7 +136,7 @@ export default function BackupRestorePage() {
         }
       }
 
-      return response.json();
+      return { success: true };
     },
     onSuccess: () => {
       toast({

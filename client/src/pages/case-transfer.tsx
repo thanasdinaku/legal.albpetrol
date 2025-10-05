@@ -148,7 +148,7 @@ export default function CaseTransferPage() {
                   <SelectTrigger data-testid="select-from-user">
                     <SelectValue placeholder="Zgjidhni përdoruesin burim" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-[300px] overflow-y-auto">
                     {users.map((user) => (
                       <SelectItem key={user.id} value={user.id}>
                         {user.firstName} {user.lastName} ({user.email})
@@ -175,7 +175,7 @@ export default function CaseTransferPage() {
                   <SelectTrigger data-testid="select-to-user">
                     <SelectValue placeholder="Zgjidhni përdoruesin destinacion" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-[300px] overflow-y-auto">
                     {users
                       .filter(u => u.id !== fromUserId)
                       .map((user) => (

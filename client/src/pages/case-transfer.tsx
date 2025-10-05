@@ -52,7 +52,7 @@ export default function CaseTransferPage() {
   // Transfer cases mutation
   const transferMutation = useMutation({
     mutationFn: async () => {
-      return await apiRequest("POST", "/api/transfer-cases", {
+      return await apiRequest("/api/transfer-cases", "POST", {
         fromUserId,
         toUserId,
       });

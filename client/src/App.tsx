@@ -15,6 +15,7 @@ import SystemSettings from "@/pages/system-settings";
 import SettingsPage from "@/pages/settings-page";
 import ManualPage from "@/pages/manual";
 import BackupRestorePage from "@/pages/backup-restore";
+import CaseTransferPage from "@/pages/case-transfer";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -48,6 +49,7 @@ function Router() {
           <Route path="/user-management" component={UserManagement} />
           <Route path="/system-settings" component={SystemSettings} />
           <Route path="/backup-restore" component={BackupRestorePage} />
+          <Route path="/case-transfer" component={CaseTransferPage} />
           <Route path="/settings" component={SettingsPage} />
           <Route path="/manual" component={ManualPage} />
         </>

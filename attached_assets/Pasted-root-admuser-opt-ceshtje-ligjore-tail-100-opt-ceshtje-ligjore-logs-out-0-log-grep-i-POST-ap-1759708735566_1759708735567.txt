@@ -1,0 +1,78 @@
+root@admuser:/opt/ceshtje-ligjore# tail -100 /opt/ceshtje-ligjore/logs/out-0.log | grep -i "POST /api/transfer"
+2025-10-06T01:29:03: 1:29:03 AM [express] POST /api/transfer-cases 200 in 5ms
+2025-10-06T01:41:52: 1:41:52 AM [express] POST /api/transfer-cases 200 in 5ms
+2025-10-06T01:42:43: 1:42:43 AM [express] POST /api/transfer-cases 200 in 10ms
+root@admuser:/opt/ceshtje-ligjore# nano server/routes.ts
+root@admuser:/opt/ceshtje-ligjore# nano server/routes.ts
+root@admuser:/opt/ceshtje-ligjore# nano server/routes.ts
+root@admuser:/opt/ceshtje-ligjore# npm run build
+pm2 restart albpetrol-legal
+pm2 logs albpetrol-legal --lines 0
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+✓ 2411 modules transformed.
+../dist/public/index.html                                         1.09 kB │ gzip:   0.62 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-D1b5zML-.css                        159.05 kB │ gzip:  25.36 kB
+../dist/public/assets/index-BaTynYKG.js                         870.49 kB │ gzip: 255.57 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.87s
+
+  dist/index.js  189.3kb
+
+⚡ Done in 7ms
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 13   │ online    │ 0%       │ 18.8mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+0|albpetrol-legal  | 2025-10-06T01:57:33: 🚀 CourtHearingScheduler constructor called
+0|albpetrol-legal  | 2025-10-06T01:57:33:
+0|albpetrol-legal  | 2025-10-06T01:57:33: ══════════════════════════════════════════════════════════════
+0|albpetrol-legal  | 2025-10-06T01:57:33: 🕐 SYSTEM TIMEZONE CONFIGURATION - GMT+1 (ALBANIA TIME)
+0|albpetrol-legal  | 2025-10-06T01:57:33: ══════════════════════════════════════════════════════════════
+0|albpetrol-legal  | 2025-10-06T01:57:33: 🌍 Configured Timezone: Europe/Tirane (GMT+1 - Albania Time)
+0|albpetrol-legal  | 2025-10-06T01:57:33: ⏰ Current UTC Time: 2025-10-05T23:57:33.405Z
+0|albpetrol-legal  | 2025-10-06T01:57:33: 🇦🇱 Current Albania Time (GMT+1): 06.10.2025, 01:57
+0|albpetrol-legal  | 2025-10-06T01:57:33: 📅 Albanian Date Format: 06.10.2025
+0|albpetrol-legal  | 2025-10-06T01:57:33: 🕒 Albanian Time Format: 01:57
+0|albpetrol-legal  | 2025-10-06T01:57:33: ══════════════════════════════════════════════════════════════
+0|albpetrol-legal  | 2025-10-06T01:57:33:
+0|albpetrol-legal  | 2025-10-06T01:57:33: 🟢 Starting court hearing notification scheduler...
+0|albpetrol-legal  | 2025-10-06T01:57:33: ✅ Scheduler configured: checking every 10 minutes, startup check in 5 seconds
+0|albpetrol-legal  | 2025-10-06T01:57:33: 🔧 Initializing database...
+0|albpetrol-legal  | 2025-10-06T01:57:33: 🔑 Generated scrypt password hash for admin user
+0|albpetrol-legal  | 2025-10-06T01:57:33: ✅ Admin user already exists
+0|albpetrol-legal  | 2025-10-06T01:57:33: ✅ Admin password already in correct scrypt format
+0|albpetrol-legal  | 2025-10-06T01:57:33: ✅ Database initialization completed
+0|albpetrol-legal  | 2025-10-06T01:57:33: Initializing court hearing notification scheduler...
+0|albpetrol-legal  | 2025-10-06T01:57:33: ⚠️ Scheduler already running, skipping duplicate start
+0|albpetrol-legal  | 2025-10-06T01:57:33: Scheduler instance created, starting automatic notifications...
+0|albpetrol-legal  | 2025-10-06T01:57:33: 1:57:33 AM [express] serving on port 5000
+0|albpetrol-legal  | 2025-10-06T01:57:38: [2025-10-05T23:57:38.417Z] 🚀 STARTUP CHECK TRIGGERED (5 seconds after start)
+0|albpetrol-legal  | 2025-10-06T01:57:38: [2025-10-05T23:57:38.417Z] === COURT HEARING CHECK STARTED ===
+0|albpetrol-legal  | 2025-10-06T01:57:38: Current time (GMT+1): 06.10.2025, 01:57
+0|albpetrol-legal  | 2025-10-06T01:57:38: Checking hearings within ≤26 hours: up to 07.10.2025, 01:57 [Albania Time]
+0|albpetrol-legal  | 2025-10-06T01:57:38: Checking entry 1 - hearing field: "2025-10-05T23:12"
+0|albpetrol-legal  | 2025-10-06T01:57:38: Parsing date string: 2025-10-05T23:12
+0|albpetrol-legal  | 2025-10-06T01:57:38: Parsed exactly as stored: 2025-10-05T21:12:00.000Z from input: 2025-10-05T23:12
+0|albpetrol-legal  | 2025-10-06T01:57:38: Parsed hearing date: 2025-10-05T21:12:00.000Z
+0|albpetrol-legal  | 2025-10-06T01:57:38:     Window check: hearing=2025-10-05T21:12:00.000Z, now=2025-10-05T23:57:38.422Z, hours_ahead=-2.8, window=≤26h, result=false
+0|albpetrol-legal  | 2025-10-06T01:57:38: Is within notification window: false (hearing at 2025-10-05T21:12:00.000Z is -3 hours from now)
+0|albpetrol-legal  | 2025-10-06T01:57:38: Checking entry 1 appeal - hearing field: "2025-10-05T23:42"
+0|albpetrol-legal  | 2025-10-06T01:57:38: Parsing date string: 2025-10-05T23:42
+0|albpetrol-legal  | 2025-10-06T01:57:38: Parsed exactly as stored: 2025-10-05T21:42:00.000Z from input: 2025-10-05T23:42
+0|albpetrol-legal  | 2025-10-06T01:57:38: Parsed appeal hearing date: 2025-10-05T21:42:00.000Z
+0|albpetrol-legal  | 2025-10-06T01:57:38:     Window check: hearing=2025-10-05T21:42:00.000Z, now=2025-10-05T23:57:38.423Z, hours_ahead=-2.3, window=≤26h, result=false
+0|albpetrol-legal  | 2025-10-06T01:57:38: Appeal hearing is within notification window: false (hearing at 2025-10-05T21:42:00.000Z is -2 hours from now)
+0|albpetrol-legal  | 2025-10-06T01:57:38: Found 0 upcoming hearings

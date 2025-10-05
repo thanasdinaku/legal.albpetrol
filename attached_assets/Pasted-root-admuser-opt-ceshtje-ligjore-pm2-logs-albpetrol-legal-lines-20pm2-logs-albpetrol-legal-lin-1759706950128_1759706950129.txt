@@ -1,0 +1,45 @@
+root@admuser:/opt/ceshtje-ligjore# pm2 logs albpetrol-legal --lines 20pm2 logs albpetrol-legal --lines 20
+[TAILING] Tailing last 20 lines for [albpetrol-legal] process (change the value with --lines option)
+/opt/ceshtje-ligjore/logs/err-0.log last 20 lines:
+0|albpetro | 2025-10-06T00:31:49:   'sessions',
+0|albpetro | 2025-10-06T00:31:49:   'database_checkpoints',
+0|albpetro | 2025-10-06T00:31:49:   'system_backups'
+0|albpetro | 2025-10-06T00:31:49: ]
+0|albpetro | 2025-10-06T00:31:49: Warning: Corrupted tables field for backup 3a8fd2db-3e60-4bc9-ac7e-3aa9484d309c: [
+0|albpetro | 2025-10-06T00:31:49:   'data_entries',
+0|albpetro | 2025-10-06T00:31:49:   'users',
+0|albpetro | 2025-10-06T00:31:49:   'system_settings',
+0|albpetro | 2025-10-06T00:31:49:   'sessions',
+0|albpetro | 2025-10-06T00:31:49:   'database_checkpoints',
+0|albpetro | 2025-10-06T00:31:49:   'system_backups'
+0|albpetro | 2025-10-06T00:31:49: ]
+0|albpetro | 2025-10-06T00:31:49: Warning: Corrupted tables field for backup 2e264b7d-8675-4256-8c91-bbf79ee70432: [
+0|albpetro | 2025-10-06T00:31:49:   'data_entries',
+0|albpetro | 2025-10-06T00:31:49:   'users',
+0|albpetro | 2025-10-06T00:31:49:   'system_settings',
+0|albpetro | 2025-10-06T00:31:49:   'sessions',
+0|albpetro | 2025-10-06T00:31:49:   'database_checkpoints',
+0|albpetro | 2025-10-06T00:31:49:   'system_backups'
+0|albpetro | 2025-10-06T00:31:49: ]
+
+/opt/ceshtje-ligjore/logs/out-0.log last 20 lines:
+0|albpetro | 2025-10-06T01:26:26: ⚠️ Scheduler already running, skipping duplicate start
+0|albpetro | 2025-10-06T01:26:26: Scheduler instance created, starting automatic notifications...
+0|albpetro | 2025-10-06T01:26:26: 1:26:26 AM [express] serving on port 5000
+0|albpetro | 2025-10-06T01:26:31: [2025-10-05T23:26:31.194Z] 🚀 STARTUP CHECK TRIGGERED (5 seconds after start)
+0|albpetro | 2025-10-06T01:26:31: [2025-10-05T23:26:31.194Z] === COURT HEARING CHECK STARTED ===
+0|albpetro | 2025-10-06T01:26:31: Current time (GMT+1): 06.10.2025, 01:26
+0|albpetro | 2025-10-06T01:26:31: Checking hearings within ≤26 hours: up to 07.10.2025, 01:26 [Albania Time]
+0|albpetro | 2025-10-06T01:26:31: Checking entry 1 - hearing field: "2025-10-05T23:12"
+0|albpetro | 2025-10-06T01:26:31: Parsing date string: 2025-10-05T23:12
+0|albpetro | 2025-10-06T01:26:31: Parsed exactly as stored: 2025-10-05T21:12:00.000Z from input: 2025-10-05T23:12
+0|albpetro | 2025-10-06T01:26:31: Parsed hearing date: 2025-10-05T21:12:00.000Z
+0|albpetro | 2025-10-06T01:26:31:     Window check: hearing=2025-10-05T21:12:00.000Z, now=2025-10-05T23:26:31.199Z, hours_ahead=-2.2, window=≤26h, result=false
+0|albpetro | 2025-10-06T01:26:31: Is within notification window: false (hearing at 2025-10-05T21:12:00.000Z is -2 hours from now)
+0|albpetro | 2025-10-06T01:26:31: Checking entry 1 appeal - hearing field: "2025-10-05T23:42"
+0|albpetro | 2025-10-06T01:26:31: Parsing date string: 2025-10-05T23:42
+0|albpetro | 2025-10-06T01:26:31: Parsed exactly as stored: 2025-10-05T21:42:00.000Z from input: 2025-10-05T23:42
+0|albpetro | 2025-10-06T01:26:31: Parsed appeal hearing date: 2025-10-05T21:42:00.000Z
+0|albpetro | 2025-10-06T01:26:31:     Window check: hearing=2025-10-05T21:42:00.000Z, now=2025-10-05T23:26:31.199Z, hours_ahead=-1.7, window=≤26h, result=false
+0|albpetro | 2025-10-06T01:26:31: Appeal hearing is within notification window: false (hearing at 2025-10-05T21:42:00.000Z is -2 hours from now)
+0|albpetro | 2025-10-06T01:26:31: Found 0 upcoming hearings

@@ -109,6 +109,14 @@ export default function Sidebar({ isOpen = true, onClose, className }: SidebarPr
               <i className="fas fa-database"></i>
               <span className="text-sm sm:text-base">Backup dhe Restaurim</span>
             </button>
+            <button
+              onClick={() => handleNavigation('/case-transfer')}
+              className={isActive('/case-transfer') ? 'nav-link-active w-full text-left' : 'nav-link w-full text-left'}
+              data-testid="link-case-transfer"
+            >
+              <i className="fas fa-exchange-alt"></i>
+              <span className="text-sm sm:text-base">Transferimi i Çështjeve</span>
+            </button>
           </div>
         )}
         

@@ -239,12 +239,30 @@ export class BackupService {
       const validBackups = [];
       for (const backup of backups) {
         if (existsSync(backup.filepath)) {
-          const stats = statSync(backup.filepath);
-          validBackups.push({
-            ...backup,
-            size: stats.size,
-            tables: JSON.parse(backup.tables as string)
-          });
+          try {
+            const stats = statSync(backup.filepath);
+            let tables: string[];
+            
+            // Safely parse tables field
+            try {
+              tables = JSON.parse(backup.tables as string);
+            } catch (parseError) {
+              // If tables field is corrupted, treat it as a single table name or empty array
+              console.warn(`Warning: Corrupted tables field for backup ${backup.id}:`, backup.tables);
+              tables = typeof backup.tables === 'string' && backup.tables.length > 0 
+                ? [backup.tables] 
+                : [];
+            }
+            
+            validBackups.push({
+              ...backup,
+              size: stats.size,
+              tables
+            });
+          } catch (error) {
+            console.error(`Error processing backup ${backup.id}:`, error);
+            // Skip this backup but continue with others
+          }
         } else {
           // Remove database record for missing file
           await db.delete(systemBackups).where(eq(systemBackups.id, backup.id));

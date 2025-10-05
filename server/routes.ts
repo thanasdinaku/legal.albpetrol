@@ -1408,5 +1408,44 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
     }
   });
 
+  // Transfer case ownership from one user to another (Admin only)
+  app.post('/api/transfer-cases', isAuthenticated, isAdmin, async (req, res) => {
+    try {
+      const { fromUserId, toUserId } = req.body;
+
+      if (!fromUserId || !toUserId) {
+        return res.status(400).json({ error: 'Both fromUserId and toUserId are required' });
+      }
+
+      if (fromUserId === toUserId) {
+        return res.status(400).json({ error: 'Cannot transfer cases to the same user' });
+      }
+
+      // Verify both users exist
+      const fromUser = await storage.getUserById(fromUserId);
+      const toUser = await storage.getUserById(toUserId);
+
+      if (!fromUser) {
+        return res.status(404).json({ error: 'Source user not found' });
+      }
+
+      if (!toUser) {
+        return res.status(404).json({ error: 'Destination user not found' });
+      }
+
+      // Transfer all cases
+      const result = await storage.transferCases(fromUserId, toUserId);
+
+      res.json({
+        success: true,
+        message: `Successfully transferred ${result.count} case(s) from ${fromUser.firstName} ${fromUser.lastName} to ${toUser.firstName} ${toUser.lastName}`,
+        count: result.count
+      });
+    } catch (error) {
+      console.error('Error transferring cases:', error);
+      res.status(500).json({ error: 'Failed to transfer cases' });
+    }
+  });
+
   return httpServer;
 }

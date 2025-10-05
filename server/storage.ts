@@ -20,6 +20,7 @@ import { eq, desc, asc, and, ilike, or, sql, getTableColumns } from "drizzle-orm
 export interface IStorage {
   // User operations
   getUser(id: string): Promise<User | undefined>;
+  getUserById(id: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: CreateUser): Promise<User>;
   updateUserPassword(userId: string, hashedPassword: string): Promise<void>;
@@ -34,6 +35,7 @@ export interface IStorage {
   updateUserRole(userId: string, role: 'user' | 'admin'): Promise<User>;
   createManualUser(userData: CreateUser): Promise<User>;
   deleteUser(userId: string): Promise<void>;
+  transferCases(fromUserId: string, toUserId: string): Promise<{ count: number }>;
   
   // Data entry operations
   createDataEntry(entry: InsertDataEntry): Promise<DataEntry>;
@@ -86,6 +88,11 @@ export interface IStorage {
 export class DatabaseStorage implements IStorage {
   // User operations
   async getUser(id: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+
+  async getUserById(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
   }
@@ -652,6 +659,27 @@ export class DatabaseStorage implements IStorage {
 
   async deleteUser(userId: string): Promise<void> {
     await db.delete(users).where(eq(users.id, userId));
+  }
+
+  async transferCases(fromUserId: string, toUserId: string): Promise<{ count: number }> {
+    // Use transaction to ensure data integrity
+    const result = await db.transaction(async (tx) => {
+      // Update all data entries from the source user to the destination user
+      await tx
+        .update(dataEntries)
+        .set({ createdById: toUserId })
+        .where(eq(dataEntries.createdById, fromUserId));
+
+      // Get the count of transferred cases
+      const [countResult] = await tx
+        .select({ count: sql<number>`count(*)` })
+        .from(dataEntries)
+        .where(eq(dataEntries.createdById, toUserId));
+
+      return { count: Number(countResult.count) };
+    });
+
+    return result;
   }
 
   // Backup/Checkpoint operations

@@ -1429,8 +1429,11 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
 
   // Transfer case ownership from one user to another (Admin only)
   app.post('/api/transfer-cases', isAuthenticated, isAdmin, async (req, res) => {
+    console.log('🚀 ROUTE HANDLER CALLED - /api/transfer-cases');
+    console.log('Request body:', req.body);
     try {
       const { fromUserId, toUserId } = req.body;
+      console.log('Extracted fromUserId:', fromUserId, 'toUserId:', toUserId);
 
       if (!fromUserId || !toUserId) {
         return res.status(400).json({ error: 'Both fromUserId and toUserId are required' });

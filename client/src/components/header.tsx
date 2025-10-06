@@ -53,10 +53,11 @@ export default function Header({ title, subtitle, onMenuToggle }: HeaderProps) {
               variant="ghost"
               size="sm"
               onClick={onMenuToggle}
-              className="lg:hidden p-2 hover:bg-gray-100"
+              className="lg:hidden p-2 hover:bg-gray-100 min-h-[40px] min-w-[40px]"
               data-testid="button-mobile-menu"
+              aria-label="Open menu"
             >
-              <i className="fas fa-bars text-2xl text-gray-700"></i>
+              <i className="fas fa-ellipsis-v text-2xl text-gray-700"></i>
             </Button>
           )}
           <div className="min-w-0">

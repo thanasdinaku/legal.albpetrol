@@ -51,7 +51,7 @@ export default function Header({ title, subtitle, onMenuToggle }: HeaderProps) {
           {onMenuToggle && (
             <button
               onClick={onMenuToggle}
-              className="lg:hidden p-1 mr-2 hover:opacity-70 active:opacity-50 transition-opacity"
+              className="p-1 mr-2 hover:opacity-70 active:opacity-50 transition-opacity"
               data-testid="button-mobile-menu"
               aria-label="Open menu"
             >

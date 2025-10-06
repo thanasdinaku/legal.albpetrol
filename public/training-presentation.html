@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trajnim - Sistemi i Menaxhimit të Çështjeve Ligjore</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #333;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            background: white;
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 60px;
+            position: relative;
+            animation: slideIn 0.5s ease;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-header {
+            border-bottom: 4px solid #2a5298;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        .slide-header h1 {
+            color: #1e3c72;
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .slide-header h2 {
+            color: #2a5298;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .slide-header .subtitle {
+            color: #666;
+            font-size: 1.3rem;
+        }
+
+        .slide-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .slide-content h3 {
+            color: #2a5298;
+            font-size: 1.8rem;
+            margin: 30px 0 20px 0;
+        }
+
+        .slide-content ul {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .slide-content ul li {
+            font-size: 1.3rem;
+            line-height: 2.2;
+            padding-left: 40px;
+            position: relative;
+            margin: 15px 0;
+        }
+
+        .slide-content ul li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #2a5298;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .slide-content p {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            margin: 15px 0;
+            color: #444;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 20px;
+            border-left: 5px solid #ffc107;
+            margin: 25px 0;
+            border-radius: 5px;
+        }
+
+        .warning {
+            background: #f8d7da;
+            padding: 20px;
+            border-left: 5px solid #dc3545;
+            margin: 25px 0;
+            border-radius: 5px;
+        }
+
+        .info {
+            background: #d1ecf1;
+            padding: 20px;
+            border-left: 5px solid #17a2b8;
+            margin: 25px 0;
+            border-radius: 5px;
+        }
+
+        .navigation {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: #2a5298;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #1e3c72;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .logo {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            color: #2a5298;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .steps {
+            counter-reset: step-counter;
+        }
+
+        .steps li {
+            counter-increment: step-counter;
+        }
+
+        .steps li:before {
+            content: counter(step-counter);
+            background: #2a5298;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #2a5298;
+        }
+
+        .feature-box h4 {
+            color: #2a5298;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .feature-box p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="logo">Albpetrol SH.A.</div>
+            <div class="slide-header" style="text-align: center; border: none; margin-top: 100px;">
+                <h1>Sistemi i Menaxhimit të Çështjeve Ligjore</h1>
+                <p class="subtitle" style="margin-top: 30px; font-size: 1.8rem;">Trajnim për Përdoruesit</p>
+                <p class="subtitle" style="margin-top: 50px;">CaseRecord - Legal Management System</p>
+            </div>
+            <div class="slide-number">Slide 1 / 15</div>
+        </div>
+
+        <!-- Slide 2: Hyrje -->
+        <div class="slide">
+            <div class="logo">Albpetrol SH.A.</div>
+            <div class="slide-header">
+                <h2>Mirë se vini!</h2>
+            </div>
+            <div class="slide-content">
+                <h3>Qëllimi i Trajnimit</h3>
+                <p>Ky trajnim do t'ju ndihmojë të mësoni se si të përdorni sistemin e menaxhimit të çështjeve ligjore për:</p>
+                <ul>
+                    <li>Regjistrimin e çështjeve të reja ligjore</li>
+                    <li>Menaxhimin dhe ndjekjen e çështjeve ekzistuese</li>
+                    <li>Bashkëngjitjen e dokumenteve ligjore</li>
+                    <li>Marrjen e njoftimeve për seancat gjyqësore</li>
+                    <li>Eksportimin e të dhënave për raportim</li>
+                </ul>
+            </div>
+            <div class="slide-number">Slide 2 / 15</div>
+        </div>
+
+        <!-- Slide 3: Hyrja në Sistem -->
+        <div class="slide">
+            <div class="logo">Albpetrol SH.A.</div>
+            <div class="slide-header">
+                <h2>Hyrja në Sistem</h2>
+            </div>
+            <div class="slide-content">
+                <h3>Hapat për t'u kyçur:</h3>
+                <ul class="steps">
+                    <li>Hapni shfletuesin tuaj (Chrome, Firefox, Edge)</li>
+                    <li>Shkruani adresën: <strong>https://legal.albpetrol.al</strong></li>
+                    <li>Klikoni butonin "Kyçu me Replit"</li>
+                    <li>Vendosni kredencialet tuaja të autorizuara</li>
+                    <li>Pas autentifikimit të suksesshëm, do të shfaqet paneli kryesor</li>
+                </ul>
+                <div class="highlight">
+                    <strong>💡 Shënim:</strong> Sistemi përdor autentifikim të sigurt me Replit OIDC dhe verifikim me dy faktorë (2FA) për sigurinë maksimale.
+                </div>
+            </div>
+            <div class="slide-number">Slide 3 / 15</div>
+        </div>
+
+        <!-- Slide 4: Dashboard -->
+        <div class="slide">
+            <div class="logo">Albpetrol SH.A.</div>
+            <div class="slide-header">
+                <h2>Paneli Kryesor (Dashboard)</h2>
+            </div>
+            <div class="slide-content">
+                <h3>Çfarë do të shihni:</h3>
+                <div class="feature-grid">
+                    <div class="feature-box">
+                        <h4>📊 Statistika</h4>
+                        <p>Numri total i çështjeve, çështjet aktive, të mbyllura dhe në apel</p>
+                    </div>
+                    <div class="feature-box">
+                        <h4>📅 Seancat e Ardhshme</h4>
+                        <p>Lista e seancave gjyqësore që do të zhvillohen së shpejti</p>
+                    </div>
+                    <div class="feature-box">
+                        <h4>🔔 Njoftime</h4>
+                        <p>Alarme automatike 24 orë para seancës gjyqësore</p>
+                    </div>
+                    <div class="feature-box">
+                        <h4>📈 Grafik Mujor</h4>
+                        <p>Vizualizimi i çështjeve të regjistruara në 6 muajt e fundit</p>
+                    </div>
+                </div>
+                <div class="info">
+                    <strong>ℹ️ Info:</strong> Të gjitha statistikat përditësohen në kohë reale.
+                </div>
+            </div>
+            <div class="slide-number">Slide 4 / 15</div>
+        </div>
+
+        <!-- Slide 5: Menaxhimi i Çështjeve -->
+        <div class="slide">
+            <div class="logo">Albpetrol SH.A.</div>
+            <div class="slide-header">
+                <h2>Menaxhimi i Çështjeve</h2>
+            </div>
+            <div class="slide-content">
+                <h3>Veprimet kryesore:</h3>
+                <ul>
+                    <li><strong>Shiko Çështjet:</strong> Klikoni "Menaxho Çështjet" në menynë anësore</li>
+                    <li><strong>Filtrimi:</strong> Përdorni filtrat për të kërkuar çështje specifike</li>
+                    <li><strong>Detajet:</strong> Klikoni mbi një çështje për të parë të gjitha detajet</li>
+                    <li><strong>Modifiko:</strong> Butonit "Modifiko" për të përditësuar informacionin</li>
+                    <li><strong>Fshij:</strong> Vetëm administratorët mund të fshijnë çështjet</li>
+                </ul>
+                <div class="highlight">
+                    <strong>💡 Këshillë:</strong> Përdorni kërkimin e shpejtë për të gjetur çështjet sipas numrit, palës ose gjykatës.
+                </div>
+            </div>
+            <div class="slide-number">Slide 5 / 15</div>
+        </div>
+
+        <!-- Slide 6: Krijimi i Çështjes së Re -->
+        <div class="slide">
+            <div class="logo">Albpetrol SH.A.</div>
+            <div class="slide-header">
+                <h2>Regjistrimi i Çështjes së Re</h2>
+            </div>
+            <div class="slide-content">
+                <h3>Hapat për regjistrimin:</h3>
+                <ul class="steps">
+                    <li>Klikoni butonin "Shto Çështje të Re" në krye të tabelës</li>
+                    <li>Plotësoni të gjitha fushat e detyrueshme (me *)</li>
+                    <li>Zgjidhni gjykatën, llojin e çështjes dhe statusin</li>
+                    <li>Vendosni datën e seancës (nëse dihet)</li>
+                    <li>Bashkëngjisni dokumente nëse është e nevojshme</li>
+                    <li>Klikoni "Ruaj" për të regjistruar çështjen</li>
+                </ul>
+                <div class="warning">
+                    <strong>⚠️ Kujdes:</strong> Sigurohuni që të gjitha të dhënat janë të sakta para se të klikoni "Ruaj".
+                </div>
+            </div>
+            <div class="slide-number">Slide 6 / 15</div>
+        </div>
+
+        <!-- Slide 7: Fushat e Çështjes -->
+        <div class="slide">
+            <div class="logo">Albpetrol SH.A.</div>
+            <div class="slide-header">
+                <h2>Fushat e Çështjes Ligjore</h2>
+            </div>
+            <div class="slide-content">
+                <p>Sistemi përmban 19 fusha për çdo çështje:</p>
+                <ul>
+                    <li>Numri i çështjes dhe data e regjistrimit</li>
+                    <li>Pala kundërshtare dhe lloji i palës</li>
+                    <li>Lloji i çështjes dhe objekti</li>
+                    <li>Gjykata e shkallës së parë dhe e apelit</li>
+                    <li>Data e seancës dhe statusi</li>
+                    <li>Përfaqësuesi ligjor dhe vendimi</li>
+                    <li>Shuma në mosmarrëveshje</li>
+                    <li>Dokumente bashkëngjitur</li>
+                </ul>
+            </div>
+            <div class="slide-number">Slide 7 / 15</div>
+        </div>
+
+        <!-- Slide 8: Bashkëngjitja e Dokumenteve -->
+        <div class="slide">
+            <div class="logo">Albpetrol SH.A.</div>
+            <div class="slide-header">
+                <h2>Bashkëngjitja e Dokumenteve</h2>
+            </div>
+            <div class="slide-content">
+                <h3>Si të bashkëngjisni dokumente:</h3>
+                <ul class="steps">
+                    <li>Në formën e çështjes, klikoni "Bashkangjit Dokumente"</li>
+                    <li>Do të shfaqet dritarja e ngarkimit poshtë butonit</li>
+                    <li>Zgjidhni file-in nga kompjuteri (PDF ose Word)</li>
+                    <li>Dokumenti do të ngarkohet automatikisht</li>
+                    <li>Mund të bashkëngjisni deri në 5 dokumente për çështje</li>
+                </ul>
+                <div class="info">
+                    <strong>ℹ️ Formatet e Pranuara:</strong> PDF (.pdf), Word (.doc, .docx) - Maksimumi 10MB për file.
+                </div>
+                <div class="highlight">
+                    <strong>💡 Shënim:</strong> Të gjitha dokumentet ruhen në sigurim dhe mund të shkarkohen më vonë.
+                </div>
+            </div>
+            <div class="slide-number">Slide 8 / 15</div>
+        </div>
+
+        <!-- Slide 9: Njoftime Email -->
+        <div class="slide">
+            <div class="logo">Albpetrol SH.A.</div>
+            <div class="slide-header">
+                <h2>Njoftime me Email</h2>
+            </div>
+            <div class="slide-content">
+                <h3>Njoftime Automatike:</h3>
+                <ul>
+                    <li><strong>Seanca Gjyqësore:</strong> Email 24 orë para seancës</li>
+                    <li><strong>Çështje e Re:</strong> Njoftim kur regjistrohet çështje e re</li>
+                    <li><strong>Ndryshime:</strong> Njoftim kur modifikohet një çështje</li>
+                    <li><strong>Fshirje:</strong> Njoftim kur fshihet një çështje</li>
+                </ul>
+                <div class="info">
+                    <strong>📧 Email-i i Sistemit:</strong> it.system@albpetrol.al
+                </div>
+                <div class="highlight">
+                    <strong>💡 Këshillë:</strong> Kontrolloni rregullisht email-in tuaj për të mos humbur seancat e rëndësishme.
+                </div>
+            </div>
+            <div class="slide-number">Slide 9 / 15</div>
+        </div>
+
+        <!-- Slide 10: Eksportimi i të Dhënave -->
+        <div class="slide">
+            <div class="logo">Albpetrol SH.A.</div>
+            <div class="slide-header">
+                <h2>Eksportimi i të Dhënave</h2>
+            </div>
+            <div class="slide-content">
+                <h3>Si të eksportoni të dhëna:</h3>
+                <ul class="steps">
+                    <li>Nga menuja "Menaxho Çështjet", klikoni butonin "Eksporto"</li>
+                    <li>Zgjidhni formatin: Excel (.xlsx) ose CSV</li>
+                    <li>File do të shkarkohet automatikisht</li>
+                    <li>Hapni me Excel/LibreOffice për analiza</li>
+                </ul>
+                <div class="feature-grid">
+                    <div class="feature-box">
+                        <h4>📊 Format Excel</h4>
+                        <p>I përshtatshëm për raporte dhe analiza të detajuara</p>
+                    </div>
+                    <div class="feature-box">
+                        <h4>📄 Format CSV</h4>
+                        <p>I përshtatshëm për import në sisteme të tjera</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">Slide 10 / 15</div>
+        </div>
+
+        <!-- Slide 11: Transferimi i Çështjeve -->
+        <div class="slide">
+            <div class="logo">Albpetrol SH.A.</div>
+            <div class="slide-header">
+                <h2>Transferimi i Pronarisë</h2>
+            </div>
+            <div class="slide-content">
+                <h3>Transferimi i çështjes tek përdorues tjetër:</h3>
+                <ul class="steps">
+                    <li>Hapni detajet e çështjes që dëshironi të transferoni</li>
+                    <li>Klikoni butonin "Transfero Pronësinë"</li>
+                    <li>Zgjidhni përdoruesin e ri nga lista</li>
+                    <li>Konfirmoni transferimin</li>
+                    <li>Pronari i ri do të marrë njoftim me email</li>
+                </ul>
+                <div class="warning">
+                    <strong>⚠️ Kujdes:</strong> Pas transferimit, vetëm pronari i ri mund të modifikojë çështjen (administratorët kanë akses të plotë).
+                </div>
+            </div>
+            <div class="slide-number">Slide 11 / 15</div>
+        </div>
+
+        <!-- Slide 12: Funksionet Administrative -->
+        <div class="slide">
+            <div class="logo">Albpetrol SH.A.</div>
+            <div class="slide-header">
+                <h2>Paneli Administrativ</h2>
+                <p class="subtitle">(Vetëm për Administratorë)</p>
+            </div>
+            <div class="slide-content">
+                <h3>Funksionet administrative:</h3>
+                <ul>
+                    <li><strong>Menaxhimi i Përdoruesve:</strong> Krijimi, modifikimi dhe fshirja e përdoruesve</li>
+                    <li><strong>Backup/Restore:</strong> Krijimi i kopjeve rezervë të bazës së të dhënave</li>
+                    <li><strong>Aktiviteti i Sistemit:</strong> Monitirimi i veprimeve të përdoruesve</li>
+                    <li><strong>Raportet:</strong> Gjenerimi i raporteve të detajuara</li>
+                    <li><strong>Konfigurimet:</strong> Ndryshimi i parametrave të sistemit</li>
+                </ul>
+            </div>
+            <div class="slide-number">Slide 12 / 15</div>
+        </div>
+
+        <!-- Slide 13: Siguria dhe Privatësia -->
+        <div class="slide">
+            <div class="logo">Albpetrol SH.A.</div>
+            <div class="slide-header">
+                <h2>Siguria dhe Privatësia</h2>
+            </div>
+            <div class="slide-content">
+                <h3>Masa të sigurisë:</h3>
+                <ul>
+                    <li><strong>Autentifikim 2FA:</strong> Verifikim me dy faktorë për sigurinë maksimale</li>
+                    <li><strong>Enkriptim SSL/TLS:</strong> Të gjitha të dhënat enkriptohen gjatë transmetimit</li>
+                    <li><strong>Sesione të Sigurta:</strong> Kohëzgjatje e kufizuar e sesioneve</li>
+                    <li><strong>Backup Automatik:</strong> Kopje rezervë automatike të të dhënave</li>
+                    <li><strong>Log të Aktivitetit:</strong> Regjistrimi i të gjitha veprimeve</li>
+                </ul>
+                <div class="warning">
+                    <strong>⚠️ Rëndësi:</strong> Mos ndani kurrë fjalëkalimin tuaj me askënd dhe dilni gjithmonë nga sistemi kur mbaroni punën.
+                </div>
+            </div>
+            <div class="slide-number">Slide 13 / 15</div>
+        </div>
+
+        <!-- Slide 14: Këshilla dhe Praktika të Mira -->
+        <div class="slide">
+            <div class="logo">Albpetrol SH.A.</div>
+            <div class="slide-header">
+                <h2>Këshilla dhe Praktika të Mira</h2>
+            </div>
+            <div class="slide-content">
+                <ul>
+                    <li>Përditësoni çështjet rregullisht me statusin më të fundit</li>
+                    <li>Bashkëngjisni të gjitha dokumentet relevante për çdo çështje</li>
+                    <li>Përdorni filtrat për të gjetur shpejt çështjet</li>
+                    <li>Kontrolloni email-in për njoftime të seancave</li>
+                    <li>Krijoni backup periodikisht (vetëm admin)</li>
+                    <li>Raportoni menjëherë problemet teknike tek IT</li>
+                    <li>Ndiqni udhëzuesin e përdoruesit për ndihmë të detajuar</li>
+                </ul>
+                <div class="highlight">
+                    <strong>📚 Manuali i Përdoruesit:</strong> Gjithmonë i disponueshëm në menynë "Manual i Përdoruesit".
+                </div>
+            </div>
+            <div class="slide-number">Slide 14 / 15</div>
+        </div>
+
+        <!-- Slide 15: Kontaktet dhe Mbyllja -->
+        <div class="slide">
+            <div class="logo">Albpetrol SH.A.</div>
+            <div class="slide-header" style="text-align: center; border: none;">
+                <h2>Faleminderit!</h2>
+            </div>
+            <div class="slide-content" style="text-align: center;">
+                <h3>Kontakte për Mbështetje:</h3>
+                <div class="info" style="margin: 40px auto; max-width: 600px;">
+                    <p><strong>📧 Email:</strong> it.system@albpetrol.al</p>
+                    <p><strong>🌐 Sistemi:</strong> https://legal.albpetrol.al</p>
+                    <p><strong>💻 Departamenti IT:</strong> Albpetrol SH.A.</p>
+                </div>
+                <h3 style="margin-top: 60px;">Ju urojmë sukses në punën tuaj!</h3>
+                <p style="font-size: 1.5rem; color: #2a5298; margin-top: 30px;">🎯 Menaxhim Profesional i Çështjeve Ligjore</p>
+            </div>
+            <div class="slide-number">Slide 15 / 15</div>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">◄ Mbrapa</button>
+            <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Para ►</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            if (n >= totalSlides) currentSlide = totalSlides - 1;
+            if (n < 0) currentSlide = 0;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>

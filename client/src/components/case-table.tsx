@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Search, Edit, Trash2, ChevronLeft, ChevronRight, Download, FileSpreadsheet, ArrowUpDown, SortAsc, SortDesc, Eye } from "lucide-react";
+import { Search, Edit, Trash2, ChevronLeft, ChevronRight, Download, FileSpreadsheet, ArrowUpDown, SortAsc, SortDesc, Eye, FileText } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -574,6 +574,47 @@ export default function CaseTable() {
                     <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{(viewingCase as any).createdByName || "Përdorues i panjohur"}</p>
                   </div>
                 </div>
+
+                {/* Attachments Section */}
+                {viewingCase.attachments && Array.isArray(viewingCase.attachments) && viewingCase.attachments.length > 0 && (
+                  <div className="space-y-3 border-t pt-4">
+                    <label className="text-sm font-medium text-gray-700">Dokumenta të Bashkangjitur</label>
+                    <div className="space-y-2">
+                      {viewingCase.attachments.map((attachment: any, index: number) => (
+                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors">
+                          <div className="flex items-center gap-3">
+                            {attachment.type?.includes('pdf') ? (
+                              <FileText className="h-5 w-5 text-red-500" />
+                            ) : (
+                              <FileText className="h-5 w-5 text-blue-500" />
+                            )}
+                            <div>
+                              <p className="text-sm font-medium text-gray-900">{attachment.name}</p>
+                              {attachment.size && (
+                                <p className="text-xs text-gray-500">{(attachment.size / 1024).toFixed(1)} KB</p>
+                              )}
+                            </div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              const downloadUrl = attachment.url.startsWith('/documents/') 
+                                ? attachment.url 
+                                : `/documents/${attachment.url}`;
+                              window.open(downloadUrl, '_blank');
+                            }}
+                            data-testid={`button-download-attachment-${index}`}
+                          >
+                            <Download className="h-4 w-4 mr-2" />
+                            Shkarko
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex justify-end pt-4">
                   <Button variant="outline" onClick={() => setViewingCase(null)}>
                     Mbyll

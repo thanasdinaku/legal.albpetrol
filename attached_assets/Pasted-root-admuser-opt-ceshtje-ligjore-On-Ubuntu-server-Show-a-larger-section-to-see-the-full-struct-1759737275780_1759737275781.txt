@@ -1,0 +1,145 @@
+root@admuser:/opt/ceshtje-ligjore# # On Ubuntu server - Show a larger section to see the full structure
+sed -n '490,630p' /opt/ceshtje-ligjore/client/src/components/case-table.tsx
+
+        {/* View Modal */}
+        <Dialog open={!!viewingCase} onOpenChange={(open) => !open && setViewingCase(null)}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Detajet e Çështjes</DialogTitle>
+            </DialogHeader>
+            {viewingCase && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Paditesi</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.paditesi}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">I Paditur</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.iPaditur}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Person i Tretë</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.personITrete || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Objekti i Padisë</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.objektiIPadise || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Gjykata Shkallë së Parë</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.gjykataShkalle || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Faza Shkallë I</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.fazaGjykataShkalle || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Zhvillimi i seances gjyqesorë (Shkallë I)</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{formatDateTime(viewingCase.zhvillimiSeancesShkalleI) || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Gjykata Apelit</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.gjykataApelit || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Faza Apelit</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.fazaGjykataApelit || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Zhvillimi i seances gjyqesorë (Apel)</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{formatDateTime(viewingCase.zhvillimiSeancesApel) || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Faza Aktuale</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.fazaAktuale || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Përfaqësuesi</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.perfaqesuesi || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Demi i Pretenduar</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.demiIPretenduar || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Shuma Gjykatë</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.shumaGjykata || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Vendim Ekzekutim</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.vendimEkzekutim || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Faza Ekzekutim</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.fazaEkzekutim || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Gjykata e Lartë</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{viewingCase.gjykataLarte || "-"}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Krijuar më</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{formatDate(viewingCase.createdAt ? new Date(viewingCase.createdAt).toISOString() : null)}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Krijuar nga</label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{(viewingCase as any).createdByName || "Përdorues i panjohur"}</p>
+                  </div>
+                </div>
+                <div className="flex justify-end pt-4">
+                  <Button variant="outline" onClick={() => setViewingCase(null)}>
+                {/* Attachments Section */}
+                {viewingCase.attachments && Array.isArray(viewingCase.attachments) && viewingCase.attachments.length > 0 && (
+                  <div className="space-y-3 border-t pt-4 mt-4">
+                    <label className="text-sm font-medium text-gray-700">Dokumenta të Bashkangjitur</label>
+                    <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
+                      {viewingCase.attachments.map((attachment: any, index: number) => (
+                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors">
+                          <div className="flex items-center gap-3 min-w-0 flex-1">
+                            {attachment.type?.includes('pdf') ? (
+                              <FileText className="h-5 w-5 text-red-500 flex-shrink-0" />
+                            ) : (
+                              <FileText className="h-5 w-5 text-blue-500 flex-shrink-0" />
+                            )}
+                            <div className="min-w-0 flex-1">
+                              <p className="text-sm font-medium text-gray-900 truncate">{attachment.name}</p>
+                              {attachment.size && (
+                                <p className="text-xs text-gray-500">{(attachment.size / 1024).toFixed(1)} KB</p>
+                              )}
+                            </div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="flex-shrink-0 ml-2"
+                            onClick={() => {
+                              const downloadUrl = attachment.url.startsWith('/documents/')
+                                ? attachment.url
+                                : `/documents/${attachment.url}`;
+                              window.open(downloadUrl, '_blank');
+                            }}
+                            data-testid={`button-download-attachment-${index}`}
+                          >
+                            <Download className="h-4 w-4 mr-2" />
+                            Shkarko
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex justify-end pt-4">
+                  <Button variant="outline" onClick={() => setViewingCase(null)}>
+                    Mbyll
+                  </Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+
+        {/* Edit Modal */}
+root@admuser:/opt/ceshtje-ligjore#
+root@admuser:/opt/ceshtje-ligjore#

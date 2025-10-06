@@ -1,0 +1,41 @@
+root@admuser:/opt/ceshtje-ligjore# cat /opt/ceshtje-ligjore/.env
+NODE_ENV=production
+PORT=5000
+DATABASE_URL=postgresql://albpetrol_user:SecurePass2025@localhost:5432/albpetrol_legal_db
+SESSION_SECRET=nwAYU0jzJIodDkKW4BgYQKFjooNGX44LOD5TrIvoW9Y=
+REPL_ID=ceshtje-ligjore
+REPLIT_DOMAINS=legal.albpetrol.al,localhost
+ISSUER_URL=
+
+# Email configuration
+SMTP_HOST=smtp-mail.outlook.com
+SMTP_PORT=587
+SMTP_USER=it.system@albpetrol.al
+SMTP_PASS=Albpetrol2025
+SMTP_FROM=it.system@albpetrol.al
+EMAIL_FROM=it.system@albpetrol.al
+
+# Albania timezone
+TZ=Europe/Tirane
+root@admuser:/opt/ceshtje-ligjore# grep -r "SMTP\|SENDGRID" /opt/ceshtje-ligjore/*.sh | head -20
+/opt/ceshtje-ligjore/complete_deployment_script.sh:SMTP_HOST=smtp-mail.outlook.com
+/opt/ceshtje-ligjore/complete_deployment_script.sh:SMTP_PORT=587
+/opt/ceshtje-ligjore/complete_deployment_script.sh:SMTP_USER=$ADMIN_EMAIL
+/opt/ceshtje-ligjore/complete_deployment_script.sh:SMTP_PASS=UPDATE_THIS_PASSWORD
+/opt/ceshtje-ligjore/complete_deployment_script.sh:echo "1. Update SMTP_PASS in .env for email functionality"
+/opt/ceshtje-ligjore/complete_replit_to_ubuntu_deployment.sh:SENDGRID_API_KEY=
+/opt/ceshtje-ligjore/complete_replit_to_ubuntu_deployment.sh:SENDGRID_FROM_EMAIL=noreply@albpetrol.al
+/opt/ceshtje-ligjore/complete_replit_to_ubuntu_deployment.sh:SENDGRID_FROM_NAME=Sistemi i Menaxhimit të Rasteve Ligjore
+/opt/ceshtje-ligjore/complete_ubuntu_deployment.sh:    echo "   - SMTP credentials for it.system@albpetrol.al"
+/opt/ceshtje-ligjore/deploy.sh:    echo "   - Email SMTP settings"
+/opt/ceshtje-ligjore/deploy_to_ubuntu.sh:SMTP_HOST=smtp-mail.outlook.com
+/opt/ceshtje-ligjore/deploy_to_ubuntu.sh:SMTP_PORT=587
+/opt/ceshtje-ligjore/deploy_to_ubuntu.sh:SMTP_USER=$ADMIN_EMAIL
+/opt/ceshtje-ligjore/deploy_to_ubuntu.sh:SMTP_PASS=UPDATE_THIS_PASSWORD
+/opt/ceshtje-ligjore/deploy_to_ubuntu.sh:SMTP_FROM=$ADMIN_EMAIL
+/opt/ceshtje-ligjore/deploy_to_ubuntu.sh:echo "   1. Edit .env and update SMTP_PASS"
+/opt/ceshtje-ligjore/fix_2fa_email_production.sh:# Check current SMTP configuration
+/opt/ceshtje-ligjore/fix_2fa_email_production.sh:echo "Checking SMTP environment variables..."
+/opt/ceshtje-ligjore/fix_2fa_email_production.sh:if [ -z "$SMTP_HOST" ]; then
+/opt/ceshtje-ligjore/fix_2fa_email_production.sh:    echo "❌ SMTP_HOST is not set"
+root@admuser:/opt/ceshtje-ligjore#

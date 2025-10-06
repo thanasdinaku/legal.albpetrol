@@ -1,0 +1,307 @@
+root@admuser:/opt/ceshtje-ligjore# cat /root/.pm2/dump.pm2
+[
+  {
+    "kill_retry_time": 100,
+    "windowsHide": true,
+    "username": "root",
+    "treekill": true,
+    "automation": true,
+    "pmx": true,
+    "instance_var": "NODE_APP_INSTANCE",
+    "watch": false,
+    "autorestart": true,
+    "autostart": true,
+    "vizion": true,
+    "merge_logs": true,
+    "env": {
+      "DATABASE_URL": "postgresql://albpetrol_user:SecurePass2025@localhost:5432/albpetrol_legal_db",
+      "NODE_ENV": "production",
+      "SHELL": "/bin/bash",
+      "SUDO_GID": "1000",
+      "SUDO_COMMAND": "/bin/bash",
+      "SUDO_USER": "admuser",
+      "PWD": "/opt/ceshtje-ligjore",
+      "LOGNAME": "root",
+      "HOME": "/root",
+      "LANG": "en_US.UTF-8",
+      "LS_COLORS": "rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:",
+      "LESSCLOSE": "/usr/bin/lesspipe %s %s",
+      "TERM": "xterm",
+      "LESSOPEN": "| /usr/bin/lesspipe %s",
+      "USER": "root",
+      "SHLVL": "1",
+      "DEBUGINFOD_URLS": "",
+      "XDG_DATA_DIRS": "/usr/share/gnome:/usr/local/share:/usr/share:/var/lib/snapd/desktop",
+      "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin",
+      "SUDO_UID": "1000",
+      "MAIL": "/var/mail/root",
+      "OLDPWD": "/",
+      "_": "/usr/bin/pm2",
+      "PM2_USAGE": "CLI",
+      "PM2_HOME": "/root/.pm2",
+      "albpetrol-legal": {},
+      "unique_id": "4bbc62c2-f780-440c-b901-a368db39ba3f"
+    },
+    "namespace": "default",
+    "filter_env": [],
+    "name": "albpetrol-legal",
+    "node_args": [],
+    "pm_exec_path": "/opt/ceshtje-ligjore/dist/index.js",
+    "pm_cwd": "/opt/ceshtje-ligjore",
+    "exec_interpreter": "node",
+    "exec_mode": "fork_mode",
+    "pm_out_log_path": "/root/.pm2/logs/albpetrol-legal-out.log",
+    "pm_err_log_path": "/root/.pm2/logs/albpetrol-legal-error.log",
+    "pm_pid_path": "/root/.pm2/pids/albpetrol-legal-0.pid",
+    "km_link": false,
+    "vizion_running": false,
+    "NODE_APP_INSTANCE": 0,
+    "DATABASE_URL": "postgresql://albpetrol_user:SecurePass2025@localhost:5432/albpetrol_legal_db",
+    "NODE_ENV": "production",
+    "SHELL": "/bin/bash",
+    "SUDO_GID": "1000",
+    "SUDO_COMMAND": "/bin/bash",
+    "SUDO_USER": "admuser",
+    "PWD": "/opt/ceshtje-ligjore",
+    "LOGNAME": "root",
+    "HOME": "/root",
+    "LANG": "en_US.UTF-8",
+    "LS_COLORS": "rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:",
+    "LESSCLOSE": "/usr/bin/lesspipe %s %s",
+    "TERM": "xterm",
+    "LESSOPEN": "| /usr/bin/lesspipe %s",
+    "USER": "root",
+    "SHLVL": "1",
+    "DEBUGINFOD_URLS": "",
+    "XDG_DATA_DIRS": "/usr/share/gnome:/usr/local/share:/usr/share:/var/lib/snapd/desktop",
+    "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin",
+    "SUDO_UID": "1000",
+    "MAIL": "/var/mail/root",
+    "OLDPWD": "/",
+    "_": "/usr/bin/pm2",
+    "PM2_USAGE": "CLI",
+    "PM2_HOME": "/root/.pm2",
+    "unique_id": "4bbc62c2-f780-440c-b901-a368db39ba3f",
+    "status": "online",
+    "pm_uptime": 1759794147916,
+    "axm_actions": [
+      {
+        "action_name": "km:heapdump",
+        "action_type": "internal",
+        "arity": 2
+      },
+      {
+        "action_name": "km:cpu:profiling:start",
+        "action_type": "internal",
+        "arity": 2
+      },
+      {
+        "action_name": "km:cpu:profiling:stop",
+        "action_type": "internal",
+        "arity": 1
+      },
+      {
+        "action_name": "km:heap:sampling:start",
+        "action_type": "internal",
+        "arity": 2
+      },
+      {
+        "action_name": "km:heap:sampling:stop",
+        "action_type": "internal",
+        "arity": 1
+      }
+    ],
+    "axm_monitor": {},
+    "axm_options": {
+      "error": true,
+      "heapdump": true,
+      "feature.profiler.heapsnapshot": false,
+      "feature.profiler.heapsampling": true,
+      "feature.profiler.cpu_js": true,
+      "latency": true,
+      "catchExceptions": true,
+      "profiling": true,
+      "metrics": {
+        "http": true,
+        "runtime": true,
+        "eventLoop": true,
+        "network": false,
+        "v8": true
+      },
+      "standalone": false,
+      "module_conf": {},
+      "apm": {
+        "version": "6.1.0",
+        "type": "node"
+      },
+      "module_name": "albpetrol-legal",
+      "module_version": "6.0.13"
+    },
+    "axm_dynamic": {},
+    "created_at": 1759794147916,
+    "restart_time": 0,
+    "unstable_restarts": 0,
+    "version": "1.0.0",
+    "node_version": "20.19.5"
+  }
+root@admuser:/opt/ceshtje-ligjore# ls -la /opt/ceshtje-ligjore/*.sh | grep -v optimizee
+-rw-r--r-- 1 root root 12920 Oct  3 23:41 /opt/ceshtje-ligjore/add_court_session_field.sh
+-rw-r--r-- 1 root root  5130 Oct  3 23:41 /opt/ceshtje-ligjore/add_elbasan_court.sh
+-rw-r--r-- 1 root root 28221 Oct  3 23:41 /opt/ceshtje-ligjore/apply_production_fix.sh
+-rw-r--r-- 1 root root 20152 Oct  3 23:41 /opt/ceshtje-ligjore/auto_fix_form.sh
+-rwxr-xr-x 1 root root   372 Oct  3 23:55 /opt/ceshtje-ligjore/backup.sh
+-rw-r--r-- 1 root root  9312 Oct  3 23:41 /opt/ceshtje-ligjore/build_complete_database_from_csv.sh
+-rw-r--r-- 1 root root 10699 Oct  3 23:41 /opt/ceshtje-ligjore/build_database_exact_csv_structure.sh
+-rw-r--r-- 1 root root  8861 Oct  3 23:41 /opt/ceshtje-ligjore/build_database_from_scratch.sh
+-rw-r--r-- 1 root root  9019 Oct  3 23:41 /opt/ceshtje-ligjore/complete_court_session_field.sh
+-rw-r--r-- 1 root root  4302 Oct  3 23:41 /opt/ceshtje-ligjore/complete_debugging_solution.sh
+-rwxr-xr-x 1 root root  8313 Oct  3 23:41 /opt/ceshtje-ligjore/complete_deployment_script.sh
+-rw-r--r-- 1 root root 23759 Oct  3 23:41 /opt/ceshtje-ligjore/complete_fix_syntax_errors.sh
+-rw-r--r-- 1 root root 15391 Oct  3 23:41 /opt/ceshtje-ligjore/complete_form_rebuild.sh
+-rwxr-xr-x 1 root root  3926 Oct  3 23:41 /opt/ceshtje-ligjore/complete_production_fix.sh
+-rw-r--r-- 1 root root 16962 Oct  3 23:41 /opt/ceshtje-ligjore/complete_react_js_deployment.sh
+-rwxr-xr-x 1 root root 12678 Oct  3 23:41 /opt/ceshtje-ligjore/complete_replit_to_ubuntu_deployment.sh
+-rwxr-xr-x 1 root root  4656 Oct  3 23:41 /opt/ceshtje-ligjore/complete_replit_transfer.sh
+-rwxr-xr-x 1 root root  2862 Oct  3 23:41 /opt/ceshtje-ligjore/complete_ubuntu_deployment.sh
+-rw-r--r-- 1 root root  5691 Oct  3 23:41 /opt/ceshtje-ligjore/complete_user_cleanup.sh
+-rw-r--r-- 1 root root   903 Oct  3 23:41 /opt/ceshtje-ligjore/create_admin_user.sh
+-rw-r--r-- 1 root root  3453 Oct  3 23:41 /opt/ceshtje-ligjore/debug_production_api.sh
+-rwxr-xr-x 1 root root  2172 Oct  3 23:41 /opt/ceshtje-ligjore/deploy_cloudflare_rule.sh
+-rwxr-xr-x 1 root root  3513 Oct  3 23:41 /opt/ceshtje-ligjore/deploy_complete_react_app.sh
+-rwxr-xr-x 1 root root  5641 Oct  3 23:41 /opt/ceshtje-ligjore/deploy_complete_replit_to_ubuntu.sh
+-rw-r--r-- 1 root root  2309 Oct  3 23:41 /opt/ceshtje-ligjore/deploy_filtering_fix_production.sh
+-rwxr-xr-x 1 root root  3511 Oct  3 23:41 /opt/ceshtje-ligjore/deploy_filtering_fix.sh
+-rwxr-xr-x 1 root root  3490 Oct  3 23:41 /opt/ceshtje-ligjore/deploy_real_replit_to_ubuntu.sh
+-rwxr-xr-x 1 root root  2132 Oct  3 23:41 /opt/ceshtje-ligjore/deploy.sh
+-rw-r--r-- 1 root root  7968 Oct  3 23:41 /opt/ceshtje-ligjore/deploy_to_ubuntu.sh
+-rwxr-xr-x 1 root root 19079 Oct  3 23:41 /opt/ceshtje-ligjore/deploy_working_complete_system.sh
+-rwxr-xr-x 1 root root  2719 Oct  3 23:41 /opt/ceshtje-ligjore/diagnose_cloudflare_service_failure.sh
+-rw-r--r-- 1 root root  2703 Oct  3 23:41 /opt/ceshtje-ligjore/emergency_cloudflare_fix.sh
+-rwxr-xr-x 1 root root  4566 Oct  3 23:41 /opt/ceshtje-ligjore/emergency_complete_fix.sh
+-rw-r--r-- 1 root root  5415 Oct  3 23:41 /opt/ceshtje-ligjore/emergency_database_restoration.sh
+-rwxr-xr-x 1 root root  1972 Oct  3 23:41 /opt/ceshtje-ligjore/emergency_simple_fix.sh
+-rw-r--r-- 1 root root  2020 Oct  3 23:41 /opt/ceshtje-ligjore/emergency_syntax_fix.sh
+-rwxr-xr-x 1 root root  6543 Oct  3 23:41 /opt/ceshtje-ligjore/emergency_working_fix.sh
+-rwxr-xr-x 1 root root  5750 Oct  3 23:41 /opt/ceshtje-ligjore/find_header_locations.sh
+-rw-r--r-- 1 root root  3657 Oct  3 23:41 /opt/ceshtje-ligjore/fix_2fa_email_production.sh
+-rw-r--r-- 1 root root  2886 Oct  3 23:41 /opt/ceshtje-ligjore/fix_cache_and_verify.sh
+-rw-r--r-- 1 root root  5098 Oct  3 23:41 /opt/ceshtje-ligjore/fix_case_submission_error.sh
+-rwxr-xr-x 1 root root  3160 Oct  3 23:41 /opt/ceshtje-ligjore/fix_cloudflare_api_blocking.sh
+-rwxr-xr-x 1 root root  2685 Oct  3 23:41 /opt/ceshtje-ligjore/fix_cloudflare_origin_connection.sh
+-rwxr-xr-x 1 root root  4046 Oct  3 23:41 /opt/ceshtje-ligjore/fix_cloudflare_tunnel_api.sh
+-rw-r--r-- 1 root root  1613 Oct  3 23:41 /opt/ceshtje-ligjore/fix_cloudflare_tunnel.sh
+-rwxr-xr-x 1 root root  1983 Oct  3 23:41 /opt/ceshtje-ligjore/fix_complete_deployment_issues.sh
+-rw-r--r-- 1 root root 11991 Oct  3 23:41 /opt/ceshtje-ligjore/fix_court_session_field.sh
+-rw-r--r-- 1 root root  1256 Oct  3 23:41 /opt/ceshtje-ligjore/fix_database_connection.sh
+-rw-r--r-- 1 root root  3812 Oct  3 23:41 /opt/ceshtje-ligjore/fix_data_table_error.sh
+-rwxr-xr-x 1 root root  3445 Oct  3 23:41 /opt/ceshtje-ligjore/fix_deployment_issues.sh
+-rw-r--r-- 1 root root  5182 Oct  3 23:41 /opt/ceshtje-ligjore/fix_edit_button_production.sh
+-rw-r--r-- 1 root root 20191 Oct  3 23:41 /opt/ceshtje-ligjore/fix_filtering_complete.sh
+-rw-r--r-- 1 root root 28777 Oct  3 23:41 /opt/ceshtje-ligjore/fix_filtering_sorting.sh
+-rwxr-xr-x 1 root root  2823 Oct  3 23:41 /opt/ceshtje-ligjore/fix_github_authentication.sh
+-rw-r--r-- 1 root root  6788 Oct  3 23:41 /opt/ceshtje-ligjore/fix_header_ubuntu.sh
+-rw-r--r-- 1 root root 21517 Oct  3 23:41 /opt/ceshtje-ligjore/fix_incomplete_form.sh
+-rw-r--r-- 1 root root  5972 Oct  3 23:41 /opt/ceshtje-ligjore/fix_manual_page_production.sh
+-rwxr-xr-x 1 root root  1374 Oct  3 23:41 /opt/ceshtje-ligjore/fix_missing_dependencies.sh
+-rwxr-xr-x 1 root root  3034 Oct  3 23:41 /opt/ceshtje-ligjore/fix_nginx_502_error.sh
+-rw-r--r-- 1 root root  1023 Oct  3 23:41 /opt/ceshtje-ligjore/fix_pm2_env_loading.sh
+-rwxr-xr-x 1 root root   940 Oct  3 23:41 /opt/ceshtje-ligjore/fix_port_binding_issue.sh
+-rwxr-xr-x 1 root root  5576 Oct  3 23:41 /opt/ceshtje-ligjore/fix_postgresql_and_deploy.sh
+-rw-r--r-- 1 root root  4430 Oct  3 23:41 /opt/ceshtje-ligjore/fix_production_filtering.sh
+-rw-r--r-- 1 root root  2605 Oct  3 23:41 /opt/ceshtje-ligjore/fix_routes_directly.sh
+-rw-r--r-- 1 root root  1972 Oct  3 23:41 /opt/ceshtje-ligjore/fix_storage_syntax.sh
+-rw-r--r-- 1 root root  5009 Oct  3 23:41 /opt/ceshtje-ligjore/fix_syntax_error_direct.sh
+-rw-r--r-- 1 root root  3460 Oct  3 23:41 /opt/ceshtje-ligjore/fix_syntax_error.sh
+-rwxr-xr-x 1 root root  3084 Oct  3 23:41 /opt/ceshtje-ligjore/fix_tunnel_name_and_credentials.sh
+-rwxr-xr-x 1 root root  3044 Oct  3 23:41 /opt/ceshtje-ligjore/fix_ubuntu_502_error.sh
+-rw-r--r-- 1 root root  2770 Oct  3 23:41 /opt/ceshtje-ligjore/fix_ubuntu_final.sh
+-rwxr-xr-x 1 root root  2038 Oct  3 23:41 /opt/ceshtje-ligjore/fix_ubuntu_issues.sh
+-rw-r--r-- 1 root root  3133 Oct  3 23:41 /opt/ceshtje-ligjore/fix_ubuntu.sh
+-rwxr-xr-x 1 root root  7374 Oct  3 23:41 /opt/ceshtje-ligjore/fix_vite_build_ubuntu.sh
+-rwxr-xr-x 1 root root  7846 Oct  3 23:41 /opt/ceshtje-ligjore/pentest_legal_albpetrol.sh
+-rwxr-xr-x 1 root root  1171 Oct  3 23:41 /opt/ceshtje-ligjore/rebuild_and_restart.sh
+-rw-r--r-- 1 root root  2616 Oct  3 23:41 /opt/ceshtje-ligjore/remove_thanas_user_fixed.sh
+-rw-r--r-- 1 root root  1268 Oct  3 23:41 /opt/ceshtje-ligjore/remove_thanas_user.sh
+-rw-r--r-- 1 root root   996 Oct  3 23:41 /opt/ceshtje-ligjore/reset_admin_password.sh
+-rw-r--r-- 1 root root  2435 Oct  3 23:41 /opt/ceshtje-ligjore/setup_manual_page.sh
+-rw-r--r-- 1 root root  4521 Oct  3 23:41 /opt/ceshtje-ligjore/sync_to_github.sh
+-rw-r--r-- 1 root root  3061 Oct  3 23:41 /opt/ceshtje-ligjore/transfer_and_remove_user.sh
+-rw-r--r-- 1 root root  4278 Oct  3 23:41 /opt/ceshtje-ligjore/transfer_and_remove_user_simple.sh
+-rw-r--r-- 1 root root  1976 Oct  3 23:41 /opt/ceshtje-ligjore/transfer_complete_app.sh
+-rwxr-xr-x 1 root root 13201 Oct  3 23:41 /opt/ceshtje-ligjore/transfer_react_to_ubuntu.sh
+-rwxr-xr-x 1 root root  1528 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_502_troubleshooting.sh
+-rw-r--r-- 1 root root  8861 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_complete_deployment.sh
+-rw-r--r-- 1 root root 27083 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_complete_diagnostic_fix.sh
+-rw-r--r-- 1 root root  1308 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_complete_fix.sh
+-rw-r--r-- 1 root root  3449 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_complete_react_deployment.sh
+-rw-r--r-- 1 root root  8346 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_complete_restoration.sh
+-rw-r--r-- 1 root root  6283 Oct  3 23:41 /opt/ceshtje-ligjore/UBUNTU_CONFIG_COLLECTION.sh
+-rw-r--r-- 1 root root  4344 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_database_recovery.sh
+-rwxr-xr-x 1 root root  3046 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_database_setup.sh
+-rw-r--r-- 1 root root  1798 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_data_entry_fix.sh
+-rw-r--r-- 1 root root  5935 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_deployment_script.sh
+-rw-r--r-- 1 root root  1674 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_ecosystem_fix.sh
+-rwxr-xr-x 1 root root  5647 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_email_fix_commands.sh
+-rw-r--r-- 1 root root  1377 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_emergency_fix.sh
+-rwxr-xr-x 1 root root  3165 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_final_fixes.sh
+-rw-r--r-- 1 root root  1411 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_final_pm2_fix.sh
+-rw-r--r-- 1 root root  1100 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_final_verification.sh
+-rw-r--r-- 1 root root  1089 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_fix_form_loading.sh
+-rw-r--r-- 1 root root  4255 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_fix_script.sh
+-rw-r--r-- 1 root root  5534 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_fresh_deployment.sh
+-rwxr-xr-x 1 root root  4156 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_git_deployment.sh
+-rw-r--r-- 1 root root   930 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_immediate_fix.sh
+-rw-r--r-- 1 root root 27425 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_manual_fix_commands.sh
+-rwxr-xr-x 1 root root 11282 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_production_deployment.sh
+-rwxr-xr-x 1 root root   837 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_quick_check.sh
+-rwxr-xr-x 1 root root 28888 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_react_transfer.sh
+-rwxr-xr-x 1 root root 30440 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_replit_deployment.sh
+-rw-r--r-- 1 root root  2956 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_server_fix.sh
+-rwxr-xr-x 1 root root   882 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_simple_test.sh
+-rwxr-xr-x 1 root root  1017 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_status_check.sh
+-rwxr-xr-x 1 root root   993 Oct  3 23:41 /opt/ceshtje-ligjore/ubuntu_system_check.sh
+-rw-r--r-- 1 root root  6763 Oct  3 23:41 /opt/ceshtje-ligjore/update_court_names.sh
+-rwxr-xr-x 1 root root  1309 Oct  3 23:41 /opt/ceshtje-ligjore/update_deployment.sh
+-rw-r--r-- 1 root root  5619 Oct  3 23:41 /opt/ceshtje-ligjore/update_headers_exact.sh
+-rwxr-xr-x 1 root root  5086 Oct  3 23:41 /opt/ceshtje-ligjore/update_header_text_ubuntu.sh
+-rwxr-xr-x 1 root root   209 Oct  3 23:55 /opt/ceshtje-ligjore/update.sh
+-rwxr-xr-x 1 root root  2942 Oct  3 23:41 /opt/ceshtje-ligjore/verify_app_binding.sh
+-rwxr-xr-x 1 root root  1774 Oct  3 23:41 /opt/ceshtje-ligjore/verify_deployment.sh
+-rwxr-xr-x 1 root root  2149 Oct  3 23:41 /opt/ceshtje-ligjore/verify_header_changes.sh
+-rwxr-xr-x 1 root root   425 Oct  3 23:55 /opt/ceshtje-ligjore/verify.sh
+-rw-r--r-- 1 root root  1423 Oct  3 23:41 /opt/ceshtje-ligjore/verify_ubuntu_system.sh
+-rw-r--r-- 1 root root  7686 Oct  3 23:41 /opt/ceshtje-ligjore/working_form_fix.sh
+root@admuser:/opt/ceshtje-ligjore# pm2 env 0
+node_version: 20.19.5
+version: 1.0.0
+unique_id: 4bbc62c2-f780-440c-b901-a368db39ba3f
+PM2_HOME: /root/.pm2
+PM2_USAGE: CLI
+_: /usr/bin/pm2
+OLDPWD: /
+MAIL: /var/mail/root
+SUDO_UID: 1000
+PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+XDG_DATA_DIRS: /usr/share/gnome:/usr/local/share:/usr/share:/var/lib/snapd/desktop
+DEBUGINFOD_URLS:
+SHLVL: 1
+USER: root
+LESSOPEN: | /usr/bin/lesspipe %s
+TERM: xterm
+LESSCLOSE: /usr/bin/lesspipe %s %s
+LS_COLORS: rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+LANG: en_US.UTF-8
+HOME: /root
+LOGNAME: root
+PWD: /opt/ceshtje-ligjore
+SUDO_USER: admuser
+SUDO_COMMAND: /bin/bash
+SUDO_GID: 1000
+SHELL: /bin/bash
+NODE_ENV: production
+DATABASE_URL: postgresql://albpetrol_user:SecurePass2025@localhost:5432/albpetrol_legal_db
+NODE_APP_INSTANCE: 0
+vizion_running: false
+km_link: false
+namespace: default
+root@admuser:/opt/ceshtje-ligjore#

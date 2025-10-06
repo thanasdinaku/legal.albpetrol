@@ -1,0 +1,69 @@
+root@admuser:/# sudo bash -c 'cat > /opt/optimize-caserecord.sh << '\''SCRIPTEND                                                                                                                                                             '\''
+#!/bin/bash
+# CaseRecord System Optimization Script for Ubuntu Server
+echo "🚀 CaseRecord System Optimization - Ubuntu Server"
+echo "================================================================"
+cd /opt/ceshtje-ligjore || exit 1
+
+# 1. NODE.JS & PM2 OPTIMIZATION
+echo ""
+echo "📦 Step 1: Node.js & PM2 Optimization"
+echo "----------------------------------------------------------------"
+export NODE_ENV=production
+cat > ecosystem.config.js << '\''EOF'\''
+module.exports = {
+  apps: [{
+    name: '\''albpetrol-legal'\'',
+    script: '\''./dist/index.js'\'',
+    instances: '\''max'\'',
+    exec_mode: '\''cluster'\'',
+    env: { NODE_ENV: '\''production'\'', PORT: 5000 },
+    max_memory_restart: '\''1G'\'',
+    error_file: '\''./logs/err.log'\'',
+    out_file: '\''./logs/out.log'\'',
+chmod +x /opt/optimize-caserecord.sh && /opt/optimize-caserecord.sh'bpetrol_lega
+🚀 CaseRecord System Optimization - Ubuntu Server
+================================================================
+
+📦 Step 1: Node.js & PM2 Optimization
+----------------------------------------------------------------
+
+added 6 packages, and audited 676 packages in 2s
+
+82 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+
+🗜️  Step 2: Enable Gzip Compression
+----------------------------------------------------------------
+✅ Compression middleware added
+
+🗄️  Step 3: PostgreSQL Optimization
+----------------------------------------------------------------
+✅ PostgreSQL optimization script: psql -U albpetrol_user -d albpetrol_legal_db                                                                                                                                                              -f /tmp/postgres_optimize.sql
+
+🌐 Step 4: Nginx Configuration
+----------------------------------------------------------------
+✅ Nginx config created. Enable: sudo ln -sf /etc/nginx/sites-available/legal.al                                                                                                                                                             bpetrol.al /etc/nginx/sites-enabled/ && sudo nginx -t && sudo systemctl reload n                                                                                                                                                             ginx
+
+⚙️  Step 5: System-Level Optimization
+----------------------------------------------------------------
+net.ipv4.tcp_fin_timeout = 15
+net.ipv4.tcp_tw_reuse = 1
+net.core.somaxconn = 4096
+net.ipv4.ip_local_port_range = 1024 65535
+
+🏗️  Step 6: Rebuild & Restart Application
+----------------------------------------------------------------
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bu                                                                                                                                                             ndle --format=esm --outdir=dist
+
+sh: 1: vite: not found
+❌ Build failed!

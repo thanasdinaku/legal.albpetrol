@@ -1,12 +1,13 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
 import Uppy from "@uppy/core";
-import { DashboardModal } from "@uppy/react";
+import { Dashboard } from "@uppy/react";
 import "@uppy/core/dist/style.min.css";
 import "@uppy/dashboard/dist/style.min.css";
 import XHRUpload from "@uppy/xhr-upload";
 import type { UploadResult } from "@uppy/core";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { FileText, Upload } from "lucide-react";
 
 interface DocumentUploaderProps {
@@ -111,30 +112,36 @@ export function DocumentUploader({
   });
 
   return (
-    <div>
-      <Button 
-        type="button"
-        onClick={() => setShowModal(true)} 
-        className={buttonClassName}
-        variant="outline"
-        data-testid="button-upload-documents"
+    <Popover open={showModal} onOpenChange={setShowModal}>
+      <PopoverTrigger asChild>
+        <Button 
+          type="button"
+          className={buttonClassName}
+          variant="outline"
+          data-testid="button-upload-documents"
+        >
+          {children || (
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              <span>Bashkangjit Dokumente</span>
+              <Upload className="h-4 w-4" />
+            </div>
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent 
+        className="w-[600px] p-0" 
+        align="start"
+        side="bottom"
+        sideOffset={5}
       >
-        {children || (
-          <div className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            <span>Bashkangjit Dokumente</span>
-            <Upload className="h-4 w-4" />
-          </div>
-        )}
-      </Button>
-
-      <DashboardModal
-        uppy={uppy}
-        open={showModal}
-        onRequestClose={() => setShowModal(false)}
-        proudlyDisplayPoweredByUppy={false}
-
-      />
-    </div>
+        <Dashboard
+          uppy={uppy}
+          proudlyDisplayPoweredByUppy={false}
+          height={400}
+          hideUploadButton={false}
+        />
+      </PopoverContent>
+    </Popover>
   );
 }

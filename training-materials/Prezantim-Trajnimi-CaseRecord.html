@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trajnim - Sistemi i Menaxhimit të Çështjeve Ligjore</title>
+    <title>Trajnim - Sistemi i Menaxhimit të Çështjeve Ligjore - Albpetrol SH.A.</title>
     <style>
         * {
             margin: 0;
@@ -233,6 +233,22 @@
         .feature-box p {
             font-size: 1.1rem;
             color: #666;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .slide {
+                page-break-after: always;
+                display: flex !important;
+                width: 100%;
+                height: 100vh;
+                box-shadow: none;
+            }
+            .navigation {
+                display: none;
+            }
         }
     </style>
 </head>

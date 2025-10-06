@@ -1,0 +1,46 @@
+root@admuser:/opt/ceshtje-ligjore# ls -la /etc/nginx/sites-enabled/
+total 8
+drwxr-xr-x 2 root root 4096 Oct  4 01:20 .
+drwxr-xr-x 8 root root 4096 Oct  3 23:55 ..
+lrwxrwxrwx 1 root root   42 Oct  4 01:20 albpetrol-legal -> /etc/nginx/sites-ava                                                                                                                                                             ilable/albpetrol-legal
+lrwxrwxrwx 1 root root   42 Oct  3 23:55 ceshtje-ligjore -> /etc/nginx/sites-ava                                                                                                                                                             ilable/ceshtje-ligjore
+root@admuser:/opt/ceshtje-ligjore# cat /etc/nginx/sites-enabled/default
+cat: /etc/nginx/sites-enabled/default: No such file or directory
+root@admuser:/opt/ceshtje-ligjore# cat /etc/nginx/sites-available/albpetrol-lega                                                                                                                                                             l
+server {
+    listen 80;
+    server_name 10.5.20.29;
+
+    location / {
+        proxy_pass http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+root@admuser:/opt/ceshtje-ligjore# cat /etc/nginx/sites-available/ceshtje-ligjor                                                                                                                                                             e
+server {
+    listen 80;
+    server_name legal.albpetrol.al _;
+
+    client_max_body_size 100M;
+
+    location / {
+        proxy_pass http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 300s;
+        proxy_connect_timeout 300s;
+    }
+}
+root@admuser:/opt/ceshtje-ligjore#

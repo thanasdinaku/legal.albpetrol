@@ -1,0 +1,69 @@
+root@admuser:/opt/ceshtje-ligjore# nano /opt/ceshtje-ligjore/client/src/components/case-table.tsx
+root@admuser:/opt/ceshtje-ligjore# npm run build && pm2 restart albpetrol-legal
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+✓ 95 modules transformed.
+x Build failed in 1.20s
+error during build:
+[vite:esbuild] Transform failed with 5 errors:
+/opt/ceshtje-ligjore/client/src/components/case-table.tsx:625:16: ERROR: Unexpected closing "div" tag does not match opening "Button" tag
+/opt/ceshtje-ligjore/client/src/components/case-table.tsx:626:13: ERROR: The character "}" is not valid inside a JSX element
+/opt/ceshtje-ligjore/client/src/components/case-table.tsx:627:12: ERROR: Unexpected closing "DialogContent" tag does not match opening "div" tag
+/opt/ceshtje-ligjore/client/src/components/case-table.tsx:628:10: ERROR: Unexpected closing "Dialog" tag does not match opening "div" tag
+/opt/ceshtje-ligjore/client/src/components/case-table.tsx:630:8: ERROR: Expected ")" but found "{"
+file: /opt/ceshtje-ligjore/client/src/components/case-table.tsx:625:16
+
+Unexpected closing "div" tag does not match opening "Button" tag
+623|                    </Button>
+624|                  </div>
+625|                </div>
+   |                  ^
+626|              )}
+627|            </DialogContent>
+
+The character "}" is not valid inside a JSX element
+624|                  </div>
+625|                </div>
+626|              )}
+   |               ^
+627|            </DialogContent>
+628|          </Dialog>
+
+Unexpected closing "DialogContent" tag does not match opening "div" tag
+625|                </div>
+626|              )}
+627|            </DialogContent>
+   |              ^
+628|          </Dialog>
+629|
+
+Unexpected closing "Dialog" tag does not match opening "div" tag
+626|              )}
+627|            </DialogContent>
+628|          </Dialog>
+   |            ^
+629|
+630|          {/* Edit Modal */}
+
+Expected ")" but found "{"
+628|          </Dialog>
+629|
+630|          {/* Edit Modal */}
+   |          ^
+631|          <Dialog open={!!editingCase} onOpenChange={(open) => !open && setEditingCase(null)}>
+632|            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+
+    at failureErrorWithLog (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:1472:15)
+    at /opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:755:50
+    at responseCallbacks.<computed> (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:622:9)
+    at handleIncomingPacket (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:677:12)
+    at Socket.readFromStdout (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:600:7)
+    at Socket.emit (node:events:524:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+root@admuser:/opt/ceshtje-ligjore#

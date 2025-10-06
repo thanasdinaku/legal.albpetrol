@@ -1,0 +1,60 @@
+nano /opt/ceshtje-ligjore/client/src/components/case-table.tsx
+root@admuser:/opt/ceshtje-ligjore# npm run build && pm2 restart albpetrol-legal
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+✓ 76 modules transformed.
+x Build failed in 1.02s
+error during build:
+[vite:esbuild] Transform failed with 4 errors:
+/opt/ceshtje-ligjore/client/src/components/case-table.tsx:625:18: ERROR: Unexpected closing "div" tag does not match opening "Button" tag
+/opt/ceshtje-ligjore/client/src/components/case-table.tsx:627:13: ERROR: The character "}" is not valid inside a JSX element
+/opt/ceshtje-ligjore/client/src/components/case-table.tsx:628:12: ERROR: Unexpected closing "DialogContent" tag does not match opening "div" tag
+/opt/ceshtje-ligjore/client/src/components/case-table.tsx:629:17: ERROR: Unterminated regular expression
+file: /opt/ceshtje-ligjore/client/src/components/case-table.tsx:625:18
+
+Unexpected closing "div" tag does not match opening "Button" tag
+623|                    </Button>
+624|                  </div>
+625|                  </div>
+   |                    ^
+626|                </div>
+627|              )}
+
+The character "}" is not valid inside a JSX element
+625|                  </div>
+626|                </div>
+627|              )}
+   |               ^
+628|            </DialogContent>
+629|          </Dialog>
+
+Unexpected closing "DialogContent" tag does not match opening "div" tag
+626|                </div>
+627|              )}
+628|            </DialogContent>
+   |              ^
+629|          </Dialog>
+630|
+
+Unterminated regular expression
+627|              )}
+628|            </DialogContent>
+629|          </Dialog>
+   |                   ^
+630|
+631|          {/* Edit Modal */}
+
+    at failureErrorWithLog (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:1472:15)
+    at /opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:755:50
+    at responseCallbacks.<computed> (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:622:9)
+    at handleIncomingPacket (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:677:12)
+    at Socket.readFromStdout (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:600:7)
+    at Socket.emit (node:events:524:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+root@admuser:/opt/ceshtje-ligjore#

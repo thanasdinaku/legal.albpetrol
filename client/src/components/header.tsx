@@ -51,11 +51,12 @@ export default function Header({ title, subtitle, onMenuToggle }: HeaderProps) {
           {onMenuToggle && (
             <button
               onClick={onMenuToggle}
-              className="p-1 mr-2 hover:opacity-70 active:opacity-50 transition-opacity"
+              className="mr-3 px-3 py-2 bg-primary text-white rounded-md hover:bg-primary/90 active:bg-primary/80 transition-colors flex items-center gap-2"
               data-testid="button-mobile-menu"
               aria-label="Open menu"
             >
-              <i className="fas fa-ellipsis-v text-3xl font-black text-black"></i>
+              <i className="fas fa-bars text-lg"></i>
+              <span className="text-sm font-medium">Menu</span>
             </button>
           )}
           <div className="min-w-0">

@@ -1,0 +1,34 @@
+root@admuser:/opt/ceshtje-ligjore# pm2 logs albpetrol-legal --lines 50
+[TAILING] Tailing last 50 lines for [albpetrol-legal] process (change the value with --lines option)
+/root/.pm2/logs/albpetrol-legal-out.log last 50 lines:
+/root/.pm2/logs/albpetrol-legal-error.log last 50 lines:
+0|albpetro | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|albpetro |     at server/db.ts (file:///opt/ceshtje-ligjore/dist/index.js:265:13)
+0|albpetro |     at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+0|albpetro |     at server/storage.ts (file:///opt/ceshtje-ligjore/dist/index.js:1134:5)
+0|albpetro |     at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+0|albpetro |     at file:///opt/ceshtje-ligjore/dist/index.js:2006:1
+0|albpetro |     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+0|albpetro | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|albpetro |     at server/db.ts (file:///opt/ceshtje-ligjore/dist/index.js:265:13)
+0|albpetro |     at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+0|albpetro |     at server/storage.ts (file:///opt/ceshtje-ligjore/dist/index.js:1134:5)
+0|albpetro |     at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+0|albpetro |     at file:///opt/ceshtje-ligjore/dist/index.js:2006:1
+0|albpetro |     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+0|albpetro | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|albpetro |     at server/db.ts (file:///opt/ceshtje-ligjore/dist/index.js:265:13)
+0|albpetro |     at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+0|albpetro |     at server/storage.ts (file:///opt/ceshtje-ligjore/dist/index.js:1134:5)
+0|albpetro |     at __init (file:///opt/ceshtje-ligjore/dist/index.js:10:56)
+0|albpetro |     at file:///opt/ceshtje-ligjore/dist/index.js:2006:1
+0|albpetro |     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+
+^C
+root@admuser:/opt/ceshtje-ligjore# netstat -tuln | grep 5000
+root@admuser:/opt/ceshtje-ligjore# curl http://localhost:5000
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Connection refused
+root@admuser:/opt/ceshtje-ligjore#

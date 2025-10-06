@@ -1,0 +1,35 @@
+root@admuser:/opt/ceshtje-ligjore# # On Ubuntu server - Check if getUserById exists
+grep -n "getUserById" server/storage.ts
+root@admuser:/opt/ceshtje-ligjore# # On Ubuntu server - Check what methods exist
+grep -n "async.*{" server/storage.ts | head -30
+88:  async getUser(id: string): Promise<User | undefined> {
+93:  async updateUserLastLogin(id: string): Promise<void> {
+99:  async updateUserLastActivity(id: string): Promise<void> {
+105:  async saveTwoFactorCode(userId: string, code: string): Promise<void> {
+115:  async verifyTwoFactorCode(userId: string, code: string): Promise<boolean> {
+151:  async clearTwoFactorCode(userId: string): Promise<void> {
+160:  async getDatabaseStats(): Promise<any> {
+231:  async getUserByEmail(email: string): Promise<User | undefined> {
+236:  async createUser(userData: CreateUser): Promise<User> {
+241:  async updateUserPassword(userId: string, hashedPassword: string): Promise<void> {
+247:  async ensureDefaultAdmin(): Promise<User> {
+270:  async getAllUsers(): Promise<User[]> {
+274:  async getUserStats(): Promise<{
+298:  async updateUserRole(userId: string, role: 'user' | 'admin'): Promise<User> {
+307:  async deactivateUser(userId: string): Promise<void> {
+317:  async createDataEntry(entry: InsertDataEntry): Promise<DataEntry> {
+326:  async getDataEntriesForExport(filters?: {
+389:  async getDataEntries(filters?: {
+500:  async getDataEntryById(id: number): Promise<DataEntry | undefined> {
+508:  async updateDataEntry(id: number, updates: UpdateDataEntry): Promise<DataEntry> {
+517:  async deleteDataEntry(id: number): Promise<void> {
+521:  async getDataEntriesCount(filters?: {
+579:  async getRecentDataEntries(limit = 5): Promise<(DataEntry & { createdByName: string; nrRendor: number })[]> {
+618:  async getDataEntryStats(): Promise<{
+648:  async createManualUser(userData: CreateUser): Promise<User> {
+653:  async deleteUser(userId: string): Promise<void> {
+656:   async transferCases(fromUserId: string, toUserId: string): Promise<{ count: number }> {
+676:    await db.transaction(async (tx) => {
+690:  async createBackupCheckpoint(checkpointData: InsertCheckpoint): Promise<DatabaseCheckpoint> {
+695:  async getAllCheckpoints(): Promise<DatabaseCheckpoint[]> {
+root@admuser:/opt/ceshtje-ligjore#

@@ -1,0 +1,48 @@
+
+root@admuser:/opt/ceshtje-ligjore# # On Ubuntu server - Check for the transfer request
+tail -50 /opt/ceshtje-ligjore/logs/out-0.log | grep -A 10 -B 2 "transfer\|ROUTE HANDLER"
+2025-10-06T01:58:35: 1:58:35 AM [express] GET /api/data-entries 304 in 12ms :: {"entries":[{"id":2,"paditesi":"aaa","iPad…
+2025-10-06T01:58:37: 1:58:37 AM [express] GET /api/users 304 in 6ms :: [{"id":"5f93759a-589d-4bf9-8b0f-390d4bbc584e","ema…
+2025-10-06T01:58:45: 🚀 ROUTE HANDLER CALLED - /api/transfer-cases
+2025-10-06T01:58:45: Request body: {
+2025-10-06T01:58:45:   fromUserId: '5f93759a-589d-4bf9-8b0f-390d4bbc584e',
+2025-10-06T01:58:45:   toUserId: '3ca4ff87-7a4f-4de4-adde-23a2b54acfdc'
+2025-10-06T01:58:45: }
+2025-10-06T01:58:45: Extracted fromUserId: 5f93759a-589d-4bf9-8b0f-390d4bbc584e toUserId: 3ca4ff87-7a4f-4de4-adde-23a2b54acfdc
+2025-10-06T01:58:45: 1:58:45 AM [express] POST /api/transfer-cases 500 in 6ms :: {"error":"Failed to transfer cases"}
+2025-10-06T01:58:48: 🚀 ROUTE HANDLER CALLED - /api/transfer-cases
+2025-10-06T01:58:48: Request body: {
+2025-10-06T01:58:48:   fromUserId: '5f93759a-589d-4bf9-8b0f-390d4bbc584e',
+2025-10-06T01:58:48:   toUserId: '3ca4ff87-7a4f-4de4-adde-23a2b54acfdc'
+2025-10-06T01:58:48: }
+2025-10-06T01:58:48: Extracted fromUserId: 5f93759a-589d-4bf9-8b0f-390d4bbc584e toUserId: 3ca4ff87-7a4f-4de4-adde-23a2b54acfdc
+2025-10-06T01:58:48: 1:58:48 AM [express] POST /api/transfer-cases 500 in 5ms :: {"error":"Failed to transfer cases"}
+2025-10-06T01:59:05: 🚀 ROUTE HANDLER CALLED - /api/transfer-cases
+2025-10-06T01:59:05: Request body: {
+2025-10-06T01:59:05:   fromUserId: '5f93759a-589d-4bf9-8b0f-390d4bbc584e',
+2025-10-06T01:59:05:   toUserId: '3ca4ff87-7a4f-4de4-adde-23a2b54acfdc'
+2025-10-06T01:59:05: }
+2025-10-06T01:59:05: Extracted fromUserId: 5f93759a-589d-4bf9-8b0f-390d4bbc584e toUserId: 3ca4ff87-7a4f-4de4-adde-23a2b54acfdc
+2025-10-06T01:59:05: 1:59:05 AM [express] POST /api/transfer-cases 500 in 12ms :: {"error":"Failed to transfer cases"}
+2025-10-06T01:59:07: 🚀 ROUTE HANDLER CALLED - /api/transfer-cases
+2025-10-06T01:59:07: Request body: {
+2025-10-06T01:59:07:   fromUserId: '5f93759a-589d-4bf9-8b0f-390d4bbc584e',
+2025-10-06T01:59:07:   toUserId: '3ca4ff87-7a4f-4de4-adde-23a2b54acfdc'
+2025-10-06T01:59:07: }
+2025-10-06T01:59:07: Extracted fromUserId: 5f93759a-589d-4bf9-8b0f-390d4bbc584e toUserId: 3ca4ff87-7a4f-4de4-adde-23a2b54acfdc
+2025-10-06T01:59:07: 1:59:07 AM [express] POST /api/transfer-cases 500 in 5ms :: {"error":"Failed to transfer cases"}
+2025-10-06T02:02:18: 🚀 ROUTE HANDLER CALLED - /api/transfer-cases
+2025-10-06T02:02:18: Request body: {
+2025-10-06T02:02:18:   fromUserId: '5f93759a-589d-4bf9-8b0f-390d4bbc584e',
+2025-10-06T02:02:18:   toUserId: '3ca4ff87-7a4f-4de4-adde-23a2b54acfdc'
+2025-10-06T02:02:18: }
+2025-10-06T02:02:18: Extracted fromUserId: 5f93759a-589d-4bf9-8b0f-390d4bbc584e toUserId: 3ca4ff87-7a4f-4de4-adde-23a2b54acfdc
+2025-10-06T02:02:18: 2:02:18 AM [express] POST /api/transfer-cases 500 in 19ms :: {"error":"Failed to transfer cases"}
+2025-10-06T02:02:20: 🚀 ROUTE HANDLER CALLED - /api/transfer-cases
+2025-10-06T02:02:20: Request body: {
+2025-10-06T02:02:20:   fromUserId: '5f93759a-589d-4bf9-8b0f-390d4bbc584e',
+2025-10-06T02:02:20:   toUserId: '3ca4ff87-7a4f-4de4-adde-23a2b54acfdc'
+2025-10-06T02:02:20: }
+2025-10-06T02:02:20: Extracted fromUserId: 5f93759a-589d-4bf9-8b0f-390d4bbc584e toUserId: 3ca4ff87-7a4f-4de4-adde-23a2b54acfdc
+2025-10-06T02:02:20: 2:02:20 AM [express] POST /api/transfer-cases 500 in 5ms :: {"error":"Failed to transfer cases"}
+root@admuser:/opt/ceshtje-ligjore#

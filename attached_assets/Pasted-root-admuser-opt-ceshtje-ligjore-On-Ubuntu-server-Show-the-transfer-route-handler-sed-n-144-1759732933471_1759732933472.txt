@@ -1,0 +1,88 @@
+root@admuser:/opt/ceshtje-ligjore# # On Ubuntu server - Show the transfer route handler
+sed -n '1440,1480p' server/routes.ts
+
+      if (fromUserId === toUserId) {
+        return res.status(400).json({ error: 'Cannot transfer cases to the same user' });
+      }
+
+      // Verify both users exist
+      const fromUser = await storage.getUser(fromUserId);
+      const toUser = await storage.getUser(toUserId);
+
+      if (!fromUser) {
+        return res.status(404).json({ error: 'Source user not found' });
+      }
+
+      if (!toUser) {
+        return res.status(404).json({ error: 'Destination user not found' });
+      }
+
+      // Transfer all cases
+      const result = await storage.transferCases(fromUserId, toUserId);
+
+      res.json({
+        success: true,
+        message: `Successfully transferred ${result.count} case(s) from ${fromUser.firstName} ${fromUser.lastName} to ${toUser.firstName} ${toUser.lastName}`,
+        count: result.count
+      });
+    } catch (error) {
+      console.error('Error transferring cases:', error);
+      res.status(500).json({ error: 'Failed to transfer cases' });
+    }
+  });
+  return httpServer;
+}
+root@admuser:/opt/ceshtje-ligjore# # On Ubuntu server - Show the FULL transfer route handler
+sed -n '1420,1480p' server/routes.ts
+        role: user.role
+      }));
+      res.json(userList);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      res.status(500).json({ error: 'Failed to fetch users' });
+    }
+  });
+
+  // Transfer case ownership from one user to another (Admin only)
+  app.post('/api/transfer-cases', isAuthenticated, isAdmin, async (req, res) => {
+    console.log('🚀 ROUTE HANDLER CALLED - /api/transfer-cases');
+    console.log('Request body:', req.body);
+    try {
+      const { fromUserId, toUserId } = req.body;
+      console.log('Extracted fromUserId:', fromUserId, 'toUserId:', toUserId);
+
+      if (!fromUserId || !toUserId) {
+        return res.status(400).json({ error: 'Both fromUserId and toUserId are required' });
+      }
+
+      if (fromUserId === toUserId) {
+        return res.status(400).json({ error: 'Cannot transfer cases to the same user' });
+      }
+
+      // Verify both users exist
+      const fromUser = await storage.getUser(fromUserId);
+      const toUser = await storage.getUser(toUserId);
+
+      if (!fromUser) {
+        return res.status(404).json({ error: 'Source user not found' });
+      }
+
+      if (!toUser) {
+        return res.status(404).json({ error: 'Destination user not found' });
+      }
+
+      // Transfer all cases
+      const result = await storage.transferCases(fromUserId, toUserId);
+
+      res.json({
+        success: true,
+        message: `Successfully transferred ${result.count} case(s) from ${fromUser.firstName} ${fromUser.lastName} to ${toUser.firstName} ${toUser.lastName}`,
+        count: result.count
+      });
+    } catch (error) {
+      console.error('Error transferring cases:', error);
+      res.status(500).json({ error: 'Failed to transfer cases' });
+    }
+  });
+  return httpServer;
+}

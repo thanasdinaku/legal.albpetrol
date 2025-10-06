@@ -1,0 +1,60 @@
+root@admuser:/opt/ceshtje-ligjore# nano client/src/components/case-table.tsx
+root@admuser:/opt/ceshtje-ligjore# npm run build && pm2 restart albpetrol-legal
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+✓ 55 modules transformed.
+x Build failed in 1.12s
+error during build:
+[vite:esbuild] Transform failed with 4 errors:
+/opt/ceshtje-ligjore/client/src/components/case-table.tsx:619:22: ERROR: Unexpected closing "div" tag does not match opening "Button" tag
+/opt/ceshtje-ligjore/client/src/components/case-table.tsx:621:17: ERROR: The character "}" is not valid inside a JSX element
+/opt/ceshtje-ligjore/client/src/components/case-table.tsx:623:20: ERROR: Unexpected closing "Button" tag does not match opening "div" tag
+/opt/ceshtje-ligjore/client/src/components/case-table.tsx:624:22: ERROR: Unterminated regular expression
+file: /opt/ceshtje-ligjore/client/src/components/case-table.tsx:619:22
+
+Unexpected closing "div" tag does not match opening "Button" tag
+617|                    </div>
+618|                  )}
+619|                      </div>
+   |                        ^
+620|                    </div>
+621|                  )}
+
+The character "}" is not valid inside a JSX element
+619|                      </div>
+620|                    </div>
+621|                  )}
+   |                   ^
+622|                      Mbyll
+623|                    </Button>
+
+Unexpected closing "Button" tag does not match opening "div" tag
+621|                  )}
+622|                      Mbyll
+623|                    </Button>
+   |                      ^
+624|                  </div>
+625|                </div>
+
+Unterminated regular expression
+622|                      Mbyll
+623|                    </Button>
+624|                  </div>
+   |                        ^
+625|                </div>
+626|              )}
+
+    at failureErrorWithLog (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:1472:15)
+    at /opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:755:50
+    at responseCallbacks.<computed> (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:622:9)
+    at handleIncomingPacket (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:677:12)
+    at Socket.readFromStdout (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:600:7)
+    at Socket.emit (node:events:524:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+root@admuser:/opt/ceshtje-ligjore#

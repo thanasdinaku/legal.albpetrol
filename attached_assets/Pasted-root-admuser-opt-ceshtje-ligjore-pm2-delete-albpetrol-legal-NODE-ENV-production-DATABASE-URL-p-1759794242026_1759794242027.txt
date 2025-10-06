@@ -1,0 +1,46 @@
+root@admuser:/opt/ceshtje-ligjore# pm2 delete albpetrol-legal && NODE_ENV=production DATABASE_URL="postgresql://albpetrol_user:SecurePass2025@localhost:5432/albpetrol_legal_db" pm2 start dist/index.js --name albpetrol-legal && pm2 save
+[PM2] Applying action deleteProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Starting /opt/ceshtje-ligjore/dist/index.js in fork_mode (1 instance)
+[PM2] Done.
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 0    │ online    │ 0%       │ 13.8mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Saving current process list...
+[PM2] Successfully saved in /root/.pm2/dump.pm2
+root@admuser:/opt/ceshtje-ligjore# curl http://localhost:5000 | head -20
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1102  100  1102    0     0   126k      0 --:--:-- --:--:-- --:--:--  134k
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Sistemi i Menaxhimit të Rasteve Ligjore</title>
+    <meta name="description" content="Sistem profesional i menaxhimit të rasteve ligjore me kontroll të aksesit të bazuar në role për operacione efikase në bazën e të dhënave.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="module" crossorigin src="/assets/index-CpTrnZTc.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CpNRcbgM.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
+    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
+  </body>
+</html>
+root@admuser:/opt/ceshtje-ligjore# cat /etc/cloudflared/config.yml
+tunnel: 3f017006-090f-4196-9d28-1dc777c480e7
+credentials-file: /etc/cloudflared/3f017006-090f-4196-9d28-1dc777c480e7.json
+
+ingress:
+  - hostname: legal.albpetrol.al
+    service: http://localhost:80
+  - service: http_status:404
+root@admuser:/opt/ceshtje-ligjore#

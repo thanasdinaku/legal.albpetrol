@@ -47,18 +47,16 @@ export default function Header({ title, subtitle, onMenuToggle }: HeaderProps) {
     <header className="bg-white shadow-sm border-b border-gray-200 px-4 sm:px-6 py-4">
       <div className="flex items-center justify-between">
         {/* Mobile menu button and title */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center min-w-0">
           {onMenuToggle && (
-            <Button
-              variant="ghost"
-              size="sm"
+            <button
               onClick={onMenuToggle}
-              className="lg:hidden p-2 hover:bg-gray-100 min-h-[40px] min-w-[40px]"
+              className="lg:hidden p-1 mr-2 hover:opacity-70 active:opacity-50 transition-opacity"
               data-testid="button-mobile-menu"
               aria-label="Open menu"
             >
-              <i className="fas fa-ellipsis-v text-2xl text-gray-700"></i>
-            </Button>
+              <i className="fas fa-ellipsis-v text-2xl text-gray-900"></i>
+            </button>
           )}
           <div className="min-w-0">
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">{title}</h2>

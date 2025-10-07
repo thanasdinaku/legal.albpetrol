@@ -1,0 +1,61 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+                                   cd /opt/ceshtje-ligjore
+# Stop PM2 completely
+# Stop PM2 completelygal
+pm2 stop albpetrol-legalal
+pm2 delete albpetrol-legal
+# Start fresh with the new clean build
+# Start fresh with the new clean build
+NODE_ENV=production \
+PORT=5000 \L="postgresql://albpetrol_user:SecurePass2025@localhost:5432/albpetroDATABASE_URL="postgresql://albpetrol_user:SecurePass2025@localhost:5432/albpetrol_legal_db" \tp-mail.outlook.com" \
+SMTP_HOST="smtp-mail.outlook.com" \
+SMTP_PORT=587 \ystem@albpetrol.al" \
+SMTP_USER="it.system@albpetrol.al" \
+SMTP_PASS="Albpetrol2025" \rol.al" \
+SMTP_FROM="it.system@albpetrol.al" \\
+EMAIL_FROM="it.system@albpetrol.al" \
+TZ="Europe/Tirane" \.js --name albpetrol-legal
+pm2 start dist/index.js --name albpetrol-legal
+pm2 save
+pm2 save
+# Now check if it's working
+# Now check if it's working
+netstat -tuln | grep 5000--lines 5 --nostream
+pm2 logs albpetrol-legal --lines 5 --nostream
+[PM2] Applying action stopProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 8    │ stopped   │ 0%       │ 0b       │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Applying action deleteProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Starting /opt/ceshtje-ligjore/dist/index.js in fork_mode (1 instance)
+[PM2] Done.
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 0    │ online    │ 0%       │ 18.9mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Saving current process list...
+[PM2] Successfully saved in /root/.pm2/dump.pm2
+[TAILING] Tailing last 5 lines for [albpetrol-legal] process (change the value with --lines option)
+/root/.pm2/logs/albpetrol-legal-error.log last 5 lines:
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+0|albpetro | TypeError: (void 0) is not a function
+0|albpetro |     at file:///opt/ceshtje-ligjore/dist/index.js:4393:35
+0|albpetro |     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+
+/root/.pm2/logs/albpetrol-legal-out.log last 5 lines:
+0|albpetro | Parsed exactly as stored: 2025-10-05T21:42:00.000Z from input: 2025-10-05T23:42
+0|albpetro | Parsed appeal hearing date: 2025-10-05T21:42:00.000Z
+0|albpetro |     Window check: hearing=2025-10-05T21:42:00.000Z, now=2025-10-07T06:52:27.611Z, hours_ahead=-33.2, window=≤26h, result=false
+0|albpetro | Appeal hearing is within notification window: false (hearing at 2025-10-05T21:42:00.000Z is -33 hours from now)
+0|albpetro | Found 0 upcoming hearings
+
+root@admuser:/opt/ceshtje-ligjore#

@@ -1,0 +1,76 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Get the clean files from GitHub
+git checkout origin/main -- client/src/components/case-entry-form.tsx client/src/components/case-edit-form.tsx
+
+# Rebuild
+npm run build
+
+# Restart PM2 with environment variables
+NODE_ENV=production \
+PORT=5000 \
+DATABASE_URL="postgresql://albpetrol_user:SecurePass2025@localhost:5432/albpetrol_legal_db" \
+SMTP_HOST="smtp-mail.outlook.com" \
+SMTP_PORT=587 \
+SMTP_USER="it.system@albpetrol.al" \
+SMTP_PASS="Albpetrol2025" \
+SMTP_FROM="it.system@albpetrol.al" \
+EMAIL_FROM="it.system@albpetrol.al" \
+TZ="Europe/Tirane" \
+pm2 restart albpetrol-legal --update-env
+
+pm2 statusuln | grep 5000
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+✓ 2413 modules transformed.
+../dist/public/index.html                                         1.09 kB │ gzip:   0.62 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-CpNRcbgM.css                        159.58 kB │ gzip:  25.48 kB
+../dist/public/assets/index-CpTrnZTc.js                         877.09 kB │ gzip: 257.55 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.71s
+▲ [WARNING] Import "defineConfig" will always be undefined because the file "vite" has no exports [import-is-undefined]
+
+    vite.config.ts:1:9:
+      1 │ import { defineConfig } from "vite";
+        ╵          ~~~~~~~~~~~~
+
+▲ [WARNING] Import "createServer" will always be undefined because the file "vite" has no exports [import-is-undefined]
+
+    server/vite.ts:4:9:
+      4 │ import { createServer as createViteServer, createLogger } from "vite";
+        ╵          ~~~~~~~~~~~~
+
+▲ [WARNING] Import "createLogger" will always be undefined because the file "vite" has no exports [import-is-undefined]
+
+    server/vite.ts:4:43:
+      4 │ import { createServer as createViteServer, createLogger } from "vite";
+        ╵                                            ~~~~~~~~~~~~
+
+3 warnings
+
+  dist/index.js  189.4kb
+
+⚡ Done in 7ms
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 8    │ online    │ 0%       │ 18.9mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Saving current process list...
+[PM2] Successfully saved in /root/.pm2/dump.pm2
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 8    │ online    │ 0%       │ 75.8mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@admuser:/opt/ceshtje-ligjore#

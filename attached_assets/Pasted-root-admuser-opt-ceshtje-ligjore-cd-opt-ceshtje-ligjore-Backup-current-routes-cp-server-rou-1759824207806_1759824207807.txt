@@ -1,0 +1,71 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Backup current routes
+cp server/routes.ts server/routes.ts.backup
+
+# Add the missing endpoints to routes.ts (append to the end, before httpServer export)
+cat >> server/routes.ts << 'ENDROUTES'
+
+  // Get all users for dropdowns (Admin only)
+  app.get('/api/users', isAuthenticated, isAdmin, async (req, res) => {
+    try {
+      const users = await storage.getAllUsers();
+      // Return only necessary fields for dropdowns
+      const userList = users.map(user => ({
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role
+      }));
+      res.json(userList);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+echo "🎉 Done! Refresh your browser and the dropdowns should now work!"count: nu
+✅ Routes added!
+
+Adding transferCases method to storage...
+✅ transferCases method added!
+
+Rebuilding application...
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+✓ 2411 modules transformed.
+../dist/public/index.html                                         1.09 kB │ gzip:   0.63 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-D1b5zML-.css                        159.05 kB │ gzip:  25.36 kB
+../dist/public/assets/index-No3X9pMA.js                         870.74 kB │ gzip: 255.59 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.74s
+✘ [ERROR] Expected ";" but found "transferCases"
+
+    server/storage.ts:764:8:
+      764 │   async transferCases(fromUserId: string, toUserId: string): Prom...
+          │         ~~~~~~~~~~~~~
+          ╵         ;
+
+1 error
+
+Restarting PM2...
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 6    │ online    │ 0%       │ 16.9mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+
+=== Verification ===
+0
+0
+
+🎉 Done! Refresh your browser and the dropdowns should now work!
+root@admuser:/opt/ceshtje-ligjore#

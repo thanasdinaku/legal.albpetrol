@@ -1,0 +1,112 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Remove the corrupted console.log lines that are causing the error
+sed -i '62d' client/src/components/case-entry-form.tsx
+sed -i '62d' client/src/components/case-edit-form.tsx
+
+# Rebuild
+npm run build
+
+# If build succeeds, restart
+NODE_ENV=production \
+PORT=5000 \
+DATABASE_URL="postgresql://albpetrol_user:SecurePass2025@localhost:5432/albpetrol_legal_db" \
+SMTP_HOST="smtp-mail.outlook.com" \
+SMTP_PORT=587 \
+SMTP_USER="it.system@albpetrol.al" \
+SMTP_PASS="Albpetrol2025" \
+SMTP_FROM="it.system@albpetrol.al" \
+EMAIL_FROM="it.system@albpetrol.al" \
+TZ="Europe/Tirane" \
+pm2 restart albpetrol-legal --update-env
+
+pm2 logs albpetrol-legal --lines 5
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+✓ 47 modules transformed.
+x Build failed in 578ms
+error during build:
+[vite:esbuild] Transform failed with 1 error:
+/opt/ceshtje-ligjore/client/src/components/case-entry-form.tsx:146:20: ERROR: Syntax error "`"
+file: /opt/ceshtje-ligjore/client/src/components/case-entry-form.tsx:146:20
+
+Syntax error "`"
+144|      toast({
+145|        title: "Dokumentet u ngarkuan me sukses",
+146|        description: \`\${uploadedFiles.length} dokument(e) u shtuan në çështje\`,
+   |                      ^
+147|      });
+148|    };
+
+    at failureErrorWithLog (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:1472:15)
+    at /opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:755:50
+    at responseCallbacks.<computed> (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:622:9)
+    at handleIncomingPacket (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:677:12)
+    at Socket.readFromStdout (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:600:7)
+    at Socket.emit (node:events:524:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 6    │ online    │ 0%       │ 19.0mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Saving current process list...
+[PM2] Successfully saved in /root/.pm2/dump.pm2
+[TAILING] Tailing last 5 lines for [albpetrol-legal] process (change the value with --lines option)
+/root/.pm2/logs/albpetrol-legal-error.log last 5 lines:
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+0|albpetro | TypeError: (void 0) is not a function
+0|albpetro |     at file:///opt/ceshtje-ligjore/dist/index.js:4393:35
+0|albpetro |     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+
+/root/.pm2/logs/albpetrol-legal-out.log last 5 lines:
+0|albpetro | Parsed exactly as stored: 2025-10-05T21:42:00.000Z from input: 2025-10-05T23:42
+0|albpetro | Parsed appeal hearing date: 2025-10-05T21:42:00.000Z
+0|albpetro |     Window check: hearing=2025-10-05T21:42:00.000Z, now=2025-10-07T06:47:17.174Z, hours_ahead=-33.1, window=≤26h, result=false
+0|albpetro | Appeal hearing is within notification window: false (hearing at 2025-10-05T21:42:00.000Z is -33 hours from now)
+0|albpetro | Found 0 upcoming hearings
+
+0|albpetrol-legal  | 🚀 CourtHearingScheduler constructor called
+0|albpetrol-legal  | ══════════════════════════════════════════════════════════════
+0|albpetrol-legal  | 🕐 SYSTEM TIMEZONE CONFIGURATION - GMT+1 (ALBANIA TIME)
+0|albpetrol-legal  | ══════════════════════════════════════════════════════════════
+0|albpetrol-legal  | 🌍 Configured Timezone: Europe/Tirane (GMT+1 - Albania Time)
+0|albpetrol-legal  | ⏰ Current UTC Time: 2025-10-07T06:48:26.517Z
+0|albpetrol-legal  | 🇦🇱 Current Albania Time (GMT+1): 07.10.2025, 08:48
+0|albpetrol-legal  | 📅 Albanian Date Format: 07.10.2025
+0|albpetrol-legal  | 🕒 Albanian Time Format: 08:48
+0|albpetrol-legal  | ══════════════════════════════════════════════════════════════
+0|albpetrol-legal  | 🟢 Starting court hearing notification scheduler...
+0|albpetrol-legal  | ✅ Scheduler configured: checking every 10 minutes, startup check in 5 seconds
+0|albpetrol-legal  | TypeError: (void 0) is not a function
+0|albpetrol-legal  |     at file:///opt/ceshtje-ligjore/dist/index.js:4393:35
+0|albpetrol-legal  |     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetrol-legal  |     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+0|albpetrol-legal  | [2025-10-07T06:48:31.528Z] 🚀 STARTUP CHECK TRIGGERED (5 seconds after start)
+0|albpetrol-legal  | [2025-10-07T06:48:31.529Z] === COURT HEARING CHECK STARTED ===
+0|albpetrol-legal  | Current time (GMT+1): 07.10.2025, 08:48
+0|albpetrol-legal  | Checking hearings within ≤26 hours: up to 08.10.2025, 08:48 [Albania Time]
+0|albpetrol-legal  | Checking entry 1 - hearing field: "2025-10-05T23:12"
+0|albpetrol-legal  | Parsing date string: 2025-10-05T23:12
+0|albpetrol-legal  | Parsed exactly as stored: 2025-10-05T21:12:00.000Z from input: 2025-10-05T23:12
+0|albpetrol-legal  | Parsed hearing date: 2025-10-05T21:12:00.000Z
+0|albpetrol-legal  |     Window check: hearing=2025-10-05T21:12:00.000Z, now=2025-10-07T06:48:31.549Z, hours_ahead=-33.6, window=≤26h, result=false
+0|albpetrol-legal  | Is within notification window: false (hearing at 2025-10-05T21:12:00.000Z is -34 hours from now)
+0|albpetrol-legal  | Checking entry 1 appeal - hearing field: "2025-10-05T23:42"
+0|albpetrol-legal  | Parsing date string: 2025-10-05T23:42
+0|albpetrol-legal  | Parsed exactly as stored: 2025-10-05T21:42:00.000Z from input: 2025-10-05T23:42
+0|albpetrol-legal  | Parsed appeal hearing date: 2025-10-05T21:42:00.000Z
+0|albpetrol-legal  |     Window check: hearing=2025-10-05T21:42:00.000Z, now=2025-10-07T06:48:31.549Z, hours_ahead=-33.1, window=≤26h, result=false
+0|albpetrol-legal  | Appeal hearing is within notification window: false (hearing at 2025-10-05T21:42:00.000Z is -33 hours from now)
+0|albpetrol-legal  | Found 0 upcoming hearings
+^C
+root@admuser:/opt/ceshtje-ligjore#

@@ -518,25 +518,32 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
               {/* Document Attachments */}
               <div className="space-y-6">
                 <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Dokumente të Bashkangjitura</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm text-gray-600">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Left side: Square upload area */}
+                  <div className="md:col-span-1">
+                    <div className="aspect-square">
+                      <DocumentUploader
+                        maxNumberOfFiles={5}
+                        maxFileSize={10485760} // 10MB
+                        onComplete={handleUploadComplete}
+                      />
+                    </div>
+                    <p className="text-xs text-gray-500 mt-2 text-center">
                       Mund të bashkangjitnit dokumente PDF ose Word që lidhen me çështjen ligjore
                     </p>
-                    <DocumentUploader
-                      maxNumberOfFiles={5}
-                      maxFileSize={10485760} // 10MB
-                      onComplete={handleUploadComplete}
-                    />
                   </div>
 
-                  {attachments.length > 0 && (
-                    <div className="space-y-2">
-                      <p className="text-sm font-medium text-gray-700">Dokumente të ngarkuara:</p>
-                      <div className="space-y-2">
-                        {attachments.map((attachment, index) => (
-                          <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-md">
-                            <div className="flex items-center space-x-2">
+                  {/* Right side: Display uploaded attachments */}
+                  <div className="md:col-span-2">
+                    {attachments.length > 0 ? (
+                      <div className="space-y-3">
+                        <h4 className="text-sm font-medium text-gray-700">
+                          Dokumente të Ngarkuara ({attachments.length})
+                        </h4>
+                        <div className="space-y-2">
+                          {attachments.map((attachment, index) => (
+                            <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-md">
+                              <div className="flex items-center space-x-2">
                               <FileText className="h-4 w-4 text-blue-600" />
                               <span className="text-sm text-gray-700">{attachment.name}</span>
                             </div>
@@ -569,7 +576,12 @@ export function CaseEditForm({ caseData, onSuccess, onCancel }: CaseEditFormProp
                         ))}
                       </div>
                     </div>
-                  )}
+                    ) : (
+                      <div className="flex items-center justify-center h-full text-gray-400 text-sm">
+                        Asnjë dokument i ngarkuar ende
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 

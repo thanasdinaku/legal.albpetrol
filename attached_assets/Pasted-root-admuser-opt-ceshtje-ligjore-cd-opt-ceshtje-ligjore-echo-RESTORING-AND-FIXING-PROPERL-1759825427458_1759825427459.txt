@@ -1,0 +1,59 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+echo "=== RESTORING AND FIXING PROPERLY ==="
+
+# Restore the original clean routes.ts
+git restore server/routes.ts
+echo "✅ Restored original routes.ts from git"
+
+# Now add BOTH routes properly before httpServer (line 1398)
+# First, create the complete routes code
+cat > /tmp/complete_routes.txt << 'ROUTES'
+
+  // User Management Routes - Get all users (Admin only)
+  app.get('/api/users', isAuthenticated, isAdmin, async (req, res) => {
+    try {
+      const users = await storage.getAllUsers();
+      res.json(users);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      res.status(500).json({ error: 'Failed to fetch users' });
+    }
+  });
+
+  // Transfer case ownership from one user to another (Admin only)
+  app.post('/api/transfer-cases', isAuthenticated, isAdmin, async (req, res) => finpm run build 2>&1 | grep -A 3 ERRORgal.albpetrol.al/case-transfer"httpServer"
+=== RESTORING AND FIXING PROPERLY ===
+✅ Restored original routes.ts from git
+✅ Routes added at correct location (before httpServer)
+
+Verifying httpServer is now AFTER the new routes:
+1400:  app.get('/api/users', isAuthenticated, isAdmin, async (req, res) => {
+1411:  app.post('/api/transfer-cases', isAuthenticated, isAdmin, async (req, res) => {
+1448:  const httpServer = createServer(app);
+
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+✓ 2411 modules transformed.
+../dist/public/index.html                                         1.09 kB │ gzip:   0.63 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-D1b5zML-.css                        159.05 kB │ gzip:  25.36 kB
+../dist/public/assets/index-No3X9pMA.js                         870.74 kB │ gzip: 255.59 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.72s
+
+  dist/index.js  190.8kb
+
+⚡ Done in 7ms
+
+✅ BUILD SUCCESS!
+  /api/users: 0
+  /api/transfer-cases: 0
+root@admuser:/opt/ceshtje-ligjore#

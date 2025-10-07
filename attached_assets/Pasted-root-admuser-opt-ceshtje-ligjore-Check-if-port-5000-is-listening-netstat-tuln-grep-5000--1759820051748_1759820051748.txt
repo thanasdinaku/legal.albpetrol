@@ -1,0 +1,31 @@
+root@admuser:/opt/ceshtje-ligjore# # Check if port 5000 is listening
+netstat -tuln | grep 5000
+
+# Check the logs
+pm2 logs albpetrol-legal --lines 10 --nostream
+[TAILING] Tailing last 10 lines for [albpetrol-legal] process (change the value with --lines option)
+/root/.pm2/logs/albpetrol-legal-error.log last 10 lines:
+0|albpetro |     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+0|albpetro | TypeError: (void 0) is not a function
+0|albpetro |     at file:///opt/ceshtje-ligjore/dist/index.js:4393:35
+0|albpetro |     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+0|albpetro | TypeError: (void 0) is not a function
+0|albpetro |     at file:///opt/ceshtje-ligjore/dist/index.js:4393:35
+0|albpetro |     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+
+/root/.pm2/logs/albpetrol-legal-out.log last 10 lines:
+0|albpetro | Parsed hearing date: 2025-10-05T21:12:00.000Z
+0|albpetro |     Window check: hearing=2025-10-05T21:12:00.000Z, now=2025-10-07T06:52:27.611Z, hours_ahead=-33.7, window=≤26h, result=false
+0|albpetro | Is within notification window: false (hearing at 2025-10-05T21:12:00.000Z is -34 hours from now)
+0|albpetro | Checking entry 1 appeal - hearing field: "2025-10-05T23:42"
+0|albpetro | Parsing date string: 2025-10-05T23:42
+0|albpetro | Parsed exactly as stored: 2025-10-05T21:42:00.000Z from input: 2025-10-05T23:42
+0|albpetro | Parsed appeal hearing date: 2025-10-05T21:42:00.000Z
+0|albpetro |     Window check: hearing=2025-10-05T21:42:00.000Z, now=2025-10-07T06:52:27.611Z, hours_ahead=-33.2, window=≤26h, result=false
+0|albpetro | Appeal hearing is within notification window: false (hearing at 2025-10-05T21:42:00.000Z is -33 hours from now)
+0|albpetro | Found 0 upcoming hearings
+
+root@admuser:/opt/ceshtje-ligjore#

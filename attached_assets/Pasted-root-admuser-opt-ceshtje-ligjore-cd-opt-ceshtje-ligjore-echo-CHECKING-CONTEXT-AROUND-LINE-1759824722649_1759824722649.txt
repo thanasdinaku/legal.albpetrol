@@ -1,0 +1,110 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+echo "=== CHECKING CONTEXT AROUND LINE 765 ==="
+sed -n '755,775p' server/storage.ts
+
+echo ""
+echo "=== THE FIX ==="
+echo "The problem is the previous method is missing a closing brace."
+echo "Let's see what method comes before transferCases..."
+
+# Show lines 750-770 to see the context
+echo ""
+echo "Lines 750-770:"
+sed -n '750,770p' server/storage.ts | cat -n
+
+echo ""
+echo "Applying fix..."
+
+# The issue is likely that a method before transferCases is missing a closing brace
+# Let's add a closing brace before the transferCases method
+sed -i '764i\  }' server/storage.ts
+
+fised -n '760,770p' server/storage.ts | cat -n770 in detail:"
+=== CHECKING CONTEXT AROUND LINE 765 ===
+  }
+
+  async saveEmailNotificationSettings(settings: any, updatedById: string): Promise<void> {
+    await this.saveSystemSetting('email_notifications', settings, updatedById);
+  }
+}
+
+export const storage = new DatabaseStorage();
+
+
+  async transferCases(fromUserId: string, toUserId: string): Promise<{ count: number }> {
+    const result = await db
+      .update(dataEntries)
+      .set({ createdBy: toUserId })
+      .where(eq(dataEntries.createdBy, fromUserId))
+      .returning();
+
+    return { count: result.length };
+  }
+
+=== THE FIX ===
+The problem is the previous method is missing a closing brace.
+Let's see what method comes before transferCases...
+
+Lines 750-770:
+     1      if (!settings.senderEmail) {
+     2        settings.senderEmail = '';
+     3      }
+     4
+     5      return settings;
+     6    }
+     7
+     8    async saveEmailNotificationSettings(settings: any, updatedById: string): Promise<void> {
+     9      await this.saveSystemSetting('email_notifications', settings, updatedById);
+    10    }
+    11  }
+    12
+    13  export const storage = new DatabaseStorage();
+    14
+    15
+    16    async transferCases(fromUserId: string, toUserId: string): Promise<{ count: number }> {
+    17      const result = await db
+    18        .update(dataEntries)
+    19        .set({ createdBy: toUserId })
+    20        .where(eq(dataEntries.createdBy, fromUserId))
+    21        .returning();
+
+Applying fix...
+Added closing brace before transferCases
+
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+✓ 2411 modules transformed.
+../dist/public/index.html                                         1.09 kB │ gzip:   0.63 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-D1b5zML-.css                        159.05 kB │ gzip:  25.36 kB
+../dist/public/assets/index-No3X9pMA.js                         870.74 kB │ gzip: 255.59 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.72s
+✘ [ERROR] Unexpected "}"
+
+    server/storage.ts:764:2:
+      764 │   }
+          ╵   ^
+
+1 error
+Still has errors. Let's see lines 760-770 in detail:
+     1  }
+     2
+     3  export const storage = new DatabaseStorage();
+     4
+     5    }
+     6
+     7    async transferCases(fromUserId: string, toUserId: string): Promise<{ count: number }> {
+     8      const result = await db
+     9        .update(dataEntries)
+    10        .set({ createdBy: toUserId })
+    11        .where(eq(dataEntries.createdBy, fromUserId))
+root@admuser:/opt/ceshtje-ligjore#

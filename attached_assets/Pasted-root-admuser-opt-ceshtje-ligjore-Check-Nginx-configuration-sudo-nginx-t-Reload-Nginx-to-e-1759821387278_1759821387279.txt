@@ -1,0 +1,63 @@
+root@admuser:/opt/ceshtje-ligjore# # Check Nginx configuration
+sudo nginx -t
+
+# Reload Nginx to ensure latest config
+sudo systemctl reload nginx
+
+# Test the actual domain
+curl -I https://legal.albpetrol.al
+
+# Check PM2 logs to confirm everything is working
+pm2 logs albpetrol-legal --lines 20
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+HTTP/2 403
+date: Tue, 07 Oct 2025 07:15:13 GMT
+content-type: text/html; charset=UTF-8
+accept-ch: Sec-CH-UA-Bitness, Sec-CH-UA-Arch, Sec-CH-UA-Full-Version, Sec-CH-UA-Mobile, Sec-CH-UA-Model, Sec-CH-UA-Platform-Version, Sec-CH-UA-Full-Version-List, Sec-CH-UA-Platform, Sec-CH-UA, UA-Bitness, UA-Arch, UA-Full-Version, UA-Mobile, UA-Model, UA-Platform-Version, UA-Platform, UA
+cf-mitigated: challenge
+critical-ch: Sec-CH-UA-Bitness, Sec-CH-UA-Arch, Sec-CH-UA-Full-Version, Sec-CH-UA-Mobile, Sec-CH-UA-Model, Sec-CH-UA-Platform-Version, Sec-CH-UA-Full-Version-List, Sec-CH-UA-Platform, Sec-CH-UA, UA-Bitness, UA-Arch, UA-Full-Version, UA-Mobile, UA-Model, UA-Platform-Version, UA-Platform, UA
+cross-origin-embedder-policy: require-corp
+cross-origin-opener-policy: same-origin
+cross-origin-resource-policy: same-origin
+origin-agent-cluster: ?1
+permissions-policy: accelerometer=(),autoplay=(),browsing-topics=(),camera=(),clipboard-read=(),clipboard-write=(),geolocation=(),gyroscope=(),hid=(),interest-cohort=(),magnetometer=(),microphone=(),payment=(),publickey-credentials-get=(),screen-wake-lock=(),serial=(),sync-xhr=(),usb=()
+referrer-policy: same-origin
+server-timing: chlray;desc="98ab9b28aabf5b85"
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+cache-control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+expires: Thu, 01 Jan 1970 00:00:01 GMT
+report-to: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=JiX4ond%2B5XSlF%2Fh8YKcJ9nSADmE8krjVj1Fh4ZwZoLeaxjddWKazr7vzfxAVYTu6XEW0Oddp1P6WfEKxfZGR3HSTr8zva%2B105xsjXYKFAdE%2FMVjNCc%2BUm6H9mOanSKBbUgz%2Fqsg%3D"}],"group":"cf-nel","max_age":604800}
+nel: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+server: cloudflare
+cf-ray: 98ab9b28aabf5b85-VIE
+alt-svc: h3=":443"; ma=86400
+server-timing: cfL4;desc="?proto=TCP&rtt=22579&min_rtt=22550&rtt_var=8514&sent=5&recv=9&lost=0&retrans=0&sent_bytes=3388&recv_bytes=796&delivery_rate=127112&cwnd=32&unsent_bytes=0&cid=c1243e5460163651&ts=44&x=0"
+
+[TAILING] Tailing last 20 lines for [albpetrol-legal] process (change the value with --lines option)
+/root/.pm2/logs/albpetrol-legal-error-0.log last 20 lines:
+/root/.pm2/logs/albpetrol-legal-out-0.log last 20 lines:
+0|albpetro | ⚠️ Scheduler already running, skipping duplicate start
+0|albpetro | Scheduler instance created, starting automatic notifications...
+0|albpetro | 9:14:16 AM [express] serving on port 5000
+0|albpetro | [2025-10-07T07:14:21.830Z] 🚀 STARTUP CHECK TRIGGERED (5 seconds after start)
+0|albpetro | [2025-10-07T07:14:21.831Z] === COURT HEARING CHECK STARTED ===
+0|albpetro | Current time (GMT+1): 07.10.2025, 09:14
+0|albpetro | Checking hearings within ≤26 hours: up to 08.10.2025, 09:14 [Albania Time]
+0|albpetro | Checking entry 1 - hearing field: "2025-10-05T23:12"
+0|albpetro | Parsing date string: 2025-10-05T23:12
+0|albpetro | Parsed exactly as stored: 2025-10-05T21:12:00.000Z from input: 2025-10-05T23:12
+0|albpetro | Parsed hearing date: 2025-10-05T21:12:00.000Z
+0|albpetro |     Window check: hearing=2025-10-05T21:12:00.000Z, now=2025-10-07T07:14:21.836Z, hours_ahead=-34.0, window=≤26h, result=false
+0|albpetro | Is within notification window: false (hearing at 2025-10-05T21:12:00.000Z is -34 hours from now)
+0|albpetro | Checking entry 1 appeal - hearing field: "2025-10-05T23:42"
+0|albpetro | Parsing date string: 2025-10-05T23:42
+0|albpetro | Parsed exactly as stored: 2025-10-05T21:42:00.000Z from input: 2025-10-05T23:42
+0|albpetro | Parsed appeal hearing date: 2025-10-05T21:42:00.000Z
+0|albpetro |     Window check: hearing=2025-10-05T21:42:00.000Z, now=2025-10-07T07:14:21.836Z, hours_ahead=-33.5, window=≤26h, result=false
+0|albpetro | Appeal hearing is within notification window: false (hearing at 2025-10-05T21:42:00.000Z is -34 hours from now)
+0|albpetro | Found 0 upcoming hearings
+
+^C
+root@admuser:/opt/ceshtje-ligjore#

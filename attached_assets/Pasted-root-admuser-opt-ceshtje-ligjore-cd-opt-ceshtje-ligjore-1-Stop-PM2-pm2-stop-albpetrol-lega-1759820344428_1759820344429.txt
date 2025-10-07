@@ -1,0 +1,154 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# 1. Stop PM2
+pm2 stop albpetrol-legal
+pm2 delete albpetrol-legal
+
+# 2. Clean all build artifacts
+rm -rf dist/
+rm -rf node_modules/.vite
+
+# 3. Verify source files are clean from git
+git status
+
+# 4. If there are modifications, restore them
+git checkout -- .
+
+# 5. Rebuild completely fresh
+npm run build
+
+# 6. Check if dist/index.js was created successfully
+ls -lh dist/index.js
+
+# 7. Test it directly
+NODE_ENV=production PORT=5000 DATABASE_URL="postgresql://albpetrol_user:SecurePass2025@localhost:5432/albpetrol_legal_db" SMTP_HOST="smtp-mail.outlook.com" SMTP_PORT=587 SMTP_USER="it.system@albpetrol.al" SMTP_PASS="Albpetrol2025" SMTP_FROM="it.system@albpetrol.al" EMAIL_FROM="it.system@albpetrol.al" TZ="Europe/Tirane" node dist/index.js
+[PM2] Applying action stopProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 0    │ stopped   │ 0%       │ 0b       │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Applying action deleteProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   client/src/App.tsx
+        modified:   client/src/components/DocumentUploader.tsx
+        modified:   client/src/components/case-table.tsx
+        modified:   client/src/components/header.tsx
+        modified:   client/src/components/sidebar.tsx
+        modified:   client/src/components/ui/select.tsx
+        modified:   client/src/pages/backup-restore.tsx
+        modified:   package.json
+        modified:   server/backup-service.ts
+        modified:   server/courtHearingScheduler.ts
+        modified:   server/db.ts
+        modified:   server/email.ts
+        modified:   server/routes.ts
+        modified:   server/storage.ts
+        modified:   update.sh
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        backup.sh
+        backups/backup-data-only-2025-10-06T08-55-06-454Z.sql
+        backups/backup-full-2025-10-05T21-33-13-472Z.sql
+        backups/backup-full-2025-10-05T21-33-15-654Z.sql
+        backups/backup-full-2025-10-05T21-33-33-681Z.sql
+        backups/backup-full-2025-10-05T21-33-35-892Z.sql
+        backups/backup-full-2025-10-05T21-37-17-200Z.sql
+        backups/case-edit-form.tsx.backup.20251007_022416
+        backups/case-entry-form.tsx.backup.20251007_022416
+        backups/edit.backup.1759797680
+        backups/entry.backup.1759797680
+        client/src/components/header.tsx.backup
+        client/src/components/header.tsx.backup.20251007_010511
+        client/src/components/ui/select.tsx.backup
+        client/src/pages/case-transfer.tsx
+        deploy_attachment_update.sh
+        ecosystem.config.cjs
+        package-lock.json
+        rest-express@1.0.0
+        server/courtHearingScheduler.ts.backup
+        server/email.ts.backup
+        server/index.ts.backup.opt
+        server/index.ts.backup.optimization
+        server/localFileStorage.ts
+        verify.sh
+        vite
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+✓ 2408 modules transformed.
+../dist/public/index.html                                         1.09 kB │ gzip:   0.62 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-D1b5zML-.css                        159.05 kB │ gzip:  25.36 kB
+../dist/public/assets/index-x-Prd7SV.js                         860.03 kB │ gzip: 252.86 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.63s
+▲ [WARNING] Import "defineConfig" will always be undefined because the file "vite" has no exports [import-is-undefined]
+
+    vite.config.ts:1:9:
+      1 │ import { defineConfig } from "vite";
+        ╵          ~~~~~~~~~~~~
+
+▲ [WARNING] Import "createServer" will always be undefined because the file "vite" has no exports [import-is-undefined]
+
+    server/vite.ts:4:9:
+      4 │ import { createServer as createViteServer, createLogger } from "vite";
+        ╵          ~~~~~~~~~~~~
+
+▲ [WARNING] Import "createLogger" will always be undefined because the file "vite" has no exports [import-is-undefined]
+
+    server/vite.ts:4:43:
+      4 │ import { createServer as createViteServer, createLogger } from "vite";
+        ╵                                            ~~~~~~~~~~~~
+
+3 warnings
+
+  dist/index.js  189.1kb
+
+⚡ Done in 8ms
+-rw-r--r-- 1 root root 190K Oct  7 08:57 dist/index.js
+🚀 CourtHearingScheduler constructor called
+
+══════════════════════════════════════════════════════════════
+🕐 SYSTEM TIMEZONE CONFIGURATION - GMT+1 (ALBANIA TIME)
+══════════════════════════════════════════════════════════════
+🌍 Configured Timezone: Europe/Tirane (GMT+1 - Albania Time)
+⏰ Current UTC Time: 2025-10-07T06:57:54.640Z
+🇦🇱 Current Albania Time (GMT+1): 07.10.2025, 08:57
+📅 Albanian Date Format: 07.10.2025
+🕒 Albanian Time Format: 08:57
+══════════════════════════════════════════════════════════════
+
+🟢 Starting court hearing notification scheduler...
+✅ Scheduler configured: checking every 10 minutes, startup check in 5 seconds
+file:///opt/ceshtje-ligjore/dist/index.js:4423
+var vite_config_default = (void 0)({
+                                  ^
+
+TypeError: (void 0) is not a function
+    at file:///opt/ceshtje-ligjore/dist/index.js:4423:35
+    at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v20.19.5
+root@admuser:/opt/ceshtje-ligjore#

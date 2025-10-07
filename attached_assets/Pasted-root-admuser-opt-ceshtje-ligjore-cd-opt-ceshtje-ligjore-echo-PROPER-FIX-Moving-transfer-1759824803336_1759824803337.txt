@@ -1,0 +1,88 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+echo "=== PROPER FIX - Moving transferCases INSIDE the class ==="
+
+# Remove all the broken transferCases code (everything after "export const storage")
+sed -i '/^export const storage/,$!b; /^export const storage/!d' server/storage.ts
+
+# Now add the export back
+echo "" >> server/storage.ts
+echo "export const storage = new DatabaseStorage();" >> server/storage.ts
+
+# Now let's add transferCases method INSIDE the class, before the closing brace
+# First, find where the class ends (before the export)
+# The class ends around line 761, we need to insert before that
+
+# Let's recreate the method properly INSIDE the class
+# Remove the closing brace of the class, add the method, then add the closing brace back
+
+# Backup first
+cp server/storage.ts server/storage.ts.broken
+
+# Find the last method in the class (saveEmailNotificationSettings) and add aftefigrep -n "class DatabaseStorage\|async.*Promise\|^}" server/storage.ts | tail -
+=== PROPER FIX - Moving transferCases INSIDE the class ===
+✅ Method added inside class!
+
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+✓ 2411 modules transformed.
+../dist/public/index.html                                         1.09 kB │ gzip:   0.63 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-D1b5zML-.css                        159.05 kB │ gzip:  25.36 kB
+../dist/public/assets/index-No3X9pMA.js                         870.74 kB │ gzip: 255.59 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.65s
+✘ [ERROR] Multiple exports with the same name "storage"
+
+    server/storage.ts:774:13:
+      774 │ export const storage = new DatabaseStorage();
+          ╵              ~~~~~~~
+
+  The name "storage" was originally exported here:
+
+    server/storage.ts:772:13:
+      772 │ export const storage = new DatabaseStorage();
+          ╵              ~~~~~~~
+
+✘ [ERROR] The symbol "storage" has already been declared
+
+    server/storage.ts:774:13:
+      774 │ export const storage = new DatabaseStorage();
+          ╵              ~~~~~~~
+
+  The symbol "storage" was originally declared here:
+
+    server/storage.ts:772:13:
+      772 │ export const storage = new DatabaseStorage();
+          ╵              ~~~~~~~
+
+2 errors
+Build failed. Showing storage.ts structure:
+318:  async createDataEntry(entry: InsertDataEntry): Promise<DataEntry> {
+501:  async getDataEntryById(id: number): Promise<DataEntry | undefined> {
+509:  async updateDataEntry(id: number, updates: UpdateDataEntry): Promise<DataEntry> {
+518:  async deleteDataEntry(id: number): Promise<void> {
+580:  async getRecentDataEntries(limit = 5): Promise<(DataEntry & { createdByName: string; nrRendor: number })[]> {
+619:  async getDataEntryStats(): Promise<{
+649:  async createManualUser(userData: CreateUser): Promise<User> {
+654:  async deleteUser(userId: string): Promise<void> {
+659:  async createBackupCheckpoint(checkpointData: InsertCheckpoint): Promise<DatabaseCheckpoint> {
+664:  async getAllCheckpoints(): Promise<DatabaseCheckpoint[]> {
+671:  async getCheckpointById(id: number): Promise<DatabaseCheckpoint | undefined> {
+679:  async deleteCheckpoint(id: number): Promise<void> {
+683:  async restoreFromCheckpoint(checkpointId: number): Promise<void> {
+691:  async saveSystemSetting(key: string, value: any, updatedById: string): Promise<SystemSettings> {
+711:  async getSystemSetting(key: string): Promise<SystemSettings | undefined> {
+719:  async getAllSystemSettings(): Promise<SystemSettings[]> {
+724:  async getEmailNotificationSettings(): Promise<any> {
+757:  async saveEmailNotificationSettings(settings: any, updatedById: string): Promise<void> {
+761:  async transferCases(fromUserId: string, toUserId: string): Promise<{ count: number }> {
+770:}
+root@admuser:/opt/ceshtje-ligjore#

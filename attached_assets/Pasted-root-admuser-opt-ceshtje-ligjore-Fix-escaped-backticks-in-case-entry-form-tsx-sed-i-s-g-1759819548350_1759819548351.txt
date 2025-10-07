@@ -1,0 +1,158 @@
+root@admuser:/opt/ceshtje-ligjore# # Fix escaped backticks in case-entry-form.tsx
+sed -i 's/\\`/`/g' client/src/components/case-entry-form.tsx
+sed -i 's/\\\$/$/g' client/src/components/case-entry-form.tsx
+# Fix escaped backticks in case-edit-form.tsx
+sed -i 's/\\`/`/g' client/src/components/case-edit-form.tsx
+sed -i 's/\\\$/$/g' client/src/components/case-edit-form.tsx
+# Now rebuild
+npm run build
+# If build succeeds, restart PM2
+NODE_ENV=production \
+PORT=5000 \
+DATABASE_URL="postgresql://albpetrol_user:SecurePass2025@localhost:5432/albpetrol_legal_db" \
+SMTP_HOST="smtp-mail.outlook.com" \
+SMTP_PORT=587 \
+SMTP_USER="it.system@albpetrol.al" \
+SMTP_PASS="Albpetrol2025" \
+SMTP_FROM="it.system@albpetrol.al" \
+EMAIL_FROM="it.system@albpetrol.al" \
+TZ="Europe/Tirane" \
+pm2 restart albpetrol-legal --update-env
+pm2 save
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+✓ 2413 modules transformed.
+../dist/public/index.html                                         1.09 kB │ gzip:   0.62 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-HvdDZsnC.css                        159.50 kB │ gzip:  25.50 kB
+../dist/public/assets/index-D1qTLsaR.js                         877.60 kB │ gzip: 257.59 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.69s
+▲ [WARNING] Import "defineConfig" will always be undefined because the file "vite" has no exports [import-is-undefined]
+
+    vite.config.ts:1:9:
+      1 │ import { defineConfig } from "vite";
+        ╵          ~~~~~~~~~~~~
+
+▲ [WARNING] Import "createServer" will always be undefined because the file "vite" has no exports [import-is-undefined]
+
+    server/vite.ts:4:9:
+      4 │ import { createServer as createViteServer, createLogger } from "vite";
+        ╵          ~~~~~~~~~~~~
+
+▲ [WARNING] Import "createLogger" will always be undefined because the file "vite" has no exports [import-is-undefined]
+
+    server/vite.ts:4:43:
+      4 │ import { createServer as createViteServer, createLogger } from "vite";
+        ╵                                            ~~~~~~~~~~~~
+
+3 warnings
+
+  dist/index.js  189.4kb
+
+⚡ Done in 9ms
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 3    │ online    │ 0%       │ 18.9mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Saving current process list...
+[PM2] Successfully saved in /root/.pm2/dump.pm2
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Find the most recent backup
+ls -lt backups/ | head -10
+
+# This will show the backup files - look for the most recent ones
+# They should be named like: case-entry-form.backup.1759819300
+# Note the timestamp of the most recent backup
+
+# Replace TIMESTAMP with the actual timestamp you see
+TIMESTAMP=1759819300  # UPDATE THIS with the actual number you see
+
+# Restore the backup files
+cp backups/case-entry-form.backup.$TIMESTAMP client/src/components/case-entry-form.tsx
+cp backups/case-edit-form.backup.$TIMESTAMP client/src/components/case-edit-form.tsx
+
+# Rebuild
+npm run build
+
+# If build succeeds, restart PM2
+NODE_ENV=production \
+PORT=5000 \
+DATABASE_URL="postgresql://albpetrol_user:SecurePass2025@localhost:5432/albpetropm2 statust albpetrol-legal --update-env
+total 264
+-rw-r--r-- 1 root root 26108 Oct  7 02:41 edit.backup.1759797680
+-rw-r--r-- 1 root root 26640 Oct  7 02:41 entry.backup.1759797680
+-rw-r--r-- 1 root root 25582 Oct  7 02:24 case-edit-form.tsx.backup.20251007_022416
+-rw-r--r-- 1 root root 26085 Oct  7 02:24 case-entry-form.tsx.backup.20251007_022416
+-rw-r--r-- 1 root root  2645 Oct  6 10:55 backup-data-only-2025-10-06T08-55-06-454Z.sql
+-rw-r--r-- 1 root root 18770 Oct  5 23:37 backup-full-2025-10-05T21-37-17-200Z.sql
+-rw-r--r-- 1 root root 18683 Oct  5 23:33 backup-full-2025-10-05T21-33-35-892Z.sql
+-rw-r--r-- 1 root root 18592 Oct  5 23:33 backup-full-2025-10-05T21-33-33-681Z.sql
+-rw-r--r-- 1 root root 18504 Oct  5 23:33 backup-full-2025-10-05T21-33-15-654Z.sql
+cp: cannot stat 'backups/case-entry-form.backup.1759819300': No such file or directory
+cp: cannot stat 'backups/case-edit-form.backup.1759819300': No such file or directory
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+✓ 2413 modules transformed.
+../dist/public/index.html                                         1.09 kB │ gzip:   0.62 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-HvdDZsnC.css                        159.50 kB │ gzip:  25.50 kB
+../dist/public/assets/index-D1qTLsaR.js                         877.60 kB │ gzip: 257.59 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.68s
+▲ [WARNING] Import "defineConfig" will always be undefined because the file "vite" has no exports [import-is-undefined]
+
+    vite.config.ts:1:9:
+      1 │ import { defineConfig } from "vite";
+        ╵          ~~~~~~~~~~~~
+
+▲ [WARNING] Import "createServer" will always be undefined because the file "vite" has no exports [import-is-undefined]
+
+    server/vite.ts:4:9:
+      4 │ import { createServer as createViteServer, createLogger } from "vite";
+        ╵          ~~~~~~~~~~~~
+
+▲ [WARNING] Import "createLogger" will always be undefined because the file "vite" has no exports [import-is-undefined]
+
+    server/vite.ts:4:43:
+      4 │ import { createServer as createViteServer, createLogger } from "vite";
+        ╵                                            ~~~~~~~~~~~~
+
+3 warnings
+
+  dist/index.js  189.4kb
+
+⚡ Done in 7ms
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 4    │ online    │ 0%       │ 17.0mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Saving current process list...
+[PM2] Successfully saved in /root/.pm2/dump.pm2
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 4    │ online    │ 0%       │ 74.6mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@admuser:/opt/ceshtje-ligjore#

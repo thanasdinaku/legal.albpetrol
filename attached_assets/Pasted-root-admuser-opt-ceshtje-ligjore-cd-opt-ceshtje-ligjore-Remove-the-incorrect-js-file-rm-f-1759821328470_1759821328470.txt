@@ -1,0 +1,57 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Remove the incorrect .js file
+rm -f ecosystem.config.js
+
+# Create correct .cjs file
+cat > ecosystem.config.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'albpetrol-legal',
+    script: './dist/index.js',
+    env: {
+      NODE_ENV: 'production',
+      PORT: '5000',
+      DATABASE_URL: 'postgresql://albpetrol_user:SecurePass2025@localhost:5432/albpetrol_legal_db',
+      SMTP_HOST: 'smtp-mail.outlook.com',
+      SMTP_PORT: '587',
+      SMTP_USER: 'it.system@albpetrol.al',
+      SMTP_PASS: 'Albpetrol2025',
+      SMTP_FROM: 'it.system@albpetrol.al',
+      EMAIL_FROM: 'it.system@albpetrol.al',
+      TZ: 'Europe/Tirane'
+    },
+curl -I http://localhost:5000se-size=512',
+[PM2][WARN] Applications albpetrol-legal not running, starting...
+[PM2] App [albpetrol-legal] launched (1 instances)
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 0    │ online    │ 0%       │ 14.0mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Saving current process list...
+[PM2] Successfully saved in /root/.pm2/dump.pm2
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 0    │ online    │ 0%       │ 71.9mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none';
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: strict-origin-when-cross-origin
+Accept-Ranges: bytes
+Cache-Control: public, max-age=0
+Last-Modified: Tue, 07 Oct 2025 07:01:38 GMT
+ETag: W/"44e-199bd79c70a"
+Content-Type: text/html; charset=UTF-8
+Content-Length: 1102
+Date: Tue, 07 Oct 2025 07:14:19 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+root@admuser:/opt/ceshtje-ligjore#

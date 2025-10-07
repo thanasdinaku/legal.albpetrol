@@ -1,0 +1,97 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+echo "=== Let's check if there's a duplicate or conflicting /api/users route ==="
+grep -B2 -A2 "'/api/users'" server/routes.ts
+
+echo ""
+echo "=== Search in dist/index.js for the exact pattern ==="
+grep -n "app2.get.*'/api/users'" dist/index.js
+
+echo ""
+echo "=== Let's verify storage.getAllUsers exists ==="
+grep -n "getAllUsers" server/storage.ts
+
+echo ""
+echo "=== Critical check: Is there tree-shaking happening? ==="
+echo "Let's see if the route is commented out or has syntax issues:"
+sed -n '1398,1410p' server/routes.ts | cat -A
+
+echo ""
+echo "=== Check PM2 logs for actual runtime behavior ==="
+pm2 logs albpetrol-legal --lines 20 --nostream
+=== Let's check if there's a duplicate or conflicting /api/users route ===
+
+  // User Management Routes - Get all users (Admin only)
+  app.get('/api/users', isAuthenticated, isAdmin, async (req, res) => {
+    try {
+      const users = await storage.getAllUsers();
+
+=== Search in dist/index.js for the exact pattern ===
+
+=== Let's verify storage.getAllUsers exists ===
+28:  getAllUsers(): Promise<User[]>;
+271:  async getAllUsers(): Promise<User[]> {
+
+=== Critical check: Is there tree-shaking happening? ===
+Let's see if the route is commented out or has syntax issues:
+$
+  // User Management Routes - Get all users (Admin only)$
+  app.get('/api/users', isAuthenticated, isAdmin, async (req, res) => {$
+    try {$
+      const users = await storage.getAllUsers();$
+      res.json(users);$
+    } catch (error) {$
+      console.error('Error fetching users:', error);$
+      res.status(500).json({ error: 'Failed to fetch users' });$
+    }$
+  });$
+$
+  // Transfer case ownership from one user to another (Admin only)$
+
+=== Check PM2 logs for actual runtime behavior ===
+[TAILING] Tailing last 20 lines for [albpetrol-legal] process (change the value with --lines option)
+/root/.pm2/logs/albpetrol-legal-error-0.log last 20 lines:
+0|albpetro |     at done (/opt/ceshtje-ligjore/node_modules/multer/lib/make-middleware.js:59:7)
+0|albpetro |     at indicateDone (/opt/ceshtje-ligjore/node_modules/multer/lib/make-middleware.js:63:68)
+0|albpetro |     at Multipart.<anonymous> (/opt/ceshtje-ligjore/node_modules/multer/lib/make-middleware.js:187:7)
+0|albpetro |     at Multipart.emit (node:events:524:28)
+0|albpetro |     at emitCloseNT (node:internal/streams/destroy:147:10)
+0|albpetro | Error uploading file: Error: PRIVATE_OBJECT_DIR not set. Create a bucket in 'Object Storage' tool and set PRIVATE_OBJECT_DIR env var.
+0|albpetro |     at ObjectStorageService.getPrivateObjectDir (file:///opt/ceshtje-ligjore/dist/index.js:2660:13)
+0|albpetro |     at ObjectStorageService.uploadDocumentBuffer (file:///opt/ceshtje-ligjore/dist/index.js:2751:35)
+0|albpetro |     at file:///opt/ceshtje-ligjore/dist/index.js:4367:55
+0|albpetro |     at Layer.handle [as handle_request] (/opt/ceshtje-ligjore/node_modules/express/lib/router/layer.js:95:5)
+0|albpetro |     at next (/opt/ceshtje-ligjore/node_modules/express/lib/router/route.js:149:13)
+0|albpetro |     at done (/opt/ceshtje-ligjore/node_modules/multer/lib/make-middleware.js:59:7)
+0|albpetro |     at indicateDone (/opt/ceshtje-ligjore/node_modules/multer/lib/make-middleware.js:63:68)
+0|albpetro |     at Multipart.<anonymous> (/opt/ceshtje-ligjore/node_modules/multer/lib/make-middleware.js:187:7)
+0|albpetro |     at Multipart.emit (node:events:524:28)
+0|albpetro |     at emitCloseNT (node:internal/streams/destroy:147:10)
+0|albpetro | ReferenceError: app is not defined
+0|albpetro |     at file:///opt/ceshtje-ligjore/dist/index.js:4415:1
+0|albpetro |     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+
+/root/.pm2/logs/albpetrol-legal-out-0.log last 20 lines:
+0|albpetro |     Window check: hearing=2025-10-05T21:42:00.000Z, now=2025-10-07T08:13:10.747Z, hours_ahead=-34.5, window=≤26h, result=false
+0|albpetro | Appeal hearing is within notification window: false (hearing at 2025-10-05T21:42:00.000Z is -35 hours from now)
+0|albpetro | Found 0 upcoming hearings
+0|albpetro | [2025-10-07T08:23:05.725Z] 🕐 AUTOMATIC CHECK TRIGGERED (every 10 minutes)
+0|albpetro | [2025-10-07T08:23:05.725Z] === COURT HEARING CHECK STARTED ===
+0|albpetro | Current time (GMT+1): 07.10.2025, 10:23
+0|albpetro | Checking hearings within ≤26 hours: up to 08.10.2025, 10:23 [Albania Time]
+0|albpetro | Checking entry 1 - hearing field: "2025-10-05T23:12"
+0|albpetro | Parsing date string: 2025-10-05T23:12
+0|albpetro | Parsed exactly as stored: 2025-10-05T21:12:00.000Z from input: 2025-10-05T23:12
+0|albpetro | Parsed hearing date: 2025-10-05T21:12:00.000Z
+0|albpetro |     Window check: hearing=2025-10-05T21:12:00.000Z, now=2025-10-07T08:23:05.737Z, hours_ahead=-35.2, window=≤26h, result=false
+0|albpetro | Is within notification window: false (hearing at 2025-10-05T21:12:00.000Z is -35 hours from now)
+0|albpetro | Checking entry 1 appeal - hearing field: "2025-10-05T23:42"
+0|albpetro | Parsing date string: 2025-10-05T23:42
+0|albpetro | Parsed exactly as stored: 2025-10-05T21:42:00.000Z from input: 2025-10-05T23:42
+0|albpetro | Parsed appeal hearing date: 2025-10-05T21:42:00.000Z
+0|albpetro |     Window check: hearing=2025-10-05T21:42:00.000Z, now=2025-10-07T08:23:05.738Z, hours_ahead=-34.7, window=≤26h, result=false
+0|albpetro | Appeal hearing is within notification window: false (hearing at 2025-10-05T21:42:00.000Z is -35 hours from now)
+0|albpetro | Found 0 upcoming hearings
+
+root@admuser:/opt/ceshtje-ligjore#

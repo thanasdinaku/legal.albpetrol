@@ -1,0 +1,51 @@
+root@admuser:/opt/ceshtje-ligjore# # Check if port 5000 is listening
+netstat -tuln | grep 5000
+
+# Check the logs to see if app started successfully
+pm2 logs albpetrol-legal --lines 20 --nostream
+[TAILING] Tailing last 20 lines for [albpetrol-legal] process (change the value with --lines option)
+/root/.pm2/logs/albpetrol-legal-error.log last 20 lines:
+0|albpetro | TypeError: (void 0) is not a function
+0|albpetro |     at file:///opt/ceshtje-ligjore/dist/index.js:4393:35
+0|albpetro |     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+0|albpetro | TypeError: (void 0) is not a function
+0|albpetro |     at file:///opt/ceshtje-ligjore/dist/index.js:4393:35
+0|albpetro |     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+0|albpetro | TypeError: (void 0) is not a function
+0|albpetro |     at file:///opt/ceshtje-ligjore/dist/index.js:4393:35
+0|albpetro |     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+0|albpetro | TypeError: (void 0) is not a function
+0|albpetro |     at file:///opt/ceshtje-ligjore/dist/index.js:4393:35
+0|albpetro |     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+0|albpetro | TypeError: (void 0) is not a function
+0|albpetro |     at file:///opt/ceshtje-ligjore/dist/index.js:4393:35
+0|albpetro |     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+
+/root/.pm2/logs/albpetrol-legal-out.log last 20 lines:
+0|albpetro |
+0|albpetro | 🟢 Starting court hearing notification scheduler...
+0|albpetro | ✅ Scheduler configured: checking every 10 minutes, startup check in 5 seconds
+0|albpetro | [2025-10-07T06:49:34.437Z] 🚀 STARTUP CHECK TRIGGERED (5 seconds after start)
+0|albpetro | [2025-10-07T06:49:34.438Z] === COURT HEARING CHECK STARTED ===
+0|albpetro | Current time (GMT+1): 07.10.2025, 08:49
+0|albpetro | Checking hearings within ≤26 hours: up to 08.10.2025, 08:49 [Albania Time]
+0|albpetro | Checking entry 1 - hearing field: "2025-10-05T23:12"
+0|albpetro | Parsing date string: 2025-10-05T23:12
+0|albpetro | Parsed exactly as stored: 2025-10-05T21:12:00.000Z from input: 2025-10-05T23:12
+0|albpetro | Parsed hearing date: 2025-10-05T21:12:00.000Z
+0|albpetro |     Window check: hearing=2025-10-05T21:12:00.000Z, now=2025-10-07T06:49:34.457Z, hours_ahead=-33.6, window=≤26h, result=false
+0|albpetro | Is within notification window: false (hearing at 2025-10-05T21:12:00.000Z is -34 hours from now)
+0|albpetro | Checking entry 1 appeal - hearing field: "2025-10-05T23:42"
+0|albpetro | Parsing date string: 2025-10-05T23:42
+0|albpetro | Parsed exactly as stored: 2025-10-05T21:42:00.000Z from input: 2025-10-05T23:42
+0|albpetro | Parsed appeal hearing date: 2025-10-05T21:42:00.000Z
+0|albpetro |     Window check: hearing=2025-10-05T21:42:00.000Z, now=2025-10-07T06:49:34.457Z, hours_ahead=-33.1, window=≤26h, result=false
+0|albpetro | Appeal hearing is within notification window: false (hearing at 2025-10-05T21:42:00.000Z is -33 hours from now)
+0|albpetro | Found 0 upcoming hearings
+
+root@admuser:/opt/ceshtje-ligjore#

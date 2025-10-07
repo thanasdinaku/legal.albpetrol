@@ -1,0 +1,110 @@
+
+root@admuser:/opt/ceshtje-ligjore# pm2 logs albpetrol-legal --lines 50
+[TAILING] Tailing last 50 lines for [albpetrol-legal] process (change the value with --lines option)
+/root/.pm2/logs/albpetrol-legal-error.log last 50 lines:
+0|albpetro | Warning: Corrupted tables field for backup 59046d3a-6422-486e-90e6-21d6044a49fe: [ 'data_entries', 'database_checkpoints' ]
+0|albpetro | Warning: Corrupted tables field for backup c2fb1ac9-f691-41b1-aeee-9a657a22b6d9: [
+0|albpetro |   'data_entries',
+0|albpetro |   'users',
+0|albpetro |   'system_settings',
+0|albpetro |   'sessions',
+0|albpetro |   'database_checkpoints',
+0|albpetro |   'system_backups'
+0|albpetro | ]
+0|albpetro | Warning: Corrupted tables field for backup fe6e12f6-4c49-4b9d-b633-e07d5984dbe9: [
+0|albpetro |   'data_entries',
+0|albpetro |   'users',
+0|albpetro |   'system_settings',
+0|albpetro |   'sessions',
+0|albpetro |   'database_checkpoints',
+0|albpetro |   'system_backups'
+0|albpetro | ]
+0|albpetro | Warning: Corrupted tables field for backup e0d45223-168a-4141-a9e1-1fd3b44478a4: [
+0|albpetro |   'data_entries',
+0|albpetro |   'users',
+0|albpetro |   'system_settings',
+0|albpetro |   'sessions',
+0|albpetro |   'database_checkpoints',
+0|albpetro |   'system_backups'
+0|albpetro | ]
+0|albpetro | Warning: Corrupted tables field for backup 3a8fd2db-3e60-4bc9-ac7e-3aa9484d309c: [
+0|albpetro |   'data_entries',
+0|albpetro |   'users',
+0|albpetro |   'system_settings',
+0|albpetro |   'sessions',
+0|albpetro |   'database_checkpoints',
+0|albpetro |   'system_backups'
+0|albpetro | ]
+0|albpetro | Warning: Corrupted tables field for backup 2e264b7d-8675-4256-8c91-bbf79ee70432: [
+0|albpetro |   'data_entries',
+0|albpetro |   'users',
+0|albpetro |   'system_settings',
+0|albpetro |   'sessions',
+0|albpetro |   'database_checkpoints',
+0|albpetro |   'system_backups'
+0|albpetro | ]
+0|albpetro | Warning: Corrupted tables field for backup 59046d3a-6422-486e-90e6-21d6044a49fe: [ 'data_entries', 'database_checkpoints' ]
+0|albpetro | TypeError: (void 0) is not a function
+0|albpetro |     at file:///opt/ceshtje-ligjore/dist/index.js:4393:35
+0|albpetro |     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+0|albpetro | TypeError: (void 0) is not a function
+0|albpetro |     at file:///opt/ceshtje-ligjore/dist/index.js:4393:35
+0|albpetro |     at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+0|albpetro |     at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+
+/root/.pm2/logs/albpetrol-legal-out.log last 50 lines:
+0|albpetro | 🟢 Starting court hearing notification scheduler...
+0|albpetro | ✅ Scheduler configured: checking every 10 minutes, startup check in 5 seconds
+0|albpetro | [2025-10-07T06:41:50.136Z] 🚀 STARTUP CHECK TRIGGERED (5 seconds after start)
+0|albpetro | [2025-10-07T06:41:50.137Z] === COURT HEARING CHECK STARTED ===
+0|albpetro | Current time (GMT+1): 07.10.2025, 08:41
+0|albpetro | Checking hearings within ≤26 hours: up to 08.10.2025, 08:41 [Albania Time]
+0|albpetro | Checking entry 1 - hearing field: "2025-10-05T23:12"
+0|albpetro | Parsing date string: 2025-10-05T23:12
+0|albpetro | Parsed exactly as stored: 2025-10-05T21:12:00.000Z from input: 2025-10-05T23:12
+0|albpetro | Parsed hearing date: 2025-10-05T21:12:00.000Z
+0|albpetro |     Window check: hearing=2025-10-05T21:12:00.000Z, now=2025-10-07T06:41:50.155Z, hours_ahead=-33.5, window=≤26h, result=false
+0|albpetro | Is within notification window: false (hearing at 2025-10-05T21:12:00.000Z is -33 hours from now)
+0|albpetro | Checking entry 1 appeal - hearing field: "2025-10-05T23:42"
+0|albpetro | Parsing date string: 2025-10-05T23:42
+0|albpetro | Parsed exactly as stored: 2025-10-05T21:42:00.000Z from input: 2025-10-05T23:42
+0|albpetro | Parsed appeal hearing date: 2025-10-05T21:42:00.000Z
+0|albpetro |     Window check: hearing=2025-10-05T21:42:00.000Z, now=2025-10-07T06:41:50.155Z, hours_ahead=-33.0, window=≤26h, result=false
+0|albpetro | Appeal hearing is within notification window: false (hearing at 2025-10-05T21:42:00.000Z is -33 hours from now)
+0|albpetro | Found 0 upcoming hearings
+0|albpetro | 🚀 CourtHearingScheduler constructor called
+0|albpetro |
+0|albpetro | ══════════════════════════════════════════════════════════════
+0|albpetro | 🕐 SYSTEM TIMEZONE CONFIGURATION - GMT+1 (ALBANIA TIME)
+0|albpetro | ══════════════════════════════════════════════════════════════
+0|albpetro | 🌍 Configured Timezone: Europe/Tirane (GMT+1 - Albania Time)
+0|albpetro | ⏰ Current UTC Time: 2025-10-07T06:44:14.090Z
+0|albpetro | 🇦🇱 Current Albania Time (GMT+1): 07.10.2025, 08:44
+0|albpetro | 📅 Albanian Date Format: 07.10.2025
+0|albpetro | 🕒 Albanian Time Format: 08:44
+0|albpetro | ══════════════════════════════════════════════════════════════
+0|albpetro |
+0|albpetro | 🟢 Starting court hearing notification scheduler...
+0|albpetro | ✅ Scheduler configured: checking every 10 minutes, startup check in 5 seconds
+0|albpetro | [2025-10-07T06:44:19.100Z] 🚀 STARTUP CHECK TRIGGERED (5 seconds after start)
+0|albpetro | [2025-10-07T06:44:19.101Z] === COURT HEARING CHECK STARTED ===
+0|albpetro | Current time (GMT+1): 07.10.2025, 08:44
+0|albpetro | Checking hearings within ≤26 hours: up to 08.10.2025, 08:44 [Albania Time]
+0|albpetro | Checking entry 1 - hearing field: "2025-10-05T23:12"
+0|albpetro | Parsing date string: 2025-10-05T23:12
+0|albpetro | Parsed exactly as stored: 2025-10-05T21:12:00.000Z from input: 2025-10-05T23:12
+0|albpetro | Parsed hearing date: 2025-10-05T21:12:00.000Z
+0|albpetro |     Window check: hearing=2025-10-05T21:12:00.000Z, now=2025-10-07T06:44:19.124Z, hours_ahead=-33.5, window=≤26h, result=false
+0|albpetro | Is within notification window: false (hearing at 2025-10-05T21:12:00.000Z is -34 hours from now)
+0|albpetro | Checking entry 1 appeal - hearing field: "2025-10-05T23:42"
+0|albpetro | Parsing date string: 2025-10-05T23:42
+0|albpetro | Parsed exactly as stored: 2025-10-05T21:42:00.000Z from input: 2025-10-05T23:42
+0|albpetro | Parsed appeal hearing date: 2025-10-05T21:42:00.000Z
+0|albpetro |     Window check: hearing=2025-10-05T21:42:00.000Z, now=2025-10-07T06:44:19.124Z, hours_ahead=-33.0, window=≤26h, result=false
+0|albpetro | Appeal hearing is within notification window: false (hearing at 2025-10-05T21:42:00.000Z is -33 hours from now)
+0|albpetro | Found 0 upcoming hearings
+
+^C
+root@admuser:/opt/ceshtje-ligjore# netstat -tuln | grep 5000
+root@admuser:/opt/ceshtje-ligjore#

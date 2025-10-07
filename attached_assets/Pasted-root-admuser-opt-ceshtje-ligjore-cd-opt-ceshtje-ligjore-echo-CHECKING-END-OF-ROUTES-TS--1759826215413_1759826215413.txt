@@ -1,0 +1,67 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+echo "=== CHECKING END OF ROUTES.TS ==="
+echo "Total lines: $(wc -l < server/routes.ts)"
+
+echo ""
+echo "Last 20 lines of routes.ts:"
+tail -20 server/routes.ts
+
+echo ""
+echo "=== Is there code AFTER the return statement? ==="
+grep -n "return httpServer" server/routes.ts
+
+echo ""
+echo "Show everything AFTER the return statement:"
+line_num=$(grep -n "return httpServer" server/routes.ts | cut -d: -f1)
+echo "Return is at line: $line_num"
+tail -n +$line_num server/routes.ts
+
+echo ""
+echo "=== This is likely the issue - code after return is unreachable ==="
+echo "Let's see the structure:"
+grep -n "export.*registerRoutes\|return httpServer\|^}" server/routes.ts | tail -10
+=== CHECKING END OF ROUTES.TS ===
+Total lines: 1462
+
+Last 20 lines of routes.ts:
+    } catch (error) {
+      console.error('Error transferring cases:', error);
+      res.status(500).json({ error: 'Failed to transfer cases' });
+    }
+  });
+  const httpServer = createServer(app);
+  // Manual notification trigger (for testing)
+  app.post('/api/force-notifications', isAuthenticated, async (req, res) => {
+    try {
+      console.log('🔥 Manual notification check triggered by user');
+      await courtHearingScheduler.forceNotificationCheck();
+      res.json({ success: true, message: 'Notification check triggered' });
+    } catch (error) {
+      console.error('Error triggering notifications:', error);
+      res.status(500).json({ error: 'Failed to trigger notifications' });
+    }
+  });
+
+  return httpServer;
+}
+
+=== Is there code AFTER the return statement? ===
+1461:  return httpServer;
+
+Show everything AFTER the return statement:
+Return is at line: 1461
+  return httpServer;
+}
+
+=== This is likely the issue - code after return is unreachable ===
+Let's see the structure:
+14:} from "@shared/schema";
+25:});
+31:});
+59:});
+81:});
+83:export async function registerRoutes(app: Express): Promise<Server> {
+1461:  return httpServer;
+1462:}
+root@admuser:/opt/ceshtje-ligjore#

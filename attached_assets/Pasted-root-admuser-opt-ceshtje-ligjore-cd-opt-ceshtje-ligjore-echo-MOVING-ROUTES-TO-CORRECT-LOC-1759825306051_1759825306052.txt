@@ -1,0 +1,74 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+echo "=== MOVING ROUTES TO CORRECT LOCATION ==="
+
+# Extract the new routes (from line 1415 to end)
+sed -n '1415,$p' server/routes.ts > /tmp/new_routes.txt
+
+# Count lines in the new routes
+echo "Extracted $(wc -l < /tmp/new_routes.txt) lines of new routes"
+
+# Remove the routes from the end (everything after line 1414)
+sed -i '1415,$d' server/routes.ts
+
+# Now insert the routes BEFORE the httpServer creation (before line 1398)
+# First, split the file at line 1397
+head -1397 server/routes.ts > /tmp/routes_part1.txt
+tail -n +1398 server/routes.ts > /tmp/routes_part2.txt
+
+# Combine: part1 + new routes + part2
+cat /tmp/routes_part1.txt > server/routes.ts
+echo "" >> server/routes.ts
+echo "  // User Management and Case Transfer Routes" >> server/routes.ts
+cat /tmp/new_routes.txt >> server/routes.ts
+echo "" >> server/routes.ts
+finpm run build 2>&1 | tail -20/routes.ts | tail -3..."s!"/case-transfer"
+=== MOVING ROUTES TO CORRECT LOCATION ===
+Extracted 59 lines of new routes
+✅ Routes moved to correct location!
+
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+✓ 2411 modules transformed.
+../dist/public/index.html                                         1.09 kB │ gzip:   0.63 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-D1b5zML-.css                        159.05 kB │ gzip:  25.36 kB
+../dist/public/assets/index-No3X9pMA.js                         870.74 kB │ gzip: 255.59 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.64s
+✘ [ERROR] Unexpected "}"
+
+    server/routes.ts:1401:2:
+      1401 │   });
+           ╵   ^
+
+1 error
+❌ Build failed:
+✓ 2411 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/public/index.html                                         1.09 kB │ gzip:   0.63 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-D1b5zML-.css                        159.05 kB │ gzip:  25.36 kB
+../dist/public/assets/index-No3X9pMA.js                         870.74 kB │ gzip: 255.59 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.71s
+✘ [ERROR] Unexpected "}"
+
+    server/routes.ts:1401:2:
+      1401 │   });
+           ╵   ^
+
+1 error
+root@admuser:/opt/ceshtje-ligjore#

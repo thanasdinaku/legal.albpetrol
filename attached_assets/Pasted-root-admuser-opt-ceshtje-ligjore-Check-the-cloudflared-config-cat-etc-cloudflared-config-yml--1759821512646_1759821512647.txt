@@ -1,0 +1,63 @@
+root@admuser:/opt/ceshtje-ligjore# # Check the cloudflared config
+cat /etc/cloudflared/config.yml
+
+# Also check recent cloudflared logs for any errors
+sudo journalctl -u cloudflared -n 50 --no-pager
+tunnel: 3f017006-090f-4196-9d28-1dc777c480e7
+credentials-file: /etc/cloudflared/3f017006-090f-4196-9d28-1dc777c480e7.json
+
+ingress:
+  - hostname: legal.albpetrol.al
+    service: http://localhost:80
+  - service: http_status:404
+Oct 07 01:51:40 admuser cloudflared[72006]: 2025-10-06T23:51:40Z ERR failed to run the datagram handler error="context canceled" connIndex=3 event=0 ip=198.41.200.13
+Oct 07 01:51:40 admuser cloudflared[72006]: 2025-10-06T23:51:40Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=3 event=0 ip=198.41.200.13
+Oct 07 01:51:40 admuser cloudflared[72006]: 2025-10-06T23:51:40Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=3 event=0 ip=198.41.200.13
+Oct 07 01:51:40 admuser cloudflared[72006]: 2025-10-06T23:51:40Z INF Retrying connection in up to 1s connIndex=3 event=0 ip=198.41.200.13
+Oct 07 01:51:40 admuser cloudflared[72006]: 2025-10-06T23:51:40Z ERR Connection terminated connIndex=3
+Oct 07 01:51:40 admuser cloudflared[72006]: 2025-10-06T23:51:40Z ERR no more connections active and exiting
+Oct 07 01:51:40 admuser cloudflared[72006]: 2025-10-06T23:51:40Z INF Tunnel server stopped
+Oct 07 01:51:40 admuser cloudflared[72006]: 2025-10-06T23:51:40Z ERR icmp router terminated error="context canceled"
+Oct 07 01:51:40 admuser cloudflared[72006]: 2025-10-06T23:51:40Z INF Metrics server stopped
+Oct 07 01:51:40 admuser systemd[1]: cloudflared.service: Deactivated successfully.
+Oct 07 01:51:40 admuser systemd[1]: Stopped cloudflared.
+Oct 07 01:51:40 admuser systemd[1]: cloudflared.service: Consumed 1.629s CPU time.
+Oct 07 01:51:40 admuser systemd[1]: Starting cloudflared...
+Oct 07 01:51:40 admuser cloudflared[72208]: 2025-10-06T23:51:40Z INF Starting tunnel tunnelID=3f017006-090f-4196-9d28-1dc777c480e7
+Oct 07 01:51:40 admuser cloudflared[72208]: 2025-10-06T23:51:40Z INF Version 2025.9.1 (Checksum 3dc1dc4252eae3c691861f926e2b8640063a2ce534b07b7a3f4ec2de439ecfe3)
+Oct 07 01:51:40 admuser cloudflared[72208]: 2025-10-06T23:51:40Z INF GOOS: linux, GOVersion: go1.24.4, GoArch: amd64
+Oct 07 01:51:40 admuser cloudflared[72208]: 2025-10-06T23:51:40Z INF Settings: map[config:/etc/cloudflared/config.yml cred-file:/etc/cloudflared/3f017006-090f-4196-9d28-1dc777c480e7.json credentials-file:/etc/cloudflared/3f017006-090f-4196-9d28-1dc777c480e7.json no-autoupdate:true]
+Oct 07 01:51:40 admuser cloudflared[72208]: 2025-10-06T23:51:40Z INF cloudflared will not automatically update if installed by a package manager.
+Oct 07 01:51:40 admuser cloudflared[72208]: 2025-10-06T23:51:40Z INF Generated Connector ID: 597374d0-a29c-4489-b514-cb5f28915b1b
+Oct 07 01:51:40 admuser cloudflared[72208]: 2025-10-06T23:51:40Z INF Initial protocol quic
+Oct 07 01:51:40 admuser cloudflared[72208]: 2025-10-06T23:51:40Z INF ICMP proxy will use 10.5.20.29 as source for IPv4
+Oct 07 01:51:40 admuser cloudflared[72208]: 2025-10-06T23:51:40Z INF ICMP proxy will use fe80::250:56ff:fe9f:19f1 in zone ens33 as source for IPv6
+Oct 07 01:51:40 admuser cloudflared[72208]: 2025-10-06T23:51:40Z INF ICMP proxy will use 10.5.20.29 as source for IPv4
+Oct 07 01:51:40 admuser cloudflared[72208]: 2025-10-06T23:51:40Z INF ICMP proxy will use fe80::250:56ff:fe9f:19f1 in zone ens33 as source for IPv6
+Oct 07 01:51:40 admuser cloudflared[72208]: 2025-10-06T23:51:40Z INF Starting metrics server on 127.0.0.1:20241/metrics
+Oct 07 01:51:40 admuser cloudflared[72208]: 2025-10-06T23:51:40Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.43
+Oct 07 01:51:42 admuser cloudflared[72208]: 2025-10-06T23:51:42Z INF Registered tunnel connection connIndex=0 connection=7850c007-dec7-4cad-95ed-b16482d3e7cf event=0 ip=198.41.200.43 location=sof01 protocol=quic
+Oct 07 01:51:42 admuser cloudflared[72208]: 2025-10-06T23:51:42Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=1 event=0 ip=198.41.192.7
+Oct 07 01:51:42 admuser systemd[1]: Started cloudflared.
+Oct 07 01:51:43 admuser cloudflared[72208]: 2025-10-06T23:51:43Z INF Registered tunnel connection connIndex=1 connection=2f4fcafa-33f8-45b2-9388-56e4fa167bc5 event=0 ip=198.41.192.7 location=bud01 protocol=quic
+Oct 07 01:51:43 admuser cloudflared[72208]: 2025-10-06T23:51:43Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=2 event=0 ip=198.41.192.37
+Oct 07 01:51:44 admuser cloudflared[72208]: 2025-10-06T23:51:44Z INF Registered tunnel connection connIndex=2 connection=479aee5f-e424-409a-8255-f34df837683c event=0 ip=198.41.192.37 location=bud01 protocol=quic
+Oct 07 01:51:44 admuser cloudflared[72208]: 2025-10-06T23:51:44Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=3 event=0 ip=198.41.200.23
+Oct 07 01:51:45 admuser cloudflared[72208]: 2025-10-06T23:51:45Z INF Registered tunnel connection connIndex=3 connection=dda67265-4e2f-4d44-841e-b3dc0cc53b80 event=0 ip=198.41.200.23 location=sof01 protocol=quic
+Oct 07 04:52:08 admuser cloudflared[72208]: 2025-10-07T02:52:08Z ERR failed to run the datagram handler error="timeout: no recent network activity" connIndex=2 event=0 ip=198.41.192.37
+Oct 07 04:52:08 admuser cloudflared[72208]: 2025-10-07T02:52:08Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: timeout: no recent network activity" connIndex=2 event=0 ip=198.41.192.37
+Oct 07 04:52:08 admuser cloudflared[72208]: 2025-10-07T02:52:08Z WRN failed to serve tunnel connection error="datagram manager encountered a failure while serving" connIndex=2 event=0 ip=198.41.192.37
+Oct 07 04:52:08 admuser cloudflared[72208]: 2025-10-07T02:52:08Z WRN Serve tunnel error error="datagram manager encountered a failure while serving" connIndex=2 event=0 ip=198.41.192.37
+Oct 07 04:52:08 admuser cloudflared[72208]: 2025-10-07T02:52:08Z INF Retrying connection in up to 1s connIndex=2 event=0 ip=198.41.192.37
+Oct 07 04:52:09 admuser cloudflared[72208]: 2025-10-07T02:52:09Z WRN Connection terminated error="datagram manager encountered a failure while serving" connIndex=2
+Oct 07 04:52:09 admuser cloudflared[72208]: 2025-10-07T02:52:09Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: timeout: no recent network activity" connIndex=1 event=0 ip=198.41.192.7
+Oct 07 04:52:09 admuser cloudflared[72208]: 2025-10-07T02:52:09Z ERR failed to run the datagram handler error="timeout: no recent network activity" connIndex=1 event=0 ip=198.41.192.7
+Oct 07 04:52:09 admuser cloudflared[72208]: 2025-10-07T02:52:09Z WRN failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=1 event=0 ip=198.41.192.7
+Oct 07 04:52:09 admuser cloudflared[72208]: 2025-10-07T02:52:09Z WRN Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=1 event=0 ip=198.41.192.7
+Oct 07 04:52:09 admuser cloudflared[72208]: 2025-10-07T02:52:09Z INF Retrying connection in up to 1s connIndex=1 event=0 ip=198.41.192.7
+Oct 07 04:52:09 admuser cloudflared[72208]: 2025-10-07T02:52:09Z WRN Connection terminated error="accept stream listener encountered a failure while serving" connIndex=1
+Oct 07 04:52:16 admuser cloudflared[72208]: 2025-10-07T02:52:16Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=1 event=0 ip=198.41.192.7
+Oct 07 04:52:16 admuser cloudflared[72208]: 2025-10-07T02:52:16Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=2 event=0 ip=198.41.192.37
+Oct 07 04:52:16 admuser cloudflared[72208]: 2025-10-07T02:52:16Z INF Registered tunnel connection connIndex=1 connection=2ffcfd54-0d85-4b7a-9b1a-73ada96a9dd9 event=0 ip=198.41.192.7 location=zag01 protocol=quic
+Oct 07 04:52:16 admuser cloudflared[72208]: 2025-10-07T02:52:16Z INF Registered tunnel connection connIndex=2 connection=5c5edf68-d6ca-4ddc-945b-2b86f1c51d76 event=0 ip=198.41.192.37 location=zag01 protocol=quic
+root@admuser:/opt/ceshtje-ligjore#

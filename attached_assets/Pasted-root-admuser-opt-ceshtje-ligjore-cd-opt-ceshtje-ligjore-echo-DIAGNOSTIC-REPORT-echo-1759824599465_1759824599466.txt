@@ -1,0 +1,86 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+echo "=== DIAGNOSTIC REPORT ==="
+echo ""
+echo "1. Checking if endpoints exist in deployed code:"
+echo "   /api/users count: $(grep -c "'/api/users'" dist/index.js)"
+echo "   /api/transfer-cases count: $(grep -c "'/api/transfer-cases'" dist/index.js)"
+echo ""
+
+echo "2. Checking if routes.ts was modified:"
+tail -20 server/routes.ts
+echo ""
+
+echo "3. Testing if API responds:"
+curl -s http://localhost:5000/api/users 2>/dev/null | head -c 100
+echo ""
+echo ""
+
+echo "=== COMPLETE FIX ==="
+echo "Creating complete routes.ts file from Replit version..."
+
+# Download the complete working routes.ts from a working system
+# Since we can't pull from git, let's check the current line count
+finpm run build 2>&1 | head -20yntax error..."ts not in build."y?"
+=== DIAGNOSTIC REPORT ===
+
+1. Checking if endpoints exist in deployed code:
+   /api/users count: 0
+   /api/transfer-cases count: 0
+
+2. Checking if routes.ts was modified:
+        return res.status(404).json({ error: 'Source user not found' });
+      }
+
+      if (!toUser) {
+        return res.status(404).json({ error: 'Destination user not found' });
+      }
+
+      // Transfer all cases
+      const result = await storage.transferCases(fromUserId, toUserId);
+
+      res.json({
+        success: true,
+        message: `U transferuan me sukses ${result.count} çështje nga ${fromUser.firstName} ${fromUser.lastName} tek ${toUser.firstName} ${toUser.lastName}`,
+        transferredCount: result.count
+      });
+    } catch (error) {
+      console.error('Error transferring cases:', error);
+      res.status(500).json({ error: 'Failed to transfer cases' });
+    }
+  });
+
+3. Testing if API responds:
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" con
+
+=== COMPLETE FIX ===
+Creating complete routes.ts file from Replit version...
+Current routes.ts has 1470 lines
+-bash: !': event not found
+Routes file seems complete but endpoints not in build.
+Checking if there's a syntax error...
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+transforming...
+✓ 2411 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/public/index.html                                         1.09 kB │ gzip:   0.63 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-D1b5zML-.css                        159.05 kB │ gzip:  25.36 kB
+../dist/public/assets/index-No3X9pMA.js                         870.74 kB │ gzip: 255.59 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.70s
+✘ [ERROR] Expected ";" but found "transferCases"
+root@admuser:/opt/ceshtje-ligjore#

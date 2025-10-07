@@ -1,0 +1,60 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Check if the endpoint exists in deployed code
+echo "=== Checking deployed server code ==="
+grep -c "'/api/users'" dist/index.js
+
+# Check if the case transfer route and component exist
+echo ""
+echo "=== Checking if case transfer endpoint exists ==="
+grep -c "'/api/transfer-cases'" dist/index.js
+
+# Let's see the actual response from the API
+echo ""
+echo "=== Testing API directly ==="
+curl -s http://localhost:5000/api/users 2>/dev/null | head -c 200
+echo ""
+
+# Check PM2 logs for any errors
+echo ""
+echo "=== Recent errors ==="
+pm2 logs albpetrol-legal --err --lines 20 --nostream
+=== Checking deployed server code ===
+0
+
+=== Checking if case transfer endpoint exists ===
+0
+
+=== Testing API directly ===
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Sistemi i Menaxhimit të
+
+=== Recent errors ===
+[TAILING] Tailing last 20 lines for [albpetrol-legal] process (change the value with --lines option)
+/root/.pm2/logs/albpetrol-legal-error-0.log last 20 lines:
+0|albpetro | Error fetching backups: SyntaxError: Unexpected token 'd', "data_entri"... is not valid JSON
+0|albpetro |     at JSON.parse (<anonymous>)
+0|albpetro |     at BackupService.getBackups (file:///opt/ceshtje-ligjore/dist/index.js:3017:26)
+0|albpetro |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|albpetro |     at async file:///opt/ceshtje-ligjore/dist/index.js:4244:23
+0|albpetro | Error getting backups: SyntaxError: Unexpected token 'd', "data_entri"... is not valid JSON
+0|albpetro |     at JSON.parse (<anonymous>)
+0|albpetro |     at BackupService.getBackups (file:///opt/ceshtje-ligjore/dist/index.js:3017:26)
+0|albpetro |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|albpetro |     at async file:///opt/ceshtje-ligjore/dist/index.js:4244:23
+0|albpetro | Error fetching backups: SyntaxError: Unexpected token 'd', "data_entri"... is not valid JSON
+0|albpetro |     at JSON.parse (<anonymous>)
+0|albpetro |     at BackupService.getBackups (file:///opt/ceshtje-ligjore/dist/index.js:3017:26)
+0|albpetro |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|albpetro |     at async file:///opt/ceshtje-ligjore/dist/index.js:4244:23
+0|albpetro | Error getting backups: SyntaxError: Unexpected token 'd', "data_entri"... is not valid JSON
+0|albpetro |     at JSON.parse (<anonymous>)
+0|albpetro |     at BackupService.getBackups (file:///opt/ceshtje-ligjore/dist/index.js:3017:26)
+0|albpetro |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|albpetro |     at async file:///opt/ceshtje-ligjore/dist/index.js:4244:23
+
+root@admuser:/opt/ceshtje-ligjore#

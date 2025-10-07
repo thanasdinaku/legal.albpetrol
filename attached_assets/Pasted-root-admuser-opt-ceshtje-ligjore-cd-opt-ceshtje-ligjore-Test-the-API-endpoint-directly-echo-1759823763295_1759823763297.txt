@@ -1,0 +1,75 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Test the API endpoint directly
+echo "Testing /api/users endpoint..."
+curl -X GET http://localhost:5000/api/users \
+  -H "Cookie: $(pm2 logs albpetrol-legal --lines 100 --nostream 2>/dev/null | grep -o 'connect.sid=[^;]*' | head -1)" \
+  2>/dev/null | jq '.' || echo "Endpoint test failed - checking logs..."
+
+# Check recent server logs for /api/users requests
+echo ""
+echo "Recent /api/users requests:"
+pm2 logs albpetrol-legal --lines 50 --nostream 2>/dev/null | grep "/api/users" || echo "No recent /api/users requests found"
+
+# Rebuild and restart to ensure latest code
+echo ""
+echo "Rebuilding application..."
+npm run build && pm2 restart albpetrol-legal
+
+echo ""
+echo "Done! Now:"
+echo "1. Open https://legal.albpetrol.al/case-transfer in your browser"
+echo "2. Open browser DevTools (F12)"
+se it shows"k for the /api/users request and tell me what status code and respon
+Testing /api/users endpoint...
+Command 'jq' not found, but can be installed with:
+snap install jq  # version 1.5+dfsg-1, or
+apt  install jq  # version 1.6-2.1ubuntu3.1
+See 'snap info jq' for additional versions.
+Endpoint test failed - checking logs...
+
+Recent /api/users requests:
+0|albpetro | 9:50:16 AM [express] GET /api/users 200 in 4ms
+0|albpetro | 9:50:18 AM [express] GET /api/users 304 in 5ms
+0|albpetro | 9:50:46 AM [express] GET /api/users 304 in 10ms
+0|albpetro | 9:50:47 AM [express] GET /api/users 304 in 4ms
+0|albpetro | 9:50:48 AM [express] GET /api/users 304 in 5ms
+0|albpetro | 9:50:50 AM [express] GET /api/users 304 in 4ms
+0|albpetro | 9:53:40 AM [express] GET /api/users 200 in 2ms
+
+Rebuilding application...
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+✓ 2411 modules transformed.
+../dist/public/index.html                                         1.09 kB │ gzip:   0.63 kB
+../dist/public/assets/Albpetrol.svg_1754604323425-C1lBmiZp.png   93.96 kB
+../dist/public/assets/index-D1b5zML-.css                        159.05 kB │ gzip:  25.36 kB
+../dist/public/assets/index-No3X9pMA.js                         870.74 kB │ gzip: 255.59 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.68s
+
+  dist/index.js  189.1kb
+
+⚡ Done in 7ms
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 5    │ online    │ 0%       │ 20.4mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+
+Done! Now:
+1. Open https://legal.albpetrol.al/case-transfer in your browser
+2. Open browser DevTools (F12)
+3. Go to Network tab
+4. Refresh the page
+5. Look for the /api/users request and tell me what status code and response it shows

@@ -1,0 +1,68 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+# Restore from the most recent backups (from 02:41 before sed broke things)
+cp backups/entry.backup.1759797680 client/src/components/case-entry-form.tsx
+cp backups/edit.backup.1759797680 client/src/components/case-edit-form.tsx
+
+# Rebuild
+npm run build
+
+# Restart PM2
+NODE_ENV=production \
+PORT=5000 \
+DATABASE_URL="postgresql://albpetrol_user:SecurePass2025@localhost:5432/albpetrol_legal_db" \
+SMTP_HOST="smtp-mail.outlook.com" \
+SMTP_PORT=587 \
+SMTP_USER="it.system@albpetrol.al" \
+SMTP_PASS="Albpetrol2025" \
+SMTP_FROM="it.system@albpetrol.al" \
+EMAIL_FROM="it.system@albpetrol.al" \
+TZ="Europe/Tirane" \
+pm2 restart albpetrol-legal --update-env
+
+pm2 statusatus| grep 5000n port 5000
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+✓ 79 modules transformed.
+x Build failed in 1.08s
+error during build:
+[vite:esbuild] Transform failed with 1 error:
+/opt/ceshtje-ligjore/client/src/components/case-entry-form.tsx:62:17: ERROR: Syntax error "`"
+file: /opt/ceshtje-ligjore/client/src/components/case-entry-form.tsx:62:17
+
+Syntax error "`"
+60 |    const convertToUTC = (datetimeLocal: string) => {
+61 |      if (!datetimeLocal) return "";
+62 |      console.log(\`Storing time exactly as entered: \${datetimeLocal}\`);
+   |                   ^
+63 |      return datetimeLocal; // Store exactly as entered
+64 |    };
+
+    at failureErrorWithLog (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:1472:15)
+    at /opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:755:50
+    at responseCallbacks.<computed> (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:622:9)
+    at handleIncomingPacket (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:677:12)
+    at Socket.readFromStdout (/opt/ceshtje-ligjore/node_modules/vite/node_modules/esbuild/lib/main.js:600:7)
+    at Socket.emit (node:events:524:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+[PM2] Applying action restartProcessId on app [albpetrol-legal](ids: [ 0 ])
+[PM2] [albpetrol-legal](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 5    │ online    │ 0%       │ 22.4mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Saving current process list...
+[PM2] Successfully saved in /root/.pm2/dump.pm2
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ albpetrol-legal    │ fork     │ 5    │ online    │ 0%       │ 74.2mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@admuser:/opt/ceshtje-ligjore#

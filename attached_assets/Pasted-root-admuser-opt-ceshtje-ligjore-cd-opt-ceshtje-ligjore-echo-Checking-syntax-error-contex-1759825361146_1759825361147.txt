@@ -1,0 +1,111 @@
+root@admuser:/opt/ceshtje-ligjore# cd /opt/ceshtje-ligjore
+
+echo "=== Checking syntax error context ==="
+sed -n '1395,1410p' server/routes.ts | cat -n
+
+echo ""
+echo "=== Let's restore and do this properly ==="
+
+# Restore from git (if available) or recreate properly
+if [ -f server/routes.ts.broken ]; then
+  cp server/routes.ts.broken server/routes.ts
+  echo "Restored from backup"
+else
+  echo "No backup found. Let's check git status:"
+  git status server/routes.ts 2>/dev/null || echo "Git not available"
+fi
+
+# Alternative: Download the working routes.ts from Replit
+echo ""
+echo "Let's try a different approach - checking the original file structure:"
+echo "What's the total line count now?"
+wc -l server/routes.ts
+
+echo ""
+git diff server/routes.ts 2>/dev/null | head -50
+=== Checking syntax error context ===
+     1      }
+     2    });
+     3
+     4
+     5    // User Management and Case Transfer Routes
+     6      }
+     7    });
+     8
+     9    // Transfer case ownership from one user to another (Admin only)
+    10    app.post('/api/transfer-cases', isAuthenticated, isAdmin, async (req, res) => {
+    11      try {
+    12        const { fromUserId, toUserId } = req.body;
+    13
+    14        if (!fromUserId || !toUserId) {
+    15          return res.status(400).json({ error: 'Both fromUserId and toUserId are required' });
+    16        }
+
+=== Let's restore and do this properly ===
+No backup found. Let's check git status:
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   server/routes.ts
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+Let's try a different approach - checking the original file structure:
+What's the total line count now?
+1476 server/routes.ts
+
+Let's see if we can restore from git:
+diff --git a/server/routes.ts b/server/routes.ts
+index 028dcb8..9d8652f 100644
+--- a/server/routes.ts
++++ b/server/routes.ts
+@@ -1395,6 +1395,50 @@ Canonical: https://legal.albpetrol.al/.well-known/security.txt
+     }
+   });
+
++
++  // User Management and Case Transfer Routes
++    }
++  });
++
++  // Transfer case ownership from one user to another (Admin only)
++  app.post('/api/transfer-cases', isAuthenticated, isAdmin, async (req, res) => {
++    try {
++      const { fromUserId, toUserId } = req.body;
++
++      if (!fromUserId || !toUserId) {
++        return res.status(400).json({ error: 'Both fromUserId and toUserId are required' });
++      }
++
++      if (fromUserId === toUserId) {
++        return res.status(400).json({ error: 'Cannot transfer cases to the same user' });
++      }
++
++      // Verify both users exist
++      const fromUser = await storage.getUserById(fromUserId);
++      const toUser = await storage.getUserById(toUserId);
++
++      if (!fromUser) {
++        return res.status(404).json({ error: 'Source user not found' });
++      }
++
++      if (!toUser) {
++        return res.status(404).json({ error: 'Destination user not found' });
++      }
++
++      // Transfer all cases
++      const result = await storage.transferCases(fromUserId, toUserId);
++
++      res.json({
++        success: true,
++        message: `U transferuan me sukses ${result.count} çështje nga ${fromUser.firstName} ${fromUser.lastName} tek ${toUser.firstName} ${toUser.lastName}`,
++        transferredCount: result.count
++      });
++    } catch (error) {
++      console.error('Error transferring cases:', error);
++      res.status(500).json({ error: 'Failed to transfer cases' });
++    }
+root@admuser:/opt/ceshtje-ligjore#
